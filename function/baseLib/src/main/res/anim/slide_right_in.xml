@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:duration="300"
+    android:zAdjustment="top"
+    tools:ignore="MissingDefaultResource">
+    <translate
+        android:fromXDelta="100%p"
+        android:interpolator="@android:anim/decelerate_interpolator"
+        android:toXDelta="0.0" />
+</set>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemInfo"
+            type="cn.yanhu.commonres.bean.SettingItemInfo" />
+        <import type="android.view.View"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/viewItemBg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_42"
+            android:background="@{itemInfo.bgDrawable}"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/white" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_12"
+            android:text="@{itemInfo.name}"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@id/viewItemBg"
+            app:layout_constraintStart_toStartOf="@+id/viewItemBg"
+            app:layout_constraintTop_toTopOf="@+id/viewItemBg"
+            tools:text="隐私开关设置" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_right_arrow"
+            android:drawablePadding="@dimen/dp_4"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/dp_12"
+            android:text="@{itemInfo.desc}"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintBottom_toBottomOf="@id/viewItemBg"
+            app:layout_constraintEnd_toEndOf="@+id/viewItemBg"
+            app:layout_constraintTop_toTopOf="@+id/viewItemBg"
+            tools:text="当前已是最新版本" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_12"
+            tools:visibility="gone"
+            android:visibility="@{itemInfo.showDivider?View.VISIBLE:View.GONE}"
+            app:layout_constraintTop_toBottomOf="@+id/viewItemBg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingDefaultResource">
+
+        <cn.yanhu.baselib.widget.CustomTabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_7"
+            app:customNormalBg="@drawable/tag_normal"
+            app:customNormalTextColor="@color/color_666666"
+            app:customNormalTextSize="@dimen/sp_14"
+            app:customSelectBg="@drawable/tag_select"
+            app:customSelectIsBold="true"
+            app:customSelectTextColor="@color/colorMain"
+            app:customSelectTextSize="@dimen/sp_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:showIconPosition="1"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="0dp"
+            app:tabMaxWidth="0dp"
+            app:tabMinWidth="@dimen/dp_5"
+            app:tabPaddingEnd="@dimen/dp_5"
+            app:tabPaddingStart="@dimen/dp_5" />
+
+        <cn.yanhu.baselib.widget.NestedScrollableHost
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tabLayout">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </cn.yanhu.baselib.widget.NestedScrollableHost>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

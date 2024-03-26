@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="userLevel"
+            type="cn.huanyuan.happymeet.bean.UserLevelResponse" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_topBg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_360"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/bg_level"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            imageUrl="@{userLevel.portrait}"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:layout_marginTop="@dimen/dp_126"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_border_color="@color/whiteColorAlpha50"
+            app:riv_border_width="@dimen/dp_1"
+            app:riv_oval="true"
+            tools:src="@drawable/icon_portrait" />
+
+        <cn.yanhu.commonres.view.UserLevelView
+            android:id="@+id/levelInfo"
+            userLevel="@{userLevel.userLevel}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_avatar" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:paddingEnd="@dimen/dp_10"
+            android:text='@{"当前财富值："+userLevel.wealthValue}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toTopOf="@id/progress"
+            app:layout_constraintStart_toStartOf="@+id/progress"
+            tools:text="当前财富值：0" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:paddingStart="@dimen/dp_10"
+            android:text='@{"距离升级："+userLevel.needWealthValue}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toTopOf="@id/progress"
+            app:layout_constraintEnd_toEndOf="@+id/progress"
+            tools:text="距离升级：1" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_54"
+            android:max="@{userLevel.progressTotal}"
+            android:progress="@{userLevel.progress}"
+            android:progressDrawable="@drawable/progress_wealth_level_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/levelInfo"
+            tools:progress="20" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:paddingEnd="@dimen/dp_10"
+            android:text='@{"Lv."+(userLevel.userLevel>=100?99:userLevel.userLevel)}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontBold"
+            app:layout_constraintStart_toStartOf="@+id/progress"
+            app:layout_constraintTop_toBottomOf="@id/progress"
+            tools:text="Lv.0" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:paddingStart="@dimen/dp_10"
+            android:text='@{"Lv."+(userLevel.userLevel>=100?100:(userLevel.userLevel+1))}'
+            android:textColor="@color/whiteColorAlpha50"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontBold"
+            app:layout_constraintEnd_toEndOf="@+id/progress"
+            app:layout_constraintTop_toBottomOf="@id/progress"
+            tools:ignore="RtlSymmetry"
+            tools:text="Lv.1" />
+
+
+        <View
+            android:id="@+id/levelBg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_74"
+            android:background="#0A0600"
+            app:layout_constraintTop_toBottomOf="@+id/iv_topBg" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            style="@style/constraintHorizonCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="等级特权"
+            android:textColor="#FFF3DD"
+            android:textSize="@dimen/sp_18"
+            app:fontType="@string/fontBold"
+            app:layout_constraintTop_toTopOf="@+id/icon_left"
+            tools:ignore="MissingConstraints" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_hasLockDesc"
+            style="@style/constraintHorizonCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="已解锁1/12项"
+            android:textColor="@color/whiteColorAlpha50"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontBold"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_left"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon_left"
+            android:layout_width="@dimen/dp_43"
+            android:layout_height="@dimen/dp_42"
+            android:src="@drawable/icon_level_left"
+            app:layout_constraintBottom_toBottomOf="@+id/levelBg"
+            app:layout_constraintEnd_toStartOf="@+id/tv_hasLockDesc"
+            app:layout_constraintTop_toTopOf="@+id/levelBg" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_43"
+            android:layout_height="@dimen/dp_42"
+            android:src="@drawable/icon_level_right"
+            app:layout_constraintBottom_toBottomOf="@+id/levelBg"
+            app:layout_constraintStart_toEndOf="@+id/tv_hasLockDesc"
+            app:layout_constraintTop_toTopOf="@+id/levelBg" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_20"
+            android:background="#0A0600"
+            app:layout_constraintTop_toBottomOf="@+id/levelBg" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

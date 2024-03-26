@@ -1,0 +1,2 @@
+-keep class io.agora.**{*;}
+-keep class cn.yanhu.agora.bean.** { *; }

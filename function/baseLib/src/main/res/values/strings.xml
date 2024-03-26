@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="loading">加载中…</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="tips_permission_apply_title">正在申请的权限是程序必须依赖的权限</string>
+    <string name="tips_permission_btn_known">我知道了</string>
+    <string name="tips_permission_apply_title_to_setting">您需要在应用设置中手动开启该权限</string>
+    <string name="net_load_error">网络错误，请检查</string>
+    <string name="load_no_data">无数据</string>
+    <string name="load_loading_fail">加载错误，请下拉刷新页面</string>
+    <string name="load_no_more">-没有更多了-</string>
+    <string name="dialog_withdraw_success_title">成功！</string>
+    <string name="fontBold">粗体</string>
+    <string name="fontLight">细体</string>
+    <string name="fontMedium">中等体</string>
+    <string name="fontRegular">常规体</string>
+    <string name="fontSemiBold">半粗体</string>
+    <string name="tips_timeout">网络连接超时</string>
+    <string name="tips_exit">再次点击退出</string>
+    <string name="values_refresh">刷新</string>
+</resources>

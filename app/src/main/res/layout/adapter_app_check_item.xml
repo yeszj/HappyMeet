@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="checkInfo"
+            type="cn.huanyuan.happymeet.bean.AppCheckItemInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_68"
+        android:paddingHorizontal="@dimen/dp_12">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_checkIcon"
+            style="@style/constraintVerticalCenter"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            imageUrl="@{checkInfo.iconUrl}"
+            tools:src="@drawable/icon_check_version"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <LinearLayout
+            style="@style/constraintVerticalCenter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/dp_10"
+            app:layout_constraintEnd_toStartOf="@+id/tv_status"
+            app:layout_constraintStart_toEndOf="@+id/iv_checkIcon"
+            tools:ignore="MissingConstraints">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_15"
+                android:text="@{checkInfo.checkName}"
+                tools:text="版本更新" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:textColor="@color/fontGreenColor"
+                android:textSize="@dimen/sp_12"
+                android:paddingTop="@dimen/dp_4"
+                android:textColor="@{checkInfo.hasCheck?@color/fontGreenColor:@color/femaleColor}"
+                android:text="@{checkInfo.hasCheck?checkInfo.passDesc:checkInfo.noPassDesc}"
+                tools:text="当前版本已经是最新版本现" />
+        </LinearLayout>
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_status"
+            style="@style/constraintVerticalCenter"
+            android:layout_width="@dimen/dp_70"
+            android:layout_height="@dimen/dp_36"
+            android:background="@drawable/white_corner_5"
+            tools:backgroundTint="@color/fontGreenColor"
+            android:backgroundTint="@{checkInfo.hasCheck?@color/blackAlpha96:@color/fontGreenColor}"
+            android:gravity="center"
+            tools:textColor="@color/white"
+            android:textColor="@{checkInfo.hasCheck?@color/fontGrayColor:@color/white}"
+            android:textSize="@dimen/sp_13"
+            app:fontType="@string/fontMedium"
+            android:text="@{checkInfo.btnValue}"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:text="暂无更新" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

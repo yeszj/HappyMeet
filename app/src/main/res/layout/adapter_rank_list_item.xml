@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="rankInfo"
+            type="cn.huanyuan.happymeet.bean.RankInfo" />
+
+        <variable
+            name="type"
+            type="java.lang.Integer" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_user"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_64"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:paddingStart="@dimen/dp_20"
+        tools:ignore="RtlSymmetry">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{rankInfo.rankingNum==null?"-":rankInfo.rankingNum}'
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontBold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/userAvatar"
+            imageUrl="@{rankInfo.portrait}"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="@dimen/dp_44"
+            android:layout_marginStart="@dimen/dp_30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true"
+            tools:src="@drawable/icon_portrait" />
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_2"
+            android:singleLine="true"
+            android:text="@{rankInfo.nickName}"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintEnd_toStartOf="@+id/tv_value"
+            app:layout_constraintStart_toEndOf="@id/userAvatar"
+            app:layout_constraintTop_toTopOf="@+id/userAvatar"
+            tools:text="Jasmine" />
+
+        <cn.yanhu.commonres.view.UserLevelView
+            android:id="@+id/userLevel"
+            userLevel="@{rankInfo.level}"
+            android:layout_marginBottom="@dimen/dp_2"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
+            app:layout_constraintStart_toEndOf="@id/userAvatar" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/userAge"
+            userAge="@{rankInfo.age}"
+            userGender="@{rankInfo.gender}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/userLevel"
+            app:layout_constraintStart_toEndOf="@id/userLevel"
+            app:layout_constraintTop_toTopOf="@+id/userLevel"
+            tools:visibility="invisible" />
+
+
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/userProvince"
+            userProvince="@{rankInfo.province}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/userLevel"
+            app:layout_constraintStart_toEndOf="@id/userAge"
+            app:layout_constraintTop_toTopOf="@+id/userLevel"
+            tools:visibility="invisible" />
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_value"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_24"
+            android:drawableEnd="@drawable/icon_rose"
+            android:gravity="center"
+            android:minWidth="@dimen/dp_61"
+            android:paddingStart="@dimen/dp_12"
+            android:text='@{rankInfo==null?"0":rankInfo.userGiftValue}'
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="325" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

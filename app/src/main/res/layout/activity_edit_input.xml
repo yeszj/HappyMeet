@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/dp_16"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleBgColor="@color/white"
+            app:titleLeftName="我的资料"
+            app:titleRightLayoutId="@layout/right_title_btn" />
+
+        <cn.yanhu.baselib.view.ClearEditText
+            android:id="@+id/et_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/common_shape_input_bg"
+            android:hint="请输入昵称"
+            android:paddingVertical="@dimen/dp_14"
+            android:minHeight="@dimen/dp_48"
+            android:paddingHorizontal="@dimen/dp_15"
+            android:textColor="@color/fontTextColor"
+            android:textColorHint="@color/fontGrayColor"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

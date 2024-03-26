@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">netRequest</string>
+    <string name="net_load_error">网络错误，请检查</string>
+    <string name="tips_timeout">网络连接超时</string>
+    <string name="file_size_too_big">文件太大</string>
+</resources>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_top"
+            app:riv_corner_radius_top_left="@dimen/dp_20"
+            app:riv_corner_radius_top_right="@dimen/dp_20"
+            android:layout_width="@dimen/dp_325"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/bg_alert_window" />
+
+        <View
+            android:id="@+id/viewBg"
+            android:layout_width="@dimen/dp_325"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_bottom_praise_tips_bg"
+            app:layout_constraintBottom_toBottomOf="@id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_top" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_13"
+            android:text="当前未开启悬浮窗权限"
+            android:textColor="#FF2A68"
+            android:textSize="@dimen/sp_20"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/viewBg" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingTop="@dimen/dp_20"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_14"
+            android:paddingStart="@dimen/dp_25"
+            android:paddingEnd="@dimen/dp_25"
+            app:layout_constraintEnd_toEndOf="@id/viewBg"
+            app:layout_constraintStart_toStartOf="@id/viewBg"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            android:text="为了房间最小化的功能目的，需获取悬浮窗权限，不授权将无法使用上述功能" />
+        <cn.yanhu.baselib.view.CustomFontButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_25"
+            android:layout_marginTop="@dimen/dp_32"
+            android:layout_marginBottom="@dimen/dp_24"
+            android:background="@drawable/shape_light_gray_alpha95"
+            android:gravity="center"
+            android:layout_marginEnd="@dimen/dp_m_10"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/btn_next"
+            app:layout_constraintStart_toStartOf="@+id/viewBg"
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc"
+            android:text="退出" />
+        <cn.yanhu.baselib.view.CustomFontButton
+            android:id="@+id/btn_next"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_25"
+            android:layout_marginTop="@dimen/dp_32"
+            android:layout_marginEnd="@dimen/dp_25"
+            android:layout_marginBottom="@dimen/dp_24"
+            android:background="@drawable/common_shape_click_bg"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/viewBg"
+            app:layout_constraintStart_toEndOf="@+id/btn_cancel"
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc"
+            android:text="开启权限" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_20"
+            app:layout_constraintTop_toBottomOf="@+id/btn_next" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_close"
+            android:layout_width="@dimen/dp_58"
+            android:layout_height="@dimen/dp_58"
+            android:padding="@dimen/dp_15"
+            android:visibility="gone"
+            android:src="@mipmap/ic_pop_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewBg" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

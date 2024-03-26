@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_top_corner_15"
+        android:paddingBottom="@dimen/dp_20">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/dp_20"
+            android:text="创建群聊"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontBold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_close"
+            android:layout_width="@dimen/dp_42"
+            android:layout_height="@dimen/dp_42"
+            android:padding="@dimen/dp_15"
+            android:src="@drawable/ic_grey_close"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_title" />
+
+        <View
+            android:id="@+id/bgName"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:background="@drawable/common_shape_input_bg"
+            app:layout_constraintBottom_toBottomOf="@+id/et_groupName"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_12"
+            android:paddingTop="@dimen/dp_12"
+            android:text="群名称"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toStartOf="@+id/bgName"
+            app:layout_constraintTop_toTopOf="@+id/bgName" />
+
+        <cn.yanhu.baselib.view.CustomFontEditText
+            android:id="@+id/et_groupName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:hint="请输入群聊名称"
+            android:maxLines="1"
+            android:maxLength="10"
+            android:padding="@dimen/dp_12"
+            android:textColor="@color/fontTextColor"
+            android:textColorHint="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="@+id/bgName"
+            app:layout_constraintStart_toStartOf="@+id/bgName"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+
+        <View
+            android:id="@+id/bgAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:background="@drawable/common_shape_input_bg"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_avatarDesc"
+            app:layout_constraintTop_toBottomOf="@+id/bgName" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_12"
+            android:paddingTop="@dimen/dp_18"
+            android:text="群名称"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toStartOf="@+id/bgAvatar"
+            app:layout_constraintTop_toTopOf="@+id/bgAvatar" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_avatarDesc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:paddingHorizontal="@dimen/dp_12"
+            android:paddingTop="@dimen/dp_12"
+            android:paddingBottom="@dimen/dp_18"
+            android:text="点击修改群头像"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="@+id/bgAvatar"
+            app:layout_constraintStart_toStartOf="@+id/bgAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/tv_avatar" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_groupIcon"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginEnd="@dimen/dp_12"
+            tools:src="@drawable/img_loading_default"
+            app:layout_constraintBottom_toBottomOf="@+id/bgAvatar"
+            app:layout_constraintEnd_toEndOf="@+id/bgAvatar"
+            app:layout_constraintTop_toTopOf="@+id/bgAvatar"
+            app:riv_corner_radius="@dimen/dp_12" />
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_progress"
+            style="@style/common_white_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:visibility="invisible"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_groupIcon"
+            app:layout_constraintEnd_toEndOf="@+id/iv_groupIcon"
+            app:layout_constraintStart_toStartOf="@+id/iv_groupIcon"
+            app:layout_constraintTop_toTopOf="@+id/iv_groupIcon"
+            tools:text="90%" />
+
+        <View
+            android:id="@+id/bgDesc"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:background="@drawable/common_shape_input_bg"
+            app:layout_constraintBottom_toBottomOf="@+id/et_groupDesc"
+            app:layout_constraintTop_toBottomOf="@+id/bgAvatar" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_12"
+            android:paddingTop="@dimen/dp_12"
+            android:text="群介绍"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toStartOf="@+id/bgDesc"
+            app:layout_constraintTop_toTopOf="@+id/bgDesc" />
+
+        <cn.yanhu.baselib.view.CustomFontEditText
+            android:id="@+id/et_groupDesc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:gravity="top"
+            android:hint="请输入群介绍"
+            android:minHeight="@dimen/dp_74"
+            android:padding="@dimen/dp_12"
+            android:textColor="@color/fontTextColor"
+            android:textColorHint="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="@+id/bgDesc"
+            app:layout_constraintStart_toStartOf="@+id/bgDesc"
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/btn_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:background="@drawable/white_corner_30"
+            android:backgroundTint="@color/colorMain"
+            android:text="确认创建"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontType="@string/fontBold"
+            app:layout_constraintTop_toBottomOf="@+id/bgDesc" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

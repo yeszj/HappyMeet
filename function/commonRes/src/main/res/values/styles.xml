@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AnimationActivity" parent="@android:style/Animation.Translucent">
+
+        <item name="android:windowEnterAnimation">@anim/slide_right_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_right_out</item>
+        <item name="android:windowShowAnimation">@anim/slide_left_in</item>
+        <item name="android:windowHideAnimation">@anim/slide_right_out</item>
+
+        <item name="android:activityOpenEnterAnimation">@anim/slide_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
+
+        <item name="android:taskOpenEnterAnimation">@anim/slide_right_in</item>
+        <item name="android:taskOpenExitAnimation">@anim/slide_left_out</item>
+        <item name="android:taskCloseEnterAnimation">@anim/slide_left_in</item>
+        <item name="android:taskCloseExitAnimation">@anim/slide_right_out</item>
+
+        <item name="android:taskToFrontEnterAnimation">@anim/no_anim</item>
+        <item name="android:taskToFrontExitAnimation">@anim/slide_left_out</item>
+        <item name="android:taskToBackEnterAnimation">@anim/no_anim</item>
+        <item name="android:taskToBackExitAnimation">@anim/slide_right_out</item>
+
+        <item name="android:wallpaperOpenEnterAnimation">@anim/slide_right_in</item>
+        <item name="android:wallpaperOpenExitAnimation" >@anim/slide_left_out</item>
+        <item name="android:wallpaperCloseEnterAnimation">@anim/slide_left_in</item>
+        <item name="android:wallpaperCloseExitAnimation">@anim/slide_right_out</item>
+
+        <item name="android:wallpaperIntraOpenEnterAnimation">@anim/slide_right_in</item>
+        <item name="android:wallpaperIntraOpenExitAnimation">@anim/slide_left_out</item>
+        <item name="android:wallpaperIntraCloseEnterAnimation">@anim/slide_left_in</item>
+        <item name="android:wallpaperIntraCloseExitAnimation">@anim/slide_right_out</item>
+
+    </style>
+
+    <style name="common_white_shadow">
+        <item name="android:shadowColor">@color/blackAlpha80</item>
+        <item name="android:shadowDx">3</item>
+        <item name="android:shadowDy">3</item>
+        <item name="android:shadowRadius">4</item>
+
+    </style>
+
+    <style name="constraintCenter">
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+    </style>
+
+    <style name="constraintHorizonCenter">
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+    </style>
+
+    <style name="constraintVerticalCenter">
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+    </style>
+
+    <declare-styleable name="NineGridLayout">
+        <attr name="spacing" format="dimension"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="ColorArcProgressBar">
+        <attr name="front_color1" format="color"/>
+        <attr name="front_color2" format="color"/>
+        <attr name="front_color3" format="color"/>
+        <attr name="bg_arc_color" format="color"/>
+        <attr name="degree_color" format="color"/>
+        <attr name="degree_num" format="integer"/>
+        <attr name="dot_color" format="color"/>
+        <attr name="start_color" format="color"/>
+        <attr name="end_color" format="color"/>
+        <attr name="border_color" format="color"/>
+        <attr name="is_show_in_border" format="boolean"/>
+        <attr name="is_show_out_border" format="boolean"/>
+        <attr name="total_engle" format="integer"/>
+        <attr name="back_width" format="dimension"/>
+        <attr name="front_width" format="dimension"/>
+        <attr name="is_need_title" format="boolean"/>
+        <attr name="is_need_content" format="boolean"/>
+        <attr name="is_need_unit" format="boolean"/>
+        <attr name="is_need_dial" format="boolean"/>
+        <attr name="is_need_end_dot" format="boolean"/>
+        <attr name="string_unit" format="string"/>
+        <attr name="string_title" format="string"/>
+        <attr name="current_value" format="float"/>
+        <attr name="max_value" format="float"/>
+        <attr name="dot_width" format="dimension"/>
+        <attr name="dot_small_width" format="dimension"/>
+        <attr name="circleWidth" format="dimension"/>
+    </declare-styleable>
+
+</resources>

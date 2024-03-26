@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="education" tools:ignore="ExtraTranslation">
+
+        <item>初中及以下</item>
+
+        <item>高中及中专</item>
+
+        <item>大专</item>
+
+        <item>本科</item>
+
+        <item>硕士及以上</item>
+
+    </string-array>
+
+    <string-array name="marriage" tools:ignore="ExtraTranslation">
+
+        <item>未婚</item>
+        <item>离异</item>
+        <item>离异带子女</item>
+        <item>丧偶</item>
+
+    </string-array>
+
+    <string-array name="income" tools:ignore="ExtraTranslation">
+        <item>2000以下</item>
+        <item>2000–4000</item>
+        <item>4000–6000</item>
+        <item>6000–10000</item>
+        <item>10000–20000</item>
+        <item>20000以上</item>
+    </string-array>
+
+    <string-array name="live_room" tools:ignore="ExtraTranslation">
+        <item>已购房</item>
+        <item>准备购房</item>
+        <item>租房</item>
+        <item>与父母同住</item>
+        <item>其它</item>
+    </string-array>
+
+    <string-array name="car" tools:ignore="ExtraTranslation">
+        <item>已买车</item>
+        <item>未买车</item>
+    </string-array>
+
+    <string-array name="work" tools:ignore="ExtraTranslation">
+        <item>上班族</item>
+        <item>企业主</item>
+        <item>个体户</item>
+        <item>公务员</item>
+        <item>事业单位</item>
+        <item>其它</item>
+    </string-array>
+
+    <string-array name="love_target" tools:ignore="ExtraTranslation">
+        <item>认同闪婚</item>
+        <item>一年内</item>
+        <item>两年内</item>
+        <item>时机成熟就结婚</item>
+    </string-array>
+
+
+    <string-array name="complaint_type" tools:ignore="ExtraTranslation">
+        <item>骚扰谩骂</item>
+        <item>垃圾广告</item>
+        <item>索要财物</item>
+        <item>色情低俗</item>
+        <item>性别错误</item>
+        <item>涉政涉恐</item>
+        <item>欺诈骗钱</item>
+        <item>其他</item>
+    </string-array>
+
+    <string-array name="error_type" tools:ignore="ExtraTranslation">
+        <item>崩溃闪退</item>
+        <item>直播间</item>
+        <item>登录问题</item>
+        <item>美颜功能</item>
+        <item>充值提现</item>
+        <item>其他</item>
+    </string-array>
+
+    <string-array name="range_start_time" tools:ignore="ExtraTranslation">
+        <item>0</item>
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+        <item>22</item>
+    </string-array>
+
+    <string-array name="range_end_time" tools:ignore="ExtraTranslation">
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+        <item>22</item>
+        <item>24</item>
+    </string-array>
+</resources>

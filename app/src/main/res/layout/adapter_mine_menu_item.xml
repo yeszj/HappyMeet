@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="item"
+            type="cn.yanhu.commonres.bean.MineMenuBean" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_74"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            app:imageUrl ="@{item.image}"
+            tools:src = "@drawable/icon_rose"
+            placeholderId="@{-1}"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            tools:text = "邀请赚钱"
+            android:text="@{item.title}"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+</layout>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="userinfo"
+            type="cn.yanhu.commonres.bean.SeenMeHistoryInfo" />
+        <variable
+            name="isLock"
+            type="java.lang.Boolean" />
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_74"
+        android:paddingStart="@dimen/dp_12"
+        android:paddingEnd="@dimen/dp_12">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/avatarView"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:src="@drawable/svg_online_stoke_white"
+            android:visibility="@{userinfo.online?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+            app:layout_constraintEnd_toEndOf="@+id/avatarView" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_5"
+            android:drawableEnd="@drawable/svg_identify_tag"
+            android:drawablePadding="@dimen/dp_2"
+            android:ellipsize="end"
+            android:maxEms="8"
+            android:visibility="@{isLock?View.INVISIBLE:View.VISIBLE}"
+            android:maxLines="1"
+            android:text="@{userinfo.nickName}"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toEndOf="@+id/avatarView"
+            app:layout_constraintTop_toTopOf="@+id/avatarView"
+            tools:text="佊岸、花开" />
+        <View
+            android:id="@+id/hideName"
+            android:layout_width="@dimen/dp_112"
+            tools:visibility="invisible"
+            android:visibility="@{isLock?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName"
+            android:background="@drawable/common_loading_bg"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
+            android:layout_height="@dimen/dp_18"/>
+
+        <cn.yanhu.commonres.view.UserLevelView
+            android:id="@+id/userLevel"
+            userLevel="@{userinfo.level}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{isLock?View.INVISIBLE:View.VISIBLE}"
+            android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+            app:layout_constraintStart_toEndOf="@+id/avatarView" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/userAge"
+            userAge="@{userinfo.age}"
+            userGender="@{userinfo.gender}"
+            android:layout_width="wrap_content"
+            android:visibility="@{isLock?View.INVISIBLE:View.VISIBLE}"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/userLevel"
+            app:layout_constraintStart_toEndOf="@+id/userLevel"
+            app:layout_constraintTop_toTopOf="@+id/userLevel" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            userProvince='@{userinfo.province}'
+            android:visibility="@{isLock?View.INVISIBLE:View.VISIBLE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/userAge"
+            app:layout_constraintStart_toEndOf="@+id/userAge"
+            app:layout_constraintTop_toTopOf="@+id/userAge" />
+
+        <View
+            android:id="@+id/hideTag"
+            android:layout_width="@dimen/dp_88"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@+id/userAge"
+            tools:visibility="invisible"
+            android:visibility="@{isLock?View.VISIBLE:View.INVISIBLE}"
+            android:background="@drawable/common_loading_bg"
+            app:layout_constraintStart_toEndOf="@+id/avatarView"
+            app:layout_constraintBottom_toBottomOf="@+id/userAge"
+            android:layout_height="@dimen/dp_18"/>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/sp_10"
+            android:textColor="@color/fontGrayColor"
+            tools:text="11:02"
+            android:text="@{userinfo.time}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
+            android:layout_height="wrap_content"/>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/fontGrayColor"
+            android:text="来访1次"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/userAge"
+            app:layout_constraintBottom_toBottomOf="@+id/userAge"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

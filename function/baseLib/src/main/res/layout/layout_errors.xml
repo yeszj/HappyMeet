@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_emptyIcon"
+        android:layout_width="@dimen/dp_72"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        app:srcCompat="@mipmap/wifi_404" />
+
+    <cn.yanhu.baselib.view.CustomFontTextView
+        android:id="@+id/tv_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_10"
+        android:textColor="@color/fontGrayColor"
+        android:textSize="@dimen/sp_14"
+        tools:text="@string/net_load_error" />
+
+    <cn.yanhu.baselib.view.CustomFontTextView
+        android:id="@+id/tv_operate"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_25"
+        android:background="@drawable/bg_purple_alpha90_radius30"
+        android:gravity="center"
+        android:minWidth="@dimen/dp_120"
+        android:paddingStart="@dimen/dp_20"
+        android:paddingEnd="@dimen/dp_20"
+        android:text="@string/values_refresh"
+        android:textColor="@color/btnPurpleColor"
+        android:textSize="@dimen/sp_16" />
+</LinearLayout>

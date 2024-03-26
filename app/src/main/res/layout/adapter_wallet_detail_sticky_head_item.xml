@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="recordInfo"
+            type="cn.huanyuan.happymeet.bean.WalletRecordInfo" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/vg_head"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_39"
+        android:background="@color/base_bg_gray"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/dp_12">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_13"
+            android:text="@{recordInfo.time}"
+            tools:text="2024年01月" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_13"
+            android:text="@{recordInfo.desc}"
+            tools:text="收入20金币  支出0金币" />
+    </LinearLayout>
+</layout>

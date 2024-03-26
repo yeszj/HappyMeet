@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="groupUserInfo"
+            type="cn.yanhu.imchat.bean.GroupUserInfo" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_82"
+        android:layout_marginEnd="@dimen/dp_10">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            imageUrl="@{groupUserInfo.portrait}"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true"
+            tools:src="@drawable/icon_portrait" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="@{groupUserInfo.owner?@color/colorMain:@color/adminTagColor,default = @color/colorMain}"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="@dimen/dp_6"
+            android:text='@{groupUserInfo.owner?"群主":groupUserInfo.groupAdmin?"管理员":""}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            android:visibility="@{(groupUserInfo.owner||groupUserInfo.groupAdmin)?View.VISIBLE:View.INVISIBLE}"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="群主" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{groupUserInfo.nickName}"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="喵斯拉" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

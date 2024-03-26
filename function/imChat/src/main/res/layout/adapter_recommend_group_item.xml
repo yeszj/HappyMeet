@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="groupInfo"
+            type="cn.yanhu.imchat.bean.GroupBean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_109"
+        android:paddingStart="@dimen/dp_12"
+        android:paddingEnd="@dimen/dp_12">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_groupIcon"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            imageUrl="@{groupInfo.groupIcon}"
+            android:layout_marginTop="@dimen/dp_12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_corner_radius="@dimen/dp_12"
+            tools:src="@drawable/default_avatar_bg_6" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{groupInfo.groupName}"
+            android:paddingTop="@dimen/dp_8"
+            tools:text="浙江相亲交友群"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintEnd_toStartOf="@+id/tv_enter"
+            app:layout_constraintStart_toEndOf="@+id/iv_groupIcon"
+            app:layout_constraintTop_toTopOf="@+id/iv_groupIcon" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_8"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_groupIcon"
+            app:layout_constraintStart_toStartOf="@+id/tv_name">
+            <cn.yanhu.commonres.view.UserTagView
+                userProvince='@{groupInfo.groupProvince}'
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_5" />
+
+            <cn.yanhu.commonres.view.UserTagView
+                groupUserTotalCount='@{groupInfo.groupUserCount}'
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_5" />
+
+            <cn.yanhu.commonres.view.UserTagView
+                groupUserCount='@{groupInfo.peopleCountDesc}'
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_5" />
+        </LinearLayout>
+
+        <cn.yanhu.baselib.view.CustomFontButton
+            android:id="@+id/tv_enter"
+            android:layout_width="@dimen/dp_66"
+            android:layout_height="@dimen/dp_26"
+            android:background="@drawable/common_shape_click_bg"
+            android:text="进入"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_groupIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_groupIcon" />
+        <View
+            android:id="@+id/divider"
+            android:layout_width="@dimen/dp_4"
+            android:background="#14000000"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintTop_toBottomOf="@+id/iv_groupIcon"
+            app:layout_constraintStart_toStartOf="@+id/iv_groupIcon"
+            android:layout_height="@dimen/dp_14"/>
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="0dp"
+            android:textSize="@dimen/sp_13"
+            android:text="@{groupInfo.groupNotice}"
+            tools:text="真心交友才能交出真感情，早日脱单，祝有情人终成眷属"
+            android:textColor="@color/color_666666"
+            android:layout_marginStart="@dimen/dp_4"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@+id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/divider"
+            app:layout_constraintBottom_toBottomOf="@+id/divider"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

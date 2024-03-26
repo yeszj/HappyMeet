@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="levelInfo"
+            type="cn.huanyuan.happymeet.bean.LevelPrivilegeInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_134"
+        android:layout_marginHorizontal="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/bg_level_privilege_item"
+        android:paddingTop="@dimen/dp_6">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            style="@style/constraintHorizonCenter"
+            imageUrl="@{levelInfo.privilegeIcon}"
+            placeholderId="@{-1}"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            app:layout_constraintBottom_toTopOf="@+id/tv_title"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:src="@drawable/icon_wx_bind" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_title"
+            style="@style/constraintHorizonCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_4"
+            android:text="@{levelInfo.privilegeTitle}"
+            android:textColor="#FFF3DD"
+            app:fontType="@string/fontMedium"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toTopOf="@+id/tv_lockLevel"
+            tools:ignore="MissingConstraints"
+            tools:text="进场特效" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_lockLevel"
+            style="@style/constraintHorizonCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_4"
+            android:text="@{levelInfo.lockLevel}"
+            android:textColor="@color/whiteColorAlpha50"
+            android:textSize="@dimen/sp_10"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toTopOf="@+id/tv_desc"
+            tools:ignore="MissingConstraints"
+            tools:text="Lv.10解锁" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_desc"
+            style="@style/constraintHorizonCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_10"
+            android:text="@{levelInfo.lockDesc}"
+            android:textColor="@{levelInfo.hasLock?@color/whiteColorAlpha50:@color/color_ffd990}"
+            android:textSize="@dimen/sp_10"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:text="还需3213财富值"
+            tools:textColor="@color/color_ffd990" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

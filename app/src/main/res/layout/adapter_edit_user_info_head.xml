@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="editUserInfo"
+            type="cn.yanhu.commonres.bean.EditUserInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:background="#f4f4f4">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_10"
+            android:text="头像"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontBold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_user_portrait"
+            style="@style/constraintHorizonCenter"
+            imageUrl="@{editUserInfo.portrait}"
+            android:layout_width="@dimen/dp_80"
+            app:riv_oval="true"
+            android:layout_height="@dimen/dp_80"
+            android:layout_marginTop="@dimen/dp_10"
+            android:src="@drawable/icon_portrait"
+            app:layout_constraintTop_toBottomOf="@+id/tv_avatar"
+            tools:ignore="MissingConstraints" />
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_progress"
+            style="@style/common_white_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:visibility="invisible"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_user_portrait"
+            app:layout_constraintEnd_toEndOf="@+id/iv_user_portrait"
+            app:layout_constraintStart_toStartOf="@+id/iv_user_portrait"
+            app:layout_constraintTop_toTopOf="@+id/iv_user_portrait"
+            tools:text="90%" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_3"
+            android:layout_marginBottom="@dimen/dp_3"
+            android:src="@drawable/icon_edit_camera"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_user_portrait"
+            app:layout_constraintEnd_toEndOf="@+id/iv_user_portrait" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_20"
+            android:paddingBottom="@dimen/dp_10"
+            android:text="相册"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontBold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_user_portrait" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_photo"
+            style="@style/constraintHorizonCenter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:background="@drawable/white_corner_10"
+            android:nestedScrollingEnabled="false"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingEnd="@dimen/dp_2"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/tv_album"
+            app:spanCount="4"
+            tools:ignore="MissingConstraints"
+            tools:itemCount="1"
+            tools:listitem="@layout/adapter_upload_photo_item" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_20"
+            android:paddingBottom="@dimen/dp_10"
+            android:text="交友心声"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontBold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_photo" />
+
+        <View
+            android:id="@+id/viewBg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:background="@drawable/white_corner_10"
+            app:layout_constraintBottom_toBottomOf="@+id/et_desc"
+            app:layout_constraintTop_toBottomOf="@+id/tv_friend" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/et_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:hint="说说你的交友心声..."
+            android:paddingHorizontal="@dimen/dp_12"
+            android:paddingVertical="@dimen/dp_16"
+            android:text="@={editUserInfo.description}"
+            android:textColor="@color/fontTextColor"
+            android:textColorHint="@color/fontGrayColor"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+            app:layout_constraintEnd_toStartOf="@+id/iv_right"
+            app:layout_constraintStart_toStartOf="@+id/viewBg"
+            app:layout_constraintTop_toTopOf="@+id/viewBg" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_12"
+            android:src="@drawable/ic_right_arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+            app:layout_constraintEnd_toEndOf="@+id/viewBg"
+            app:layout_constraintTop_toTopOf="@+id/viewBg" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="userinfo"
+            type="cn.yanhu.commonres.bean.BaseUserInfo" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/base_bg_gray">
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleBgColor="@color/white"
+            app:titleLeftName="邀请我的人" />
+
+        <View
+            android:id="@+id/viewBg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_156"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="@drawable/white_corner_10"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginStart="@dimen/dp_16"
+            android:src="@drawable/icon_portrait"
+            imageUrl="@{userinfo.portrait}"
+            app:layout_constraintBottom_toBottomOf="@+id/divider"
+            app:layout_constraintStart_toStartOf="@+id/viewBg"
+            app:layout_constraintTop_toTopOf="@+id/viewBg"
+            app:riv_oval="true" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_6"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/dp_140"
+            android:paddingStart="@dimen/dp_10"
+            android:singleLine="true"
+            android:text="@{userinfo.nickName}"
+            tools:text="慢两拍慢两拍慢两拍"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:fontType="@string/fontBold"
+            app:layout_constraintEnd_toStartOf="@+id/tv_id"
+            app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+            app:layout_constraintTop_toTopOf="@+id/iv_avatar" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_2"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="@color/blackAlpha96"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:paddingVertical="@dimen/dp_1"
+            tools:text="ID:52643"
+            android:text='@{"ID:"+userinfo.userId}'
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
+            app:layout_constraintStart_toEndOf="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
+
+        <cn.yanhu.commonres.view.UserLevelView
+            android:id="@+id/userLevel"
+            userLevel="@{userinfo.level}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_6"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintStart_toEndOf="@+id/iv_avatar" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/userAge"
+            userAge="@{userinfo.age}"
+            userGender="@{userinfo.gender}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/userLevel"
+            app:layout_constraintStart_toEndOf="@+id/userLevel"
+            app:layout_constraintTop_toTopOf="@+id/userLevel" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            userProvince='@{userinfo.province}'
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/userAge"
+            app:layout_constraintStart_toEndOf="@+id/userAge"
+            app:layout_constraintTop_toTopOf="@+id/userAge" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:src="@drawable/ic_right_arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/divider"
+            app:layout_constraintEnd_toEndOf="@id/viewBg"
+            app:layout_constraintTop_toTopOf="@+id/viewBg" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_100"
+            android:background="@color/blackAlpha96"
+            app:layout_constraintEnd_toEndOf="@id/viewBg"
+            app:layout_constraintStart_toStartOf="@id/viewBg"
+            app:layout_constraintTop_toTopOf="@+id/viewBg" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            style="@style/constraintHorizonCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="您已绑定邀请人"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toBottomOf="@id/viewBg"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            tools:ignore="MissingConstraints" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

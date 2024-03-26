@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_videoParent"
+        android:layout_width="@dimen/dp_278"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_4"
+        android:layout_marginEnd="@dimen/dp_10">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/iv_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="CodeLocatorVectorDrawableCompat" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_video"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_28"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_bg"
+            app:layout_constraintEnd_toEndOf="@+id/iv_bg"
+            app:layout_constraintStart_toStartOf="@+id/iv_bg"
+            app:layout_constraintTop_toTopOf="@+id/iv_bg"
+            app:srcCompat="@drawable/icon_video_pause" />
+
+        <com.lihang.ShadowLayout
+            android:id="@+id/vg_video"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:hl_cornerRadius="@dimen/dp_4"
+            app:hl_layoutBackground="@color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_bg"
+            app:layout_constraintEnd_toEndOf="@+id/iv_bg"
+            app:layout_constraintStart_toStartOf="@+id/iv_bg"
+            app:layout_constraintTop_toTopOf="@+id/iv_bg"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

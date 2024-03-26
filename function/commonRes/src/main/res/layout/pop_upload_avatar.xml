@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_top_corner_15"
+        android:paddingBottom="@dimen/dp_30">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_30"
+            android:text="请上传真实头像"
+            android:textColor="@color/colorMain"
+            android:textSize="@dimen/sp_20"
+            app:fontType="@string/fontBold"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_tips2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:gravity="center"
+            android:text="露脸照片可大幅提高曝光率"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tips" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_example"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_171"
+            android:layout_marginTop="@dimen/dp_40"
+            android:adjustViewBounds="true"
+            android:src="@mipmap/avatar_example_man"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tips2" />
+
+        <View
+            android:id="@+id/view_pic"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_40"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:background="@drawable/white_corner_15"
+            android:backgroundTint="@color/colorMain"
+            app:layout_constraintEnd_toStartOf="@+id/viewCamera"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_example" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/icon_album"
+            android:drawablePadding="@dimen/dp_5"
+            android:text="相册上传"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontType="@string/fontBold"
+            app:layout_constraintBottom_toBottomOf="@+id/view_pic"
+            app:layout_constraintEnd_toEndOf="@+id/view_pic"
+            app:layout_constraintStart_toStartOf="@+id/view_pic"
+            app:layout_constraintTop_toTopOf="@+id/view_pic" />
+
+        <View
+            android:id="@+id/viewCamera"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_40"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:background="@drawable/white_corner_15"
+            android:backgroundTint="@color/colorMain"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_pic"
+            app:layout_constraintTop_toBottomOf="@+id/iv_example" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/icon_camera"
+            android:drawablePadding="@dimen/dp_5"
+            android:text="现拍一张"
+            android:textSize="@dimen/sp_17"
+            app:fontType="@string/fontBold"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/viewCamera"
+            app:layout_constraintEnd_toEndOf="@+id/viewCamera"
+            app:layout_constraintStart_toStartOf="@+id/viewCamera"
+            app:layout_constraintTop_toTopOf="@+id/viewCamera" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

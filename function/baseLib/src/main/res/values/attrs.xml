@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TitleBar">
+
+        <attr name="titleName" format="string" />
+
+        <attr name="titleRightName" format="string" />
+        <attr name="titleLeftName" format="string" />
+        <attr name="titleShowBackButton" format="boolean" />
+
+        <attr name="titleRightIco" format="reference" />
+
+        <attr name="titleRightDrawableLeft" format="boolean"/>
+
+        <attr name="titleLeftIco" format="reference" />
+
+        <attr name="titleBgColor" format="color" />
+
+        <attr name="titleColor" format="color" />
+
+        <attr name="titleRightColor" format="color" />
+
+        <attr name="titleNameIsbold" format="boolean" />
+        <attr name="titleRightNameIsbold" format="boolean" />
+        <attr name="titleRightLayoutId" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="StrokeGradientTextView">
+        <attr name="strokeColor" format="color" />
+        <attr name="strokeEndColor" format="color" />
+        <attr name="startColor" format="color" />
+        <attr name="centerColor" format="color" />
+        <attr name="endColor" format="color" />
+        <attr name="gradientStrokeWidth" format="dimension" />
+        <attr name="gradient_direction">
+            <flag name="leftToRight" value="1" />
+            <flag name="topToBottom" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="CustomFontTextView">
+        <attr name="fontType" format="string" />
+        <attr name="fontCustomStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="BorderGradientView">
+        <attr name="borderStartColor" format="color" />
+        <attr name="borderEndColor" format="color" />
+        <attr name="borderRadius" format="dimension" />
+        <attr name="borderBgColor" format="color" />
+        <attr name="borderViewWidth" format="dimension" />
+        <attr name="borderBottomLeftRadius" format="dimension" />
+        <attr name="borderBottomRightRadius" format="dimension" />
+        <attr name="borderTopRightRadius" format="dimension" />
+        <attr name="borderTopLeftRadius" format="dimension" />
+        <attr name="borderGradientType">
+            <flag name="TOP_TO_BOTTOM" value="0" />
+            <flag name="LEFT_TO_RIGHT" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="CustomTabLayout">
+        <attr name="customSelectTextSize" format="dimension" />
+        <attr name="customNormalTextSize" format="dimension" />
+        <attr name="customSelectTextColor" format="color" />
+        <attr name="customNormalTextColor" format="color" />
+        <attr name="customSelectIsBold" format="boolean" />
+        <attr name="customSelectBg" format="reference" />
+        <attr name="customNormalBg" format="reference" />
+        <attr name="showIconPosition" format="integer" />
+    </declare-styleable>
+</resources>

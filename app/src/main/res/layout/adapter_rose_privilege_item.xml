@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="itemInfo"
+            type="cn.yanhu.commonres.bean.MineMenuBean" />
+        <import type="cn.yanhu.commonres.R"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="@dimen/dp_44"
+            android:layout_marginTop="@dimen/dp_10"
+            placeholderId="@{R.drawable.pic_default_bg}"
+            imageUrl="@{itemInfo.image}"
+            android:src="@drawable/icon_alipay_logo" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_12"
+            tools:text="添加好友"
+            android:text="@{itemInfo.title}"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+</layout>

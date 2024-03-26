@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="cn.huanyuan.happymeet.bean.TaskInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_68"
+        android:paddingHorizontal="@dimen/dp_16">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/item_task_icon"
+            imageUrl="@{item.taskIcon}"
+            tools:src = "@mipmap/ic_launcher"
+            app:riv_oval="true"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/constraintVerticalCenter"
+            tools:ignore="MissingConstraints" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/item_task_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_8"
+            android:paddingTop="@dimen/dp_16"
+            android:textSize="@dimen/sp_14"
+            tools:text = "开启消息通知"
+            android:textColor="@color/fontTextColor"
+            android:text="@{item.title}"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toEndOf="@+id/item_task_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/item_task_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_8"
+            android:gravity="center"
+            android:textColor="@color/colorMain"
+            tools:text = "社交达人聊天气泡x1天"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            android:text="@{item.rewardDesc}"
+            app:layout_constraintStart_toEndOf="@+id/item_task_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingBottom="@dimen/dp_16"/>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/item_do_task"
+            android:layout_width="@dimen/dp_72"
+            android:layout_height="@dimen/dp_32"
+            android:background="@drawable/white_corner_20"
+            tools:backgroundTint="@color/colorMain"
+            android:gravity="center"
+            android:backgroundTint="@{item.status != 0 ? @color/colorMain : @color/colorMain_alpha90}"
+            android:paddingVertical="@dimen/dp_4"
+            android:text="@{item.status != 0 ? `领奖励` : item.buttonText}"
+            android:textColor="@{item.status != 0 ? @color/white : @color/colorMain}"
+            tools:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:text = "领奖励"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="@{item.status == 2 ? View.GONE : View.VISIBLE}"/>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="@dimen/dp_72"
+            android:layout_height="@dimen/dp_32"
+            android:background="@drawable/white_corner_20"
+            android:paddingVertical="@dimen/dp_4"
+            android:backgroundTint="@color/base_bg_gray"
+            tools:visibility="invisible"
+            android:text="已完成"
+            app:fontType="@string/fontMedium"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="@{item.status == 2 ? View.VISIBLE : View.GONE}"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

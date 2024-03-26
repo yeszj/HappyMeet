@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="cn.huanyuan.happymeet.ui.login.LoginViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="头像和昵称"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_22"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_tips2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:gravity="center"
+                android:text="上传本人清晰头像有助于脱单哦"
+                android:textColor="@color/fontGrayColor"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tips" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="@dimen/dp_120"
+                android:layout_marginTop="@dimen/dp_40"
+                app:riv_oval="false"
+                android:src="@drawable/icon_click_avatar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tips2" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_progress"
+                style="@style/common_white_shadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:visibility="invisible"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+                app:layout_constraintEnd_toEndOf="@+id/iv_avatar"
+                app:layout_constraintStart_toStartOf="@+id/iv_avatar"
+                app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+                tools:text="90%" />
+
+            <View
+                android:id="@+id/bgName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_40"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:background="@drawable/common_shape_input_bg"
+                app:layout_constraintTop_toBottomOf="@+id/iv_avatar" />
+
+            <cn.yanhu.baselib.view.CustomFontEditText
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/transparent"
+                android:paddingStart="@dimen/dp_15"
+                android:text="@={viewModel.personInfo.nickName}"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_15"
+                app:fontType="@string/fontMedium"
+                android:maxLength="8"
+                app:layout_constraintBottom_toBottomOf="@+id/bgName"
+                app:layout_constraintEnd_toStartOf="@+id/tv_switch"
+                app:layout_constraintStart_toStartOf="@+id/bgName"
+                app:layout_constraintTop_toTopOf="@+id/bgName"
+                tools:text="是谁善昭光" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:drawableStart="@drawable/icon_switch"
+                android:drawablePadding="@dimen/dp_5"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_15"
+                android:text="换个昵称"
+                android:textColor="@color/colorMain"
+                android:textSize="@dimen/sp_15"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintBottom_toBottomOf="@+id/bgName"
+                app:layout_constraintEnd_toEndOf="@+id/bgName"
+                app:layout_constraintTop_toTopOf="@+id/bgName" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

@@ -1,0 +1,1 @@
+-keep class cn.yanhu.dynamic.bean.** { *; }

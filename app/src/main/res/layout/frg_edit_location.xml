@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="cn.huanyuan.happymeet.ui.login.LoginViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="此刻在哪里"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_22"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_tips2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:gravity="center"
+                android:text="优先为你推荐附近用户"
+                android:textColor="@color/fontGrayColor"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tips" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_map"
+                android:layout_width="@dimen/dp_328"
+                android:layout_height="@dimen/dp_328"
+                android:layout_marginTop="@dimen/dp_40"
+                android:src="@drawable/icon_map"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tips2"
+                app:riv_oval="true" />
+
+            <com.cpiz.android.bubbleview.BubbleLinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_52"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_20"
+                android:paddingEnd="@dimen/dp_20"
+                app:bb_arrowDirection="Down"
+                app:bb_arrowPosPolicy="SelfCenter"
+                app:bb_cornerRadius="@dimen/dp_20"
+                app:bb_fillColor = "@color/fontTextColor"
+                app:bb_arrowHeight = "@dimen/dp_10"
+                app:bb_arrowWidth = "@dimen/dp_18"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_map"
+                app:layout_constraintEnd_toEndOf="@+id/iv_map"
+                app:layout_constraintStart_toStartOf="@+id/iv_map"
+                app:layout_constraintTop_toTopOf="@+id/iv_map">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dp_18"
+                    android:layout_height="@dimen/dp_18"
+                    android:src="@drawable/svg_location_white" />
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_province"
+                    android:layout_width="wrap_content"
+                    android:text="点击获取位置信息"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_15"
+                    android:paddingStart="@dimen/dp_2"
+                    app:fontType="@string/fontMedium"
+                    android:layout_height="wrap_content"/>
+            </com.cpiz.android.bubbleview.BubbleLinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

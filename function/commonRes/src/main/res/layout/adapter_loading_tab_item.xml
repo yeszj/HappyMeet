@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dp_58"
+    android:layout_height="@dimen/dp_26"
+    android:layout_marginEnd="@dimen/dp_20"
+    android:background="@drawable/common_loading_bg"
+    tools:ignore="MissingDefaultResource">
+</View>

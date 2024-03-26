@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_empty"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_width="@dimen/dp_120"
+        android:src="@drawable/svg_common_empty"
+        android:layout_height="@dimen/dp_120" />
+
+    <cn.yanhu.baselib.view.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_12"
+        android:text="@string/load_no_data"
+        android:textColor="@color/color_white_gray"
+        android:textSize="@dimen/sp_14" />
+
+</LinearLayout>

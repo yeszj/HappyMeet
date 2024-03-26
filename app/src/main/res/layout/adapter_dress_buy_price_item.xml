@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="priceInfo"
+            type="cn.yanhu.commonres.bean.StorePriceInfo" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_9"
+        android:layout_marginEnd="@dimen/dp_9"
+        android:background="@drawable/bg_dress_price_normal"
+        android:paddingTop="@dimen/dp_12">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@{priceInfo.days}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1天" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_10"
+            android:textColor="@color/whiteColorAlpha60"
+            android:textSize="@dimen/sp_12"
+            android:text="@{priceInfo.price}"
+            android:paddingBottom="@dimen/dp_12"
+            android:drawableStart="@drawable/icon_rose_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_days"
+            tools:text="288" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_select_tag"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

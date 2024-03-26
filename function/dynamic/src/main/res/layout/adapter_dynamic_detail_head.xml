@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="momentInfo"
+            type="cn.yanhu.dynamic.bean.DynamicInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/blackAlpha96"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:paddingStart="@dimen/dp_20"
+            android:text="@{String.valueOf(momentInfo.trendsCommentCount)}"
+            android:textColor="@color/color_white_black"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="3" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="条评论"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_comments"
+            app:layout_constraintStart_toEndOf="@+id/tv_comments"
+            app:layout_constraintTop_toTopOf="@+id/tv_comments" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_comments"
+            app:layout_constraintEnd_toStartOf="@+id/tv_likes"
+            app:layout_constraintTop_toTopOf="@+id/tv_comments"
+            tools:itemCount="5"
+            tools:listitem="@layout/adapter_like_avatar_item" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_5"
+            android:text="@{String.valueOf(momentInfo.trendsLikeCount)}"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_comments"
+            app:layout_constraintEnd_toStartOf="@+id/likes"
+            app:layout_constraintTop_toTopOf="@+id/tv_comments"
+            tools:text="3" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/dp_20"
+            android:text="喜欢"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_comments"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_comments" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

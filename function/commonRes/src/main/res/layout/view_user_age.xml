@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<cn.yanhu.baselib.view.CustomFontTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_tag"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/dp_16"
+    android:background="@drawable/tab_bg_black"
+    android:backgroundTint="@color/femaleColor"
+    android:drawableTint="@color/white"
+    android:gravity="center"
+    android:includeFontPadding="false"
+    android:paddingStart="@dimen/dp_5"
+    android:drawableStart="@drawable/svg_female_white"
+    android:paddingEnd="@dimen/dp_5"
+    android:textColor="@color/white"
+    android:textSize="@dimen/sp_12"
+    app:fontType="@string/fontMedium"
+    app:endColor="@color/white"
+    tools:text="25" />

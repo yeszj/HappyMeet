@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="cn.huanyuan.happymeet.ui.login.LoginViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="性别和年龄"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_22"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_tips2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:gravity="center"
+                android:text="性别选定后将无法修改哦"
+                android:textColor="@color/fontGrayColor"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tips" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/selfManImage"
+                android:layout_width="@dimen/dp_144"
+                android:layout_height="@dimen/dp_144"
+                android:layout_marginTop="@dimen/dp_32"
+                android:paddingStart="@dimen/dp_18"
+                android:paddingBottom="@dimen/dp_12"
+                android:paddingEnd="@dimen/dp_18"
+                android:scaleType="centerCrop"
+                android:src="@{viewModel.personInfo.gender == 1 ? @drawable/avatar_male_select : @drawable/avatar_male_normal}"
+                app:layout_constraintEnd_toStartOf="@+id/selfWomanImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tips2"
+                tools:src="@drawable/avatar_male_normal" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:text="男"
+                android:textColor="@{viewModel.personInfo.gender == 1?@color/manColor:@color/fontTextColor }"
+                android:textSize="@dimen/sp_14"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintEnd_toEndOf="@+id/selfManImage"
+                app:layout_constraintStart_toStartOf="@id/selfManImage"
+                app:layout_constraintTop_toBottomOf="@+id/selfManImage"
+                tools:textColor="@color/manColor" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/selfWomanImage"
+                android:layout_width="@dimen/dp_144"
+                android:layout_height="@dimen/dp_144"
+                android:paddingStart="@dimen/dp_18"
+                android:paddingBottom="@dimen/dp_12"
+                android:paddingEnd="@dimen/dp_18"
+                android:scaleType="centerCrop"
+                android:src="@{viewModel.personInfo.gender == 2 ? @drawable/avatar_woman_select : @drawable/avatar_woman_normal}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/selfManImage"
+                app:layout_constraintTop_toTopOf="@+id/selfManImage"
+                tools:src="@drawable/avatar_woman_normal" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/selfManImage"
+                android:layout_marginTop="@dimen/dp_5"
+                android:text="女"
+                android:textColor="@{viewModel.personInfo.gender == 2?@color/femaleColor:@color/fontTextColor }"
+                android:textSize="@dimen/sp_14"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintEnd_toEndOf="@+id/selfWomanImage"
+                app:layout_constraintStart_toStartOf="@id/selfWomanImage"
+                app:layout_constraintTop_toBottomOf="@+id/selfWomanImage"
+                tools:textColor="@color/fontTextColor" />
+
+            <View
+                android:id="@+id/viewBg"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_188"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_40"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:background="@drawable/white_corner_20"
+                android:backgroundTint="#0A000000"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sex" />
+
+            <com.github.gzuliyujiang.wheelpicker.widget.OptionWheelLayout
+                android:id="@+id/wheelView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dp_50"
+                android:layout_marginEnd="@dimen/dp_50"
+                app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+                app:layout_constraintEnd_toEndOf="@+id/viewBg"
+                app:layout_constraintStart_toStartOf="@+id/viewBg"
+                app:layout_constraintTop_toTopOf="@+id/viewBg"
+                app:wheel_indicatorColor="@color/divider_color"
+                app:wheel_indicatorEnabled="true"
+                app:wheel_indicatorSize="@dimen/dp_1"
+                app:wheel_itemSpace="@dimen/dp_60"
+                app:wheel_itemTextBoldSelected="true"
+                app:wheel_itemTextColor="@color/fontGrayColor"
+                app:wheel_itemTextColorSelected="@color/fontTextColor"
+                app:wheel_itemTextSize="@dimen/sp_16"
+                app:wheel_itemTextSizeSelected="@dimen/sp_18"
+                app:wheel_visibleItemCount="3" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

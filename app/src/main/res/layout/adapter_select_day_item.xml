@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <cn.yanhu.baselib.view.CustomFontTextView
+        android:id="@+id/tv_day"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_60"
+        android:gravity="center"
+        android:background="@color/white"
+        tools:text="02-24\n今天"
+        android:textColor="@color/colorMain"
+        android:textSize="@dimen/sp_14"
+        app:fontType="@string/fontMedium" />
+</layout>

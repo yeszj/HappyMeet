@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemInfo"
+            type="cn.yanhu.commonres.bean.DressUpInfo" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_153"
+        android:layout_marginEnd="@dimen/dp_6"
+        android:layout_marginBottom="@dimen/dp_6"
+        android:background="@drawable/white_corner_10"
+        android:backgroundTint="@color/blackAlpha80">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_cover"
+            style="@style/constraintHorizonCenter"
+            imageUrl="@{itemInfo.cover}"
+            placeholderId="@{-1}"
+            android:layout_width="@dimen/dp_92"
+            android:layout_height="@dimen/dp_92"
+            android:layout_marginTop="@dimen/dp_6"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:src="@color/fontRedColor" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_name"
+            style="@style/constraintHorizonCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_4"
+            android:text="@{itemInfo.name}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintTop_toBottomOf="@+id/iv_cover"
+            tools:ignore="MissingConstraints"
+            tools:text="贵族王冠" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            style="@style/constraintHorizonCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/icon_rose_16"
+            android:gravity="center_vertical"
+            android:paddingTop="@dimen/dp_6"
+            android:text="@{itemInfo.showPrice}"
+            android:textColor="@color/whiteColorAlpha60"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name"
+            tools:ignore="MissingConstraints"
+            tools:text="200" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_4"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@{itemInfo.have?@color/whiteColorAlpha70:@color/color_alpha40_ff003d}"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_4"
+            android:paddingVertical="@dimen/dp_2"
+            android:text='@{itemInfo.have?"已拥有":itemInfo.tag}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            android:visibility="@{(itemInfo.have||!TextUtils.isEmpty(itemInfo.tag))?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:backgroundTint="@color/color_alpha40_ff003d"
+            tools:text="最新" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

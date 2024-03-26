@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="groupInfo"
+            type="cn.yanhu.imchat.bean.GroupDetailInfo" />
+
+        <import type="android.view.View" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cn.yanhu.baselib.refresh.MyRefreshLayout
+            android:id="@+id/refresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/dp_10"
+            app:layout_constraintBottom_toTopOf="@+id/tv_join"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_groupIcon"
+                        imageUrl="@{groupInfo.groupIcon}"
+                        placeholderId="@{-1}"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_360"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@drawable/default_avatar_bg_6" />
+
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        style="@style/common_white_shadow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:text="@{groupInfo.groupName}"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_17"
+                        app:fontType="@string/fontBold"
+                        app:layout_constraintBottom_toTopOf="@+id/iv_groupId"
+                        app:layout_constraintStart_toStartOf="@+id/iv_groupId"
+                        tools:text="红娘喵斯拉的相亲群" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/iv_groupId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_16"
+                        android:layout_marginStart="@dimen/dp_12"
+                        android:layout_marginBottom="@dimen/dp_14"
+                        android:background="@drawable/white_corner_10"
+                        android:backgroundTint="@color/whiteColorAlpha80"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dp_8"
+                        android:text='@{"ID:"+groupInfo.groupId}'
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_groupIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:text="ID:52643" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_intro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/dp_16"
+                        android:paddingTop="@dimen/dp_20"
+                        android:text="群介绍"
+                        android:textColor="@color/fontGrayColor"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_groupIcon" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_groupDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/dp_16"
+                        android:paddingTop="@dimen/dp_12"
+                        android:text="@{groupInfo.groupNotice}"
+                        android:textColor="@color/fontTextColor"
+                        android:textSize="@dimen/sp_15"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_intro"
+                        tools:text="世上无难事只怕有钱人，物以类聚人以穷分。" />
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:layout_marginHorizontal="@dimen/dp_12"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:background="@color/blackAlpha96"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_groupDesc" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_totalCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:paddingStart="@dimen/dp_16"
+                        android:text='@{"群成员("+groupInfo.groupUserCount+"人)"}'
+                        android:textColor="@color/fontGrayColor"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/divider"
+                        tools:text="群成员(105人)" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_sexCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_right_arrow"
+                        android:padding="@dimen/dp_16"
+                        android:paddingStart="@dimen/dp_16"
+                        android:text='@{(groupInfo.isMan()?"女性：":"男性：")+(groupInfo.isMan()?groupInfo.manCount:groupInfo.womanCount)+"人"}'
+                        android:textColor="@{groupInfo.isMan()?@color/femaleColor:@color/manColor,default = @color/femaleColor }"
+                        android:textSize="@dimen/sp_13"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_totalCount"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tv_totalCount"
+                        tools:text="女性：65人" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_82"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingStart="@dimen/dp_10"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_sexCount"
+                        app:spanCount="5"
+                        tools:listitem="@layout/adapter_group_detail_user_item" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </cn.yanhu.baselib.refresh.MyRefreshLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_back"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_50"
+            android:src="@drawable/icon_back_circle_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/vgSee"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_6"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/blue_shape_btn_gradient_r30"
+            android:visibility="@{groupInfo.owner?View.GONE:View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_join"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/icon_group_msg"
+            android:drawablePadding="@dimen/dp_4"
+            android:gravity="center_vertical"
+            android:text='@{groupInfo.groupUser?"进入群聊":"围观"}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            android:visibility="@{groupInfo.owner?View.GONE:View.VISIBLE}"
+            app:fontType="@string/fontBold"
+            app:layout_constraintBottom_toBottomOf="@+id/vgSee"
+            app:layout_constraintEnd_toEndOf="@+id/vgSee"
+            app:layout_constraintStart_toStartOf="@+id/vgSee"
+            app:layout_constraintTop_toTopOf="@+id/vgSee"
+            tools:text="围观" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_join"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_6"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/common_shape_btn_gradient_r30"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_11"
+            android:text="加入群聊(20玫瑰)"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            android:visibility="@{groupInfo.groupUser||groupInfo.owner?View.GONE:View.VISIBLE}"
+            app:fontType="@string/fontBold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/vgSee"
+            tools:visibility="visible" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_modify"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/white_corner_30"
+            android:backgroundTint="@color/colorMain"
+            android:gravity="center"
+            android:text="修改资料"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            android:visibility="@{groupInfo.owner?View.VISIBLE:View.GONE}"
+            app:fontType="@string/fontBold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="invisible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

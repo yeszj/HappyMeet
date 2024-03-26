@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="authInfo"
+            type="cn.yanhu.commonres.bean.AuthCenterInfo" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F4F4F4">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_280"
+            android:background="@drawable/bg_gradient_auth_center"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleLeftName="认证中心" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_safe"
+                    style="@style/constraintHorizonCenter"
+                    android:layout_width="@dimen/dp_150"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/icon_auth_center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="MissingConstraints" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_title"
+                    style="@style/constraintHorizonCenter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/dp_10"
+                    android:text="趣相亲保护你的隐私安全"
+                    android:textColor="@color/fontTextColor"
+                    android:textSize="@dimen/sp_18"
+                    app:fontType="@string/fontMedium"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_safe"
+                    tools:ignore="MissingConstraints" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_desc"
+                    style="@style/constraintHorizonCenter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_27"
+                    android:text="相关信息会严格保密"
+                    android:textColor="@color/fontGrayColor"
+                    android:textSize="@dimen/sp_14"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                    tools:ignore="MissingConstraints" />
+
+                <View
+                    android:id="@+id/bg_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:layout_marginHorizontal="@dimen/dp_12"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/white_corner_10"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_phone"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/dp_12"
+                    android:src="@drawable/icon_phone"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_phone"
+                    app:layout_constraintStart_toStartOf="@+id/bg_phone"
+                    app:layout_constraintTop_toTopOf="@+id/bg_phone" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_8"
+                    android:text="手机绑定"
+                    android:textColor="@color/fontTextColor"
+                    android:textSize="@dimen/sp_15"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_phone"
+                    app:layout_constraintStart_toEndOf="@+id/iv_phone"
+                    app:layout_constraintTop_toTopOf="@+id/bg_phone" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_12"
+                    android:drawableEnd="@drawable/ic_right_arrow"
+                    android:drawablePadding="@dimen/dp_4"
+                    android:gravity="center_vertical"
+                    android:text='@{TextUtils.isEmpty(authInfo.phone)?"未绑定":"("+authInfo.hidePhone+") 已绑定"}'
+                    android:textColor='@{TextUtils.isEmpty(authInfo.phone)?@color/colorMain:@color/fontGrayColor}'
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_phone"
+                    app:layout_constraintEnd_toEndOf="@+id/bg_phone"
+                    app:layout_constraintTop_toTopOf="@+id/bg_phone"
+                    tools:text="未绑定"
+                    android:textSize="@dimen/sp_13"
+                    tools:textColor="@color/colorMain" />
+
+                <View
+                    android:id="@+id/bg_realName"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:layout_marginHorizontal="@dimen/dp_12"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/white_corner_10"
+                    app:layout_constraintTop_toBottomOf="@+id/bg_phone" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_realName"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/dp_12"
+                    android:src="@drawable/icon_real_name"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_realName"
+                    app:layout_constraintStart_toStartOf="@+id/bg_realName"
+                    app:layout_constraintTop_toTopOf="@+id/bg_realName" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_8"
+                    android:textColor="@color/fontTextColor"
+                    android:textSize="@dimen/sp_15"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_realName"
+                    app:layout_constraintStart_toEndOf="@+id/iv_realName"
+                    app:layout_constraintTop_toTopOf="@+id/bg_realName"
+                    android:text="实名认证" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_12"
+                    android:drawableEnd="@drawable/ic_right_arrow"
+                    android:drawablePadding="@dimen/dp_4"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/sp_13"
+                    android:text='@{TextUtils.isEmpty(authInfo.realName)?"未认证":"("+authInfo.hideRealName+") 已认证"}'
+                    android:textColor='@{TextUtils.isEmpty(authInfo.realName)?@color/colorMain:@color/fontGrayColor}'
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_realName"
+                    app:layout_constraintEnd_toEndOf="@+id/bg_realName"
+                    app:layout_constraintTop_toTopOf="@+id/bg_realName"
+                    tools:text="未认证"
+                    tools:textColor="@color/colorMain" />
+
+                <View
+                    android:id="@+id/bg_wxBind"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:layout_marginHorizontal="@dimen/dp_12"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/white_corner_10"
+                    app:layout_constraintTop_toBottomOf="@+id/bg_realName" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_wxBind"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/dp_12"
+                    android:src="@drawable/icon_wx_bind"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_wxBind"
+                    app:layout_constraintStart_toStartOf="@+id/bg_wxBind"
+                    app:layout_constraintTop_toTopOf="@+id/bg_wxBind" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_8"
+                    android:textColor="@color/fontTextColor"
+                    android:textSize="@dimen/sp_15"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_wxBind"
+                    app:layout_constraintStart_toEndOf="@+id/iv_wxBind"
+                    app:layout_constraintTop_toTopOf="@+id/bg_wxBind"
+                    android:text="微信绑定" />
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    imageUrl="@{authInfo.wxAvatar}"
+                    android:layout_width="@dimen/dp_24"
+                    android:layout_height="@dimen/dp_24"
+                    android:layout_marginEnd="@dimen/dp_4"
+                    android:src="@drawable/icon_portrait"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_wxState"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_wxState"
+                    app:layout_constraintTop_toTopOf="@+id/tv_wxState"
+                    app:riv_oval="true"
+                    tools:placeholderId="@{-1}" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_wxState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_12"
+                    android:drawableEnd="@drawable/ic_right_arrow"
+                    android:drawablePadding="@dimen/dp_4"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/sp_13"
+                    android:text='@{TextUtils.isEmpty(authInfo.wxNickName)?"未绑定":authInfo.wxNickName}'
+                    android:textColor='@{TextUtils.isEmpty(authInfo.wxNickName)?@color/colorMain:@color/fontGrayColor}'
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_wxBind"
+                    app:layout_constraintEnd_toEndOf="@+id/bg_wxBind"
+                    app:layout_constraintTop_toTopOf="@+id/bg_wxBind"
+                    tools:text="未绑定"
+                    tools:textColor="@color/colorMain" />
+
+                <View
+                    android:id="@+id/bg_aliBind"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:layout_marginHorizontal="@dimen/dp_12"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/white_corner_10"
+                    app:layout_constraintTop_toBottomOf="@+id/bg_wxBind" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_aliBind"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/dp_12"
+                    android:src="@drawable/icon_ali_bind"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_aliBind"
+                    app:layout_constraintStart_toStartOf="@+id/bg_aliBind"
+                    app:layout_constraintTop_toTopOf="@+id/bg_aliBind" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_8"
+                    android:textColor="@color/fontTextColor"
+                    android:textSize="@dimen/sp_15"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_aliBind"
+                    app:layout_constraintStart_toEndOf="@+id/iv_aliBind"
+                    app:layout_constraintTop_toTopOf="@+id/bg_aliBind"
+                    android:text="支付宝绑定" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_12"
+                    android:drawableEnd="@drawable/ic_right_arrow"
+                    android:drawablePadding="@dimen/dp_4"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/sp_13"
+                    android:text='@{TextUtils.isEmpty(authInfo.aliAccount)?"未绑定":"("+authInfo.hideAliAccount+") 已绑定"}'
+                    android:textColor='@{TextUtils.isEmpty(authInfo.aliAccount)?@color/colorMain:@color/fontGrayColor}'
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_aliBind"
+                    app:layout_constraintEnd_toEndOf="@+id/bg_aliBind"
+                    app:layout_constraintTop_toTopOf="@+id/bg_aliBind"
+                    tools:text="未绑定"
+                    tools:textColor="@color/colorMain" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

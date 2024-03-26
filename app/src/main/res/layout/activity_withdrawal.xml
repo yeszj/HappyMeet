@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="selectItem"
+            type="cn.yanhu.commonres.bean.RoseRechargeBean" />
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_200"
+            android:background="@color/colorMain"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_40"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleColor="@color/white"
+            app:titleLeftIco="@drawable/svg_white_back"
+            app:titleLeftName="提现"
+            app:titleName=" "
+            app:titleRightColor="@color/whiteAlpha40"
+            app:titleRightName="明细" />
+
+        <cn.yanhu.baselib.refresh.MyRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/viewRecharge"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_9"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_30"
+                        app:fontType="@string/fontBold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="0" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_balanceDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/dp_10"
+                        android:text="可提现余额(元)"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_balance" />
+
+                    <View
+                        android:id="@+id/viewBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:background="@drawable/white_top_corner_20"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_balanceDesc" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_recharge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/dp_16"
+                        android:paddingTop="@dimen/dp_20"
+                        android:text="选择提现金额"
+                        android:textColor="@color/fontGrayColor"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/viewBg" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingStart="@dimen/dp_12"
+                        android:paddingTop="@dimen/dp_3"
+                        android:paddingEnd="@dimen/dp_3"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_recharge"
+                        app:spanCount="3"
+                        tools:itemCount="4"
+                        tools:listitem="@layout/adapter_withdrawal_item" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_payWay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/dp_16"
+                        android:paddingTop="@dimen/dp_20"
+                        android:text="提现至"
+                        android:textColor="@color/fontGrayColor"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/rv_amount" />
+
+                    <cn.yanhu.commonres.view.PayWaySelectView
+                        android:id="@+id/paySelectView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_12"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_payWay" />
+
+
+                    <View
+                        android:id="@+id/bgAccountInfo"
+                        app:layout_constraintTop_toBottomOf="@+id/paySelectView"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginHorizontal="@dimen/dp_12"
+                        android:background="@drawable/bg_pay_account"
+                        android:layout_height="@dimen/dp_82"/>
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_realName"
+                        android:layout_width="wrap_content"
+                        android:textSize="@dimen/sp_14"
+                        android:textColor="@color/fontTextColor"
+                        android:text="真实姓名    孟*瑶"
+                        android:paddingTop="@dimen/dp_20"
+                        android:layout_marginStart="@dimen/dp_16"
+                        app:layout_constraintTop_toTopOf="@+id/bgAccountInfo"
+                        app:layout_constraintStart_toStartOf="@+id/bgAccountInfo"
+                        android:layout_height="wrap_content"/>
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/iv_wxAvatar"
+                        android:layout_width="@dimen/dp_20"
+                        android:src="@drawable/icon_portrait"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@+id/tv_realName"
+                        app:layout_constraintTop_toTopOf="@+id/tv_account"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_account"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_account"
+                        android:layout_height="@dimen/dp_20"/>
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_account"
+                        android:layout_width="wrap_content"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintStart_toEndOf="@+id/iv_wxAvatar"
+                        android:textColor="@color/fontTextColor"
+                        android:text="支付宝账号    530****69@qq.com"
+                        android:layout_marginBottom="@dimen/dp_20"
+                        app:layout_constraintBottom_toBottomOf="@+id/bgAccountInfo"
+                        android:layout_height="wrap_content"/>
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_bind"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="@dimen/dp_8"
+                        android:paddingHorizontal="@dimen/dp_8"
+                        android:text="立即绑定"
+                        android:textColor="#2D9AFF"
+                        android:gravity="center"
+                        android:textSize="@dimen/sp_12"
+                        app:fontType="@string/fontMedium"
+                        android:background="@drawable/white_corner_5"
+                        app:layout_constraintEnd_toEndOf="@+id/bgAccountInfo"
+                        app:layout_constraintTop_toTopOf="@id/bgAccountInfo"
+                        android:layout_height="@dimen/dp_22"/>
+
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/dp_16"
+                        android:paddingTop="@dimen/dp_20"
+                        android:text="提现说明"
+                        android:textColor="@color/fontGrayColor"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/bgAccountInfo" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_rule"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="@dimen/dp_5"
+                        android:paddingStart="@dimen/dp_16"
+                        android:paddingTop="@dimen/dp_20"
+                        android:text="1.提现时间：9:00-18:00，每日可提现5次。\n
+2.本平台支持提现10分钟内到账，申请提现后请及时查看到账情况，超过24小时未到账请联系客服。\n
+3.提现时将从提现金额中扣除14%作为手续费和平台服务费。"
+                        android:textColor="@color/fontGrayColor"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </cn.yanhu.baselib.refresh.MyRefreshLayout>
+
+        <View
+            android:id="@+id/viewRecharge"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_120"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_check"
+            android:layout_width="@dimen/dp_25"
+            app:layout_constraintEnd_toStartOf="@+id/tv_agreement"
+            app:layout_constraintTop_toTopOf="@+id/tv_agreement"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_agreement"
+            android:src="@drawable/svg_unselected_r20"
+            android:padding="@dimen/dp_5"
+            android:layout_height="@dimen/dp_25"/>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/dp_5"
+            android:paddingVertical="@dimen/dp_10"
+            android:gravity="center_vertical"
+            android:text="我已阅读并同意同意用户提现协议"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="@+id/viewRecharge"
+            app:layout_constraintStart_toStartOf="@+id/viewRecharge"
+            app:layout_constraintTop_toTopOf="@+id/viewRecharge" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_withdrawal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:background="@drawable/white_corner_30"
+            android:backgroundTint="@color/femaleColor"
+            android:gravity="center"
+            android:text="立即提现"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontType="@string/fontBold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_agreement" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

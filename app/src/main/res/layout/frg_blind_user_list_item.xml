@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <cn.yanhu.baselib.refresh.MyRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingDefaultResource">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingEnd="@dimen/dp_2"
+            tools:listitem="@layout/adapter_blind_user_item"
+            app:layoutManager="com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager"
+            app:spanCount="2"
+            tools:itemCount="10" />
+    </cn.yanhu.baselib.refresh.MyRefreshLayout>
+</layout>

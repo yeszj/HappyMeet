@@ -1,0 +1,1 @@
+-keep class * extends cn.zj.netrequest.BaseViewModel

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_top_corner_15">
+
+        <View
+            android:id="@+id/viewTop"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:background="@drawable/white_top_corner_15"
+            android:backgroundTint="#F4F4F4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_15"
+            android:text="取消"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toBottomOf="@+id/viewTop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/viewTop" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_sure"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_15"
+            android:text="确定"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toBottomOf="@+id/viewTop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/viewTop" />
+
+        <com.github.gzuliyujiang.wheelpicker.widget.OptionWheelLayout
+            android:id="@+id/wheelView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_250"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sure"
+            app:wheel_indicatorColor="@color/divider_color"
+            app:wheel_indicatorEnabled="true"
+            app:wheel_indicatorSize="@dimen/dp_1"
+            app:wheel_itemSpace="@dimen/dp_50"
+            app:wheel_curvedEnabled="true"
+            app:wheel_itemTextBoldSelected="true"
+            app:wheel_itemTextColor="@color/fontGrayColor"
+            app:wheel_itemTextColorSelected="@color/fontTextColor"
+            app:wheel_itemTextSize="@dimen/sp_16"
+            app:wheel_itemTextSizeSelected="@dimen/sp_18"
+            app:wheel_visibleItemCount="5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

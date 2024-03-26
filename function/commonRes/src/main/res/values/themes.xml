@@ -1,0 +1,26 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+
+    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <declare-styleable name="UserAvatarView">
+        <!--头像大小-->
+        <attr name="avatarSize" format="dimension" />
+        <attr name="avatarBorderSize" format="dimension" />
+        <attr name="avatarBorderColor" format="color" />
+        <!--头像框大小-->
+        <attr name="svgAvatarSize" format="dimension" />
+        <!--是否显示头像框-->
+        <attr name="isShowSvgAvatar" format="boolean" />
+        <attr name="isCanClick" format="boolean" />
+    </declare-styleable>
+
+</resources>

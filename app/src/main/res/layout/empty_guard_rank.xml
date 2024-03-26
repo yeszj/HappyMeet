@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <cn.yanhu.baselib.view.CustomFontTextView
+        android:id="@+id/tv_guard"
+        style="@style/constraintHorizonCenter"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_50"
+        android:background="@drawable/white_corner_30"
+        android:backgroundTint="@color/colorMain"
+        android:gravity="center"
+        android:text="抢守护"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_17"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

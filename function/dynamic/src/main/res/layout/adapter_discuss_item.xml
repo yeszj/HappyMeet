@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="discussInfo"
+            type="cn.yanhu.dynamic.bean.DiscussInfo" />
+        <import type="android.view.View"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_24"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/dp_12">
+
+        <cn.yanhu.commonres.view.UserAvatarView
+            android:id="@+id/avatarView"
+            avatarUrl="@{discussInfo.portrait}"
+            avatarUserId="@{discussInfo.userId}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:avatarSize="@dimen/dp_36"
+            app:isShowSvgAvatar="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:svgAvatarSize="@dimen/dp_36" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/dp_150"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@{discussInfo.nickName}"
+            android:textColor="@color/fontLightColor"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toEndOf="@+id/avatarView"
+            app:layout_constraintTop_toTopOf="@+id/avatarView"
+            tools:text="zhengjun" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_author"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_17"
+            android:visibility="@{discussInfo.authorComment?View.VISIBLE:View.GONE}"
+            android:layout_marginStart="@dimen/dp_5"
+            android:background="@drawable/tag_dynamic_self"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_5"
+            android:text="作者"
+            android:textColor="#737373"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintBottom_toBottomOf="@id/tv_name"
+            app:layout_constraintStart_toEndOf="@+id/tv_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_name" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            userAge="@{discussInfo.age}"
+            userGender="@{discussInfo.gender}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_author"
+            app:layout_constraintStart_toEndOf="@+id/tv_author"
+            app:layout_constraintTop_toTopOf="@+id/tv_author" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_40"
+            android:ellipsize="end"
+            android:lineSpacingExtra="@dimen/dp_3"
+            android:maxLines="5"
+            android:paddingTop="@dimen/dp_2"
+            android:textColor="@color/color_white_black"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name"
+            tools:text="Nice to meet you!" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/icon_seemore"
+            android:gravity="center_vertical"
+            android:paddingTop="@dimen/dp_4"
+            android:paddingEnd="@dimen/dp_10"
+            android:text="更多"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_12"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_content"
+            tools:ignore="RtlSymmetry" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_6"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toStartOf="@+id/tv_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_more"
+            tools:ignore="RtlSymmetry"
+            tools:text="17:38" />
+
+        <LinearLayout
+            android:id="@+id/vg_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/dp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/avatarView">
+
+            <com.like.LikeButton
+                android:id="@+id/likeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_m_20"
+                app:circle_end_color="@color/color_black_white"
+                app:circle_start_color="@color/color_black_white"
+                app:dots_primary_color="@color/fontGrayColor"
+                app:dots_secondary_color="@color/font_pink_color"
+                app:icon_size="@dimen/dp_20"
+                app:like_drawable="@drawable/icon_like"
+                app:liked="false"
+                app:unlike_drawable="@drawable/icon_unlike"
+                tools:background="@drawable/icon_unlike" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_heartNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_12"
+                tools:ignore="HardcodedText"
+                tools:text="2" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_reply"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:paddingBottom="@dimen/dp_12"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time"
+            tools:itemCount="1"
+            tools:listitem="@layout/adapter_reply_item" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_moreReply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/line_16"
+            android:drawablePadding="@dimen/dp_5"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingEnd="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_12"
+            android:textColor="#737373"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toStartOf="@+id/rv_reply"
+            app:layout_constraintTop_toBottomOf="@+id/rv_reply"
+            tools:text="5条回复" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

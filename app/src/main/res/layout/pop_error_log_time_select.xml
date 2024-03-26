@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:backgroundTint="@color/base_bg_gray"
+        android:background="@drawable/white_top_corner_10"
+        android:layout_height="wrap_content">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/sp_15"
+            android:text="取消"
+            android:textColor="@color/fontGrayColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="@dimen/dp_15"
+            android:layout_height="wrap_content"/>
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_sure"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/sp_15"
+            android:text="确定"
+            android:textColor="@color/fontTextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="@dimen/dp_15"
+            android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_day"
+            android:layout_width="@dimen/dp_114"
+            tools:listitem="@layout/adapter_select_day_item"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/tv_cancel"
+            android:layout_height="@dimen/dp_240"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_time"
+            android:layout_width="0dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingStart="@dimen/dp_10"
+            tools:listitem="@layout/adapter_select_time_item"
+            android:background="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/rv_day"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_cancel"
+            android:layout_height="@dimen/dp_240"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

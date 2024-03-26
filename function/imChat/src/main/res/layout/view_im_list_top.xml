@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.fragment.im.IMListFragment">
+
+    <data>
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/notice_rl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_13"
+            android:layout_marginEnd="@dimen/dp_13"
+            android:background="@drawable/shape_notice_bg"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/notice_cancel"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
+                android:src="@mipmap/ic_delete_notice" />
+
+            <TextView
+                android:id="@+id/permission_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_24"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/dp_5"
+                android:layout_toEndOf="@id/notice_cancel"
+                android:gravity="center"
+                android:text="打开推送通知，以免错过新消息"
+                android:textColor="@color/colorMain"
+                android:textSize="@dimen/sp_12" />
+
+            <Button
+                android:id="@+id/notice_apply_permission"
+                android:layout_width="@dimen/dp_62"
+                android:layout_height="@dimen/dp_26"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:background="@mipmap/ic_open_notification" />
+
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/notify_rl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_74"
+            android:layout_marginStart="@dimen/dp_13"
+            android:layout_marginEnd="@dimen/dp_13">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/im_system_msg_icon"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"
+                android:src="@mipmap/ic_launcher_round"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_oval="true" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/im_system_msg_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_2"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_toEndOf="@id/im_system_msg_icon"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:fontType="@string/fontMedium"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_15"
+                app:layout_constraintEnd_toStartOf="@+id/im_system_msg_time"
+                app:layout_constraintStart_toEndOf="@+id/im_system_msg_icon"
+                app:layout_constraintTop_toTopOf="@+id/im_system_msg_icon"
+                android:text="官方消息" />
+
+            <TextView
+                android:id="@+id/im_system_msg_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/im_system_msg_title"
+                android:layout_alignStart="@id/im_system_msg_title"
+                android:layout_marginTop="@dimen/dp_4"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_2"
+                android:layout_toEndOf="@id/im_system_msg_icon"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/fontGrayColor"
+                android:textSize="@dimen/sp_13"
+                app:layout_constraintBottom_toBottomOf="@+id/im_system_msg_icon"
+                app:layout_constraintEnd_toStartOf="@+id/tv_unReadSystemMsg"
+                app:layout_constraintStart_toStartOf="@+id/im_system_msg_title"
+                android:text="严禁红娘以承诺见面、交换微信、做女朋友等理由" />
+
+            <TextView
+                android:id="@+id/im_system_msg_time"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_15"
+                android:textColor="@color/fontGrayColor"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="@+id/im_system_msg_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/im_system_msg_title"
+                android:text="13:54" />
+
+            <TextView
+                android:id="@+id/tv_unReadSystemMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_unread_msg"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_6"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingEnd="@dimen/dp_6"
+                android:paddingBottom="@dimen/dp_2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="@+id/im_system_msg_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/im_system_msg_content"
+                android:text="3" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/browser_cl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_74"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_12">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/interest_img"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_interest_default"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_oval="true" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/interest_title"
+                android:layout_width="@dimen/dp_170"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_2"
+                android:text="谁喜欢我"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_15"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintStart_toEndOf="@+id/interest_img"
+                app:layout_constraintTop_toTopOf="@+id/interest_img" />
+
+            <TextView
+                android:id="@+id/interest_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_2"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="💖这些人在偷偷喜欢你哦～"
+                android:textColor="@color/fontGrayColor"
+                android:textSize="@dimen/sp_13"
+                app:layout_constraintBottom_toBottomOf="@+id/interest_img"
+                app:layout_constraintEnd_toStartOf="@+id/tv_readCount"
+                app:layout_constraintStart_toStartOf="@id/interest_title" />
+
+            <TextView
+                android:id="@+id/tv_readCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_unread_msg"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_6"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingEnd="@dimen/dp_6"
+                android:paddingBottom="@dimen/dp_2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="@+id/interest_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/interest_content"
+                android:text="3" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_4"
+            android:background="#0A000000" />
+
+    </LinearLayout>
+
+</layout>

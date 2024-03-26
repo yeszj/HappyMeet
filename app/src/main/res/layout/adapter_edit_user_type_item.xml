@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:background="#F4F4F4">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_10"
+            android:text="基本信息"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontBold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@drawable/white_corner_10"
+            android:nestedScrollingEnabled="false"
+            android:paddingVertical="@dimen/dp_6"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/adapter_edit_user_info_item" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_more"
+            style="@style/constraintHorizonCenter"
+            android:layout_width="@dimen/dp_168"
+            android:layout_height="@dimen/dp_42"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="@dimen/dp_10"
+            android:src="@drawable/icon_edit_more"
+            tools:ignore="MissingConstraints" />
+    </LinearLayout>
+</layout>
