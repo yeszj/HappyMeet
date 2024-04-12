@@ -24,7 +24,7 @@
         <item name="android:taskToBackExitAnimation">@anim/slide_right_out</item>
 
         <item name="android:wallpaperOpenEnterAnimation">@anim/slide_right_in</item>
-        <item name="android:wallpaperOpenExitAnimation" >@anim/slide_left_out</item>
+        <item name="android:wallpaperOpenExitAnimation">@anim/slide_left_out</item>
         <item name="android:wallpaperCloseEnterAnimation">@anim/slide_left_in</item>
         <item name="android:wallpaperCloseExitAnimation">@anim/slide_right_out</item>
 
@@ -61,38 +61,62 @@
     </style>
 
     <declare-styleable name="NineGridLayout">
-        <attr name="spacing" format="dimension"/>
+        <attr name="spacing" format="dimension" />
     </declare-styleable>
 
 
     <declare-styleable name="ColorArcProgressBar">
-        <attr name="front_color1" format="color"/>
-        <attr name="front_color2" format="color"/>
-        <attr name="front_color3" format="color"/>
-        <attr name="bg_arc_color" format="color"/>
-        <attr name="degree_color" format="color"/>
-        <attr name="degree_num" format="integer"/>
-        <attr name="dot_color" format="color"/>
-        <attr name="start_color" format="color"/>
-        <attr name="end_color" format="color"/>
-        <attr name="border_color" format="color"/>
-        <attr name="is_show_in_border" format="boolean"/>
-        <attr name="is_show_out_border" format="boolean"/>
-        <attr name="total_engle" format="integer"/>
-        <attr name="back_width" format="dimension"/>
-        <attr name="front_width" format="dimension"/>
-        <attr name="is_need_title" format="boolean"/>
-        <attr name="is_need_content" format="boolean"/>
-        <attr name="is_need_unit" format="boolean"/>
-        <attr name="is_need_dial" format="boolean"/>
-        <attr name="is_need_end_dot" format="boolean"/>
-        <attr name="string_unit" format="string"/>
-        <attr name="string_title" format="string"/>
-        <attr name="current_value" format="float"/>
-        <attr name="max_value" format="float"/>
-        <attr name="dot_width" format="dimension"/>
-        <attr name="dot_small_width" format="dimension"/>
-        <attr name="circleWidth" format="dimension"/>
+        <attr name="front_color1" format="color" />
+        <attr name="front_color2" format="color" />
+        <attr name="front_color3" format="color" />
+        <attr name="bg_arc_color" format="color" />
+        <attr name="degree_color" format="color" />
+        <attr name="degree_num" format="integer" />
+        <attr name="dot_color" format="color" />
+        <attr name="start_color" format="color" />
+        <attr name="end_color" format="color" />
+        <attr name="border_color" format="color" />
+        <attr name="is_show_in_border" format="boolean" />
+        <attr name="is_show_out_border" format="boolean" />
+        <attr name="total_engle" format="integer" />
+        <attr name="back_width" format="dimension" />
+        <attr name="front_width" format="dimension" />
+        <attr name="is_need_title" format="boolean" />
+        <attr name="is_need_content" format="boolean" />
+        <attr name="is_need_unit" format="boolean" />
+        <attr name="is_need_dial" format="boolean" />
+        <attr name="is_need_end_dot" format="boolean" />
+        <attr name="string_unit" format="string" />
+        <attr name="string_title" format="string" />
+        <attr name="current_value" format="float" />
+        <attr name="max_value" format="float" />
+        <attr name="dot_width" format="dimension" />
+        <attr name="dot_small_width" format="dimension" />
+        <attr name="circleWidth" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="ShineTextView">
+        <attr name="shineColor" format="color" />
+        <attr name="defaultColor" format="color" />
+        <attr name="speedDuration" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="HighlightAnimView"  >
+        <attr name="highlight_view_highlightColor" format="reference|color" />
+        <attr name="highlight_view_duration" format="integer" />
+        <attr name="highlight_view_repeatCount" format="integer" />
+        <attr name="highlight_view_highlightWidth" format="dimension" />
+        <attr name="highlight_view_highlightRotateDegrees" format="float" />
+        <attr name="highlight_view_repeatMode" format="enum" >
+            <enum name="restart" value="1" />
+            <enum name="reverse" value="2" />
+        </attr>
+        <attr name="highlight_view_startDirection" format="enum" >
+            <enum name="from_left" value="1" />
+            <enum name="from_right" value="2" />
+            <enum name="from_top" value="3" />
+            <enum name="from_bottom" value="4" />
+        </attr>
+        <attr name="highlight_view_autoStart" format="boolean" />
+    </declare-styleable>
 </resources>

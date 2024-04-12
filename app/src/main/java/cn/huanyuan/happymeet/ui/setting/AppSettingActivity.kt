@@ -15,6 +15,7 @@ import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.commonres.bean.SettingItemInfo
 import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.PageIntentUtil
+import cn.yanhu.imchat.manager.ImChatManager
 import cn.zj.netrequest.application.ApplicationProxy
 import com.blankj.utilcode.util.AppUtils
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -74,6 +75,10 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
 
                     }
 
+                    "blackList" ->{
+                        ImChatManager.toBlackListPage(mContext)
+                    }
+
                     else -> {
                         PageIntentUtil.url2Page(mContext, item.pageUrl)
                     }
@@ -92,17 +97,19 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
                     mContext,
                     cn.yanhu.commonres.R.drawable.white_top_corner_10
                 ),
-                name = "隐私开关设置"
+                name = "隐私开关设置", pageUrl = "{clsPath:cn.huanyuan.happymeet.ui.setting.PrivacySwitchSetActivity}"
             )
         )
         list.add(
             SettingItemInfo(
-                name = "美颜设置"
+                name = "美颜设置",
+                pageUrl = "{clsPath:cn.yanhu.agora.ui.beautifyFace.BeautyFaceSetActivity}"
             )
         )
         list.add(
             SettingItemInfo(
-                name = "黑名单"
+                name = "黑名单",
+                pageUrl = "blackList"
             )
         )
         list.add(
@@ -111,7 +118,7 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
                     mContext,
                     cn.yanhu.commonres.R.drawable.white_bottom_corner_10
                 ),
-                name = "安全中心", showDivider = true
+                name = "安全中心", showDivider = true, pageUrl = "{clsPath:cn.huanyuan.happymeet.ui.system.SecurityCenterActivity}"
             )
         )
 

@@ -18,9 +18,11 @@ import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.widget.router.ARouterWrapper
 import cn.yanhu.commonres.db.UserInfoDbManager
 import cn.yanhu.commonres.manager.AppCacheManager
-import cn.yanhu.imchat.chat.ImChatActivity
 import cn.yanhu.imchat.config.ImKeyUtils
 import cn.yanhu.imchat.config.NimSDKOptionConfig
+import cn.yanhu.imchat.push.PushMessageHandler
+import cn.yanhu.imchat.ui.chat.ImChatActivity
+import cn.yanhu.imchat.ui.groupChat.ImTeamChatActivity
 import cn.zj.netrequest.RetrofitUtil
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.factory.CustomizeGsonConverterFactory
@@ -38,7 +40,9 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.SDKOptions
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.yunxin.kit.corekit.im.IMKitClient
+import com.netease.yunxin.kit.corekit.im.repo.SettingRepo.isPushNotify
 import com.netease.yunxin.kit.corekit.im.utils.RouterConstant.PATH_CHAT_P2P_PAGE
+import com.netease.yunxin.kit.corekit.im.utils.RouterConstant.PATH_CHAT_TEAM_PAGE
 import com.netease.yunxin.kit.corekit.route.XKitRouter
 import com.opensource.svgaplayer.SVGAParser
 import com.pcl.sdklib.sdk.union.UnicornGlideImageLoader
@@ -76,7 +80,7 @@ class BaseApplication : Application() {
     private fun initImKit() {
         val options: SDKOptions =
             NimSDKOptionConfig.getSDKOptions<MainActivity>(this, ImKeyUtils.readAppKey(this))
-        IMKitClient.config(this, null, options);
+        IMKitClient.config(this, null, options)
     }
 
 
@@ -177,7 +181,10 @@ class BaseApplication : Application() {
     private fun initImConfig() {
         IMKitClient.initSDK()
         registerImMsgEvent()
+        XKitRouter.registerRouter(PATH_CHAT_TEAM_PAGE, ImTeamChatActivity::class.java)
         XKitRouter.registerRouter(PATH_CHAT_P2P_PAGE, ImChatActivity::class.java)
+        IMKitClient.toggleNotification(isPushNotify())
+        IMKitClient.registerMixPushMessageHandler(PushMessageHandler())
     }
 
     /**
@@ -194,7 +201,8 @@ class BaseApplication : Application() {
 
     private fun options(): YSFOptions {
         val options = YSFOptions()
-        options.statusBarNotificationConfig = StatusBarNotificationConfig()
+        val statusBarNotificationConfig = StatusBarNotificationConfig()
+        options.statusBarNotificationConfig = statusBarNotificationConfig
         options.sdkEvents = SDKEvents()
         options.sdkEvents.eventProcessFactory = EventProcessFactory { eventType: Int ->
             if (eventType == 5) {

@@ -5,6 +5,8 @@ import cn.huanyuan.happymeet.bean.ComplaintInfo
 import cn.huanyuan.happymeet.bean.GuardRankResponse
 import cn.huanyuan.happymeet.bean.InviteInfo
 import cn.huanyuan.happymeet.bean.InviteRecordResponse
+import cn.huanyuan.happymeet.bean.SecurityInfo
+import cn.huanyuan.happymeet.bean.SwitchConfigInfo
 import cn.huanyuan.happymeet.bean.TabEntity
 import cn.huanyuan.happymeet.bean.TaskResponse
 import cn.huanyuan.happymeet.bean.UserLevelResponse
@@ -12,11 +14,11 @@ import cn.huanyuan.happymeet.bean.WalletInfo
 import cn.huanyuan.happymeet.bean.WalletRecordResponse
 import cn.yanhu.commonres.bean.AuthCenterInfo
 import cn.yanhu.commonres.bean.BaseUserInfo
-import cn.yanhu.commonres.bean.request.DressBuyRequest
 import cn.yanhu.commonres.bean.EditUserInfo
 import cn.yanhu.commonres.bean.LoginSuccessInfo
 import cn.yanhu.commonres.bean.MineMenuBean
 import cn.yanhu.commonres.bean.UserDetailInfo
+import cn.yanhu.commonres.bean.request.DressBuyRequest
 import cn.yanhu.commonres.bean.request.DressUpRequest
 import cn.yanhu.commonres.bean.response.DressUpResponse
 import cn.yanhu.commonres.bean.response.FriendsResponse
@@ -162,12 +164,20 @@ interface ApiService {
         @Body complaintInfo: ComplaintInfo?,
     ): BaseBean<Boolean>
 
+
+    @GET("app/v1/auth/getSecurityCenter")
+    suspend fun getSecurityInfo(): BaseBean<SecurityInfo>
+
     @GET("app/v1/user/getAppCheckInfo")
     suspend fun getAppCheckInfo(
         @Query("hasCameraPermission") hasCameraPermission: Boolean,
         @Query("hasMicrophonePermission") hasMicrophonePermission: Boolean
     ): BaseBean<MutableList<AppCheckItemInfo>>
 
+
+    @GET("app/v1/user/getSwitchSetInfo")
+    suspend fun getSwitchSetInfo(
+    ): BaseBean<MutableList<SwitchConfigInfo>>
 
     @GET("app/v1/user/getInviteMyUser")
     suspend fun getInviteMyUser(

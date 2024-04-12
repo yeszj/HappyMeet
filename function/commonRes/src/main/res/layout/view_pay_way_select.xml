@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/dp_12"
         android:paddingEnd="@dimen/dp_2"
+        android:minHeight="@dimen/dp_58"
         android:nestedScrollingEnabled="false"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"

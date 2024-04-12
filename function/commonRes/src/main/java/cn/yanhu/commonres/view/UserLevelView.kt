@@ -45,7 +45,7 @@ class UserLevelView : LinearLayout {
         if (userLevel <= 0) {
             tvLevel.visibility = View.GONE
         } else {
-            val levelBg = LevelTagConfig.getLevelBg(userLevel)
+            val levelBg = LevelTagConfig.getLevelTagBg(userLevel)
             tvLevel.setBackgroundResource(levelBg)
             tvLevel.text = "Lv.$userLevel"
             tvLevel.visibility = View.VISIBLE

@@ -15,6 +15,7 @@ import cn.yanhu.imchat.R
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.bean.GroupDetailInfo
 import cn.yanhu.imchat.databinding.PopCreateGroupBinding
+import cn.yanhu.imchat.manager.ImUserManager
 import cn.zj.netrequest.ext.OnBooleanResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.upload.UploadFileClient
@@ -38,12 +39,13 @@ class CreateGroupPop(val context: FragmentActivity, val groupInfo: GroupDetailIn
     }
 
     private lateinit var mBinding: PopCreateGroupBinding
-    private var groupIconUrl: String = ""
+    private var groupIconUrl: String = ImUserManager.getSelfUserInfo().portrait
     override fun onCreate() {
         super.onCreate()
         mBinding = PopCreateGroupBinding.bind(popupImplView)
         mBinding.apply {
             if (groupInfo == null) {
+                GlideUtils.load(context, groupIconUrl, mBinding.ivGroupIcon)
                 mBinding.btnConfirm.text = "确认创建"
             } else {
                 mBinding.etGroupName.setText(groupInfo.groupName)

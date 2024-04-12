@@ -14,27 +14,27 @@ class ComplaintInfo : BaseObservable(){
     var complaintType:String = ""
         set(value) {
             field = value
-            notifyPropertyChanged(BR._all)
+            notifyPropertyChanged(BR.complaintType)
         }
 
     @Bindable
     var complaintUserId:String = ""
         set(value) {
             field = value
-            notifyPropertyChanged(BR._all)
+            notifyPropertyChanged(BR.complaintUserId)
         }
 
     @Bindable
     var complaintReason:String = ""
         set(value) {
             field = value
-            notifyPropertyChanged(BR._all)
+            notifyPropertyChanged(BR.complaintReason)
         }
 
     @Bindable
     var picList:MutableList<String> = mutableListOf()
         set(value) {
             field = value
-            notifyPropertyChanged(BR._all)
+            notifyPropertyChanged(BR.picList)
         }
 }

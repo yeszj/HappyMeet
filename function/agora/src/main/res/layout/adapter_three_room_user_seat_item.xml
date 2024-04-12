@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="seatInfo"
+            type="cn.yanhu.agora.bean.RoomSeatInfo" />
+
+        <import type="android.view.View" />
+    </data>
+
+
+    <com.lihang.ShadowLayout
+        android:id="@+id/vg_parent"
+        style="@style/constraintHorizonCenter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_204"
+        android:layout_marginStart="@dimen/dp_4"
+        android:layout_marginTop="@dimen/dp_4"
+        android:layout_marginEnd="@dimen/dp_4"
+        app:hl_cornerRadius="@dimen/dp_4"
+        app:hl_layoutBackground="@color/whiteColorAlpha90"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <SurfaceView
+            android:id="@+id/surfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/vg_emptySeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{seatInfo.roomUserSeatInfo==null?View.VISIBLE:View.INVISIBLE}"
+            tools:visibility="invisible">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_seat"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:src="@drawable/icon_room_wheat"
+                app:layout_constraintEnd_toEndOf="@+id/tv_joinSeat"
+                app:layout_constraintStart_toStartOf="@+id/tv_joinSeat" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_joinSeat"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_30"
+                android:background="@drawable/bg_seat_invite"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/dp_12"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_15"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintTop_toBottomOf="@+id/iv_seat"
+                tools:text="邀请男嘉宾" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_joinSeatRoseNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:gravity="center"
+                android:text='@{seatInfo.seatRoseNum+"玫瑰一次"}'
+                android:textColor="@color/whiteAlpha40"
+                android:textSize="@dimen/sp_12"
+                app:fontType="@string/fontMedium"
+                app:layout_constraintEnd_toEndOf="@+id/tv_joinSeat"
+                app:layout_constraintStart_toStartOf="@+id/tv_joinSeat"
+                app:layout_constraintTop_toBottomOf="@+id/tv_joinSeat"
+                tools:text="20玫瑰一次" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/vg_userInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{seatInfo.roomUserSeatInfo==null?View.INVISIBLE:View.VISIBLE}"
+            tools:visibility="visible">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/vg_userStatusChange"
+                android:visibility="@{!seatInfo.videoUser|| seatInfo.ifLeave?View.VISIBLE:View.INVISIBLE}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_avatarBg"
+                    maskUrl="@{seatInfo.roomUserSeatInfo.portrait}"
+                    maskRadius="@{25}"
+                    maskSampling="@{2}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    tools:ignore="MissingConstraints" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg_seat_leave" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_statusDesc"
+                    style="@style/common_white_shadow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='@{seatInfo.ifLeave?"暂时离开":"摄像头已关闭"}'
+                    tools:text="暂时离开"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_16"
+                    app:fontType="@string/fontMedium" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_avatar"
+                imageUrl="@{seatInfo.roomUserSeatInfo.portrait}"
+                android:layout_width="@dimen/dp_28"
+                android:layout_height="@dimen/dp_28"
+                android:layout_marginStart="@dimen/dp_6"
+                android:layout_marginBottom="@dimen/dp_8"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:riv_oval="true"
+                tools:src="@color/customer_service_blue" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_m_2"
+                android:paddingStart="@dimen/dp_4"
+                android:text="@{seatInfo.roomUserSeatInfo.nickName}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                app:fontType="@string/fontMedium"
+                style="@style/common_white_shadow"
+                app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+                app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+                tools:text="王地主" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_m_2"
+                android:paddingStart="@dimen/dp_4"
+                android:text="@{seatInfo.roomUserSeatInfo.strNoGenderInfo}"
+                android:textColor="@color/whiteAlpha30"
+                android:textSize="@dimen/sp_12"
+                style="@style/common_white_shadow"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+                app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+                tools:text="30岁" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_28"
+                android:layout_height="@dimen/dp_28"
+                android:layout_margin="@dimen/dp_4"
+                android:src="@drawable/icon_rose_fill"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_videoStatus"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_6"
+                android:layout_marginBottom="@dimen/dp_4"
+                android:src="@drawable/icon_video_on_fill"
+                app:layout_constraintBottom_toTopOf="@+id/iv_voiceStatus"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_voiceStatus"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_6"
+                android:layout_marginBottom="@dimen/dp_6"
+                android:src="@drawable/icon_voice_on_fill"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.lihang.ShadowLayout>
+
+
+</layout>

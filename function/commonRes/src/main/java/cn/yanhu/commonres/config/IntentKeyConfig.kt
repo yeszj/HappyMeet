@@ -13,4 +13,5 @@ object IntentKeyConfig {
     const val ID = "id"
     const val ROOM_ID  = "roomId"
     const val ROOM_TYPE = "roomType"
+    const val PAGE = "page"
 }

@@ -74,4 +74,5 @@
         <attr name="customNormalBg" format="reference" />
         <attr name="showIconPosition" format="integer" />
     </declare-styleable>
+
 </resources>

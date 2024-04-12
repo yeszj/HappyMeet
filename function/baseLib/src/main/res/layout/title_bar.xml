@@ -28,15 +28,18 @@
         android:textColor="#333333"
         android:textSize="@dimen/sp_16"
         app:fontType="@string/fontMedium" />
-
+    <FrameLayout
+        android:id="@+id/fl_customLeftView"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/tv_leftTitle" />
     <cn.yanhu.baselib.view.CustomFontTextView
         android:id="@+id/titleName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:ellipsize="end"
-        android:maxEms="10"
-        android:maxLines="1"
         android:textColor="#333333"
         android:textSize="@dimen/sp_16"
         app:fontType="@string/fontMedium"

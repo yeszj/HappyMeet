@@ -2,7 +2,10 @@ package cn.yanhu.agora.api
 
 import cn.yanhu.agora.bean.ConfigSdkVersion
 import cn.yanhu.agora.bean.RoomConfigInfo
+import cn.yanhu.agora.bean.RoomDetailInfo
 import cn.yanhu.agora.bean.request.CreateRoomRequest
+import cn.yanhu.commonres.bean.ExpressionInfo
+import cn.yanhu.commonres.bean.response.RoomListResponse
 import cn.zj.netrequest.status.BaseBean
 import retrofit2.http.*
 
@@ -12,6 +15,12 @@ import retrofit2.http.*
  * desc:
  */
 interface AgoraApiService {
+
+    @GET("app/v1/room/list")
+    suspend fun getRoomList(
+        @Query("type") type: Int,
+        @Query("page") page: Int
+    ): BaseBean<RoomListResponse>
 
     @GET("app/v1/agora/getAgoraToken")
     suspend fun getAgoraToken(
@@ -31,4 +40,13 @@ interface AgoraApiService {
     suspend fun createRoom(
         @Body roomRequest: CreateRoomRequest
     ): BaseBean<String>
+
+    @GET("app/v1/room/getRoomDetail")
+    suspend fun getRoomDetail(
+        @Query("roomId") roomId: String, @Query("roomType") roomType: Int
+    ): BaseBean<RoomDetailInfo>
+
+    @GET("app/v1/room/getExpression")
+    suspend fun getExpression(
+    ): BaseBean<List<ExpressionInfo>>
 }

@@ -51,9 +51,9 @@ dependencies {
     val smartRefreshVersion = rootProject.ext.get("smartRefresh")
     //https://github.com/scwang90/SmartRefreshLayout
     api("io.github.scwang90:refresh-layout-kernel:${smartRefreshVersion}")      //核心必须依赖
-   // api("io.github.scwang90:refresh-header-classics:${smartRefreshVersion}")    //经典刷新头
+    // api("io.github.scwang90:refresh-header-classics:${smartRefreshVersion}")    //经典刷新头
     api("io.github.scwang90:refresh-footer-classics:${smartRefreshVersion}")      //经典加载
-    api ("io.github.scwang90:refresh-header-material:${smartRefreshVersion}")     //谷歌刷新头
+    api("io.github.scwang90:refresh-header-material:${smartRefreshVersion}")     //谷歌刷新头
     api("me.weishu:free_reflection:3.0.1")
     api("com.github.gzu-liyujiang:Android_CN_OAID:4.2.4")
     //https://github.com/CymChad/BaseRecyclerViewAdapterHelper
@@ -83,23 +83,26 @@ dependencies {
     api("io.github.lucksiege:ucrop:v3.11.1")
 
     api("androidx.core:core-splashscreen:1.1.0-alpha02")
-    api ("com.github.getActivity:ToastUtils:10.5")
+    api("com.github.getActivity:ToastUtils:10.5")
     api("com.alibaba:arouter-api:${rootProject.ext.get("arouter")}")
 
-    api ("com.makeramen:roundedimageview:2.3.0")
+    api("com.makeramen:roundedimageview:2.3.0")
 
 
-    api ("pl.droidsonroids.gif:android-gif-drawable:1.2.27")
+    api("pl.droidsonroids.gif:android-gif-drawable:1.2.27")
 
-    api ("io.github.jeremyliao:live-event-bus-x:1.8.0")
+    api("io.github.jeremyliao:live-event-bus-x:1.8.0")
 
     //选择器
-    api ("com.github.gzu-liyujiang.AndroidPicker:WheelPicker:4.1.11")
+    api("com.github.gzu-liyujiang.AndroidPicker:WheelPicker:4.1.11")
 
-    api ("androidx.room:room-runtime:2.6.1")
+    api("androidx.room:room-runtime:2.6.1")
     //noinspection KaptUsageInsteadOfKsp
-    kapt ("androidx.room:room-compiler:2.6.1")
-    api ("com.cpiz.bubbleview:bubbleview:1.0.2")
+    kapt("androidx.room:room-compiler:2.6.1")
+    api("com.cpiz.bubbleview:bubbleview:1.0.2")
     api("com.hyman:flowlayout-lib:1.1.2")
     api("net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3")
+    //https://github.com/getActivity/Logcat
+    debugImplementation("com.github.getActivity:Logcat:11.86")
+    api("com.github.getActivity:EasyWindow:10.6")
 }

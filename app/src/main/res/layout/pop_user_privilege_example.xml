@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="privilegeInfo"
+            type="cn.huanyuan.happymeet.bean.LevelPrivilegeInfo" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_corner_20"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_30"
+        android:paddingBottom="@dimen/dp_20">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{privilegeInfo.privilegeTitle}"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium"
+            tools:text="等级图标" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_4"
+            android:text="@{privilegeInfo.lockLevel}"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_12"
+            tools:text="Lv.1解锁" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_example"
+            android:layout_width="wrap_content"
+            android:maxWidth="@dimen/dp_280"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_24"
+            android:adjustViewBounds="true" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_24"
+            android:text="特权说明"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_10"
+            android:text="@{privilegeInfo.privilegeDesc}"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_12"
+            tools:text="等级越高图标越炫丽，会展示在个人主页、直播间等公开场景，尊贵地位的绝对象征。" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_style"
+            placeholderId="@{-1}"
+            android:layout_width="@dimen/dp_280"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_24"
+            android:adjustViewBounds="true"/>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_sure"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_24"
+            android:background="@drawable/white_corner_30"
+            android:backgroundTint="@color/colorMain"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontType="@string/fontBold" />
+    </LinearLayout>
+</layout>

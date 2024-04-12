@@ -8,14 +8,14 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
+        android:largeHeap="true"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HappyMeet"
         tools:targetApi="31">
-        <meta-data
-            android:name="com.netease.nim.appKey"
-            android:value="5657149e53ac213d7ac7293ee6ad80bd" />
+
 
         <activity
             android:name=".ui.splash.SplashActivity"
@@ -67,5 +67,7 @@
         <activity android:name=".ui.userinfo.dressUp.DressUpCenterActivity"
             android:launchMode="singleTask"/>
         <activity android:name=".ui.userinfo.dressUp.MyDressUpActivity"/>
+        <activity android:name=".ui.system.SecurityCenterActivity"/>
+        <activity android:name=".ui.setting.PrivacySwitchSetActivity" />
     </application>
 </manifest>

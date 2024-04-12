@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import cn.huanyuan.happymeet.R
 import cn.huanyuan.happymeet.databinding.ActivityUserLevelBinding
+import cn.huanyuan.happymeet.func.dialog.UserPrivilegeExamplePop
 import cn.huanyuan.happymeet.ui.userinfo.UserViewModel
 import cn.huanyuan.happymeet.ui.userinfo.adapter.UserLevelHeadAdapter
 import cn.huanyuan.happymeet.ui.userinfo.adapter.UserLevelPrivilegeAdapter
@@ -29,6 +30,12 @@ class UserLevelActivity : BaseActivity<ActivityUserLevelBinding, UserViewModel>(
         setFullScreenStatusBar()
         helper = QuickAdapterHelper.Builder(privilegeAdapter)
             .build()
+        privilegeAdapter.setOnItemClickListener { adapter, _, position ->
+            if (position!=adapter.itemCount-1){
+                val item = adapter.getItem(position)
+                UserPrivilegeExamplePop.showDialog(mContext, item!!)
+            }
+        }
         mBinding.recyclerView.itemAnimator?.changeDuration = 0
         mBinding.recyclerView.adapter = helper.adapter
         helper.addBeforeAdapter(0, headAdapter.apply {

@@ -1,8 +1,8 @@
 package cn.huanyuan.happymeet.func.dialog
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.text.TextUtils
+import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.happymeet.R
 import cn.huanyuan.happymeet.databinding.PopDressGoodsBuyBinding
 import cn.huanyuan.happymeet.net.rxApi
@@ -31,12 +31,12 @@ import com.lxj.xpopup.core.BottomPopupView
  */
 @SuppressLint("ViewConstructor")
 class DressGoodsBuyPop(
-    context: Context,
+    val mContext: FragmentActivity,
     val item: DressUpInfo,
     val type: Int,
-    val roseBalance: String
+    private val roseBalance: String
 ) :
-    BottomPopupView(context) {
+    BottomPopupView(mContext) {
     override fun getImplLayoutId(): Int {
         return R.layout.pop_dress_goods_buy
     }
@@ -119,15 +119,19 @@ class DressGoodsBuyPop(
         return true
     }
 
+    private var roseRechargePop:RoseRechargePop?=null
     private fun showRechargeDialog() {
-
+        if (CommonUtils.isPopShow(roseRechargePop)){
+            return
+        }
+        roseRechargePop = RoseRechargePop.showDialog(mContext)
     }
 
 
     companion object {
         @JvmStatic
         fun showDialog(
-            mContext: Context,
+            mContext: FragmentActivity,
             item: DressUpInfo,
             type: Int,
             roseBalance: String

@@ -10,7 +10,7 @@ import java.security.MessageDigest
  */
 object Md5utils {
     fun getMD5Str(str: String): String {
-        var messageDigest: MessageDigest? = null
+        val messageDigest: MessageDigest?
         try {
             messageDigest = MessageDigest.getInstance("MD5")
             messageDigest.reset()

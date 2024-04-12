@@ -5,7 +5,9 @@ import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.ProgressBar
+import cn.huanyuan.happymeet.net.HttpHeadConfig
 import cn.yanhu.baselib.view.TitleBar
+import com.google.gson.Gson
 
 /**
  * Created by Ace on 2018/5/11.
@@ -20,6 +22,8 @@ class MyWebChromeClient(titleView: TitleBar) : WebChromeClient() {
             if (newProgress < 100) {
                 progressBar!!.visibility = View.VISIBLE
             } else {
+                val s = Gson().toJson(HttpHeadConfig.getHeader())
+                view.loadUrl("javascript:saveDeviceInfo($s)")
                 progressBar!!.visibility = View.GONE
             }
         }

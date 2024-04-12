@@ -78,6 +78,9 @@ class TabWalletFrg : BaseFragment<FrgTabWalletBinding, MainViewModel>(
         mBinding.tvDetail.setOnSingleClickListener {
             WalletDetailActivity.lunch(mContext, WalletDetailActivity.TYPE_COIN_DETAIL)
         }
+        mBinding.tvRank.setOnSingleClickListener {
+            MyInviteRecordActivity.lunch(mContext)
+        }
     }
 
     override fun initRefresh() {

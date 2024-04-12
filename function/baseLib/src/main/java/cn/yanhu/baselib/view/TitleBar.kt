@@ -51,7 +51,7 @@ class TitleBar : LinearLayout {
     private var titleView: ViewGroup? = null
     private var flCustomRightView: FrameLayout? = null
     private var tvLeftTitle: TextView? = null
-
+    private var flCustomLeftView:FrameLayout?=null
     constructor(context: Context) : super(context) {
         init(context, null)
     }
@@ -176,13 +176,21 @@ class TitleBar : LinearLayout {
         titleView = findViewById(R.id.titleView)
         flCustomRightView = findViewById(R.id.fl_customRightView)
         tvLeftTitle = findViewById(R.id.tv_leftTitle)
+        flCustomLeftView = findViewById(R.id.fl_customLeftView)
     }
 
 
     fun setCustomRightView(layoutId: Int) {
         val view = LayoutInflater.from(context).inflate(layoutId, null)
-        flCustomRightView!!.addView(view)
+        flCustomRightView?.addView(view)
         view.setOnClickListener { view1: View? -> titleBtnClickListener?.rightButtonOnClick(view1) }
+    }
+
+    fun setCustomLeftView(view: View) {
+        flCustomLeftView?.addView(view)
+    }
+    fun getLeftView(): View? {
+        return flCustomLeftView
     }
 
     fun getRightView(): View? {

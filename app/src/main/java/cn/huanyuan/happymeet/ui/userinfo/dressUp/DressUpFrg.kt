@@ -12,6 +12,8 @@ import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.zj.netrequest.ext.parseState
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.pcl.sdklib.listener.OnPayResultListener
+import com.pcl.sdklib.manager.PayManager
 
 /**
  * @author: zhengjun
@@ -84,6 +86,11 @@ class DressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
             item?.isHave = true
             dressUpItemAdapter.notifyItemChanged(indexOf)
         }
+        PayManager.registerPayResult(mContext, object : OnPayResultListener {
+            override fun onPaySuccess() {
+                requestData()
+            }
+        })
     }
 
     companion object {

@@ -1,29 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:orientation="vertical">
 
         <cn.yanhu.baselib.view.TitleBar
             android:id="@+id/title_bar"
             android:layout_width="match_parent"
-            app:titleBgColor="@color/white"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:titleLeftName="郑俊"
+            app:titleRightIco="@drawable/svg_more_dot_black"
+            app:titleBgColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/vg_addFriendTips"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_47"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="@color/blackAlpha96"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/dp_12">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="加好友对方优先看到你"
+                android:textColor="@color/color_222222"
+                android:textSize="@dimen/sp_14" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_addFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_27"
+                android:background="@drawable/white_corner_20"
+                android:backgroundTint="@color/colorMain"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="加好友丨20玫瑰"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13" />
+        </LinearLayout>
+
+        <cn.yanhu.imchat.view.P2pChatTopUserView
+            android:id="@+id/userView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10" />
+
+
 
         <FrameLayout
             android:id="@+id/containerLayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_bar" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </LinearLayout>
 </layout>

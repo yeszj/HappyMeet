@@ -29,6 +29,7 @@ object RouterPath {
 
     /*imChat module下的跳转配置start*/
     const val ROUTER_GROUP_DETAIL = "/imChat/groupDetail"
+
     /*imChat module下的跳转配置end*/
 
 
@@ -45,13 +46,7 @@ object RouterPath {
     //美颜
     const val ROUTER_BEAUTIFUL_FACE= "/agora/beautifulFace"
 
-    //相亲房(大厅/专属)
-    const val ROUTER_BLIND_ROOM= "/agora/blindRoom"
-
-    //7人交友房间/天使房
-    const val ROUTER_SEVEN_ROOM= "/agora/sevenRoom"
-
-    //7人交友房间/天使房
-    const val ROUTER_AUCTION_ROOM= "/agora/auctionRoom"
+    //直播房
+    const val ROUTER_LIVE_ROOM= "/agora/liveRoom"
     /*agora module下的跳转配置end*/
 }

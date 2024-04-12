@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_bg_main"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:ignore="MissingDefaultResource">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/svg_common_empty"
+                android:tint="@color/white" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_10"
+                android:text="当前版本不支持此直播,请升级版本"
+                android:textColor="@color/whiteColorAlpha50"
+                android:textSize="@dimen/sp_14" />
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>

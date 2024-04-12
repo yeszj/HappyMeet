@@ -53,7 +53,7 @@ dependencies {
     api("com.umeng.umsdk:share-wx:7.3.3")
     api("com.umeng.umsdk:share-core:7.3.3")
     // 友盟统计SDK
-    api("com.umeng.umsdk:common:9.6.6")// 必选
+    api("com.umeng.umsdk:common:9.6.7")// 必选
     api("com.umeng.umsdk:asms:1.8.0")// 必选
 
     //七鱼客服

@@ -18,31 +18,35 @@ fun <T> request(
     listener: OnRequestResultListener<T>,
     isShowToast: Boolean = true,
 ) {
-    GlobalScope.launch {
-        kotlin.runCatching {
-            block()
-        }.onSuccess {
-            ThreadUtils.runOnUiThread {
-                if (it.code == ErrorCode.SUCCESS) {
-                    listener.onSuccess(it)
-                } else {
-                    listener.onFail(it.code, it.msg)
-                    dealNetException(CustomException(it.code, it.msg), isShowToast)
+    val activity = ActivityUtils.getTopActivity() as FragmentActivity?
+    activity?.apply {
+        this.lifecycleScope.launch {
+            kotlin.runCatching {
+                block()
+            }.onSuccess {
+                ThreadUtils.runOnUiThread {
+                    if (it.code == ErrorCode.SUCCESS) {
+                        listener.onSuccess(it)
+                    } else {
+                        listener.onFail(it.code, it.msg)
+                        dealNetException(CustomException(it.code, it.msg), isShowToast)
+                    }
                 }
-            }
-        }.onFailure {
-            ThreadUtils.runOnUiThread {
-                if (it is CustomException) {
-                    listener.onFail(it.code, it.msg)
-                } else {
-                    listener.onFail(-1, it.message)
-                }
-                if (isShowToast && it !is CancellationException) {
-                    ToastUtils.show(it.message)
+            }.onFailure {
+                ThreadUtils.runOnUiThread {
+                    if (it is CustomException) {
+                        listener.onFail(it.code, it.msg)
+                    } else {
+                        listener.onFail(-1, it.message)
+                    }
+                    if (isShowToast && it !is CancellationException) {
+                        ToastUtils.show(it.message)
+                    }
                 }
             }
         }
     }
+
 }
 
 

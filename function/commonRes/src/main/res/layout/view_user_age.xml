@@ -18,4 +18,4 @@
     android:textSize="@dimen/sp_12"
     app:fontType="@string/fontMedium"
     app:endColor="@color/white"
-    tools:text="25" />
+    android:text="25" />

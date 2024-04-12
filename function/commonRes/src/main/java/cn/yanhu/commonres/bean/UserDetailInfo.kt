@@ -3,13 +3,14 @@ package cn.yanhu.commonres.bean
 import androidx.databinding.Bindable
 import cn.yanhu.commonres.manager.RoomTypeManager
 import cn.zj.netrequest.BR
+import java.io.Serializable
 
 /**
  * @author: zhengjun
  * created: 2024/2/6
  * desc:
  */
-class UserDetailInfo : BaseUserInfo() {
+class UserDetailInfo : BaseUserInfo(),Serializable {
     var isMatchmaker = false ////是否是月老/红娘
     var banners: MutableList<BannerBean> = mutableListOf()
     var beautifulIdImg: String? = ""
@@ -23,6 +24,9 @@ class UserDetailInfo : BaseUserInfo() {
     var roomType:Int = 0
     var isAdmin:Boolean = false
     var thumbnail: List<String> = mutableListOf()
+    var basicTagInfo:MutableList<String> = mutableListOf()
+    var isFriend:Boolean = false
+    var needRoseNum:Int = 0
     fun isBlinding():Boolean{
         return RoomTypeManager.isBlinding(roomType)
     }

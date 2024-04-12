@@ -7,7 +7,7 @@
         <variable
             name="roomBean"
             type="cn.yanhu.commonres.bean.RoomListBean" />
-
+        <import type="cn.yanhu.commonres.R"/>
         <import type="android.view.View" />
     </data>
 
@@ -20,6 +20,7 @@
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_cover"
             imageUrl="@{roomBean.coverUrl}"
+            placeholderId="@{R.drawable.pic_default_bg}"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_200"
             android:scaleType="centerCrop"

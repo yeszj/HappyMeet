@@ -1,7 +1,6 @@
 package cn.huanyuan.happymeet.func.dialog
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.text.TextUtils
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.happymeet.R
@@ -29,7 +28,7 @@ import com.lxj.xpopup.core.BottomPopupView
  */
 @SuppressLint("ViewConstructor")
 class DressUpOperatePop(
-    context: Context,
+    val context: FragmentActivity,
     val item: DressUpInfo,
     val type: Int,
     private val roseBalance: String

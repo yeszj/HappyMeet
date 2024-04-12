@@ -12,8 +12,8 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewPager2Helper
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.widget.indicator.CommonIndicatorAdapter
-import cn.yanhu.imchat.conversation.ConversationFrg
-import cn.yanhu.imchat.conversation.GroupConversationFrg
+import cn.yanhu.imchat.ui.conversation.ConversationFrg
+import cn.yanhu.imchat.ui.conversation.GroupConversationFrg
 import cn.yanhu.imchat.pop.CreateGroupPop
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 

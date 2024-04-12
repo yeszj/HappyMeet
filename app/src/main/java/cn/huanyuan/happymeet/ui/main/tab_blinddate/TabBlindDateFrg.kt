@@ -52,9 +52,9 @@ class TabBlindDateFrg : BaseFragment<FrgTabBlinddateBinding, MainViewModel>(
 
     private var frgList: ArrayList<Fragment> = arrayListOf()
     private fun initVpData() {
-        frgList.add(BlindDateUserListFrg())
+        frgList.add(BlindDateUserRoomListFrg())
 
-        frgList.add(BlindUserListItemFrg.newsInstance(BlindUserListItemFrg.TYPE_FRIENDS))
+        frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_FRIENDS))
 
         mBinding.viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
         mBinding.viewPager.offscreenPageLimit = frgList.size

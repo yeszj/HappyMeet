@@ -56,12 +56,17 @@ dependencies {
     api("xyz.doikki.android.dkplayer:player-ijk:3.3.7")
     api("xyz.doikki.android.dkplayer:videocache:3.3.7")
     //api("xyz.doikki.android.dkplayer:player-exo:3.3.7")
-    // 会话列表功能组件
-    api("com.netease.yunxin.kit.conversation:conversationkit-ui:9.7.0")
-    // 聊天功能组件
-    api("com.netease.yunxin.kit.chat:chatkit-ui:9.7.0")
+
+
     api ("com.github.jd-alexander:LikeButton:0.2.3")
     kapt ("androidx.room:room-compiler:2.6.1")
 
     api ("com.google.zxing:core:3.3.3")
+
+    //https://github.com/airbnb/lottie-android
+    api ("com.airbnb.android:lottie:6.4.0")
+
+    //https://gitcode.com/lihangleo2/ViewPager2Demo/overview
+    api("com.github.lihangleo2:SmartViewPager2Adapter:2.1.3")
+
 }

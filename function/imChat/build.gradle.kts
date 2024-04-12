@@ -54,4 +54,11 @@ dependencies {
     implementation("com.meizu.flyme.internet:push-internal:4.1.0")
     implementation("com.huawei.agconnect:agconnect-core:1.8.1.300")
     kapt ("com.alibaba:arouter-compiler:${rootProject.ext.get("arouter")}")
+
+    // 会话列表功能组件
+    api("com.netease.yunxin.kit.conversation:conversationkit-ui:9.7.0")
+    // 聊天功能组件
+    api("com.netease.yunxin.kit.chat:chatkit-ui:9.7.0")
+//    api("com.netease.yunxin.kit.call:call-ui:2.2.0")
+//    api("com.netease.nimlib:avsignalling:9.14.2")
 }

@@ -15,9 +15,11 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.EditPhotoInfo
 import cn.yanhu.commonres.manager.ImageSelectManager
+import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.upload.UploadFileClient
 import cn.zj.netrequest.upload.UploadFileProgressListener
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.luck.picture.lib.config.PictureMimeType
@@ -29,6 +31,7 @@ import com.luck.picture.lib.interfaces.OnResultCallbackListener
  * created: 2024/3/12
  * desc:投诉与反馈
  */
+@Route(path =  RouterPath.ROUTER_REPORT)
 class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
     R.layout.activity_feedback,
     SystemViewModel::class.java

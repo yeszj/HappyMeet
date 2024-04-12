@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.yanhu.baselib.view.CustomFontTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingEnd="@dimen/dp_8"
+    android:paddingStart="@dimen/dp_6"
+    android:paddingVertical="@dimen/dp_2"
+    android:background="@drawable/white_corner_10"
+    android:backgroundTint="@color/blackAlpha96"
+    android:text="在线"
+    android:id="@+id/tv_tag"
+    android:textSize="@dimen/sp_12"
+    app:fontType="@string/fontMedium"
+    android:gravity="center"
+    android:drawableStart="@drawable/svg_online"
+    android:layout_height="wrap_content">
+
+</cn.yanhu.baselib.view.CustomFontTextView>

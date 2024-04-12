@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.happymeet.databinding.AdapterHomepageHeadBinding
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.view.IconTagInfoView
+import com.chad.library.adapter4.BaseQuickAdapter.OnItemClickListener
 import com.chad.library.adapter4.BaseSingleItemAdapter
+
 
 /**
  * @author: zhengjun
@@ -27,6 +29,8 @@ class UserHomePageHeadAdapter :
             executePendingBindings()
         }
     }
+
+
 
     private fun AdapterHomepageHeadBinding.bindPersonInfoTag(item: UserDetailInfo?) {
         val personInfo = item?.personInfo

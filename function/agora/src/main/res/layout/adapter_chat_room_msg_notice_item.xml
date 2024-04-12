@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/white_corner_10"
+        android:backgroundTint="@color/blackAlpha80"
+        android:padding="@dimen/dp_10">
+
+        <cn.yanhu.commonres.view.highlightviewlib.HighlightTextView
+            android:id="@+id/tv_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="平台公示：平台只提供交友相亲介绍认识的服务，我们提倡文明直播、积极阳光交友，严谨涉黄、涉政、涉恐、低俗、辱骂等行为。发现建规行为将被封禁。保护网络绿色环境，从你我做起。"
+            android:textColor="#FFE086"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold|italic"
+            app:highlight_view_autoStart="true"
+            app:highlight_view_duration="2000"
+            app:highlight_view_highlightColor="#E6ffffff"
+            app:highlight_view_highlightRotateDegrees="30"
+            app:highlight_view_highlightWidth="@dimen/dp_120"
+            app:highlight_view_repeatCount="-1"
+            app:highlight_view_repeatMode="restart"
+            app:highlight_view_startDirection="from_left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--        <cn.yanhu.baselib.view.CustomFontTextView-->
+        <!--            android:id="@+id/tv_notice"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="平台公示：平台只提供交友相亲介绍认识的服务，我们提倡文明直播、积极阳光交友，严谨涉黄、涉政、涉恐、低俗、辱骂等行为。发现建规行为将被封禁。保护网络绿色环境，从你我做起。"-->
+        <!--            android:textColor="#FFE086"-->
+        <!--            android:textSize="@dimen/sp_13"-->
+        <!--            app:fontType="@string/fontMedium"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

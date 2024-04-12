@@ -170,4 +170,8 @@ object ViewUtils {
     fun setViewPadding(view: View?, padding: Int) {
         view?.setPadding(padding, padding, padding, padding)
     }
+
+    fun setViewPadding(view: View?, horizontalPadding: Int,verticalPadding: Int) {
+        view?.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
+    }
 }

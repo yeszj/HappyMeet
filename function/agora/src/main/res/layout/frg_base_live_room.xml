@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="roomInfo"
+            type="cn.yanhu.agora.bean.RoomDetailInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@drawable/shape_bg_main">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_roomCover"
+            imageUrl="@{roomInfo.coverUrl}"
+            placeholderId="@{-1}"
+            android:layout_width="@dimen/dp_34"
+            android:layout_height="@dimen/dp_34"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_40"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true"
+            tools:src="@drawable/avatar_male_normal" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_roomName"
+            style="@style/common_white_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_6"
+            android:text="@{roomInfo.roomName}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toEndOf="@+id/iv_roomCover"
+            app:layout_constraintTop_toTopOf="@+id/iv_roomCover"
+            tools:text="落落的相亲房" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            style="@style/common_white_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{"ID:"+roomInfo.roomId}'
+            android:textColor="@color/whiteColorAlpha50"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_roomCover"
+            app:layout_constraintStart_toStartOf="@+id/tv_roomName"
+            tools:text="ID 24082" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_exit"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:padding="@dimen/dp_8"
+            android:src="@drawable/icon_room_exit"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_roomCover"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_roomCover" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_seat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/iv_roomCover"
+            app:spanCount="2" />
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/bgInput"
+            android:layout_width="@dimen/dp_137"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginBottom="@dimen/dp_12"
+            android:background="@drawable/white_corner_20"
+            android:backgroundTint="@color/blackAlpha80"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_16"
+            android:text="说点什么吧"
+            android:textColor="@color/whiteColorAlpha60"
+            android:textSize="@dimen/sp_12"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_extension"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:src="@drawable/icon_meme"
+            app:layout_constraintBottom_toBottomOf="@+id/bgInput"
+            app:layout_constraintEnd_toEndOf="@+id/bgInput"
+            app:layout_constraintTop_toTopOf="@+id/bgInput" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:src="@drawable/icon_room_gift"
+            app:layout_constraintBottom_toBottomOf="@+id/bgInput"
+            app:layout_constraintEnd_toStartOf="@+id/iv_message"
+            app:layout_constraintTop_toTopOf="@+id/bgInput" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_message"
+            android:layout_width="@dimen/dp_47"
+            android:layout_height="@dimen/dp_43"
+            android:layout_marginBottom="@dimen/dp_7"
+            android:src="@drawable/icon_room_message"
+            app:layout_constraintBottom_toBottomOf="@+id/bgInput"
+            app:layout_constraintEnd_toStartOf="@+id/iv_setting"
+            app:layout_constraintTop_toTopOf="@+id/bgInput" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_chatUnReadCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_unread_msg"
+            android:backgroundTint="#FF2A68"
+            android:gravity="center"
+            android:minWidth="@dimen/dp_23"
+            android:paddingHorizontal="@dimen/dp_6"
+            android:paddingVertical="@dimen/dp_2"
+            android:text="99"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            app:fontType="@string/fontBold"
+            app:layout_constraintEnd_toEndOf="@+id/iv_message"
+            app:layout_constraintTop_toTopOf="@+id/iv_message" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:src="@drawable/icon_room_setting"
+            app:layout_constraintBottom_toBottomOf="@+id/bgInput"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/bgInput" />
+
+        <View
+            android:id="@+id/viewMask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_alpha60"
+            android:visibility="invisible" />
+
+        <cn.yanhu.baselib.widget.RecyclerViewAtViewPager2
+            android:id="@+id/rv_chat"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dp_300"
+            android:layout_marginEnd="@dimen/dp_90"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:fadingEdgeLength="@dimen/dp_15"
+            android:paddingStart="@dimen/dp_10"
+            android:requiresFadingEdge="vertical"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/bgInput"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.commonres.view.floatScreenView.RewardLayout
+            android:id="@+id/giftAnimView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_108"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            app:gift_item_layout="@layout/gift_animation_item"
+            app:layout_constraintStart_toStartOf="@+id/rv_chat"
+            app:layout_constraintTop_toTopOf="@+id/rv_chat"
+            app:max_gift="2" />
+
+        <cn.yanhu.commonres.view.floatScreenView.RewardLayout
+            android:id="@+id/userEnterView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            app:gift_item_layout="@layout/user_enter_animation_item"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_chat"
+            app:layout_constraintStart_toStartOf="@+id/rv_chat"
+            app:max_gift="1" />
+
+        <com.opensource.svgaplayer.SVGAImageView
+            android:id="@+id/svg_giftAnim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:scaleType="centerCrop"
+            app:autoPlay="false"
+            app:clearsAfterDetached="true"
+            app:fillMode="Clear"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:loopCount="1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

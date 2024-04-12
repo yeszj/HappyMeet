@@ -2,10 +2,10 @@ package cn.yanhu.commonres.router
 
 import android.os.Bundle
 import android.text.TextUtils
-import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.config.IntentKeyConfig
-import cn.yanhu.commonres.manager.RoomTypeManager
 import com.alibaba.android.arouter.launcher.ARouter
+import com.blankj.utilcode.util.GsonUtils
 
 /**
  * @author: witness
@@ -84,23 +84,24 @@ object RouteIntent {
     }
 
     fun lunchToLiveRoom(roomType: Int, roomId: String) {
-        var routePath = ""
-        if (RoomTypeManager.isBlinding(roomType)) {
-            routePath = RouterPath.ROUTER_BLIND_ROOM
-        } else if (RoomTypeManager.isSevenRoom(roomType)) {
-            routePath = RouterPath.ROUTER_SEVEN_ROOM
-        } else if (RoomTypeManager.isAuctionRoom(roomType)) {
-            routePath = RouterPath.ROUTER_AUCTION_ROOM
-        }
-        if (!TextUtils.isEmpty(routePath)) {
-            ARouter.getInstance().build(routePath)
-                .withString(IntentKeyConfig.ROOM_ID, roomId)
-                .withInt(IntentKeyConfig.ROOM_TYPE, roomType)
-                .navigation()
-        } else {
-            showToast("请升级版本")
-        }
-
+        val roomList: MutableList<RoomListBean> = mutableListOf()
+        val roomListBean = RoomListBean()
+        roomListBean.roomId = roomId
+        roomListBean.roomType = roomType
+        roomList.add(roomListBean)
+        ARouter.getInstance().build(RouterPath.ROUTER_LIVE_ROOM)
+            .withString(IntentKeyConfig.DATA, GsonUtils.toJson(roomList))
+            .navigation()
     }
+
+    fun lunchToLiveRoom(roomList: MutableList<RoomListBean>,page:Int,roomId: String) {
+        ARouter.getInstance().build(RouterPath.ROUTER_LIVE_ROOM)
+            .withString( IntentKeyConfig.DATA, GsonUtils.toJson(roomList))
+            .withString(IntentKeyConfig.ROOM_ID,roomId)
+            .withInt(IntentKeyConfig.PAGE,page)
+            .navigation()
+    }
+
+
     /*agora module下的跳转配置end*/
 }

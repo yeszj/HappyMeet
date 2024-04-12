@@ -107,4 +107,10 @@
         <item>22</item>
         <item>24</item>
     </string-array>
+
+    <string-array name="visitorRule" tools:ignore="ExtraTranslation">
+        <item>不限性别</item>
+        <item>仅男性可进</item>
+        <item>仅女性可进</item>
+    </string-array>
 </resources>

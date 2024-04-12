@@ -3,10 +3,14 @@ package cn.yanhu.commonres.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
+import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.commonres.R
 import cn.yanhu.commonres.bean.TagInfo
 
@@ -18,6 +22,7 @@ import cn.yanhu.commonres.bean.TagInfo
 class IconTagInfoView : LinearLayout {
     private lateinit var tvTag: AppCompatTextView
     private lateinit var ivIcon:AppCompatImageView
+    private lateinit var vgTag:ViewGroup
     constructor(context: Context) : super(context) {
         initView(context)
     }
@@ -38,6 +43,14 @@ class IconTagInfoView : LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.view_icon_tag, this, true)
         tvTag = findViewById(R.id.tv_tag)
         ivIcon = findViewById(R.id.iv_icon)
+        vgTag = findViewById(R.id.vg_tag)
+    }
+
+    fun setTagValue(value:String){
+        tvTag.text = value
+        ivIcon.visibility = View.GONE
+        ViewUtils.setViewPadding(vgTag,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_8),CommonUtils.getDimension(
+            com.zj.dimens.R.dimen.dp_4))
     }
 
     fun setTagValue(tagInfo:TagInfo){

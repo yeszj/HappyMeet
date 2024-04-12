@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package cn.yanhu.baselib.utils
 
 import android.annotation.SuppressLint
@@ -24,21 +26,23 @@ object WebViewUtil {
             javaScriptCanOpenWindowsAutomatically = true
             loadsImagesAutomatically = true
             domStorageEnabled = true
-            setSupportZoom(true)
+            builtInZoomControls = true
+            displayZoomControls = false
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             loadWithOverviewMode = true
             allowFileAccess = true
-            setNeedInitialFocus(false)
+            allowContentAccess = true
+            defaultTextEncodingName = "utf-8"
             allowFileAccessFromFileURLs = true
             allowUniversalAccessFromFileURLs = true
-            loadWithOverviewMode = true
-            pluginState = WebSettings.PluginState.ON
-            setGeolocationEnabled(true)
-            cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+            cacheMode = WebSettings.LOAD_DEFAULT
             databaseEnabled = true
             databasePath = "/data/data/"+ ActivityUtils.getTopActivity().packageName+"/databases/"
         }
+
+        webView.isDrawingCacheEnabled = true
         webView.isVerticalScrollBarEnabled = false
+        WebView.setWebContentsDebuggingEnabled(true)
        // webView.addJavascriptInterface(JsBridge(webView), "AppJs")
         dealJavascriptLeak(webView)
     }

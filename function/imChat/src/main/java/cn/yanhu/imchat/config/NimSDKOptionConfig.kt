@@ -14,6 +14,7 @@ import com.netease.nimlib.sdk.SDKOptions
 import com.netease.nimlib.sdk.StatusBarNotificationConfig
 import com.netease.nimlib.sdk.StatusBarNotificationFilter
 import com.netease.nimlib.sdk.mixpush.MixPushConfig
+import com.netease.nimlib.sdk.msg.constant.NotificationExtraTypeEnum
 import com.netease.yunxin.kit.common.utils.ScreenUtils.getDisplayWidth
 import java.io.IOException
 
@@ -53,6 +54,8 @@ object NimSDKOptionConfig {
         config.notificationEntrance = T::class.java
         config.notificationFilter =
             StatusBarNotificationFilter { StatusBarNotificationFilter.FilterPolicy.PERMIT }
+        config.downTimeEnableNotification = false
+        config.notificationExtraType = NotificationExtraTypeEnum.JSON_ARR_STR
         options.statusBarNotificationConfig = config
     }
 
@@ -63,7 +66,7 @@ object NimSDKOptionConfig {
         // SDK statusBarNotificationConfig 生效
         config.notificationColor = Color.parseColor("#3a9efb")
         config.notificationSound = NOTIFY_SOUND_KEY
-        config.notificationFoldStyle = NotificationFoldStyle.ALL
+        config.notificationFoldStyle = NotificationFoldStyle.CONTACT
         config.downTimeEnableNotification = true
         config.ledARGB = Color.GREEN
         config.ledOnMs = LED_ON_MS

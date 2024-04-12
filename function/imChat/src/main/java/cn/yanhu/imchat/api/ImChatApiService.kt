@@ -1,9 +1,13 @@
 package cn.yanhu.imchat.api
 
+import cn.yanhu.commonres.bean.UserDetailInfo
+import cn.yanhu.imchat.bean.GetChatGroupRequest
 import cn.yanhu.imchat.bean.GetChatUsersRequest
 import cn.yanhu.imchat.bean.GroupBean
+import cn.yanhu.imchat.bean.GroupChatPageInfo
 import cn.yanhu.imchat.bean.GroupDetailInfo
 import cn.yanhu.imchat.bean.GroupMemberData
+import cn.yanhu.imchat.bean.GroupOnlineData
 import cn.zj.netrequest.status.BaseBean
 import com.netease.yunxin.kit.corekit.im.model.UserInfo
 import retrofit2.http.Body
@@ -33,15 +37,39 @@ interface ImChatApiService {
         @Body request: GetChatUsersRequest
     ): BaseBean<MutableList<UserInfo>>
 
+    @GET("app/v1/chat/getIntimateUsers")
+    suspend fun getIntimateUsers(
+    ): BaseBean<MutableList<String>>
+
+    @POST("app/v1/groupChat/getImGroupList")
+    suspend fun getGroupsInfo(
+        @Body request: GetChatGroupRequest
+    ): BaseBean<MutableList<GroupBean>>
+
     @GET("app/v1/groupChat/groupDetail")
     suspend fun getGroupDetail(
         @Query("groupId") groupId: String
     ): BaseBean<GroupDetailInfo>
 
+    @GET("app/v1/user/getUserInfoByUserId")
+    suspend fun getUserInfoByUserId(
+        @Query("userId") userId: String
+    ): BaseBean<UserDetailInfo>
+
     @GET("app/v1/groupChat/getGroupMember")
     suspend fun getGroupMember(
         @Query("groupId") groupId: String
     ): BaseBean<GroupMemberData>
+
+    @GET("app/v1/groupChat/getGroupOnlineUser")
+    suspend fun getOnlineUser(
+        @Query("groupId") groupId: String
+    ): BaseBean<GroupOnlineData>
+
+    @GET("app/v1/groupChat/getImGroupInfo")
+    suspend fun getImGroupInfo(
+        @Query("groupId") groupId: String
+    ): BaseBean<GroupChatPageInfo>
 
     @FormUrlEncoded
     @POST("app/v1/groupChat/setAdmin")
@@ -58,9 +86,25 @@ interface ImChatApiService {
         @Field("userId") userId: String
     ): BaseBean<Boolean>
 
+
     @FormUrlEncoded
     @POST("app/v1/groupChat/createGroup")
     suspend fun createGroup(
         @FieldMap map: MutableMap<String, String>
+    ): BaseBean<Boolean>
+
+
+    @FormUrlEncoded
+    @POST("app/v1/groupChat/setUserLimit")
+    suspend fun setUserLimit(
+        @Field("groupId") groupId: String,
+        @Field("visitorEnterRule") visitorEnterRule: Int
+    ): BaseBean<Boolean>
+
+    @FormUrlEncoded
+    @POST("app/v1/groupChat/exitGroup")
+    suspend fun exitGroup(
+        @Field("groupId") groupId: String,
+        @Field("type") type: Int
     ): BaseBean<Boolean>
 }

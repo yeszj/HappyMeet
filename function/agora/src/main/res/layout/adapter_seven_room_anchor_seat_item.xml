@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_155">
+
+        <include
+            android:id="@+id/anchorSeatInfo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            layout="@layout/adapter_seven_room_user_seat_item"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_142" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

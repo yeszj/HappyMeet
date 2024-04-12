@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="id"
+            type="java.lang.String" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:paddingStart="@dimen/dp_10"
+        android:layout_height="@dimen/dp_48">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="#F2F2F2"
+            android:layout_height="@dimen/dp_32"
+            android:paddingStart="@dimen/dp_4"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/dp_8"
+            android:gravity="center_vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:src="@drawable/svg_personal" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_14"
+                android:paddingStart="@dimen/dp_2"
+                android:text='@{"ID"+id}'
+                tools:text="ID22**111"
+                android:textColor="@color/fontTextColor" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/fontTextColor_alpha50"
+            android:text="存在违规行为"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="@dimen/dp_75"
+            android:layout_height="@dimen/dp_32"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:textColor="#FF453A"
+            android:text="永久封号"
+            android:textSize="@dimen/sp_16"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="#1AFF2A68"
+            android:layout_centerVertical="true"
+            android:gravity="center" />
+
+    </RelativeLayout>
+</layout>

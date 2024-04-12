@@ -23,6 +23,26 @@
             android:id="@+id/avatarView"
             android:layout_width="@dimen/dp_50"
             android:layout_height="@dimen/dp_50" />
+        <com.lihang.ShadowLayout
+            android:id="@+id/sl_groupRole"
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            app:hl_cornerRadius_rightBottom="@dimen/dp_12"
+            app:hl_startColor="#F8459B"
+            app:hl_endColor="#00F8459B"
+            android:visibility="invisible"
+            app:hl_angle="90"
+            app:hl_cornerRadius_leftBottom="@dimen/dp_12"
+            android:layout_height="@dimen/dp_20">
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_groupRole"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/sp_10"
+            android:text="我的"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"/>
+        </com.lihang.ShadowLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_online"
@@ -57,16 +77,16 @@
             app:fontType="@string/fontMedium"
             tools:text="能吃一杆能吃一杆能吃一杆能吃一杆能吃一杆" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_onlineCount"
             android:layout_width="wrap_content"
-            android:text="6人在线"
+            tools:text="6人在线"
             android:visibility="gone"
             android:paddingStart="@dimen/dp_5"
             android:paddingEnd="@dimen/dp_5"
             android:gravity="center"
             android:textSize="@dimen/sp_12"
-            android:layout_marginTop="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_23"
             android:textColor="@color/white"
             android:background="@drawable/tag_group_online"
             android:layout_height="@dimen/dp_16"/>

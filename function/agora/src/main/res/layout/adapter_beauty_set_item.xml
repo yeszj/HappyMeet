@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cn.yanhu.agora.R" />
+
+        <import type="androidx.core.content.ContextCompat" />
+        <variable
+            name="isCheck"
+            type="java.lang.Boolean"/>
+        <variable
+            name="beautyInfo"
+            type="cn.yanhu.agora.bean.BeautyBean" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/beautyInfo_ll"
+        android:layout_width="@dimen/dp_52"
+        android:layout_height="@dimen/dp_76"
+        android:layout_margin="@dimen/dp_5"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_52"
+            android:padding="@dimen/dp_10"
+            tools:background="@drawable/white_corner10_alpha90"
+            android:background="@{isCheck ? @drawable/white_corner10_alpha90 : @drawable/shape_transparent}"
+            android:src="@{ContextCompat.getDrawable(context,beautyInfo.icon)}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{beautyInfo.name}"
+            tools:text = "磨皮"
+            android:textSize="@dimen/sp_12"
+            tools:textColor="@color/femaleColor"
+            android:textColor="@{isCheck ? @color/femaleColor : @color/white}"
+            android:layout_marginTop="@dimen/dp_4"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+</layout>

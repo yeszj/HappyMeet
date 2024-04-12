@@ -1,8 +1,10 @@
 package cn.yanhu.imchat
 
 import androidx.lifecycle.MutableLiveData
+import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.bean.GroupBean
+import cn.yanhu.imchat.bean.GroupChatPageInfo
 import cn.yanhu.imchat.bean.GroupDetailInfo
 import cn.yanhu.imchat.bean.GroupMemberData
 import cn.zj.netrequest.BaseViewModel
@@ -19,6 +21,8 @@ class ImChatViewModel : BaseViewModel() {
     val groupListObserver = MutableLiveData<ResultState<MutableList<GroupBean>>>()
     val groupDetailObserver = MutableLiveData<ResultState<GroupDetailInfo>>()
     val groupMemberObserver = MutableLiveData<ResultState<GroupMemberData>>()
+    val userInfoObserver = MutableLiveData<ResultState<UserDetailInfo>>()
+    val groupPageInfoObserver = MutableLiveData<ResultState<GroupChatPageInfo>>()
     fun getRecommendGroupList(page: Int) {
         request({ imChatRxApi.recommendGroupList(page) }, groupListObserver, true)
     }
@@ -29,6 +33,14 @@ class ImChatViewModel : BaseViewModel() {
 
     fun getGroupMember(groupId: String) {
         request({ imChatRxApi.getGroupMember(groupId) }, groupMemberObserver, true)
+    }
+
+    fun getUserInfo(userId: String) {
+        request({ imChatRxApi.getUserInfoByUserId(userId) }, userInfoObserver, true)
+    }
+
+    fun getImGroupInfo(groupId: String) {
+        request({ imChatRxApi.getImGroupInfo(groupId) }, groupPageInfoObserver, true)
     }
 
     fun setAdmin(
@@ -50,6 +62,28 @@ class ImChatViewModel : BaseViewModel() {
     ) {
         request(
             { imChatRxApi.skipUser(groupId, userId) },
+            onBooleanResultListener
+        )
+    }
+
+    fun setUserLimit(
+        groupId: String,
+        visitorEnterRule: Int,
+        onBooleanResultListener: OnBooleanResultListener
+    ) {
+        request(
+            { imChatRxApi.setUserLimit( groupId, visitorEnterRule) },
+            onBooleanResultListener
+        )
+    }
+
+    fun exitGroup(
+        groupId: String,
+        type: Int,
+        onBooleanResultListener: OnBooleanResultListener
+    ) {
+        request(
+            { imChatRxApi.exitGroup( groupId, type) },
             onBooleanResultListener
         )
     }

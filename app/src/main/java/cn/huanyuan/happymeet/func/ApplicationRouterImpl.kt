@@ -2,7 +2,9 @@ package cn.huanyuan.happymeet.func
 
 import android.app.Application
 import android.text.TextUtils
+import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.happymeet.BuildConfig
+import cn.huanyuan.happymeet.func.dialog.RoseRechargePop
 import cn.huanyuan.happymeet.net.HttpHeadConfig
 import cn.yanhu.baselib.cache.UserPref
 import cn.yanhu.commonres.manager.AppCacheManager
@@ -41,6 +43,10 @@ class ApplicationRouterImpl:IApplication {
 
     override fun askCustomer() {
         UnionServiceUtils.askCustomer()
+    }
+
+    override fun showRechargePop(mContext: FragmentActivity, isDismissWhenPaySuccess: Boolean) {
+        RoseRechargePop.showDialog(mContext,isDismissWhenPaySuccess)
     }
 
 

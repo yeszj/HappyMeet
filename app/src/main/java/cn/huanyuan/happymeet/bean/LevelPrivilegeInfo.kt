@@ -6,10 +6,13 @@ package cn.huanyuan.happymeet.bean
  * desc:
  */
 data class LevelPrivilegeInfo(
-    val id:Int,
+    val id: Int,
     val privilegeIcon: String,
     val privilegeTitle: String,
     val lockLevel: String,
     val lockDesc: String,
-    val hasLock: Boolean
+    val hasLock: Boolean,
+    val privilegeDesc: String,
+    val privilegeLevelAllStyleIcon: String,
+    val privilegeShowExampleIcon: String
 )

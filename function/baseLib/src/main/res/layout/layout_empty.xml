@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/white"
+    android:background="@color/base_bg_gray"
     android:orientation="vertical">
 
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="@dimen/dp_120"
         android:src="@drawable/svg_common_empty"
         android:layout_height="@dimen/dp_120" />
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_12"
         android:text="@string/load_no_data"
-        android:textColor="@color/color_white_gray"
+        android:textColor="@color/fontGrayColor"
         android:textSize="@dimen/sp_14" />
 
 </LinearLayout>

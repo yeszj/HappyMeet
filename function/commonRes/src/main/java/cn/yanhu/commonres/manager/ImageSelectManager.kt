@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import cn.yanhu.baselib.func.photo.ImageSelectUtils
 import cn.yanhu.commonres.utils.PermissionXUtils
 import com.blankj.utilcode.util.AppUtils
+import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
 
@@ -36,7 +37,7 @@ object ImageSelectManager {
                                  maxSelectNum:Int,
                                  call: OnResultCallbackListener<LocalMedia>) {
         val permissions = ArrayList<String>()
-        if (type == ImageSelectUtils.TYPE_CAMERA) {
+        if (type == ImageSelectUtils.TYPE_CAMERA || type == ImageSelectUtils.TYPE_CAMERA_VIDEO ) {
             permissions.add(Manifest.permission.CAMERA)
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -68,7 +69,10 @@ object ImageSelectManager {
                         ImageSelectUtils.selectVideo(mContext,isCrop,width,height,maxSelectNum,call)
                     }
                     ImageSelectUtils.TYPE_CAMERA ->{
-                        ImageSelectUtils.openCamara(mContext,isCrop,call)
+                        ImageSelectUtils.openCamara(mContext,isCrop,type = SelectMimeType.ofAll(),call=call)
+                    }
+                    ImageSelectUtils.TYPE_CAMERA_VIDEO ->{
+                        ImageSelectUtils.openCamara(mContext,isCrop,type = SelectMimeType.ofVideo(),call)
                     }
                     else -> {
                         ImageSelectUtils.selectVideoOrImage(mContext,isCrop,maxSelectNum,width,height,call = call)

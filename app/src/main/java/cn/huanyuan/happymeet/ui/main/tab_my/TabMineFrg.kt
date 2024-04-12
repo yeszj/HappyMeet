@@ -18,24 +18,25 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.adapter.MyBannerImageAdapter
 import cn.yanhu.commonres.bean.BannerBean
-import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.EditPhotoInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
-import cn.yanhu.commonres.db.UserInfoDbManager
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.ImageSelectManager
 import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.utils.VideoUtils
+import cn.yanhu.imchat.manager.ImUserManager
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.upload.UploadFileClient
 import cn.zj.netrequest.upload.UploadFileProgressListener
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ClipboardUtils
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
+import com.netease.yunxin.kit.corekit.im.model.UserField
 import com.youth.banner.indicator.CircleIndicator
 import com.youth.banner.listener.OnBannerListener
 
@@ -139,18 +140,12 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, MainViewModel>(
         mViewModel.myPageInfoObservable.observe(this) { it ->
             parseState(it, {
                 userInfo = it
+                val map:MutableMap<UserField, Any> = mutableMapOf()
+                map[UserField.Avatar] = it.portrait
+                map[UserField.Name] = it.nickName
+                map[UserField.Ext] = GsonUtils.toJson(it)
+                ImUserManager.updateUserInfo(map)
                 AppCacheManager.isAdmin = it.isAdmin
-                UserInfoDbManager.saveUserInfo(mContext, it)
-                UserInfoDbManager.getUserInfo(mContext,
-                    object : UserInfoDbManager.OnGetUserInfoListener {
-                        override fun onUserInfo(userInfo: BaseUserInfo?) {
-                            if (userInfo != null) {
-                                showToast("获取成功")
-                            } else {
-                                showToast("获取失败")
-                            }
-                        }
-                    })
                 mBinding.userinfo = it
                 showMyPicData(it)
                 bindBanner(it.banners)

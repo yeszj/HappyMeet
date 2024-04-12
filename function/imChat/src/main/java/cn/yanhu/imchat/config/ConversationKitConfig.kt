@@ -21,7 +21,7 @@ object ConversationKitConfig {
         conversationUIConfig.itemContentSize = 13
         conversationUIConfig.itemDateSize = 10
         conversationUIConfig.itemBackground =  ColorDrawable(CommonUtils.getColor(cn.yanhu.baselib.R.color.transparent))
-        conversationUIConfig.itemStickTopBackground = ColorDrawable(CommonUtils.getColor(cn.yanhu.baselib.R.color.transparent))
+        conversationUIConfig.itemStickTopBackground = ColorDrawable(CommonUtils.getColor(cn.yanhu.baselib.R.color.blackAlpha96))
         ConversationKitClient.setConversationUIConfig(conversationUIConfig)
     }
 }

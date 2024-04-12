@@ -39,9 +39,16 @@ android {
     buildFeatures {
         dataBinding = true
     }
+    sourceSets {
+        getByName("main") {
+            jniLibs.srcDirs("libs")
+        }
+    }
 }
 
+
 dependencies {
+    api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar","*.aar"))))
     implementation("androidx.core:core-ktx:${cfg["ktxVersion"]}")
     implementation("androidx.appcompat:appcompat:${cfg["appcompatVersion"]}")
     implementation("com.google.android.material:material:${cfg["materialVersion"]}")
@@ -50,6 +57,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation(project(mapOf("path" to ":function:commonRes")))
     kapt ("com.alibaba:arouter-compiler:${rootProject.ext.get("arouter")}")
-    api("io.agora.rtc:full-rtc-basic:4.3.0")
+    //api("io.agora.rtc:full-rtc-basic:4.3.0")
+    api("io.agora.rtc:agora-special-full:4.1.1.28")
     implementation(project(mapOf("path" to ":function:sdkLib")))
+    implementation(project(mapOf("path" to ":function:imChat")))
+
 }

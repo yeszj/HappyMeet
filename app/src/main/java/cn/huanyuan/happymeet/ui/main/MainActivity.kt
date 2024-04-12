@@ -23,6 +23,7 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.commonres.loading.MainLoadingCallBack
 import cn.yanhu.commonres.manager.LiveDataEventManager
+import cn.yanhu.imchat.manager.ImChatManager
 import cn.zj.netrequest.ext.parseState
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.KeyboardUtils
@@ -30,6 +31,10 @@ import com.blankj.utilcode.util.ThreadUtils
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.chaychan.library.BottomBarItem
+import com.netease.nimlib.sdk.NimIntent
+import com.qiyukf.nimlib.sdk.msg.constant.SessionTypeEnum
+import org.json.JSONArray
+import org.json.JSONObject
 import kotlin.system.exitProcess
 
 
@@ -53,12 +58,38 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         }
         BeautySDKManager.sharedInstance().downloadBundle()
         mViewModel.getMainTabInfo()
+        parseNotification(intent)
     }
 
     override fun initLoadService() {
         val loadSir = initCustomLoadingLoad(MainLoadingCallBack())
         loadService = loadSir.register(mBinding.root) {
             onReload()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        parseNotification(intent)
+    }
+
+    private fun parseNotification(intent: Intent?) {
+        if (intent?.hasExtra(NimIntent.EXTRA_NOTIFY_SESSION_CONTENT) == true) {
+            val stringExtra =
+                intent.getStringExtra(NimIntent.EXTRA_NOTIFY_SESSION_CONTENT).toString()
+            val jsonArray = JSONArray(stringExtra)
+            if (jsonArray.length()>0){
+                val jsonObject = jsonArray[0] as JSONObject?
+                jsonObject?.apply {
+                    val sessionId = jsonObject.optString("sessionId")
+                    val sessionType = jsonObject.optInt("sessionType")
+                    if (sessionType == SessionTypeEnum.Team.value) {
+                        ImChatManager.toImGroupChatPage(mContext, sessionId)
+                    } else {
+                        ImChatManager.toImChatPage(mContext, sessionId)
+                    }
+                }
+            }
         }
     }
 
@@ -119,8 +150,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             .iconWidth(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20))
             //还有很多属性，详情请查看Builder里面的方法
             .create(
-                cn.yanhu.baselib.R.drawable.svg_black_back,
-                cn.yanhu.baselib.R.drawable.svg_black_back,
+                cn.yanhu.commonres.R.drawable.tab_default_bg,
+                cn.yanhu.commonres.R.drawable.tab_default_bg,
                 tabEntity.name
             )
         GlideUtils.loadAsDrawable(
@@ -179,7 +210,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         mBinding.viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                if (position==getTabSameCityPosition()){
+                if (position == getTabSameCityPosition()) {
                     LiveDataEventManager.sendLiveDataMessage(
                         LiveDataEventManager.SWITCH_TO_SAME_CITY,
                         position
@@ -190,10 +221,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         mBinding.viewPager.currentItem = 2
     }
 
-    private fun getTabSameCityPosition():Int{
-        for (i in 0..<mFragmentList.size){
+    private fun getTabSameCityPosition(): Int {
+        for (i in 0..<mFragmentList.size) {
             val fragment = mFragmentList[i]
-            if (fragment is TabSameCityFrg){
+            if (fragment is TabSameCityFrg) {
                 return i
             }
         }
@@ -215,7 +246,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     companion object {
-        fun lunch(context: Activity, bundle: Bundle?=null) {
+        fun lunch(context: Activity, bundle: Bundle? = null) {
             val intent = Intent(context, MainActivity::class.java)
             if (bundle != null) {
                 intent.putExtras(bundle)

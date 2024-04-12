@@ -38,4 +38,6 @@ object ImMsgManager {
         notification.config = config
         NIMClient.getService(MsgService::class.java).sendCustomNotification(notification)
     }
+
+
 }

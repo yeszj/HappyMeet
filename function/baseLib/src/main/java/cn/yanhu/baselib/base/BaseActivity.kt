@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -19,6 +20,7 @@ import cn.yanhu.baselib.loadinglayout.EmptyCallBack
 import cn.yanhu.baselib.loadinglayout.ErrorCallback
 import cn.yanhu.baselib.loadinglayout.LoadingCallBack
 import cn.yanhu.baselib.loadinglayout.LoadingHasContentCallBack
+import cn.yanhu.baselib.loadinglayout.LoadingManager
 import cn.yanhu.baselib.refresh.MyRefreshLayout
 import cn.yanhu.baselib.refresh.NoMoreDataFootView
 import cn.yanhu.baselib.utils.DisplayUtils
@@ -28,7 +30,6 @@ import cn.yanhu.baselib.view.TitleBar
 import cn.zj.netrequest.BaseViewModel
 import com.blankj.utilcode.util.LanguageUtils
 import com.kingja.loadsir.callback.Callback
-import com.kingja.loadsir.callback.SuccessCallback
 import com.kingja.loadsir.core.LoadService
 import com.kingja.loadsir.core.LoadSir
 
@@ -71,6 +72,23 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
         initListener()
         initData()
         initRefresh()
+        addBackPressListener()
+    }
+
+    open fun initBeforeContentView(){}
+
+    private fun addBackPressListener() {
+        val callback = object : OnBackPressedCallback(
+            true // default to enabled
+        ) {
+            override fun handleOnBackPressed() {
+                back()
+            }
+        }
+        onBackPressedDispatcher.addCallback(
+            this, // LifecycleOwner
+            callback
+        )
     }
 
 
@@ -89,13 +107,7 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
     private var loadingCallBack: Any? = LoadingCallBack::class.java
     fun initCustomLoadingLoad(loadCallBack: Callback): LoadSir {
         loadingCallBack = loadCallBack::class.java
-        return LoadSir.Builder()
-            .addCallback(ErrorCallback())
-            .addCallback(EmptyCallBack())
-            .addCallback(LoadingHasContentCallBack())
-            .setDefaultCallback(SuccessCallback::class.java)
-            .addCallback(loadCallBack)
-            .build()
+        return LoadingManager.initCustomLoading(loadCallBack)
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -252,14 +264,6 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
         loadService.showCallback(ErrorCallback::class.java)
     }
     //--------------loadingLayout end--------------
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if (!isFinishing) {
-            back()
-        }
-    }
-
     open fun back() {
         finish()
     }

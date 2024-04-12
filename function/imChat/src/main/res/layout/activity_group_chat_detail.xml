@@ -175,6 +175,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_enterGroupChat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/icon_group_msg"

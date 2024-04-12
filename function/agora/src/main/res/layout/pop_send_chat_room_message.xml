@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:background="@drawable/white_top_corner_15">
+
+        <LinearLayout
+            android:id="@+id/vg_message"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_40"
+            android:layout_margin="@dimen/dp_10"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/iv_send"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingStart="@dimen/dp_7"
+            android:background="@drawable/common_shape_input_bg"
+            tools:ignore="RtlSymmetry">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_ait"
+                android:layout_width="wrap_content"
+                android:textSize="@dimen/sp_12"
+                android:visibility="gone"
+                android:paddingStart="@dimen/dp_5"
+                android:gravity="center_vertical"
+                android:textColor="@color/fontRedColor"
+                android:layout_height="match_parent"/>
+
+            <cn.yanhu.baselib.view.ClearEditText
+                android:id="@+id/et_message"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:hint="说点什么吧"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_12"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:paddingStart="@dimen/dp_5"
+                android:paddingEnd="@dimen/dp_12"
+                android:textColorHint="@color/fontGrayColor" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_operate"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/dp_8"
+                android:src="@drawable/icon_gray_smile" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_send"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:padding="@dimen/dp_8"
+            android:src="@drawable/ic_gray_msg_send"
+            app:layout_constraintBottom_toBottomOf="@+id/vg_message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/vg_message" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_10"
+            app:layout_constraintTop_toBottomOf="@+id/vg_message" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_expression"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_254"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            android:visibility="gone"
+            app:spanCount="5"
+            tools:itemCount="15"
+            tools:listitem="@layout/adapter_message_expression" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

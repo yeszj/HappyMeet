@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="userinfo"
+            type="cn.yanhu.commonres.bean.UserDetailInfo" />
+        <variable
+            name="selfAvatar"
+            type="java.lang.String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_12"
+        android:background="@drawable/white_corner_20"
+        android:backgroundTint="@color/blackAlpha96"
+        android:padding="@dimen/dp_11">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_otherAvatar"
+            android:layout_width="@dimen/dp_38"
+            android:layout_height="@dimen/dp_38"
+            android:layout_marginStart="@dimen/dp_m_10"
+            android:background="@drawable/circle_dot_gradient_bottom_white"
+            android:padding="@dimen/dp_1"
+            android:scaleType="centerCrop"
+            imageUrl="@{userinfo.portrait}"
+            android:src="@drawable/default_avatar_bg_1"
+            app:layout_constraintStart_toEndOf="@+id/iv_selfAvatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_selfAvatar"
+            android:layout_width="@dimen/dp_38"
+            android:layout_height="@dimen/dp_38"
+            imageUrl="@{selfAvatar}"
+            android:background="@drawable/circle_dot_gradient_bottom_white"
+            android:padding="@dimen/dp_1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_avatar_bg_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_12"
+            android:layout_height="@dimen/dp_11"
+            android:layout_marginBottom="@dimen/dp_6"
+            android:src="@drawable/icon_love_chat_user"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_selfAvatar"
+            app:layout_constraintEnd_toEndOf="@+id/iv_otherAvatar"
+            app:layout_constraintStart_toStartOf="@+id/iv_selfAvatar" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_100"
+            android:drawableEnd="@drawable/svg_identify_tag"
+            android:drawablePadding="@dimen/dp_2"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{userinfo.nickName}"
+            android:layout_marginStart="@dimen/dp_10"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_otherAvatar"
+            app:layout_constraintTop_toTopOf="@+id/iv_selfAvatar"
+            tools:text="能吃一杆能吃一杆能吃一杆能吃一杆能吃一杆" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/ageView"
+            android:layout_width="wrap_content"
+            userAge="@{userinfo.age}"
+            userGender="@{userinfo.gender}"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_selfAvatar"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName" />
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/provinceView"
+            userProvince='@{userinfo.province}'
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_4"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_selfAvatar"
+            app:layout_constraintStart_toEndOf="@+id/ageView" />
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:text="查看更多"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName"
+            app:layout_constraintBottom_toBottomOf="@id/tv_nickName"
+            android:drawableEnd="@drawable/ic_right_arrow"
+            android:layout_height="wrap_content"/>
+        <com.zhy.view.flowlayout.FlowLayout
+            android:id="@+id/flowLayoutInfo"
+            app:layout_constraintTop_toBottomOf="@+id/iv_selfAvatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:paddingEnd="@dimen/dp_2"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_2" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_avatar"
+            android:layout_width="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
+            tools:listitem="@layout/adapter_chat_top_avatar_item"
+            android:layout_marginTop="@dimen/dp_12"
+            app:layout_constraintTop_toBottomOf="@+id/flowLayoutInfo"
+            android:layout_height="@dimen/dp_60"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

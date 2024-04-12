@@ -23,6 +23,7 @@ object ImageSelectUtils {
     const val TYPE_IMAGE = 2
     const val TYPE_VIDEO = 3
     const val TYPE_ALL = 4
+    const val TYPE_CAMERA_VIDEO = 5
 
 
     fun selectlePic(
@@ -126,10 +127,11 @@ object ImageSelectUtils {
     fun openCamara(
         mContext: Activity,
         isCrop: Boolean = true,
+        type:Int = SelectMimeType.ofImage(),
         call: OnResultCallbackListener<LocalMedia>
     ) {
         val pictureSelectionCameraModel: PictureSelectionCameraModel =
-            PictureSelector.create(mContext).openCamera(SelectMimeType.ofImage())
+            PictureSelector.create(mContext).openCamera(type)
                 .setSandboxFileEngine(MeSandboxFileEngine())
         if (isCrop) {
             pictureSelectionCameraModel.setCropEngine(ImageFileCropEngine())

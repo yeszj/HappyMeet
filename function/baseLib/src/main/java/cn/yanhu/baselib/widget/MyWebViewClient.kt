@@ -1,5 +1,6 @@
 package cn.yanhu.baselib.widget
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.net.http.SslError
@@ -44,9 +45,26 @@ open class MyWebViewClient : WebViewClient() {
         }
     }
 
+    @SuppressLint("WebViewClientOnReceivedSslError")
     override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-        super.onReceivedSslError(view, handler, error)
-        //handler.proceed()
+       // super.onReceivedSslError(view, handler, error)
+        handler?.proceed()
+    }
+
+    override fun onReceivedError(
+        view: WebView?,
+        request: WebResourceRequest?,
+        error: WebResourceError?
+    ) {
+        super.onReceivedError(view, request, error)
+    }
+
+    override fun onReceivedHttpError(
+        view: WebView?,
+        request: WebResourceRequest?,
+        errorResponse: WebResourceResponse?
+    ) {
+        super.onReceivedHttpError(view, request, errorResponse)
     }
 
     override fun onPageFinished(view: WebView, url: String) {

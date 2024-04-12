@@ -3,14 +3,19 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application>
+        <meta-data
+            android:name="com.netease.nim.appKey"
+            android:value="f80afc0c4e0bb377591f2d15180dfb63" />
+
         <activity
-            android:name=".chat.ImChatActivity"
-            android:configChanges="orientation|screenSize|screenLayout"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity android:name=".groupChat.GroupChatDetailActivity"/>
-        <activity android:name=".groupChat.GroupMemberActivity"/>
+            android:name=".ui.chat.ImChatActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.groupChat.ImTeamChatActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".ui.groupChat.GroupChatDetailActivity" />
+        <activity android:name=".ui.groupChat.GroupMemberActivity" />
+        <activity android:name=".ui.chatSetting.UserChatSettingActivity" />
+        <activity android:name=".ui.chatSetting.GroupChatSettingActivity" />
     </application>
 </manifest>

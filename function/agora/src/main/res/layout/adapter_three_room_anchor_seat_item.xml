@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_176"
+        android:layout_marginTop="@dimen/dp_8"
+        android:paddingHorizontal="@dimen/dp_4">
+
+        <include
+            android:id="@+id/anchorSeatInfo"
+            style="@style/constraintHorizonCenter"
+            layout="@layout/adapter_three_room_user_seat_item"
+            android:layout_width="@dimen/dp_160"
+            android:layout_height="@dimen/dp_176" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/vg_wish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_14"
+            app:layout_constraintEnd_toStartOf="@+id/anchorSeatInfo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.lihang.ShadowLayout
+                android:id="@+id/bg_wish"
+                android:layout_width="@dimen/dp_56"
+                style="@style/constraintHorizonCenter"
+                app:hl_cornerRadius="@dimen/dp_8"
+                app:hl_strokeColor="@color/whiteColorAlpha80"
+                app:hl_layoutBackground="@color/blackAlpha90"
+                app:hl_strokeWith="@dimen/dp_1"
+                android:layout_marginTop="@dimen/dp_8"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="@dimen/dp_72"
+                tools:ignore="MissingConstraints" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_gift"
+                android:layout_width="@dimen/dp_32"
+                app:layout_constraintTop_toTopOf="@+id/bg_wish"
+                style="@style/constraintHorizonCenter"
+                android:layout_marginTop="@dimen/dp_14"
+                android:layout_height="@dimen/dp_32"
+                tools:ignore="MissingConstraints" />
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:text="0/2"
+                android:paddingTop="@dimen/dp_6"
+                app:layout_constraintTop_toBottomOf="@+id/iv_gift"
+                style="@style/constraintHorizonCenter"
+                android:textColor="@color/whiteAlpha40"
+                android:textSize="@dimen/sp_12"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingConstraints" />
+            <androidx.appcompat.widget.AppCompatImageView
+                style="@style/constraintHorizonCenter"
+                android:layout_width="@dimen/dp_56"
+                android:layout_height="@dimen/dp_20"
+                android:src="@drawable/icon_text_wish_list"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints" />
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:text="未完成"
+                android:paddingTop="@dimen/dp_8"
+                app:layout_constraintTop_toBottomOf="@+id/bg_wish"
+                style="@style/constraintHorizonCenter"
+                android:textColor="@color/whiteAlpha40"
+                android:textSize="@dimen/sp_10"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginTop="@dimen/dp_14"
+            android:background="@drawable/white_corner_12"
+            android:backgroundTint="@color/whiteColorAlpha80"
+            android:drawableStart="@drawable/icon_swarp"
+            android:drawablePadding="@dimen/dp_2"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_6"
+            android:text="转为专属"
+            android:textColor="@color/whiteAlpha40"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_manApplyCount"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@color/blackAlpha80"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_6"
+            android:text="0申请 1在线"
+            android:textColor="@color/whiteAlpha40"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_womanApplyCount"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@color/blackAlpha80"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_6"
+            android:text="0申请 1在线"
+            android:textColor="@color/whiteAlpha40"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

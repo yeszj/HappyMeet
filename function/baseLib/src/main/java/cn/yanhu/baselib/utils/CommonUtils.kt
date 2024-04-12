@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
+import com.lxj.xpopup.core.BasePopupView
 import java.math.BigDecimal
 import java.util.Calendar
 import java.util.Date
@@ -167,5 +168,10 @@ object CommonUtils {
         return pattern.matcher(str).matches()
     }
 
-
+    fun isPopShow(pop: BasePopupView?): Boolean {
+        if (pop!=null && pop.isShow){
+            return true
+        }
+        return false
+    }
 }

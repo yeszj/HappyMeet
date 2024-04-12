@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="roomInfo"
+            type="cn.yanhu.commonres.bean.RoomListBean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/dp_70"
+        android:layout_height="@dimen/dp_95">
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/dp_54"
+        app:riv_oval="true"
+        app:riv_border_color="@color/transparent"
+        app:riv_border_width="@dimen/dp_3"
+        android:background="@drawable/circle_stroke_dot_red"
+        android:padding="@dimen/dp_1"
+        imageUrl="@{roomInfo.coverUrl}"
+        placeholderId="@{-1}"
+        android:layout_marginTop="@dimen/dp_8"
+        android:src="@drawable/default_avatar_bg_5"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/constraintHorizonCenter"
+        android:layout_height="@dimen/dp_54"
+        tools:ignore="MissingConstraints" />
+        <LinearLayout
+            android:id="@+id/vg_status"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="@dimen/dp_15"
+            android:background="@drawable/white_corner_20"
+            android:backgroundTint="#FF58A8"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_m_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_avatar">
+
+            <com.opensource.svgaplayer.SVGAImageView
+                android:id="@+id/svgPlay"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="@dimen/dp_10"
+                app:autoPlay="true"
+                app:loopCount="-1"
+                app:source="play_white.svga" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                app:fontType="@string/fontMedium"
+                android:text="相亲中" />
+        </LinearLayout>
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_12"
+            android:layout_marginTop="@dimen/dp_5"
+            android:paddingHorizontal="@dimen/dp_5"
+            app:layout_constraintTop_toBottomOf="@+id/vg_status"
+            style="@style/constraintHorizonCenter"
+            tools:text="就是德拉吉拉"
+            android:text="@{roomInfo.ownerInfo.nickName}"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_top_corner_20"
+        android:paddingBottom="@dimen/dp_20">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_recharge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:paddingStart="@dimen/dp_16"
+            android:text="充值玫瑰"
+            android:textColor="@color/color_222222"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_16"
+            android:text="我的玫瑰"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_roseBalance"
+            app:layout_constraintEnd_toStartOf="@+id/iv_rose"
+            app:layout_constraintTop_toTopOf="@+id/tv_roseBalance" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_rose"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:src="@drawable/icon_rose"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_roseBalance"
+            app:layout_constraintEnd_toStartOf="@+id/tv_roseBalance"
+            app:layout_constraintTop_toTopOf="@+id/tv_roseBalance" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_roseBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/dp_16"
+            android:textColor="@color/color_222222"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_recharge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_recharge"
+            android:text="0" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_rose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_12"
+            android:paddingTop="@dimen/dp_3"
+            android:minHeight="@dimen/dp_170"
+            android:paddingEnd="@dimen/dp_3"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/tv_recharge"
+            app:spanCount="3"
+            tools:itemCount="6"
+            tools:listitem="@layout/adapter_rose_recharge_item" />
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_payWay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_20"
+            android:text="选择付款方式"
+            android:textColor="@color/color_222222"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_rose" />
+
+        <cn.yanhu.commonres.view.PayWaySelectView
+            android:id="@+id/paySelectView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_12"
+            android:minHeight="@dimen/dp_58"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_payWay" />
+
+        <cn.yanhu.baselib.view.CustomFontButton
+            android:id="@+id/btn_pay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@drawable/shape_common_btn_r30"
+            android:gravity="center"
+            android:text="立即支付"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontType="@string/fontBold"
+            app:layout_constraintTop_toBottomOf="@+id/paySelectView" />
+
+        <com.lihang.ShadowLayout
+            android:id="@+id/vg_loading"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:hl_angle="90"
+            app:hl_cornerRadius_leftTop="@dimen/dp_20"
+            app:hl_cornerRadius_rightTop="@dimen/dp_20"
+            app:hl_layoutBackground="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/tv_recharge"
+            app:layout_constraintBottom_toTopOf="@+id/tv_payWay"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="0dp"
+            tools:visibility="invisible">
+
+            <com.opensource.svgaplayer.SVGAImageView
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"
+                android:layout_gravity="center"
+                app:autoPlay="true"
+                app:clearsAfterStop="true"
+                app:source="loading_light.svga" />
+        </com.lihang.ShadowLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
