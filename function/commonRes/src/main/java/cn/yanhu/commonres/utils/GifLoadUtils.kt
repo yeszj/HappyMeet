@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.ImageView
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.R
+import cn.yanhu.commonres.manager.ImageThumbUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -30,7 +31,9 @@ object GifLoadUtils {
             override fun onSuccess(result: ByteBuffer?) {
                 if (result != null) {
                     val gifFromBytes = GifDrawable(result)
-                    gifFromBytes.cornerRadius = CommonUtils.getDimension(dimenId).toFloat()
+                    if (dimenId!=0){
+                        gifFromBytes.cornerRadius = CommonUtils.getDimension(dimenId).toFloat()
+                    }
                     giftImageView.setImageDrawable(gifFromBytes)
                 }
             }
@@ -86,7 +89,7 @@ object GifLoadUtils {
             )
             requestOptions.placeholder(R.drawable.pic_default_bg)
             requestOptions.error(R.drawable.pic_default_bg)
-            Glide.with(context).load(url).apply(requestOptions).into(imageView)
+            Glide.with(context).load(ImageThumbUtils.getThumbUrl(url)).apply(requestOptions).into(imageView)
         }
     }
 }

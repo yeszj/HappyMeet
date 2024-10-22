@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleLeftName="关于我们" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_72"
+            android:layout_height="@dimen/dp_72"
+            android:layout_marginTop="@dimen/dp_50"
+            android:src="@mipmap/ic_logo" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:text="v1.0.0-12 huawei"
+            android:textColor="@color/color_888888"
+            android:textSize="@dimen/sp_13"
+            app:fontType="@string/fontMedium" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_60"
+            android:paddingHorizontal="@dimen/dp_30"
+            android:text="暖遇平台是专注于婚恋交友的正规婚恋服务平台，致力于营造一个安全、真实、互相尊重的社交环境，让每一位用户都能在这里找到属于自己的幸福。"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_14" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:layout_marginBottom="@dimen/dp_40"
+            android:text="暖遇用户隐私协议"
+            android:textColor="@color/adminTagColor"
+            android:textSize="@dimen/sp_13"
+            app:fontType="@string/fontMedium" />
+    </LinearLayout>
+</layout>

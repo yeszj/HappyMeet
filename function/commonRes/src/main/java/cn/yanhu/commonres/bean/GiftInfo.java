@@ -15,17 +15,23 @@ public class GiftInfo implements Serializable {
     private String giftIcon;
     private String svga;
     private int id;
-    private int type;//0普通礼物 1掉落效果 2svga动画
-   private int sendNumber;
+    private int sendNumber;
+    private String tagIcon;
 
-   private String giftTag;
-
-    public String getGiftTag() {
-        return giftTag;
+    public String getSvga() {
+        return svga;
     }
 
-    public void setGiftTag(String giftTag) {
-        this.giftTag = giftTag;
+    public void setSvga(String svga) {
+        this.svga = svga;
+    }
+
+    public String getTagIcon() {
+        return tagIcon;
+    }
+
+    public void setTagIcon(String tagIcon) {
+        this.tagIcon = tagIcon;
     }
 
     public int getSendNumber() {
@@ -36,21 +42,6 @@ public class GiftInfo implements Serializable {
         this.sendNumber = sendNumber;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public String getGiftAnimUrl() {
-        return svga;
-    }
-
-    public void setGiftAnimUrl(String giftAnimUrl) {
-        this.svga = giftAnimUrl;
-    }
 
     public String getGiftIcon() {
         return giftIcon;

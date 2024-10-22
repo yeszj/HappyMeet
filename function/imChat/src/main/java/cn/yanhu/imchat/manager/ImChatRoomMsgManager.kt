@@ -1,9 +1,5 @@
 package cn.yanhu.imchat.manager
 
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.chatroom.ChatRoomMessageBuilder
-import com.netease.nimlib.sdk.chatroom.ChatRoomService
-import com.netease.nimlib.sdk.msg.attachment.MsgAttachment
 
 
 /**
@@ -13,14 +9,9 @@ import com.netease.nimlib.sdk.msg.attachment.MsgAttachment
  */
 object ImChatRoomMsgManager {
 
-    fun sendCustomChatRoomMsg(roomId: String, msgAttachment: MsgAttachment) {
-        val message = ChatRoomMessageBuilder.createChatRoomCustomMessage(roomId, msgAttachment)
-        NIMClient.getService(ChatRoomService::class.java).sendMessage(message, false)
+    fun sendCustomChatRoomMsg(roomId: String) {
     }
 
     fun sendTipsMessage(roomId: String, content: String) {
-        val createTipMessage = ChatRoomMessageBuilder.createTipMessage(roomId)
-        createTipMessage.content = content
-        NIMClient.getService(ChatRoomService::class.java).sendMessage(createTipMessage, false)
     }
 }

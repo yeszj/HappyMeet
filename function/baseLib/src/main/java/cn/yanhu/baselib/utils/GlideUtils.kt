@@ -31,6 +31,13 @@ object GlideUtils {
             .into(listener)
     }
 
+    @JvmStatic
+    fun loadImage(context: Context,
+             url: Any?,
+             imageView: ImageView?,){
+        load(context,url,imageView)
+    }
+
     @SuppressLint("CheckResult")
     fun load(
         context: Context,

@@ -1,15 +1,17 @@
 package cn.yanhu.agora.bean
 
+import cn.yanhu.commonres.bean.BannerBean
+
 /**
  * @author: zhengjun
  * created: 2024/3/20
  * desc:
  */
 data class RoomConfigInfo(
-    val bannerUrl: String,
-    val typeList: MutableList<RoomTypeInfo>,
+    val banners: MutableList<BannerBean>,
+    val types: MutableList<RoomTypeInfo>,
     val name: String,
-    val welcomeMsg: String,
-    val rechargeAgreement:String,
+    val welcomeMsg:String,
+    val liveAgreement: String,
     val timePriceList: MutableList<LiveTimePriceInfo>
 )

@@ -20,6 +20,7 @@ import kotlinx.coroutines.*
  * @param isShowDialog 是否显示加载框
  * @param loadingHasContent 加载时当前页面的view是否显示
  */
+
 fun <T> BaseViewModel.request(
     block: suspend () -> BaseBean<T>,
     resultState: MutableLiveData<ResultState<T>>,

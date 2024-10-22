@@ -19,18 +19,11 @@ class SevenLiveRoomFrg : BaseLiveRoomFrg() {
         mBinding.rvSeat.adapter = seatUserAdapter
     }
 
-    override fun preJoinRoom() {
-        super.preJoinRoom()
-    }
-
-    override fun destroyRoom() {
-        super.destroyRoom()
-    }
 
     override fun getRoomInfoSuccess() {
         super.getRoomInfoSuccess()
-        seatUserAdapter.submitList(roomDetailInfo?.roomSeatResList)
-        seatUserAdapter.roomDetailInfo = roomDetailInfo
+        seatUserAdapter.submitList(roomSourceBean.roomSeatResList)
+        seatUserAdapter.roomDetailInfo = roomSourceBean
         ThreadUtils.getMainHandler().postDelayed({
             seatUserAdapter.getItem(0)?.ifLeave = true
         },1000)

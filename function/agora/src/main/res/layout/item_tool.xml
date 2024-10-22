@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cn.yanhu.agora.R" />
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <variable
+            name="item"
+            type="cn.yanhu.agora.bean.ToolBean" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/item_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            tools:src = "@drawable/ic_exception_upload"
+            android:src="@{ContextCompat.getDrawable(context,item.icon)}"
+            android:layout_margin="@dimen/dp_10"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.name}"
+            android:textSize="@dimen/sp_13"
+            tools:text = "巡查记录"
+            android:textColor="@color/cl_common"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+</layout>

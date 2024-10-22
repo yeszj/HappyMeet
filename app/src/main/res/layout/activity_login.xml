@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -13,15 +14,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_login_bg"
         android:focusable="true"
         android:focusableInTouchMode="true">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_bg_main"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent" />
+
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/bgTop"
@@ -37,8 +37,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_70"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/tv_agreement"
             app:layout_constraintTop_toBottomOf="@+id/bgTop">
 
             <View
@@ -47,7 +47,7 @@
                 android:layout_height="@dimen/dp_50"
                 android:layout_marginBottom="@dimen/dp_24"
                 android:background="@drawable/white_corner_15"
-                android:backgroundTint="#0A000000"
+                android:backgroundTint="#33000000"
                 android:gravity="center"
                 app:layout_constraintBottom_toTopOf="@+id/bgCode"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/dp_16"
                 android:text="+86"
-                android:textColor="@color/fontTextColor"
+                android:textColor="@color/white"
                 android:textSize="@dimen/sp_15"
                 app:layout_constraintBottom_toBottomOf="@+id/bgPhone"
                 app:layout_constraintStart_toStartOf="@+id/bgPhone"
@@ -84,7 +84,7 @@
                 android:inputType="phone"
                 android:maxLength="11"
                 android:paddingHorizontal="@dimen/dp_10"
-                android:textColor="@color/fontTextColor"
+                android:textColor="@color/white"
                 android:textColorHint="@color/fontGrayColor"
                 android:textSize="@dimen/sp_15"
                 app:layout_constraintBottom_toBottomOf="@+id/bgPhone"
@@ -101,71 +101,50 @@
                 android:gravity="center"
                 android:text="获取验证码"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_14"
+                android:textSize="@dimen/sp_17"
                 app:fontType="@string/fontBold"
-                app:layout_constraintBottom_toTopOf="@+id/bgWxLogin"
+                app:layout_constraintBottom_toTopOf="@+id/bgPhone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <View
-                android:id="@+id/bgWxLogin"
-                android:layout_width="@dimen/dp_328"
-                android:layout_height="@dimen/dp_50"
-                android:background="@drawable/white_corner_15"
-                android:backgroundTint="#0A000000"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
 
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_50"
-                android:drawableStart="@drawable/icon_wx_login"
-                android:drawablePadding="@dimen/dp_10"
-                android:gravity="center"
-                android:text="微信登录"
-                android:textColor="@color/fontTextColor"
-                android:textSize="@dimen/sp_14"
-                app:layout_constraintBottom_toBottomOf="@+id/bgWxLogin"
-                app:layout_constraintEnd_toEndOf="@+id/bgWxLogin"
-                app:layout_constraintStart_toStartOf="@+id/bgWxLogin"
-                app:layout_constraintTop_toTopOf="@+id/bgWxLogin" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_tips"
             android:layout_width="wrap_content"
-            android:src="@drawable/ic_tips"
             android:layout_height="@dimen/dp_30"
-            android:visibility="@{isSelect?View.INVISIBLE:View.VISIBLE,default = visible}"
-            android:layout_marginBottom="@dimen/dp_m_10"
-            app:layout_constraintBottom_toTopOf="@+id/tv_agreement"
-            app:layout_constraintStart_toStartOf="@+id/iv_check"
             android:layout_marginStart="@dimen/dp_m_5"
-            android:adjustViewBounds="true"/>
+            android:layout_marginBottom="@dimen/dp_m_10"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_tips"
+            android:visibility="@{isSelect?View.INVISIBLE:View.VISIBLE,default = visible}"
+            app:layout_constraintBottom_toTopOf="@+id/tv_agreement"
+            app:layout_constraintStart_toStartOf="@+id/iv_check" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_check"
             android:layout_width="@dimen/dp_25"
-            app:layout_constraintEnd_toStartOf="@+id/tv_agreement"
-            app:layout_constraintTop_toTopOf="@+id/tv_agreement"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_agreement"
-            android:src="@drawable/svg_unselected_r20"
+            android:layout_height="@dimen/dp_25"
             android:padding="@dimen/dp_5"
-            android:layout_height="@dimen/dp_25"/>
+            android:src="@drawable/svg_unselected_r20"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_agreement"
+            app:layout_constraintEnd_toStartOf="@+id/tv_agreement"
+            app:layout_constraintTop_toTopOf="@+id/tv_agreement" />
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_agreement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_25"
-            app:fontType="@string/fontMedium"
+            android:gravity="center_vertical"
             android:paddingTop="@dimen/dp_10"
             android:paddingBottom="@dimen/dp_10"
-            android:gravity="center_vertical"
             android:text="同意并接受用户服务协议，隐私政策，号码认证协议"
+            android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

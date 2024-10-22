@@ -50,7 +50,7 @@ open class CustomClickSpan : ClickableSpan {
         if (colorId != -1) {
             ds.color = colorId
         } else {
-            ds.color = ContextCompat.getColor(context, R.color.colorPrimary)
+            ds.color = ContextCompat.getColor(context, R.color.white)
         }
         ds.isUnderlineText = false
     }

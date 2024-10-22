@@ -5,6 +5,13 @@
 
     <data>
 
+        <variable
+            name="selectItem"
+            type="cn.yanhu.commonres.bean.RoseRechargeBean" />
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,20 +58,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="@dimen/dp_16"
+            android:text="0"
             android:textColor="@color/color_222222"
             android:textSize="@dimen/sp_13"
             app:layout_constraintBottom_toBottomOf="@+id/tv_recharge"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_recharge"
-            android:text="0" />
+            app:layout_constraintTop_toTopOf="@+id/tv_recharge" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_rose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="@dimen/dp_170"
             android:paddingStart="@dimen/dp_12"
             android:paddingTop="@dimen/dp_3"
-            android:minHeight="@dimen/dp_170"
             android:paddingEnd="@dimen/dp_3"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/tv_recharge"
@@ -95,41 +102,82 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_payWay" />
 
-        <cn.yanhu.baselib.view.CustomFontButton
-            android:id="@+id/btn_pay"
+        <View
+            android:id="@+id/viewRecharge"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_50"
-            android:layout_marginHorizontal="@dimen/dp_12"
-            android:layout_marginTop="@dimen/dp_20"
-            android:background="@drawable/shape_common_btn_r30"
-            android:gravity="center"
-            android:text="立即支付"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_17"
-            app:fontType="@string/fontBold"
+            android:layout_height="@dimen/dp_80"
             app:layout_constraintTop_toBottomOf="@+id/paySelectView" />
 
-        <com.lihang.ShadowLayout
-            android:id="@+id/vg_loading"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:hl_angle="90"
-            app:hl_cornerRadius_leftTop="@dimen/dp_20"
-            app:hl_cornerRadius_rightTop="@dimen/dp_20"
-            app:hl_layoutBackground="@color/white"
-            app:layout_constraintTop_toBottomOf="@+id/tv_recharge"
-            app:layout_constraintBottom_toTopOf="@+id/tv_payWay"
-            app:layout_constraintVertical_bias="0.0"
-            tools:layout_editor_absoluteX="0dp"
-            tools:visibility="invisible">
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/blackAlpha90"
+            app:layout_constraintTop_toTopOf="@+id/viewRecharge" />
 
-            <com.opensource.svgaplayer.SVGAImageView
-                android:layout_width="@dimen/dp_50"
-                android:layout_height="@dimen/dp_50"
-                android:layout_gravity="center"
-                app:autoPlay="true"
-                app:clearsAfterStop="true"
-                app:source="loading_light.svga" />
-        </com.lihang.ShadowLayout>
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:text="￥"
+            android:textColor="@color/colorMain"
+            android:textSize="@dimen/sp_18"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toStartOf="@+id/viewRecharge"
+            app:layout_constraintTop_toTopOf="@+id/viewRecharge" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{selectItem.money}"
+            android:textColor="@color/colorMain"
+            android:textSize="@dimen/sp_24"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_unit"
+            app:layout_constraintStart_toEndOf="@+id/tv_unit"
+            app:layout_constraintTop_toTopOf="@+id/tv_unit"
+            tools:text="30" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_4"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="#FF8A00"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_4"
+            android:paddingVertical="@dimen/dp_2"
+            android:text="@{selectItem.extraReward}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            android:visibility="@{TextUtils.isEmpty(selectItem.extraReward)?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_unit"
+            app:layout_constraintStart_toEndOf="@+id/tv_amount"
+            app:layout_constraintTop_toTopOf="@+id/tv_unit"
+            tools:text="送雷霆战机7天" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_rechargeAgreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_5"
+            android:text="充值即代表同意趣交友充值协议"
+            android:textColor="@color/fontGrayColor"
+            app:layout_constraintStart_toStartOf="@+id/tv_unit"
+            app:layout_constraintTop_toBottomOf="@+id/tv_amount" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_recharge"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:src="@mipmap/btn_recharge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/viewRecharge" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

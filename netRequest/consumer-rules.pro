@@ -1,1 +1,3 @@
 -keep class * extends cn.zj.netrequest.BaseViewModel
+-keep class cn.zj.netrequest.ext.** { *; }
+-keep class cn.zj.netrequest.status.** { *; }

@@ -3,8 +3,9 @@ package com.pcl.sdklib.sdk.wechat
 import androidx.fragment.app.FragmentActivity
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.manager.LiveDataEventManager
-import cn.zj.netrequest.ext.OnBooleanResultListener
+import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ThreadUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.pcl.sdklib.api.sdkRxApi
@@ -41,11 +42,11 @@ object WxAuthUtils {
         LiveEventBus.get<String>(LiveDataEventManager.WX_AUTH_SUCCESS).observe(context) {
             request(
                 { sdkRxApi.wxAuth(it) },
-                object : OnBooleanResultListener {
-                    override fun onSuccess() {
+                object : OnRequestResultListener<Boolean> {
+                    override fun onSuccess(data: BaseBean<Boolean>) {
                         onAuthResultListener.onAuthSuccess()
                     }
-                },
+                }, activity = context
             )
         }
     }

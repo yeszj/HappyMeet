@@ -5,7 +5,7 @@
     <data>
         <variable
             name="recordInfo"
-            type="cn.huanyuan.happymeet.bean.WalletRecordInfo" />
+            type="cn.huanyuan.sweetlove.bean.WalletRecordInfo" />
     </data>
 
     <LinearLayout

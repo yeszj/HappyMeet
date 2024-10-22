@@ -9,7 +9,7 @@ import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.databinding.PopSendChatRoomMessageBinding
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.widget.SimpleTextWatcher
-import cn.yanhu.commonres.adapter.MessageExpressionAdapter
+import cn.yanhu.commonres.adapter.MessageLottieExpressionAdapter
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.ExpressionInfo
 import cn.zj.netrequest.ext.OnRequestResultListener
@@ -34,7 +34,7 @@ class SendMessagePop(
     private val messageSendListener: OnMessageSendListener,
 ) : BottomPopupView(context) {
     private val expressionAdapter by lazy {
-        MessageExpressionAdapter()
+        MessageLottieExpressionAdapter()
     }
     private var expressionList: List<ExpressionInfo> = mutableListOf()
     override fun getImplLayoutId(): Int {
@@ -209,6 +209,7 @@ class SendMessagePop(
             val builder = XPopup.Builder(mContext)
             builder.setPopupCallback(xPopupCallback).autoFocusEditText(isKeyboard)
                 .hasShadowBg(false)
+                //.isRequestFocus(isKeyboard)
                 .autoOpenSoftInput(isKeyboard).asCustom(confirmPayDialog).show()
             return confirmPayDialog
         }

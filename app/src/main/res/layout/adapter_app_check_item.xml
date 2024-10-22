@@ -7,7 +7,7 @@
 
         <variable
             name="checkInfo"
-            type="cn.huanyuan.happymeet.bean.AppCheckItemInfo" />
+            type="cn.huanyuan.sweetlove.bean.AppCheckItemInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

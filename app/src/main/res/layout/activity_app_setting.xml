@@ -26,18 +26,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_marginHorizontal="@dimen/dp_12"
             app:layout_constraintTop_toBottomOf="@+id/titleBar"
-            app:layout_constraintBottom_toTopOf="@+id/tv_appInfo"
-            android:layout_height="0dp"/>
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_appInfo"
-            android:layout_width="wrap_content"
-            style="@style/constraintHorizonCenter"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="#AAAAAA"
-            android:textSize="@dimen/sp_13"
-            android:paddingVertical="@dimen/dp_20"
-            tools:text="去相亲V1.0.0-84-huawei"
-            android:layout_height="wrap_content"
-            tools:ignore="MissingConstraints" />
+            android:layout_height="0dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

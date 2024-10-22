@@ -13,7 +13,7 @@
 Config: meetKey
 Store: /Users/witness/workspace/HappyMeet/meet.jks
 Alias: meet
-MD5: 8D:66:45:F1:FE:75:31:FA:68:9B:E8:2C:FB:7A:E3:82
+MD5: 8D:66:45:F1:FE:75:31:FA:68:9B:E8:2C:FB:7A:E3:82 8d6645f1fe7531fa689be82cfb7ae382
 SHA1: 2B:9D:64:8D:57:02:06:EC:14:B0:07:5E:DD:F2:69:36:98:63:83:87
 SHA-256: 98:05:D1:31:DB:1D:3C:76:F4:AC:88:D9:5E:62:0C:3F:73:FA:6E:E6:75:DE:9F:E7:DC:92:E3:29:97:9F:16:BF
 
@@ -32,4 +32,6 @@ SHA-256: 98:05:D1:31:DB:1D:3C:76:F4:AC:88:D9:5E:62:0C:3F:73:FA:6E:E6:75:DE:9F:E7
 "{roomId:33}"
 
 "{clsPath:cn.qw.invite.ui.InviteMainActivity}"
+
+
 

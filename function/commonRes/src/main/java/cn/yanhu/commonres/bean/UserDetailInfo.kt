@@ -10,12 +10,10 @@ import java.io.Serializable
  * created: 2024/2/6
  * desc:
  */
-class UserDetailInfo : BaseUserInfo(),Serializable {
+open class UserDetailInfo : BaseUserInfo(),Serializable {
     var isMatchmaker = false ////是否是月老/红娘
     var banners: MutableList<BannerBean> = mutableListOf()
-    var beautifulIdImg: String? = ""
-    val needUploadPortrait = false
-    val isFirstRecharge = false //是否首次充值
+    var needUploadPortrait = false
     var isAuth = false
     var personInfo: MutableList<TagInfo> = mutableListOf()
     var friendCondition: MutableList<TagInfo> = mutableListOf()
@@ -27,6 +25,12 @@ class UserDetailInfo : BaseUserInfo(),Serializable {
     var basicTagInfo:MutableList<String> = mutableListOf()
     var isFriend:Boolean = false
     var needRoseNum:Int = 0
+    var colseVideo:Boolean = false
+    var colseMic:Boolean = false
+    var sameSex:Boolean = false
+    var seatNum:Int = 0
+    var roseNum:String = "0"
+
     fun isBlinding():Boolean{
         return RoomTypeManager.isBlinding(roomType)
     }

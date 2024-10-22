@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/vg_chatCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginEnd="@dimen/dp_50"
+        android:layout_gravity="end"
+        android:layout_below="@+id/coin_ll"
+        android:paddingTop="@dimen/dp_2"
+        android:layout_alignStart="@+id/bubble"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_card"
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="@dimen/dp_18"
+            android:src="@drawable/icon_chat_card_im" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_cardTips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="使用畅聊卡"
+            android:textColor="@color/cl_common_opacity_50"
+            android:textSize="@dimen/sp_13" />
+    </LinearLayout>
+</layout>

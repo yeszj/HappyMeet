@@ -3,7 +3,7 @@ package cn.yanhu.agora.ui.liveRoom.live
 import androidx.fragment.app.Fragment
 import cn.yanhu.agora.R
 import cn.yanhu.commonres.bean.RoomListBean
-import com.smart.adapter.interf.SmartFragmentImpl2
+import com.smart.adapter.interf.SmartFragmentImpl
 
 /**
  * @author: zhengjun
@@ -12,7 +12,7 @@ import com.smart.adapter.interf.SmartFragmentImpl2
  */
 class NeedUpgradeTipFrg : Fragment(
     R.layout.frg_need_upgrade_tip
-), SmartFragmentImpl2<RoomListBean> {
+), SmartFragmentImpl<RoomListBean> {
     override fun initSmartFragmentData(bean: RoomListBean) {
 
     }

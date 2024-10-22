@@ -1,0 +1,362 @@
+
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+-keep class com.baidu.idl.face.platform.listener.IInitCallback
+-keep class com.baidu.idl.face.platform.listener.ISecurityCallback
+-keepclassmembers class com.baidu.idl.face.platform.listener.IInitCallback {
+    void init*();
+    void init*(...);
+}
+-keepclassmembers class com.baidu.idl.face.platform.listener.ISecurityCallback {
+    void getFaceInfoForSecurity(...);
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.model.FaceExtInfo {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.model.ImageInfo {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.model.VersionInfo {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.utils.Base64Utils {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.utils.BitmapUtils {
+    <fields>;
+    <methods>;
+}
+-keep class com.baidu.idl.face.platform.utils.APIUtils {
+    public static boolean has*();
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.utils.DensityUtils {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.utils.FileUtils {
+    <fields>;
+    <methods>;
+}
+-keep class com.baidu.idl.face.platform.utils.SystemUtils {
+    public static boolean check*();
+    public static *** get*(...);
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.FaceConfig {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.FaceEnvironment {
+    <fields>;
+    <methods>;
+}
+-keep public class com.baidu.idl.face.platform.FaceSDKManager {
+    public static FaceSDKManager getInstance();
+    public void init*(...);
+    public void set*(...);
+    public *** get*();
+    public void release();
+    public *** get*(...);
+    public *** scale*(...);
+    public *** image*(...);
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.FaceStatusNewEnum {
+    <fields>;
+    <methods>;
+}
+-keep class com.baidu.idl.face.platform.ILivenessStrategy
+-keep class com.baidu.idl.face.platform.ILivenessStrategyCallback
+-keep class com.baidu.idl.face.platform.ILivenessViewCallback
+-keepclassmembers class com.baidu.idl.face.platform.ILivenessStrategy {
+    void set*(...);
+    void liveness*(...);
+    void reset();
+}
+-keepclassmembers class com.baidu.idl.face.platform.ILivenessStrategyCallback {
+    void onCollect*(...);
+}
+-keepclassmembers class com.baidu.idl.face.platform.ILivenessViewCallback {
+    void set*(...);
+    void viewReset();
+    void animStop();
+    void start*(...);
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.LivenessTypeEnum {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.manager.TimeManager {
+    <fields>;
+    <methods>;
+}
+# 保持授权库、facesdk库不被混淆
+-keep class com.baidu.vis.unified.license.** { *;}
+-keep class com.baidu.idl.main.facesdk.** { *;}
+
+-keepattributes *JavascriptInterface*
+-ignorewarnings
+
+-keep class com.baidu.liantian.ac.** {*;}
+-keepclasseswithmembers class com.baidu.liantian.jni.Asc {
+    native <methods>;
+}
+-keepclasseswithmembers class com.baidu.liantian.ac.F {*;}
+-keep public class com.baidu.liantian.active.Active {*;}
+-keep public class com.baidu.liantian.mutiprocess.Sp {*;}
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep class com.baidu.liantian.core.ApkInfo {*;}
+-keep class com.baidu.liantian.rp.Report {
+    <methods>;
+}
+
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+
+#for face liantian
+-keep class com.baidu.vis.unified.license.** {*;}
+-keep class com.baidu.baidusec.** {*;}
+-keep class com.baidu.protect.** {*;}
+-keep class com.baidu.idl.main.facesdk.** {*;}
+-keep class com.baidu.idl.face.platform.** {*;}
+-keep class com.baidu.liantian.utility.WbEncryptUtil {*;}
+-keepclasseswithmembers class * {
+native <methods>;
+}
+
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+#
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+-keepattributes *JavascriptInterface*
+-ignorewarnings
+
+-keep class com.baidu.liantian.ac.** {*;}
+-keepclasseswithmembers class com.baidu.liantian.jni.Asc {
+    native <methods>;
+}
+-keepclasseswithmembers class com.baidu.liantian.ac.F {*;}
+-keep public class com.baidu.liantian.active.Active {*;}
+-keep public class com.baidu.liantian.mutiprocess.Sp {*;}
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep class com.baidu.liantian.core.ApkInfo {*;}
+-keep class com.baidu.liantian.rp.Report {
+    <methods>;
+}
+
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+
+
+-keep class com.baidu.liantian.engine.EngineImpl {*;}
+-keep class com.baidu.liantian.x0.jni.** {*;}
+-keep class com.baidu.liantian.x6.jni.EmulatorAcquisition {*;}
+-keep class com.baidu.liantian.x0.EngineImpl {*;}
+-keep class com.baidu.liantian.x6.EngineImpl {*;}
+-keeppackagenames com.baidu.sec
+
+
+
+
+
+
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+-keep class com.baidu.idl.face.platform.listener.IInitCallback
+-keep class com.baidu.idl.face.platform.listener.ISecurityCallback
+-keepclassmembers class com.baidu.idl.face.platform.listener.IInitCallback {
+    void init*();
+    void init*(...);
+}
+-keepclassmembers class com.baidu.idl.face.platform.listener.ISecurityCallback {
+    void getFaceInfoForSecurity(...);
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.model.FaceExtInfo {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.model.ImageInfo {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.model.VersionInfo {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.utils.Base64Utils {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.utils.BitmapUtils {
+    <fields>;
+    <methods>;
+}
+-keep class com.baidu.idl.face.platform.utils.APIUtils {
+    public static boolean has*();
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.utils.DensityUtils {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.utils.FileUtils {
+    <fields>;
+    <methods>;
+}
+-keep class com.baidu.idl.face.platform.utils.SystemUtils {
+    public static boolean check*();
+    public static *** get*(...);
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.FaceConfig {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.FaceEnvironment {
+    <fields>;
+    <methods>;
+}
+-keep public class com.baidu.idl.face.platform.FaceSDKManager {
+    public static FaceSDKManager getInstance();
+    public void init*(...);
+    public void set*(...);
+    public *** get*();
+    public void release();
+    public *** get*(...);
+    public *** scale*(...);
+    public *** image*(...);
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.FaceStatusNewEnum {
+    <fields>;
+    <methods>;
+}
+-keep class com.baidu.idl.face.platform.ILivenessStrategy
+-keep class com.baidu.idl.face.platform.ILivenessStrategyCallback
+-keep class com.baidu.idl.face.platform.ILivenessViewCallback
+-keepclassmembers class com.baidu.idl.face.platform.ILivenessStrategy {
+    void set*(...);
+    void liveness*(...);
+    void reset();
+}
+-keepclassmembers class com.baidu.idl.face.platform.ILivenessStrategyCallback {
+    void onCollect*(...);
+}
+-keepclassmembers class com.baidu.idl.face.platform.ILivenessViewCallback {
+    void set*(...);
+    void viewReset();
+    void animStop();
+    void start*(...);
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.LivenessTypeEnum {
+    <fields>;
+    <methods>;
+}
+-keepclasseswithmembers class com.baidu.idl.face.platform.manager.TimeManager {
+    <fields>;
+    <methods>;
+}
+# 保持授权库、facesdk库不被混淆
+-keep class com.baidu.vis.unified.license.** { *;}
+-keep class com.baidu.idl.main.facesdk.** { *;}
+
+-keepattributes *JavascriptInterface*
+-ignorewarnings
+
+-keep class com.baidu.liantian.ac.** {*;}
+-keepclasseswithmembers class com.baidu.liantian.jni.Asc {
+    native <methods>;
+}
+-keepclasseswithmembers class com.baidu.liantian.ac.F {*;}
+-keep public class com.baidu.liantian.active.Active {*;}
+-keep public class com.baidu.liantian.mutiprocess.Sp {*;}
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep class com.baidu.liantian.core.ApkInfo {*;}
+-keep class com.baidu.liantian.rp.Report {
+    <methods>;
+}
+
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+
+#for face liantian
+-keep class com.baidu.vis.unified.license.** {*;}
+-keep class com.baidu.baidusec.** {*;}
+-keep class com.baidu.protect.** {*;}
+-keep class com.baidu.idl.main.facesdk.** {*;}
+-keep class com.baidu.idl.face.platform.** {*;}
+-keep class com.baidu.liantian.utility.WbEncryptUtil {*;}
+-keepclasseswithmembers class * {
+native <methods>;
+}
+
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+#
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+-keepattributes *JavascriptInterface*
+-ignorewarnings
+
+-keep class com.baidu.liantian.ac.** {*;}
+-keepclasseswithmembers class com.baidu.liantian.jni.Asc {
+    native <methods>;
+}
+-keepclasseswithmembers class com.baidu.liantian.ac.F {*;}
+-keep public class com.baidu.liantian.active.Active {*;}
+-keep public class com.baidu.liantian.mutiprocess.Sp {*;}
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep class com.baidu.liantian.core.ApkInfo {*;}
+-keep class com.baidu.liantian.rp.Report {
+    <methods>;
+}
+
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+
+
+-keep class com.baidu.liantian.engine.EngineImpl {*;}
+-keep class com.baidu.liantian.x0.jni.** {*;}
+-keep class com.baidu.liantian.x6.jni.EmulatorAcquisition {*;}
+-keep class com.baidu.liantian.x0.EngineImpl {*;}
+-keep class com.baidu.liantian.x6.EngineImpl {*;}
+-keeppackagenames com.baidu.sec
+
+
+
+
+

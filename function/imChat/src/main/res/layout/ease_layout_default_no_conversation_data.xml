@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center">
+
+    <ImageView
+        android:layout_width="@dimen/dp_138"
+        android:layout_height="@dimen/dp_106"
+        android:src="@drawable/ease_icon_no_conversation" />
+
+    <TextView
+        android:id="@+id/tv_no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:textSize="@dimen/sp_14"
+        android:textColor="@color/cl_common_opacity_60"
+        android:text="@string/ease_list_no_conversation_data_text"/>
+
+</LinearLayout>

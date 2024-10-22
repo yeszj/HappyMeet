@@ -13,11 +13,11 @@ val cfg = rootProject.ext
 val keyName = "meetKey"
 android {
 
-    namespace = "cn.huanyuan.happymeet"
+    namespace = "cn.huanyuan.sweetlove"
     compileSdk = cfg["compileSdkVersion"] as Int
 
     defaultConfig {
-        applicationId = "cn.huanyuan.happymeet"
+        applicationId = "cn.huanyuan.sweetlove"
         minSdk = cfg["minSdkVersion"] as Int
         targetSdk = cfg["targetSdkVersion"] as Int
         versionCode = 1
@@ -29,7 +29,7 @@ android {
             abiFilters.add("arm64-v8a")
         }
        // resourceConfigurations.add("zh")
-        manifestPlaceholders["JPUSH_APPKEY"] = "4035ab3342a72a02d9de14bd"
+        manifestPlaceholders["JPUSH_APPKEY"] = "fcef63ea7f2461eb0d70f55f"
         manifestPlaceholders["JPUSH_PKGNAME"] = applicationId!!
         manifestPlaceholders["JPUSH_CHANNEL"] = "developer-default"
     }
@@ -54,8 +54,8 @@ android {
             )
             buildConfigField(
                 "String",
-                "BASE_SERVER_ADDRES",
-                "\"https://mock.apifox.com/m1/3995814-0-default/\""
+                "BASE_SERVER_ADDRESS",
+                "\"http://dev-qxq.hanyonjoy.com/\""
             )
         }
         release {
@@ -66,7 +66,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_SERVER_ADDRES", "\"https://app.sengos.com/app/v1/\"")
+            buildConfigField("String", "BASE_SERVER_ADDRESS", "\"http://qxq.hanyonjoy.com/\"")
         }
     }
     compileOptions {
@@ -95,7 +95,7 @@ dependencies {
     implementation("com.google.android.material:material:${cfg["materialVersion"]}")
     implementation(project(mapOf("path" to ":function:dynamic")))
     testImplementation("junit:junit:${cfg["junitVersion"]}")
-
+    kapt("com.github.bumptech.glide:compiler:${rootProject.ext.get("glide")}")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation(project(mapOf("path" to ":function:commonRes")))

@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cn.yanhu.agora.R" />
+
+        <import type="android.view.View" />
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="callInfo"
+            type="cn.yanhu.commonres.bean.ChatCallResponseInfo" />
+        <variable
+            name="chatUserInfo"
+            type="cn.yanhu.commonres.bean.UserDetailInfo" />
+        <!--通话时间计时器-->
+        <variable
+            name="timer"
+            type="String" />
+
+        <!--免费通话时间-->
+        <variable
+            name="freeTime"
+            type="Integer" />
+
+        <!--剩余通话时间-->
+        <variable
+            name="remainTime"
+            type="Integer" />
+
+        <!--剩余通话时间-->
+        <variable
+            name="chatVideoClose"
+            type="boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_login_bg"
+        tools:context=".ui.activity.imphone.VoicePhoneActivity">
+
+        <SurfaceView
+            android:id="@+id/call_to_video_sf"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/to_bg_preload"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_cl"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_corner_12"
+                android:backgroundTint="#1AFFFFFF"
+                android:paddingStart="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_4"
+                android:paddingEnd="@dimen/dp_8"
+                android:paddingBottom="@dimen/dp_4"
+                android:text="@{timer}"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/top_bar_wmode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:src="@mipmap/ic_wmode"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/top_bar_eye"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:src="@{chatUserInfo.colseVideo ? ContextCompat.getDrawable(context,R.mipmap.ic_eye_close) : ContextCompat.getDrawable(context,R.mipmap.ic_eye_look)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/to_ll"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:visibility="@{chatUserInfo == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top_cl"
+            tools:visibility="visible">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/call_to_user_portrait"
+                android:layout_width="@dimen/dp_80"
+                android:layout_height="@dimen/dp_80"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_oval="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginTop="@dimen/dp_35"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/call_to_user_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{chatUserInfo.nickName}"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold"
+                    tools:text="昵称" />
+
+                <TextView
+                    android:id="@+id/call_to_user_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{chatUserInfo.age + `岁` + (TextUtils.isEmpty(chatUserInfo.province)?``: ` | `+chatUserInfo.province)}"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_13"
+                    tools:text="30岁" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#1AFFFFFF"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dp_6"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/to_ll"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:src="@mipmap/ic_live_room_notice_icon" />
+
+            <cn.yanhu.commonres.view.MyMarqueeTextView
+                android:id="@+id/notice_txt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_2"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="3"
+                android:singleLine="true"
+                android:text="@{callInfo.notice}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                android:textStyle="normal"
+                tools:text="公告公告改功能够昂看电视">
+
+            </cn.yanhu.commonres.view.MyMarqueeTextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/free_timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#1AFFFFFF"
+            android:gravity="center"
+            android:padding="@dimen/dp_6"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/notice"
+            tools:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`免费通话即将结束，` + freeTime + `s后将消耗你` + callInfo.price}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                tools:text="免费通话即将结束10s后将消耗你60" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
+                android:layout_marginStart="@dimen/dp_1"
+                android:src="@drawable/icon_rose_16" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/分钟"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/remain_timer"
+            android:layout_width="@dimen/dp_260"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/white_corner_20"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/dp_12"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/free_timer"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_hangUpTips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="玫瑰余额不足，通话即将结束"
+                    android:textColor="@color/cl_common"
+                    android:textSize="@dimen/sp_14"
+                    tools:text="玫瑰余额不足，通话即将结束(" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@{remainTime + `s`}"
+                    android:textColor="@color/colorTextRed"
+                    android:textSize="@dimen/sp_14"
+                    tools:text="60s" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text=")"
+                    android:textColor="@color/cl_common"
+                    android:textSize="@dimen/sp_14" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/call_recharge"
+                android:layout_width="@dimen/dp_84"
+                android:layout_height="@dimen/dp_32"
+                android:layout_marginTop="@dimen/dp_16"
+                android:background="@drawable/gradient_main_r10"
+                android:gravity="center"
+                android:text="立即充值"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/call_gift"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginBottom="@dimen/dp_30"
+            android:src="@drawable/svg_call_gift"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/call_finish" />
+
+        <ImageView
+            android:id="@+id/call_video"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginBottom="@dimen/dp_30"
+            android:src="@drawable/svg_call_switch"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/call_finish" />
+
+        <ImageView
+            android:id="@+id/call_finish"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginBottom="@dimen/dp_30"
+            android:src="@drawable/svg_phone_hangup"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.opensource.svgaplayer.SVGAImageView
+            android:id="@+id/call_svga_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:autoPlay="true"
+            app:clearsAfterStop="true"
+            app:fillMode="Backward" />
+
+        <cn.yanhu.commonres.view.GiftFrameLayout
+            android:id="@+id/call_gift_dialog_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/call_gift_dialog_two" />
+
+        <cn.yanhu.commonres.view.GiftFrameLayout
+            android:id="@+id/call_gift_dialog_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/call_gift" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_waiting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="invisible"
+        android:background="@drawable/bg_login_bg"
+        tools:context=".ui.activity.imphone.ToWaitPhoneActivity">
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/call_wait_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            drawableUrl="@{chatUserInfo.portrait}"
+            android:scaleType="centerCrop"
+            android:visibility="visible" />
+
+        <View
+            android:layout_width="match_parent"
+            android:background="#33000000"
+            android:layout_height="match_parent"/>
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_25"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleLeftIco="@drawable/svg_white_back"
+            app:titleName=" " />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            imageUrl="@{chatUserInfo.portrait}"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_50"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/titleBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/titleBar"
+            app:riv_oval="true"
+            tools:src="@drawable/ease_default_avatar" />
+
+        <TextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="@{chatUserInfo.nickName}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+            app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+            tools:text="微风轻柔" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/userInfoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            userGender="@{chatUserInfo.gender}"
+            userAge="@{chatUserInfo.age}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName" />
+
+
+        <TextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_15"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintBottom_toTopOf="@+id/vg_hangUp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="接通中，请稍候..." />
+
+        <LinearLayout
+            android:id="@+id/vg_hangUp"
+            android:layout_width="@dimen/dp_70"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/dp_40"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:src="@drawable/svg_phone_hangup" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_12"
+                android:text="挂断"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

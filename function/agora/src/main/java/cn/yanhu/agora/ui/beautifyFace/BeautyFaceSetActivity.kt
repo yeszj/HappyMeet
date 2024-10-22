@@ -7,9 +7,8 @@ import android.widget.SeekBar
 import cn.yanhu.agora.R
 import cn.yanhu.agora.adapter.BeautyFaceSetAdapter
 import cn.yanhu.agora.bean.BeautyBean
-import cn.yanhu.agora.config.AgoraManager
-import cn.yanhu.agora.config.rtc.RtcManager
 import cn.yanhu.agora.databinding.ActivityBeautyFaceSetBinding
+import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.BeautySetManager
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.base.BaseActivity
@@ -22,6 +21,7 @@ import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.utils.PermissionXUtils
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.google.gson.Gson
 
@@ -33,7 +33,7 @@ import com.google.gson.Gson
 class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoomViewModel>(
     R.layout.activity_beauty_face_set,
     LiveRoomViewModel::class.java
-) {
+)  {
     private val beautyFaceSetAdapter by lazy { BeautyFaceSetAdapter() }
     private var beautyAllList: MutableList<BeautyBean> = mutableListOf()
     private var beautyList: MutableList<BeautyBean> = mutableListOf()
@@ -45,9 +45,16 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
         mBinding.alertkey = ""
         checkPermission()
         mBinding.rvBeauty.adapter = beautyFaceSetAdapter
-        beautyAllList = BeautySetManager.getInstance().beautyList
-        beautyList = beautyAllList.subList(0, 5)
-        beautyFaceSetAdapter.submitList(beautyList)
+        ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
+            override fun doInBackground(): Boolean {
+                beautyAllList = BeautySetManager.getInstance().beautyList
+                return true
+            }
+            override fun onSuccess(result: Boolean?) {
+                beautyList = beautyAllList.subList(0, 5)
+                beautyFaceSetAdapter.submitList(beautyList)
+            }
+        })
 
     }
 
@@ -89,7 +96,7 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
     private fun showExitDialog() {
         DialogUtils.showConfirmDialog("确定退出美颜设置吗？", {
             finish()
-        })
+        }, cancel = "取消")
     }
 
     private fun switchToBeautyType() {
@@ -136,7 +143,7 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
                 .setBeautyProperty(beautyBean.key, beautyBean.value)
         }
         beautyFaceSetAdapter.notifyDataSetChanged()
-    })
+    }, cancel = "取消")
 
     private fun addOnSeekBarListener() {
         mBinding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -193,11 +200,12 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
         PermissionXUtils.checkPermission(
             mContext,
             permissions,
-            "对爱相亲想访问您的以下权限，用于美颜设置",
+            "对爱交友想访问您的以下权限，用于美颜设置",
             "您拒绝授权权限，将无法体验部分功能",
             object : PermissionXUtils.PermissionListener {
                 override fun onSuccess() {
-                    RtcManager.startPreLocalVideoView(mBinding.beautySetSf)
+                    AgoraManager.getInstence()
+                        .init(mContext,  1, mBinding.beautySetSf)
                 }
 
                 override fun onFail() {
@@ -214,6 +222,7 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
 
     override fun exactDestroy() {
         super.exactDestroy()
-        AgoraManager.getInstance().clearRtcHandler()
+        AgoraManager.getInstence().onDestory()
     }
+
 }

@@ -143,7 +143,7 @@
                     android:lineSpacingExtra="@dimen/dp_3"
                     android:paddingHorizontal="@dimen/dp_33"
                     android:paddingBottom="@dimen/dp_30"
-                    android:text="日志中仅包含趣相亲的故障记录、技术数据，不包含聊天记录等用户隐私信息。"
+                    android:text="日志中仅包含趣交友的故障记录、技术数据，不包含聊天记录等用户隐私信息。"
                     android:textColor="@color/fontGrayColor"
                     android:textSize="@dimen/sp_14" />
             </LinearLayout>

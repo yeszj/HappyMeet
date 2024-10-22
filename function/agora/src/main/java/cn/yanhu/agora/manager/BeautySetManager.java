@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.yanhu.agora.R;
-import cn.huanyuan.happymeet.authpack;
+import cn.huanyuan.sweetlove.authpack;
 import cn.yanhu.agora.bean.BeautyBean;
 import io.agora.rtc2.RtcEngine;
 
@@ -122,7 +122,9 @@ public class BeautySetManager {
 
     //设置属性
     private void setExtensionProperty(String key, String property) {
-        mRtcEngine.setExtensionProperty("FaceUnity", "Effect", key, property);
+        if (mRtcEngine!=null){
+            mRtcEngine.setExtensionProperty("FaceUnity", "Effect", key, property);
+        }
     }
 
     //美颜道具包路径

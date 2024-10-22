@@ -1,0 +1,9 @@
+com.baidu.secsdk.merge
+drawable ic_launcher
+string action_settings
+string app_name
+string init1
+string init2
+string init3
+string init4
+string start

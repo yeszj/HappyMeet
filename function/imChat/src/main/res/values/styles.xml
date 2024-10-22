@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="chat_im_avatar_style" >
+        <item name="android:layout_marginStart">@dimen/dp_2</item>
+        <item name="android:layout_marginEnd">@dimen/dp_2</item>
+        <item name="android:layout_width">@dimen/dp_50</item>
+        <item name="android:layout_height">@dimen/dp_50</item>
+    </style>
+
+    <style name="chat_im_avatar_size">
+        <item name="android:layout_width">@dimen/dp_50</item>
+        <item name="android:layout_height">@dimen/dp_50</item>
+        <item name="android:layout_marginStart">@dimen/dp_2</item>
+        <item name="android:layout_marginEnd">@dimen/dp_2</item>
+    </style>
+</resources>

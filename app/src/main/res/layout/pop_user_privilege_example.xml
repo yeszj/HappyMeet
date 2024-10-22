@@ -7,7 +7,7 @@
 
         <variable
             name="privilegeInfo"
-            type="cn.huanyuan.happymeet.bean.LevelPrivilegeInfo" />
+            type="cn.huanyuan.sweetlove.bean.LevelPrivilegeInfo" />
     </data>
 
     <LinearLayout

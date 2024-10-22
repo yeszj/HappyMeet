@@ -7,7 +7,7 @@
 
         <variable
             name="rankInfo"
-            type="cn.huanyuan.happymeet.bean.RankInfo" />
+            type="cn.huanyuan.sweetlove.bean.RankInfo" />
 
         <variable
             name="type"

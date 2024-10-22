@@ -7,7 +7,7 @@
 
         <variable
             name="walletInfo"
-            type="cn.huanyuan.happymeet.bean.WalletInfo" />
+            type="cn.huanyuan.sweetlove.bean.WalletInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -82,7 +82,7 @@
                     <View
                         android:id="@+id/bgBalance"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_198"
+                        android:layout_height="@dimen/dp_196"
                         android:layout_marginStart="@dimen/dp_12"
                         android:layout_marginTop="@dimen/dp_12"
                         android:layout_marginEnd="@dimen/dp_12"
@@ -91,15 +91,16 @@
 
                     <cn.yanhu.baselib.view.CustomFontTextView
                         android:id="@+id/tv_wallet"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_132"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/dp_36"
+                        android:layout_marginStart="@dimen/dp_24"
                         android:text="钱包余额(元)"
+                        android:gravity="center_horizontal"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
+                        android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontMedium"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_withDraw"
-                        app:layout_constraintStart_toStartOf="@+id/btn_withDraw"
+                        app:layout_constraintStart_toStartOf="@+id/bgBalance"
                         app:layout_constraintTop_toTopOf="@+id/bgBalance" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
@@ -111,22 +112,23 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_24"
                         app:fontType="@string/fontBold"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_withDraw"
-                        app:layout_constraintStart_toStartOf="@+id/btn_withDraw"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_wallet"
+                        app:layout_constraintStart_toStartOf="@+id/tv_wallet"
                         app:layout_constraintTop_toBottomOf="@+id/tv_wallet"
                         tools:text="1000.00" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
                         android:id="@+id/tv_ncomeTitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_132"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/dp_36"
                         android:text="累计总收入(元)"
+                        android:layout_marginEnd="@dimen/dp_24"
+                        android:gravity="center_horizontal"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
+                        android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontMedium"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_exchange"
-                        app:layout_constraintStart_toStartOf="@+id/btn_exchange"
+                        app:layout_constraintEnd_toEndOf="@+id/bgBalance"
                         app:layout_constraintTop_toTopOf="@+id/bgBalance" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
@@ -138,17 +140,15 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_24"
                         app:fontType="@string/fontBold"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_exchange"
-                        app:layout_constraintStart_toStartOf="@+id/btn_exchange"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_ncomeTitle"
+                        app:layout_constraintStart_toStartOf="@+id/tv_ncomeTitle"
                         app:layout_constraintTop_toBottomOf="@+id/tv_ncomeTitle"
                         tools:text="0.00" />
 
                     <cn.yanhu.baselib.view.CustomFontButton
                         android:id="@+id/btn_withDraw"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dp_132"
                         android:layout_height="@dimen/dp_40"
-                        android:layout_marginStart="@dimen/dp_24"
-                        android:layout_marginEnd="@dimen/dp_12"
                         android:layout_marginBottom="@dimen/dp_24"
                         android:background="@drawable/white_alpha60_r20"
                         android:text="提现"
@@ -163,6 +163,7 @@
                         android:id="@+id/btn_exchange"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_40"
+                        android:visibility="gone"
                         android:layout_marginStart="@dimen/dp_12"
                         android:layout_marginEnd="@dimen/dp_24"
                         android:layout_marginBottom="@dimen/dp_24"
@@ -196,7 +197,7 @@
                     <View
                         android:id="@+id/bgInvite"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_198"
+                        android:layout_height="@dimen/dp_196"
                         android:layout_marginStart="@dimen/dp_12"
                         android:layout_marginTop="@dimen/dp_12"
                         android:layout_marginEnd="@dimen/dp_12"
@@ -205,15 +206,16 @@
 
                     <cn.yanhu.baselib.view.CustomFontTextView
                         android:id="@+id/tv_inviteTitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_132"
                         android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_marginStart="@dimen/dp_24"
                         android:paddingTop="@dimen/dp_36"
                         android:text="邀请收益(元)"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
+                        android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontMedium"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_detail"
-                        app:layout_constraintStart_toStartOf="@+id/btn_detail"
+                        app:layout_constraintStart_toStartOf="@+id/bgInvite"
                         app:layout_constraintTop_toTopOf="@+id/bgInvite" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
@@ -225,22 +227,23 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_24"
                         app:fontType="@string/fontBold"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_withDraw"
-                        app:layout_constraintStart_toStartOf="@+id/btn_withDraw"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_inviteTitle"
+                        app:layout_constraintStart_toStartOf="@+id/tv_inviteTitle"
                         app:layout_constraintTop_toBottomOf="@+id/tv_inviteTitle"
                         tools:text="5.00" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
                         android:id="@+id/tv_hasInviteTitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_132"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/dp_36"
                         android:text="已邀请(人)"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
+                        android:textSize="@dimen/sp_14"
+                        android:gravity="center_horizontal"
+                        android:layout_marginEnd="@dimen/dp_24"
                         app:fontType="@string/fontMedium"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_invite"
-                        app:layout_constraintStart_toStartOf="@+id/btn_invite"
+                        app:layout_constraintEnd_toEndOf="@+id/bgInvite"
                         app:layout_constraintTop_toTopOf="@+id/bgInvite" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
@@ -252,8 +255,8 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_24"
                         app:fontType="@string/fontBold"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_exchange"
-                        app:layout_constraintStart_toStartOf="@+id/btn_exchange"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_hasInviteTitle"
+                        app:layout_constraintStart_toStartOf="@+id/tv_hasInviteTitle"
                         app:layout_constraintTop_toBottomOf="@+id/tv_hasInviteTitle"
                         tools:text="2" />
 
@@ -266,6 +269,7 @@
                         android:layout_marginBottom="@dimen/dp_24"
                         android:background="@drawable/white_alpha60_r20"
                         android:text="查看详情"
+                        android:visibility="gone"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontBold"
@@ -275,10 +279,8 @@
 
                     <cn.yanhu.baselib.view.CustomFontButton
                         android:id="@+id/btn_invite"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/dp_132"
                         android:layout_height="@dimen/dp_40"
-                        android:layout_marginStart="@dimen/dp_12"
-                        android:layout_marginEnd="@dimen/dp_24"
                         android:layout_marginBottom="@dimen/dp_24"
                         android:background="@drawable/white_corner_20"
                         android:text="继续邀请"

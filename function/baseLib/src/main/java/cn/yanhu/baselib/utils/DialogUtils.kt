@@ -130,13 +130,25 @@ object DialogUtils {
     fun showConfirmDialog(
         title: CharSequence,
         onConfirmListener: OnConfirmListener? = null,
+        content: CharSequence = "",
+        confirm: String? = CommonUtils.getString(R.string.confirm),
+    ): BasePopupView {
+       return showConfirmDialog(title,onConfirmListener,content=content, isHideCancel = true, cancel = "", confirm = confirm)
+    }
+
+
+    @JvmStatic
+    fun showConfirmDialog(
+        title: CharSequence,
+        onConfirmListener: OnConfirmListener? = null,
         onCancelListener: OnCancelListener? = null,
-        content: String = "",
+        content: CharSequence = "",
         cancel: String? = CommonUtils.getString(R.string.cancel),
         confirm: String? = CommonUtils.getString(R.string.confirm),
         isHideCancel: Boolean = false,
         isAutoDismiss: Boolean = true,
         confirmBg: Int = R.drawable.shape_common_btn_r30,
+        cancelBg: Int = R.drawable.shape_transparent,
         context: Context = ActivityUtils.getTopActivity()
     ): BasePopupView {
         val asConfirm = XPopup.Builder(context)
@@ -152,6 +164,7 @@ object DialogUtils {
                 onCancelListener, isHideCancel,
                 R.layout.dialog_common_center_confirm
             )
+        asConfirm.cancelTextView.setBackgroundResource(cancelBg)
         asConfirm.confirmTextView.setBackgroundResource(confirmBg)
         return asConfirm.show()
     }

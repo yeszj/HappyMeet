@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="info"
+            type="cn.yanhu.agora.bean.RoomLeaveResponse" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_three_room"
+        tools:context=".ui.activity.liveroom.LiveRoomEndActivity">
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleLeftIco="@drawable/svg_white_back" />
+
+
+        <TextView
+            android:id="@+id/live_room_end_txt_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/titleBar"
+            android:layout_marginTop="@dimen/dp_80"
+            android:layout_marginStart="@dimen/dp_60"
+            android:layout_marginEnd="@dimen/dp_60"
+            android:gravity="center"
+            android:text="直播已结束"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_20"
+            android:textStyle="bold"
+            android:visibility="@{info.ifOwner ? View.GONE : View.VISIBLE}" />
+
+        <TextView
+            android:id="@+id/tv_reason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/live_room_end_txt_two"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:paddingStart="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingEnd="@dimen/dp_15"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_18"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="关房原因：的点点滴滴" />
+
+
+        <LinearLayout
+            android:id="@+id/live_room_end_info_ll"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_234"
+            android:layout_below="@id/live_room_end_portrait"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_m_30"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:background="@drawable/white_corner_20"
+            android:backgroundTint="#33FFFFFF"
+            android:orientation="vertical"
+            android:visibility="@{info.ifOwner ? View.VISIBLE : View.GONE}">
+
+            <TextView
+                android:id="@+id/live_room_end_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_30"
+                android:gravity="center"
+                android:text="@{info.ownerInfo.nickName}"
+                android:textColor="@color/whiteColorAlpha40"
+                android:textSize="@dimen/sp_14"
+                tools:text="微甜汽水" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_300"
+                android:src="@drawable/icon_live_end"
+                android:layout_marginTop="@dimen/dp_36"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dp_36"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/live_room_end_duration"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_20"
+                        android:gravity="center"
+                        android:text="@{info.ownerInfo.duration+``}"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dp_18"
+                        tools:text="00:04:334" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:gravity="center"
+                        android:text="开播时长"
+                        android:textColor="@color/whiteColorAlpha40"
+                        android:textSize="@dimen/sp_13" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/live_room_end_peopleNum"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_20"
+                        android:gravity="center"
+                        android:text="@{info.ownerInfo.peopleNum+``}"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dp_18"
+                        tools:text="20" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:gravity="center"
+                        android:text="观看人数"
+                        android:textColor="@color/whiteColorAlpha40"
+                        android:textSize="@dimen/sp_13" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/live_room_end_roseNum"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_20"
+                        android:gravity="center"
+                        android:text="@{info.ownerInfo.roseNum+``}"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dp_18"
+                        tools:text="20" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:gravity="center"
+                        android:text="玫瑰收益"
+                        android:textColor="@color/whiteColorAlpha40"
+                        android:textSize="@dimen/sp_13" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/live_room_end_portrait"
+            imageUrl="@{info.ownerInfo.portrait}"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:layout_below="@id/titleBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_130"
+            android:scaleType="centerCrop"
+            android:visibility="@{info.ifOwner ? View.VISIBLE : View.GONE}"
+            app:riv_oval="true"
+            tools:src="@drawable/ease_default_avatar" />
+
+        <Button
+            android:id="@+id/live_room_end_off"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/dp_25"
+            android:layout_marginEnd="@dimen/dp_25"
+            android:visibility="@{info.ifOwner ? View.VISIBLE : View.GONE}"
+            android:layout_marginBottom="@dimen/dp_50"
+            android:background="@drawable/common_shape_btn_gradient_r30"
+            android:text="返回大厅"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16" />
+
+    </RelativeLayout>
+
+
+</layout>

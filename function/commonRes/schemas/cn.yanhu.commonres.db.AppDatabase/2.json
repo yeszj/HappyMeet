@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "ab8d663be787dedd3531e960b9222d8a",
+    "identityHash": "ba917fc8ba8672f58ecf22881932335b",
     "entities": [
       {
         "tableName": "BaseUserInfo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` TEXT, `portrait` TEXT, `nickName` TEXT, `gender` INTEGER NOT NULL, `age` INTEGER NOT NULL, `province` TEXT, `city` TEXT, `hometown` TEXT, `isSelect` INTEGER NOT NULL, `avatarFrame` TEXT, `level` INTEGER NOT NULL, `leveIcon` TEXT, `description` TEXT, `onlineStatus` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userId` TEXT, `portrait` TEXT, `nickName` TEXT, `gender` INTEGER NOT NULL, `age` INTEGER NOT NULL, `province` TEXT, `city` TEXT, `hometown` TEXT, `isSelect` INTEGER NOT NULL, `avatarFrame` TEXT, `level` INTEGER NOT NULL, `leveIcon` TEXT, `description` TEXT, `onlineStatus` INTEGER NOT NULL, `baseObjId` INTEGER NOT NULL, `associatedModelsMapWithFK` TEXT, `associatedModelsMapWithoutFK` TEXT, `associatedModelsMapForJoinTable` TEXT, `listToClearSelfFK` TEXT, `listToClearAssociatedFK` TEXT, `fieldsToSetToDefault` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -97,13 +97,53 @@
             "columnName": "onlineStatus",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "baseObjId",
+            "columnName": "baseObjId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "associatedModelsMapWithFK",
+            "columnName": "associatedModelsMapWithFK",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "associatedModelsMapWithoutFK",
+            "columnName": "associatedModelsMapWithoutFK",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "associatedModelsMapForJoinTable",
+            "columnName": "associatedModelsMapForJoinTable",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "listToClearSelfFK",
+            "columnName": "listToClearSelfFK",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "listToClearAssociatedFK",
+            "columnName": "listToClearAssociatedFK",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fieldsToSetToDefault",
+            "columnName": "fieldsToSetToDefault",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
+          "autoGenerate": false,
+          "columnNames": []
         },
         "indices": [],
         "foreignKeys": []
@@ -112,7 +152,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ab8d663be787dedd3531e960b9222d8a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ba917fc8ba8672f58ecf22881932335b')"
     ]
   }
 }

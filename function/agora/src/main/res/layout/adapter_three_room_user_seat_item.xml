@@ -7,7 +7,7 @@
 
         <variable
             name="seatInfo"
-            type="cn.yanhu.agora.bean.RoomSeatInfo" />
+            type="cn.yanhu.commonres.bean.RoomSeatInfo" />
 
         <import type="android.view.View" />
     </data>
@@ -25,13 +25,22 @@
         app:hl_layoutBackground="@color/whiteColorAlpha90"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
-
-        <SurfaceView
-            android:id="@+id/surfaceView"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_avatarBg"
+            maskRadius="@{25}"
+            maskSampling="@{2}"
+            maskUrl="@{seatInfo.roomUserSeatInfo.portrait}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible" />
+            android:scaleType="centerCrop"
+            tools:ignore="MissingConstraints" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_video_sf"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{seatInfo.ifLeave?View.INVISIBLE:View.VISIBLE}"
+            tools:visibility="gone" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vg_emptySeat"
@@ -87,40 +96,36 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/vg_userStatusChange"
-                android:visibility="@{!seatInfo.videoUser|| seatInfo.ifLeave?View.VISIBLE:View.INVISIBLE}"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_avatarBg"
-                    maskUrl="@{seatInfo.roomUserSeatInfo.portrait}"
-                    maskRadius="@{25}"
-                    maskSampling="@{2}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    tools:ignore="MissingConstraints" />
+                android:layout_height="match_parent"
+                android:visibility="@{seatInfo.ifLeave?View.VISIBLE:View.INVISIBLE}">
+
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/bg_seat_leave" />
+                    android:src="@drawable/bg_seat_leave"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <cn.yanhu.baselib.view.CustomFontTextView
                     android:id="@+id/tv_statusDesc"
                     style="@style/common_white_shadow"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='@{seatInfo.ifLeave?"暂时离开":"摄像头已关闭"}'
-                    tools:text="暂时离开"
+                    android:text="暂时离开"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_16"
-                    app:fontType="@string/fontMedium" />
+                    app:fontType="@string/fontMedium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="暂时离开" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
             <com.makeramen.roundedimageview.RoundedImageView
@@ -136,6 +141,7 @@
                 tools:src="@color/customer_service_blue" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
+                style="@style/common_white_shadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_m_2"
@@ -144,12 +150,12 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_13"
                 app:fontType="@string/fontMedium"
-                style="@style/common_white_shadow"
                 app:layout_constraintStart_toEndOf="@+id/iv_avatar"
                 app:layout_constraintTop_toTopOf="@+id/iv_avatar"
                 tools:text="王地主" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
+                style="@style/common_white_shadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_m_2"
@@ -157,12 +163,12 @@
                 android:text="@{seatInfo.roomUserSeatInfo.strNoGenderInfo}"
                 android:textColor="@color/whiteAlpha30"
                 android:textSize="@dimen/sp_12"
-                style="@style/common_white_shadow"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
                 app:layout_constraintStart_toEndOf="@+id/iv_avatar"
                 tools:text="30岁" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_rose"
                 android:layout_width="@dimen/dp_28"
                 android:layout_height="@dimen/dp_28"
                 android:layout_margin="@dimen/dp_4"
@@ -177,6 +183,7 @@
                 android:layout_marginEnd="@dimen/dp_6"
                 android:layout_marginBottom="@dimen/dp_4"
                 android:src="@drawable/icon_video_on_fill"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/iv_voiceStatus"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -186,7 +193,8 @@
                 android:layout_height="@dimen/dp_20"
                 android:layout_marginEnd="@dimen/dp_6"
                 android:layout_marginBottom="@dimen/dp_6"
-                android:src="@drawable/icon_voice_on_fill"
+                android:src="@{seatInfo.mikeUser?@drawable/icon_voice_on_fill:@drawable/icon_micro_off}"
+                tools:src="@drawable/icon_voice_on_fill"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

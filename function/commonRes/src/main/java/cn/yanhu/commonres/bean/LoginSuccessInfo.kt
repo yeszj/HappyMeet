@@ -12,6 +12,7 @@ data class LoginSuccessInfo(
     val token: String,
     val userId: String,
     val isRegister: Boolean,
-    val maleNickNames:MutableList<String>?,
-    val femaleNickNames:MutableList<String>?
-):Serializable
+    val phoneEndNum: String,
+    val baseInfoFinish: Boolean,
+    val province: String
+) : Serializable

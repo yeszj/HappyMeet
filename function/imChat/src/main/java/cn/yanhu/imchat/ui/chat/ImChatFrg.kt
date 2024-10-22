@@ -3,26 +3,35 @@ package cn.yanhu.imchat.ui.chat
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
-import cn.yanhu.baselib.anim.AnimManager
 import cn.yanhu.baselib.base.BaseFragment
-import cn.yanhu.baselib.view.TitleBar
-import cn.yanhu.baselib.widget.RecyclerViewScrollHelper
+import cn.yanhu.baselib.queue.TaskQueueManagerImpl
+import cn.yanhu.baselib.utils.DialogUtils
+import cn.yanhu.baselib.utils.ext.logcom
+import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.UserDetailInfo
+import cn.yanhu.commonres.config.ChatConstant
+import cn.yanhu.commonres.config.CmdMsgTypeConfig
+import cn.yanhu.commonres.config.EventBusKeyConfig
+import cn.yanhu.commonres.manager.LiveDataEventManager
+import cn.yanhu.commonres.task.GiftPopAnimTask
 import cn.yanhu.imchat.ImChatViewModel
 import cn.yanhu.imchat.R
 import cn.yanhu.imchat.config.ChatUiConfig
 import cn.yanhu.imchat.databinding.FrgImChatBinding
-import cn.yanhu.imchat.custom.chat.CustomFunChatP2PFragment
+import cn.yanhu.imchat.db.ChatUserInfoManager
+import cn.yanhu.imchat.manager.EmMsgManager
 import cn.yanhu.imchat.ui.chatSetting.UserChatSettingActivity
+import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.ThreadUtils
-import com.netease.yunxin.kit.corekit.im.model.UserInfo
-import com.netease.yunxin.kit.corekit.im.utils.RouterConstant
-import kotlin.math.abs
+import cn.zj.netrequest.status.ErrorCode
+import com.hyphenate.chat.EMClient
+import com.hyphenate.chat.EMConversation
+import com.hyphenate.chat.EMCustomMessageBody
+import com.hyphenate.chat.EMMessage
+import com.hyphenate.easeui.constants.EaseConstant
+import com.jeremyliao.liveeventbus.LiveEventBus
+import com.lxj.xpopup.core.BasePopupView
 
 /**
  * @author: zhengjun
@@ -34,131 +43,209 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
     R.layout.frg_im_chat,
     ImChatViewModel::class.java
 ) {
-    private var chatFragment: CustomFunChatP2PFragment? = null
+    lateinit var chatFragment: ChatFragment
     private var userId: String = ""
-    private var isAnim: Boolean = false
-    private var userViewHeight = 0
+    private var isPop: Boolean = false
     override fun initData() {
-        val userInfo = requireArguments().getSerializable(RouterConstant.CHAT_KRY) as UserInfo?
-        userId = requireArguments().getString(RouterConstant.CHAT_ID_KRY).toString()
-        if (userInfo == null && TextUtils.isEmpty(userId)) {
-            mContext.finish()
+        userId = requireArguments().getString(EaseConstant.EXTRA_CONVERSATION_ID).toString()
+        if (TextUtils.isEmpty(userId)) {
+            finishPage()
             return
         }
-        chatFragment = CustomFunChatP2PFragment()
-        chatFragment?.setInitListener(object : CustomFunChatP2PFragment.OnViewInitListener {
-            override fun initFinish() {
-                registerChatRvScrollListener()
-            }
-        })
+        isPop = requireArguments().getBoolean("isPop", false)
+        chatFragment = ChatFragment()
         ChatUiConfig.initConfig()
-        chatFragment?.arguments = arguments
+        chatFragment.arguments = arguments
         addFragment(chatFragment)
-        KeyboardUtils.registerSoftInputChangedListener(mContext) {
-            if (it>ScreenUtils.getAppScreenHeight()*0.15){
-                hideTopUserView()
-            }else{
-                showTopUserView()
+        userInfo = ChatUserInfoManager.getUserInfo(userId)
+        userInfo?.apply {
+            bindUserInfo(this)
+        }
+        playUnShowGiftAnim()
+    }
+
+    private fun finishPage() {
+        chatFragment?.customEaseChatPrimaryMenu?.hideSoftKeyboard()
+        if (isPop) {
+            LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.CLOSECHATDIALOG, "-1")
+        } else {
+            mContext.finish()
+        }
+    }
+
+    /**
+     * 不在聊天页面时收到的礼物消息
+     * 再次进入聊天页面时播放礼物特效动画
+     */
+    private fun playUnShowGiftAnim() {
+        val conversation =
+            EMClient.getInstance().chatManager().getConversation(userId) ?: return
+        val unreadMsgCount = conversation.unreadMsgCount
+        if (unreadMsgCount > 0) {
+            val emMessages = conversation.searchMsgFromDB(
+                System.currentTimeMillis(),
+                unreadMsgCount,
+                EMConversation.EMSearchDirection.UP
+            )
+            if (emMessages.size > 0) {
+                for (i in emMessages.indices) {
+                    val emMessage = emMessages[i]
+                    if (emMessage.type == EMMessage.Type.CUSTOM) {
+                        val body = emMessage.body as EMCustomMessageBody
+                        if (body.event() == ChatConstant.MSG_GIFT) {
+                            val params = body.params
+                            if (params.containsKey("giftSvga")) {
+                                val svgaUrl = params["giftSvga"]
+                                playSvga(svgaUrl)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
+
+    //播放动画
+    private fun playSvga(url: String?) {
+        if (TextUtils.isEmpty(url)) {
+            return
+        }
+        showGiftSvgAnim(url)
+    }
+
+    private val giftAnimTaskManager = TaskQueueManagerImpl()
+    private fun showGiftSvgAnim(url: String?) {
+        if (TextUtils.isEmpty(url)) {
+            return
+        }
+        //显示礼物特效svg动画
+        giftAnimTaskManager.addTask(GiftPopAnimTask(url!!))
+    }
+
     override fun initListener() {
         super.initListener()
-        val onlineTagView = LayoutInflater.from(context).inflate(R.layout.view_online_tag, null)
-        mBinding.titleBar.setCustomLeftView(onlineTagView)
-        mBinding.titleBar.setTitleButtonOnClickListener(object : TitleBar.TitleButtonOnClickListener{
-            override fun leftButtonOnClick(v: View?) {
-                mContext.finish()
+        mBinding.ivBack.setOnSingleClickListener {
+            finishPage()
+        }
+        mBinding.ivMore.setOnSingleClickListener {
+            UserChatSettingActivity.lunch(mContext, userInfo)
+        }
+        mBinding.tvAddFriend.setOnSingleClickListener {
+            showAddFriendPop()
+        }
+        LiveEventBus.get<EMMessage>(EventBusKeyConfig.RECEIVE_CMD_MSG).observe(this) {
+            val source = it.getIntAttribute("source", -1)
+            if (source == CmdMsgTypeConfig.ADD_FRIEND) {
+                mBinding.vgAddFriendTips.visibility = View.GONE
             }
-
-            override fun rightButtonOnClick(v: View?) {
-                UserChatSettingActivity.lunch(mContext,userInfo)
+        }
+        LiveEventBus.get("sendGift", String::class.java).observe(this) { svga ->
+            logcom("礼盒：$svga")
+            playSvga(svga.toString())
+        }
+        LiveEventBus.get<MutableList<EMMessage>>(EventBusKeyConfig.RECEIVE_CHAT_MSG).observe(this) {
+            for (message in it) {
+                if (message.from!= userId){
+                    break
+                }
+                val body = message.body
+                if (body is EMCustomMessageBody) {
+                    logcom("event：" + (message.body as EMCustomMessageBody).event())
+                    if ((message.body as EMCustomMessageBody).event() == ChatConstant.MSG_GIFT) { //接收礼物，播放动画
+                        val params = (message.body as EMCustomMessageBody).params
+                        if (message.from.equals(userId)) {
+                            LiveDataEventManager.sendLiveDataMessage(
+                                "sendGift",
+                                params["giftSvga"].toString()
+                            )
+                        }
+                    } else if ((message.body as EMCustomMessageBody).event() == ChatConstant.MSG_ADD_FRIEND) { //是否同意好友
+                        val params = (message.body as EMCustomMessageBody).params
+                        if (params["isApplySuccess"] == "1") {
+                            userInfo?.isFriend = true
+                        }
+                    }
+                }
             }
-
-        })
+        }
     }
 
-    private fun registerChatRvScrollListener() {
-        RecyclerViewScrollHelper().attachRecyclerView(chatFragment!!.chatView.messageListView,
-            object : RecyclerViewScrollHelper.Callback {
+    private fun showAddFriendPop(): BasePopupView {
+        return DialogUtils.showConfirmDialog(
+            "添加好友",
+            {
+                addFriend()
+            },
+            {
+            },
+            content = "是否同意花费${userInfo?.needRoseNum}玫瑰，添加好友？",
+            cancel = "取消",
+            confirm = "加好友",
+            cancelBg = cn.yanhu.baselib.R.drawable.shape_cancel_btn_r30
+        )
+    }
 
-                override fun onScrolledToDown(dy:Int) {
-                    //下滑
-                    showTopUserView(dy)
-                }
-
-                override fun onScrolledToUp(dy:Int) {
-                    //上滑
-                    hideTopUserView(dy)
+    private fun addFriend() {
+        mViewModel.addFriend(userId)
+        mViewModel.addFriendObservable.observe(this) { it ->
+            parseState(it, {
+                userInfo?.isFriend = true
+                ChatUserInfoManager.saveUserInfo(userInfo)
+                mBinding.vgAddFriendTips.visibility = View.GONE
+                EmMsgManager.sendCmdMessagePeople(userId, CmdMsgTypeConfig.ADD_FRIEND, null)
+//                EmMsgManager.sendApplyFriend(
+//                    userId,
+//                    ImUserManager.getSelfUserInfo().nickName,
+//                    userInfo!!.nickName
+//                )
+            },{
+                if (it.code == ErrorCode.CODE_NO_BALANCE){
+                    ApplicationProxy.instance.showRechargePop(mContext, true)
                 }
             })
-    }
-
-    private fun hideTopUserView(dy: Int = 60) {
-        if (!isAnim && mBinding.userView.visibility == View.VISIBLE && abs(dy) > 50) {
-            isAnim = true
-            userViewHeight = mBinding.userView.height
-            AnimManager.createDropAnimator(
-                mBinding.userView,
-                mBinding.userView.height,
-                0,
-                500
-            )
-            ThreadUtils.getMainHandler().postDelayed({
-                mBinding.userView.visibility = View.GONE
-                isAnim = false
-            }, 500)
         }
     }
 
-    private fun showTopUserView(dy: Int = 60) {
-        if (!isAnim && mBinding.userView.visibility == View.GONE && abs(dy) > 50) {
-            isAnim = true
-            mBinding.userView.visibility = View.VISIBLE
-            AnimManager.createDropAnimator(
-                mBinding.userView,
-                0,
-                userViewHeight,
-                500
-            )
-            ThreadUtils.getMainHandler().postDelayed({
-                isAnim = false
-            }, 500)
-        }
-    }
 
     override fun requestData() {
         super.requestData()
         mViewModel.getUserInfo(userId)
     }
 
-    private var userInfo:UserDetailInfo?=null
+    private var userInfo: UserDetailInfo? = null
+
     @SuppressLint("SetTextI18n")
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
         mViewModel.userInfoObserver.observe(this) { it ->
             parseState(it, {
-                userInfo = it
-                mBinding.titleBar.setLeftTitleName(it.nickName)
-                if (it.isOnline){
-                    mBinding.titleBar.getLeftView()?.visibility = View.VISIBLE
-                }else{
-                    mBinding.titleBar.getLeftView()?.visibility = View.INVISIBLE
+                ChatUserInfoManager.saveUserInfo(it)
+                bindUserInfo(it)
+            },{
+                if (it.code == ErrorCode.HAS_BLACK){
+                    finishPage()
                 }
-                if (it.isFriend) {
-                    mBinding.vgAddFriendTips.visibility = View.GONE
-                } else {
-                    mBinding.vgAddFriendTips.visibility = View.VISIBLE
-                    mBinding.tvAddFriend.text = "加好友丨${it.needRoseNum}玫瑰"
-                }
-                mBinding.userView.setChatUserInfo(it)
             })
+        }
+    }
+
+    private fun bindUserInfo(it: UserDetailInfo) {
+        mBinding.userInfo = it
+        mBinding.executePendingBindings()
+        userInfo = it
+
+        chatFragment.setUserInfo(userInfo)
+        if (it.isFriend) {
+            mBinding.vgAddFriendTips.visibility = View.GONE
+        } else {
+            mBinding.vgAddFriendTips.visibility = View.VISIBLE
+            mBinding.tvAddFriend.text = "加好友丨${it.needRoseNum}玫瑰"
         }
     }
 
 
     fun onNewIntent(intent: Intent?) {
-        chatFragment!!.onNewIntent(intent)
+        //chatFragment!!.onNewIntent(intent)
     }
 
 }

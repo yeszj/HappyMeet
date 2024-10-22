@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vg_avatar"
+    style="@style/chat_im_avatar_style">
+
+    <com.hyphenate.easeui.widget.EaseImageView
+        android:id="@+id/iv_userhead"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ease_default_avatar"
+        app:ease_shape_type="round" />
+
+    <com.opensource.svgaplayer.SVGAImageView
+        android:id="@+id/iv_avatarFrame"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
+        android:layout_centerInParent="true" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_identity"
+        tools:text="群主"
+        tools:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_m_10"
+        android:background="@drawable/bg_gradient_red_r4"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingStart="@dimen/dp_2"
+        android:paddingTop="@dimen/dp_1"
+        android:paddingEnd="@dimen/dp_2"
+        android:paddingBottom="@dimen/dp_1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        android:visibility="invisible" />
+</RelativeLayout>

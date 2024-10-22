@@ -7,7 +7,7 @@
 
         <variable
             name="userinfo"
-            type="cn.huanyuan.happymeet.bean.InviteRecordInfo" />
+            type="cn.huanyuan.sweetlove.bean.InviteRecordInfo" />
 
         <import type="android.view.View" />
     </data>

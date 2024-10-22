@@ -1,7 +1,9 @@
 package cn.yanhu.baselib.func.photo
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.pm.ActivityInfo
 import com.luck.picture.lib.basic.PictureSelectionCameraModel
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
@@ -26,6 +28,7 @@ object ImageSelectUtils {
     const val TYPE_CAMERA_VIDEO = 5
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     fun selectlePic(
         mContext: Activity,
         isCrop: Boolean = true,
@@ -38,6 +41,7 @@ object ImageSelectUtils {
             .openGallery(SelectMimeType.ofImage())
             .setImageEngine(GlideEngine.createGlideEngine())
             .setSandboxFileEngine(MeSandboxFileEngine())
+            .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             .setSelectionMode(if (maxSelectNum==1) SelectModeConfig.SINGLE else SelectModeConfig.MULTIPLE)
             .setMaxSelectNum(maxSelectNum)
             .setCompressEngine(ImageCompressEngine())
@@ -50,6 +54,7 @@ object ImageSelectUtils {
 
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     fun selectSingleVideoOrPic(
         mContext: Activity,
         isCrop: Boolean = true,
@@ -60,6 +65,7 @@ object ImageSelectUtils {
         val cropEngine = PictureSelector.create(mContext)
             .openGallery(SelectMimeType.ofAll())
             .setImageEngine(GlideEngine.createGlideEngine())
+            .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             .setSandboxFileEngine(MeSandboxFileEngine())
             .setMaxSelectNum(1)
             .setFilterVideoMaxSecond(30)
@@ -71,6 +77,7 @@ object ImageSelectUtils {
         cropEngine.forResult(call)
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     fun selectVideo(
         mContext: Activity,
         isCrop: Boolean = true,
@@ -84,6 +91,7 @@ object ImageSelectUtils {
             .setImageEngine(GlideEngine.createGlideEngine())
             .setSandboxFileEngine(MeSandboxFileEngine())
             .setMaxSelectNum(maxSelectNum)
+            .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             .setSelectionMode(if (maxSelectNum==1) SelectModeConfig.SINGLE else SelectModeConfig.MULTIPLE)
             .setFilterVideoMaxSecond(30)
             .setCompressEngine(ImageCompressEngine())
@@ -97,6 +105,7 @@ object ImageSelectUtils {
     /**
      * isWithSelectVideoImage 图片和视频是否能一起选中
      */
+    @SuppressLint("SourceLockedOrientationActivity")
     fun selectVideoOrImage(
         mContext: Activity,
         isCrop: Boolean = true,
@@ -111,6 +120,7 @@ object ImageSelectUtils {
             .openGallery(selectType)
             .setImageEngine(GlideEngine.createGlideEngine())
             .setSandboxFileEngine(MeSandboxFileEngine())
+            .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             .setMaxSelectNum(maxSelectNum)
             .setSelectionMode(if (maxSelectNum==1) SelectModeConfig.SINGLE else SelectModeConfig.MULTIPLE)
             .setMaxVideoSelectNum(if (!isWithSelectVideoImage) 1 else maxSelectNum)

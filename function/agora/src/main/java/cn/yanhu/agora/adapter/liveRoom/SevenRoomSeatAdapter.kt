@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cn.yanhu.agora.R
-import cn.yanhu.agora.bean.RoomDetailInfo
-import cn.yanhu.agora.bean.RoomSeatInfo
+import cn.yanhu.commonres.bean.RoomDetailInfo
+import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.agora.databinding.AdapterSevenRoomAnchorSeatItemBinding
 import cn.yanhu.agora.databinding.AdapterSevenRoomUserSeatItemBinding
 import cn.yanhu.commonres.manager.AppCacheManager

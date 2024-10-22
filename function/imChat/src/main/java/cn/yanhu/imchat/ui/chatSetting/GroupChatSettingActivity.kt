@@ -16,21 +16,10 @@ import cn.yanhu.imchat.adapter.VisitorRuleAdapter
 import cn.yanhu.imchat.bean.GroupBean
 import cn.yanhu.imchat.bean.GroupDetailInfo
 import cn.yanhu.imchat.databinding.ActivityGroupChatSettingBinding
-import cn.yanhu.imchat.manager.ImChatManager
-import cn.yanhu.imchat.manager.ImUserManager
 import cn.yanhu.imchat.ui.groupChat.GroupMemberActivity
 import cn.zj.netrequest.ext.OnBooleanResultListener
 import cn.zj.netrequest.ext.parseState
 import com.blankj.utilcode.util.StringUtils
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.team.constant.TeamMemberType
-import com.netease.nimlib.sdk.team.constant.TeamMessageNotifyTypeEnum
-import com.netease.nimlib.sdk.team.model.Team
-import com.netease.yunxin.kit.chatkit.model.TeamWithCurrentMember
-import com.netease.yunxin.kit.chatkit.repo.TeamRepo.queryTeamWithMember
-import com.netease.yunxin.kit.corekit.im.IMKitClient.account
-import com.netease.yunxin.kit.corekit.im.provider.FetchCallback
-import java.util.Objects
 
 /**
  * @author: zhengjun
@@ -42,7 +31,6 @@ class GroupChatSettingActivity : BaseActivity<ActivityGroupChatSettingBinding, I
     ImChatViewModel::class.java
 ) {
     private var groupId: String = ""
-    private var teamInfo: Team? = null
     private val groupUserAdapter by lazy { GroupSettingUserAdapter() }
     private val visitorRuleAdapter by lazy { VisitorRuleAdapter() }
     override fun initData() {
@@ -99,9 +87,7 @@ class GroupChatSettingActivity : BaseActivity<ActivityGroupChatSettingBinding, I
     override fun initListener() {
         super.initListener()
         mBinding.tvHistory.setOnSingleClickListener {
-            teamInfo?.apply {
-                ImChatManager.toGroupHistoryPage(mContext, this)
-            }
+
         }
         mBinding.tvNickName.setOnSingleClickListener {
             RouteIntent.lunchGroupDetail(groupId)
@@ -128,43 +114,12 @@ class GroupChatSettingActivity : BaseActivity<ActivityGroupChatSettingBinding, I
      *
      */
     private fun getTeamInfo() {
-        queryTeamWithMember(
-            groupId,
-            Objects.requireNonNull<String?>(account()),
-            object : FetchCallback<TeamWithCurrentMember> {
-                override fun onSuccess(param: TeamWithCurrentMember?) {
-                    teamInfo = param?.team
-                    val teamMember = param?.teamMember
-                    if (teamMember?.type == TeamMemberType.Owner) {
-                        mBinding.vgVisitor.visibility = View.VISIBLE
-                        mBinding.rvRule.visibility = View.VISIBLE
-                    } else {
-                        mBinding.vgVisitor.visibility = View.GONE
-                    }
-                    setMessageNotify()
-                }
-
-                override fun onFailed(code: Int) {
-                }
-
-                override fun onException(exception: Throwable?) {
-                }
-            })
     }
 
     /**
      *  开启/取消 消息提醒
      */
     private fun setMessageNotify() {
-        mBinding.toggleMessageTip.isChecked =
-            teamInfo?.messageNotifyType == TeamMessageNotifyTypeEnum.All
-        mBinding.toggleMessageTip.setOnCheckedChangeListener { _, isChecked ->
-            ImUserManager.setNotify(
-                !isChecked,
-                groupId,
-                SessionTypeEnum.Team
-            )
-        }
     }
 
     private var isVisitor:Boolean = false
@@ -217,15 +172,6 @@ class GroupChatSettingActivity : BaseActivity<ActivityGroupChatSettingBinding, I
      * 设置/取消群置顶
      */
     private fun setStickTop() {
-        val stickTop = ImUserManager.isStickTop(groupId, SessionTypeEnum.Team)
-        mBinding.toggleStickTop.isChecked = stickTop
-        mBinding.toggleStickTop.setOnCheckedChangeListener { _, isChecked ->
-            ImUserManager.setStickTop(
-                isChecked,
-                groupId,
-                SessionTypeEnum.Team
-            )
-        }
     }
 
     companion object {

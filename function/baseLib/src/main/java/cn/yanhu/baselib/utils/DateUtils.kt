@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Formatter
 import java.util.GregorianCalendar
 
 /**
@@ -12,6 +13,17 @@ import java.util.GregorianCalendar
  * desc:
  */
 object DateUtils {
+    /*
+     * 时间转化格式为：00:00:00
+     * */
+    @JvmStatic
+    fun stringForTime(timeMs: Long): String? {
+        val totalSeconds = timeMs / 1000
+        val seconds = totalSeconds % 60
+        val minutes = totalSeconds / 60 % 60
+        val hours = totalSeconds / 3600
+        return Formatter().format("%02d:%02d:%02d", hours, minutes, seconds).toString()
+    }
 
     fun clearCalendarHour(calendar: Calendar) {
         calendar[Calendar.MINUTE] = 0
@@ -114,6 +126,7 @@ object DateUtils {
         return "00:00:00"
     }
 
+    @JvmStatic
     fun isToday(time: Long): Boolean {
         return isSameOfDay(time, System.currentTimeMillis())
     }
@@ -155,6 +168,7 @@ object DateUtils {
      * @param dayFormat
      * @return
      */
+    @JvmStatic
     fun getYestodyStr(i: Int, dayFormat: String?): String{
         var date = Date()
         @SuppressLint("SimpleDateFormat") val formatter = SimpleDateFormat(dayFormat)

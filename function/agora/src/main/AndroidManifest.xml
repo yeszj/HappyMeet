@@ -1,9 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application>
-        <activity android:name=".ui.liveRoom.create.CreateLiveRoomActivity"/>
-        <activity android:name=".ui.liveRoom.live.LiveRoomActivity"/>
-        <activity android:name=".ui.beautifyFace.BeautyFaceSetActivity"/>
+        <activity
+            android:name=".ui.liveRoom.create.CreateLiveRoomActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.liveRoom.live.LiveRoomActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.beautifyFace.BeautyFaceSetActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.imphone.FromWaitPhoneActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.imphone.ToWaitPhoneActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.imphone.VideoPhoneActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.imphone.CallPhoneEndActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.liveRoom.live.LiveRoomEndActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

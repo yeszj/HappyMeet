@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cl_imchat_bg_opacity_10">#0D1F1F23</color><!--聊天背景-->
+    <color name="cl_accent">#FF2B68</color>
+</resources>

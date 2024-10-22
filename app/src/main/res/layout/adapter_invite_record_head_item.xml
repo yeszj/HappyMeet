@@ -76,6 +76,6 @@
                android:background="@drawable/white_top_corner_15"
                app:layout_constraintTop_toBottomOf="@+id/tv_totalDesc"
                android:layout_marginTop="@dimen/dp_24"
-               android:layout_height="@dimen/dp_22"/>
+               android:layout_height="@dimen/dp_42"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

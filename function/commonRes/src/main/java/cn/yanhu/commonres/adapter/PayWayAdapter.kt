@@ -1,6 +1,8 @@
 package cn.yanhu.commonres.adapter
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +51,14 @@ class PayWayAdapter : BaseQuickAdapter<PayWayInfo, PayWayAdapter.VH>() {
 
     private fun AdapterPayWayItemBinding.changeSelect(position: Int) {
         if (selectPosition == position) {
-            viewBg.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_pay_select)
+            val item = getItem(position)
+            if (item?.payType == PayWayInfo.TYPE_ALIPAY){
+                viewBg.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_pay_select)
+                ivSelect.imageTintList  = ColorStateList.valueOf(Color.parseColor("#2D9AFF"))
+            }else{
+                viewBg.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_pay_select_wx)
+                ivSelect.imageTintList  = ColorStateList.valueOf(Color.parseColor("#00CF5F"))
+            }
             ivSelect.visibility = View.VISIBLE
         } else {
             viewBg.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_pay_normal)

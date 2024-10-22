@@ -16,10 +16,10 @@
 -dontwarn  android.net.wifi.WifiManager
 -dontnote ct.**
 
-        -dontoptimize
-        -dontpreverify
+-dontoptimize
+-dontpreverify
 
-        -dontwarn cn.jpush.**
+-dontwarn cn.jpush.**
         -keep class cn.jpush.** {*;}
         -dontwarn cn.jiguang.**
         -keep class cn.jiguang.** {*;}
@@ -141,5 +141,39 @@
 -dontwarn org.slf4j.**
 -keep class org.slf4j.** { *; }
 #七鱼客服--end
+
+#Parcelable 不被混淆
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+#Serializable 不被混淆
+-keepnames class * implements java.io.Serializable
+#Serializable 不被混淆并且enum 类也不被混淆
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient <fields>;
+    !private <fields>;
+    !private <methods>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+#保持枚举 enum 类不被混淆 如果混淆报错，建议直接使用上面的 -keepclassmembers class * implements java.io.Serializable即可
+-keepclassmembers enum * {
+  public static **[] values();
+  public static ** valueOf(java.lang.String);
+}
+-keepclassmembers class * {
+    public void *ButtonClicked(android.view.View);
+}
+#保持类中的所有方法名
+-keepclassmembers class * {
+    public <methods>;
+    private <methods>;
+}
+
+-keep class com.pcl.sdklib.bean.** { *; }
 
 

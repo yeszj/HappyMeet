@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    style="@style/chat_im_parent_style">
+
+    <TextView
+        android:id="@+id/timestamp"
+        style="@style/chat_text_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_chat_activity">
+
+        <include layout="@layout/ease_im_chat_avatar" />
+
+        <RelativeLayout
+            android:id="@+id/bubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userInfoView"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_toRightOf="@id/vg_avatar"
+            android:paddingVertical="@dimen/dp_9"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:background="@drawable/ease_chat_bubble_receive_bg"
+            android:minHeight="@dimen/dp_40">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/iv_voice"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="@dimen/dp_22"
+                android:layout_centerVertical="true"
+                app:lottie_loop="true"
+                android:src="@drawable/icon_voice_from3" />
+            <TextView
+                android:id="@+id/tv_length"
+                style="@style/chat_text_name_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/dp_4"
+                android:layout_toRightOf="@id/iv_voice"
+                android:gravity="center"
+                android:paddingEnd="@dimen/dp_20"
+                android:maxLines="1"
+                android:textColor="@color/cl_common"
+                android:textSize="@dimen/sp_15"
+                tools:ignore="HardcodedText"
+                tools:text="3&apos;&apos;" />
+
+
+        </RelativeLayout>
+
+        <include layout="@layout/view_message_coin_reward"/>
+        <include layout="@layout/ease_receive_im_chat_card_tip"/>
+
+
+
+        <ImageView
+            android:id="@+id/iv_unread_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/bubble"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/bubble"
+            android:src="@drawable/ease_chat_voice_unread_icon" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/iv_unread_voice"
+            android:indeterminateDrawable="@drawable/ease_chat_loading_progress_bar"
+            android:visibility="invisible" />
+
+        <cn.yanhu.imchat.view.ImChatUserInfoView
+            android:id="@+id/userInfoView"
+            android:layout_width="wrap_content"
+            android:layout_toEndOf="@id/vg_avatar"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+</LinearLayout>

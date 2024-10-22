@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="versionInfo"
+            type="cn.huanyuan.sweetlove.bean.AppVersionInfo" />
+        <import type="android.text.TextUtils"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_corner_20"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_20">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            tools:text="发现新版本"
+            android:text="@{versionInfo.title}"
+            android:textColor="@color/color_222222"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="#1AF8459B"
+            android:gravity="center"
+            android:text="@{TextUtils.isEmpty(versionInfo.versionNum)?``:`v `+versionInfo.versionNum}"
+            android:paddingHorizontal="@dimen/dp_6"
+            tools:text="V1.0.0"
+            android:textColor="@color/colorMain"
+            android:textSize="@dimen/sp_13"
+            app:fontType="@string/fontMedium" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:paddingHorizontal="@dimen/dp_10"
+            tools:text="1.优化性能；\n2修复bug。"
+            android:text="@{versionInfo.content}"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_14" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20">
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="@dimen/dp_270"
+                android:layout_height="@dimen/dp_42"
+                android:progress="100"
+                android:progressDrawable="@drawable/progress_color_main_bg" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="立即更新"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</layout>

@@ -1,20 +1,17 @@
 package cn.yanhu.agora.ui.liveRoom.live
 
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import android.annotation.SuppressLint
+import android.content.Intent
 import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.ActivityLiveRoomBinding
-import cn.yanhu.agora.listener.SwitchRoomListener
+import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.base.BaseActivity
+import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.router.RouterPath
-import cn.zj.netrequest.ext.parseState
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.blankj.utilcode.util.GsonUtils
-import com.google.gson.reflect.TypeToken
-import com.smart.adapter.SmartViewPager2Adapter
-import com.smart.adapter.interf.OnLoadMoreListener
 
 /**
  * @author: zhengjun
@@ -22,114 +19,62 @@ import com.smart.adapter.interf.OnLoadMoreListener
  * desc:
  */
 @Route(path = RouterPath.ROUTER_LIVE_ROOM)
- class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel>(
-    R.layout.activity_live_room,
-    LiveRoomViewModel::class.java
+class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel>(
+    R.layout.activity_live_room, LiveRoomViewModel::class.java
 ) {
 
-    private var currentPage: Int = 1
-    private val mAdapter by lazy {
-        SmartViewPager2Adapter(this, mBinding.viewPager)
-            .cancleOverScrollMode()
-            .setOffscreenPageLimit(1)
-            .setPreLoadLimit(3)
-            .addFragment(RoomListBean.TYPE_THREE_ROOM, ThreeLiveRoomFrg::class.java)
-            .addFragment(RoomListBean.TYPE_SEVEN_ROOM, SevenLiveRoomFrg::class.java)
-            .addFragment(RoomListBean.TYPE_OTHER_ROOM, NeedUpgradeTipFrg::class.java)
-    }
-
+    private var liveRoomFrg: BaseLiveRoomFrg? = null
     override fun initData() {
+        val roomSourceBean: RoomDetailInfo? =
+            intent.getSerializableExtra(IntentKeyConfig.DATA) as RoomDetailInfo?
+        if (roomSourceBean == null) {
+            finish()
+            return
+        }
+        if (roomSourceBean.roomType == RoomListBean.TYPE_THREE_ROOM) {
+            liveRoomFrg = ThreeLiveRoomFrg()
+            liveRoomFrg?.arguments = intent.extras
+            addFragment(liveRoomFrg)
+        } else {
+            val upgradeTipFrg = NeedUpgradeTipFrg()
+            addFragment(upgradeTipFrg)
+        }
         setFullScreenStatusBar(true)
-        initRoomVpAdapter()
-
+        AgoraManager.isLiveRoom = true
     }
 
-
-    override fun initListener() {
-        super.initListener()
-        initLoadMoreListener()
+    @SuppressLint("MissingSuperCall")
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        liveRoomFrg?.onNewIntent(intent)
     }
 
-    override fun requestData() {
-        super.requestData()
-        mViewModel.getRoomList(currentPage)
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        if (liveRoomFrg != null) {
+            liveRoomFrg?.showFloatWindow(1)
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun registerNecessaryObserver() {
-        super.registerNecessaryObserver()
-        mViewModel.roomListObservable.observe(this) { it ->
-            parseState(it, {
-                mAdapter.addData(getRoomList(it.roomList))
-            })
-        }
+        //super.registerNecessaryObserver()
     }
 
-    private fun initLoadMoreListener() {
-        mAdapter.setLoadMoreListener(object :
-            OnLoadMoreListener {
-            override fun onLoadMore(smartAdapter: SmartViewPager2Adapter) {
-                currentPage++
-                requestData()
-            }
-        })
+    override fun onStop() {
+        super.onStop()
+        liveRoomFrg?.onCustomStop()
     }
 
-    private fun initRoomVpAdapter() {
-        val data = intent.getStringExtra(IntentKeyConfig.DATA)
-        currentPage = intent.getIntExtra(IntentKeyConfig.PAGE, -1)
-        val list = GsonUtils.fromJson<MutableList<RoomListBean>>(
-            data,
-            object : TypeToken<List<RoomListBean>>() {}.type
-        )
-        currentRoomId = intent.getStringExtra(IntentKeyConfig.ROOM_ID)
-        val roomList = getRoomList(list)
-        val currentPosition = roomList.indexOfFirst { it.roomId == currentRoomId }
-        mAdapter.addData(roomList)
-        mBinding.viewPager.adapter = mAdapter
-        if (currentPosition != -1) {
-            mBinding.viewPager.setCurrentItem(currentPosition, false)
-        }
-        mBinding.viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                val item = mAdapter.getItem(position) as RoomListBean
-                switchViewPager(item.roomId!!)
-            }
-        })
+    override fun exactDestroy() {
+        super.exactDestroy()
+        liveRoomFrg?.exitRoom()
+        AgoraManager.isLiveRoom = false
     }
 
-    private fun getRoomList(list: MutableList<RoomListBean>): MutableList<RoomListBean> {
-        val roomList: MutableList<RoomListBean> = mutableListOf()
-        list.forEach {
-            if (it.roomType != 0) {
-                roomList.add(it)
-            }
-        }
-        return roomList
-    }
 
-    private val switchRoomListenerMap: HashMap<String, SwitchRoomListener> =  HashMap()
-    private var currentRoomId: String? = null
-     fun switchViewPager(roomId: String) {
-        if (roomId!=currentRoomId) {
-            if (currentRoomId != null && switchRoomListenerMap.containsKey(currentRoomId)) {
-                switchRoomListenerMap[currentRoomId]?.destroyRoom()
-            }
-            currentRoomId = roomId
-            if (switchRoomListenerMap.containsKey(currentRoomId)) {
-                switchRoomListenerMap[currentRoomId]?.preJoinRoom()
-            }
-        }
-    }
-
-     fun addSwitchRoomListener(roomId: String, switchRoomListener: SwitchRoomListener) {
-        switchRoomListenerMap[roomId] = switchRoomListener
-    }
-
-     fun removeSwitchRoomListener(roomId: String) {
-        switchRoomListenerMap.remove(roomId)
-    }
-
-    companion object{
+    companion object {
         const val LIVE_ROOM_TAG = "liveRoom"
     }
 }

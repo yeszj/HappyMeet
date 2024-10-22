@@ -110,6 +110,7 @@ object PermissionXUtils {
 
     fun checkAlertPermission(
         fragmentActivity: FragmentActivity?,
+        cancelTxt:String = "退出" ,
         permissionListener: OnAlertPermissionListener
     ) {
         PermissionX.init(fragmentActivity!!)
@@ -117,7 +118,7 @@ object PermissionXUtils {
             .explainReasonBeforeRequest()
             .onExplainRequestReason { scope: ExplainScope, _: List<String?>? ->
                 val systemAlertPermissionDialog = SystemAlertPermissionDialog(
-                    fragmentActivity, object : SystemAlertPermissionDialog.OnClickCloseListener {
+                    fragmentActivity,cancelTxt, object : SystemAlertPermissionDialog.OnClickCloseListener {
                        override fun onClose() {
                             permissionListener.onClose()
                         }

@@ -31,7 +31,7 @@
             android:layout_width="@dimen/dp_42"
             android:layout_height="@dimen/dp_42"
             android:padding="@dimen/dp_15"
-            android:src="@drawable/ic_grey_close"
+            android:src="@drawable/svg_close"
             app:layout_constraintBottom_toBottomOf="@id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_title" />

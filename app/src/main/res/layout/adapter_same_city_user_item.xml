@@ -71,7 +71,7 @@
             <cn.yanhu.commonres.view.UserTagView
                 android:id="@+id/userAge"
                 userAge="@{userinfo.age}"
-                android:layout_marginTop="@dimen/dp_4"
+                android:layout_marginTop="@dimen/dp_6"
                 userGender="@{userinfo.gender}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -116,11 +116,12 @@
             app:layout_constraintTop_toTopOf="@+id/avatarView" />
 
         <LinearLayout
-            android:layout_width="@dimen/dp_66"
-            android:layout_height="@dimen/dp_25"
-            android:background="@drawable/white_corner_20"
-            android:backgroundTint="@color/colorMain"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_26"
+            android:background="@{userinfo.blinding ?@drawable/bg_blinding_tag:@drawable/bg_friends_tag}"
+            tools:background="@drawable/bg_blinding_tag"
             android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_7"
             android:visibility="@{userinfo.roomId == 0? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/avatarView"
             app:layout_constraintEnd_toEndOf="parent"
@@ -137,11 +138,11 @@
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{userinfo.blinding ? `相亲中` : `交友中`}"
+                android:text="@{userinfo.blinding ? `视频交友中` : `七人交友中`}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium"
-                tools:text="相亲中" />
+                tools:text="视频交友中" />
         </LinearLayout>
 
         <cn.yanhu.commonres.view.gridimage.ImageNineGridLayout

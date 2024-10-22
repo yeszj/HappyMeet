@@ -6,7 +6,7 @@
     <data>
         <variable
             name="complaintInfo"
-            type="cn.huanyuan.happymeet.bean.ComplaintInfo" />
+            type="cn.huanyuan.sweetlove.bean.ComplaintInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

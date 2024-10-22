@@ -87,7 +87,7 @@
             android:visibility="gone"
             app:spanCount="5"
             tools:itemCount="15"
-            tools:listitem="@layout/adapter_message_expression" />
+            tools:listitem="@layout/adapter_lottie_message_expression" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

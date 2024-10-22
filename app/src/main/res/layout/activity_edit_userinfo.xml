@@ -18,8 +18,7 @@
             android:paddingEnd="@dimen/dp_16"
             app:titleBgColor="@color/white"
             app:layout_constraintTop_toTopOf="parent"
-            app:titleLeftName="我的资料"
-            app:titleRightLayoutId="@layout/right_title_btn" />
+            app:titleLeftName="我的资料" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_userInfo"

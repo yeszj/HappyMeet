@@ -11,7 +11,7 @@ data class PayWayInfo(
     val iconId: Int
 ){
     companion object{
-        const val TYPE_ALIPAY = 1
-        const val TYPE_WXPAY = 2
+        const val TYPE_ALIPAY = 0
+        const val TYPE_WXPAY = 1
     }
 }

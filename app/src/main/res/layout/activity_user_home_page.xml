@@ -99,11 +99,11 @@
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{userinfo.blinding ? `相亲中` : `交友中`}"
+                android:text="@{userinfo.blinding ? `视频交友中` : `七人交友中`}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_17"
                 app:fontType="@string/fontBold"
-                tools:text="相亲中" />
+                tools:text="视频交友中" />
         </LinearLayout>
 
         <View
@@ -117,7 +117,7 @@
             app:layout_constraintTop_toBottomOf="@+id/refreshLayout"
             android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/blue_shape_btn_gradient_r30"
-            android:visibility="@{isSelf?View.GONE:View.VISIBLE}"
+            android:visibility="@{isSelf || userinfo.sameSex?View.GONE:View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/vg_room"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -129,7 +129,7 @@
             android:drawablePadding="@dimen/dp_4"
             android:gravity="center_vertical"
             android:text="打招呼"
-            android:visibility="@{isSelf?View.GONE:View.VISIBLE}"
+            android:visibility="@{isSelf|| userinfo.sameSex?View.GONE:View.VISIBLE}"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_17"
             app:fontType="@string/fontBold"
@@ -137,7 +137,7 @@
             app:layout_constraintEnd_toEndOf="@+id/vgChat"
             app:layout_constraintStart_toStartOf="@+id/vgChat"
             app:layout_constraintTop_toTopOf="@+id/vgChat"
-            tools:text="围观" />
+            tools:text="打招呼" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_pub"
@@ -146,7 +146,7 @@
             android:src="@drawable/btn_pub_dynamic"
             tools:visibility="invisible"
             android:layout_marginBottom="@dimen/dp_20"
-            android:visibility="@{isSelf?View.VISIBLE:View.INVISIBLE}"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="color" name="face_liveness_initial_border"/>
+    <attr format="color" name="face_liveness_progress_border"/>
+    <attr format="color" name="face_liveness_result_bg"/>
+    <attr format="color" name="face_liveness_result_recollect_bg"/>
+    <attr format="color" name="face_liveness_result_recollect_pressed_bg"/>
+    <attr format="color" name="face_liveness_result_recollect_text"/>
+    <attr format="color" name="face_liveness_result_return_bg"/>
+    <attr format="color" name="face_liveness_result_return_pressed_bg"/>
+    <attr format="color" name="face_liveness_result_return_text"/>
+    <attr format="color" name="face_liveness_result_score_text"/>
+    <attr format="color" name="face_liveness_result_small_title_text"/>
+    <attr format="color" name="face_liveness_result_title_text"/>
+    <attr format="color" name="face_liveness_tips_small_text"/>
+    <attr format="color" name="face_liveness_tips_text"/>
+    <attr format="color" name="face_liveness_verify_bg"/>
+    <color name="aura_blue">#4438D4</color>
+    <color name="aura_green">#28BB56</color>
+    <color name="aura_red">#D8335F</color>
+    <color name="collect_bottom_color">#C1C7CE</color>
+    <color name="face_liveness_initial_border">#DCDDE0</color>
+    <color name="face_liveness_initial_border_black">#373B40</color>
+    <color name="face_liveness_initial_border_custom">#DCDDE0</color>
+    <color name="face_liveness_progress_border">#0080FF</color>
+    <color name="face_liveness_progress_border_black">#0094FF</color>
+    <color name="face_liveness_progress_border_custom">#0080FF</color>
+    <color name="face_liveness_result_bg">#F0F1F2</color>
+    <color name="face_liveness_result_bg_black">#18191A</color>
+    <color name="face_liveness_result_bg_custom">#F0F1F2</color>
+    <color name="face_liveness_result_recollect_bg">#ff0080ff</color>
+    <color name="face_liveness_result_recollect_bg_black">#ff0094ff</color>
+    <color name="face_liveness_result_recollect_bg_custom">#ff0080ff</color>
+    <color name="face_liveness_result_recollect_pressed_bg">#990080ff</color>
+    <color name="face_liveness_result_recollect_pressed_bg_black">#990094ff</color>
+    <color name="face_liveness_result_recollect_pressed_bg_custom">#990080ff</color>
+    <color name="face_liveness_result_recollect_text">#FFFFFF</color>
+    <color name="face_liveness_result_recollect_text_black">#FFFFFF</color>
+    <color name="face_liveness_result_recollect_text_custom">#FFFFFF</color>
+    <color name="face_liveness_result_return_bg">#ffd9dfe6</color>
+    <color name="face_liveness_result_return_bg_black">#ff636A73</color>
+    <color name="face_liveness_result_return_bg_custom">#ffd9dfe6</color>
+    <color name="face_liveness_result_return_pressed_bg">#99d9dfe6</color>
+    <color name="face_liveness_result_return_pressed_bg_black">#99636A73</color>
+    <color name="face_liveness_result_return_pressed_bg_custom">#99d9dfe6</color>
+    <color name="face_liveness_result_return_text">#171D24</color>
+    <color name="face_liveness_result_return_text_black">#EFF0F1</color>
+    <color name="face_liveness_result_return_text_custom">#171D24</color>
+    <color name="face_liveness_result_score_text">#77787A</color>
+    <color name="face_liveness_result_score_text_black">#77787A</color>
+    <color name="face_liveness_result_score_text_custom">#77787A</color>
+    <color name="face_liveness_result_small_title_text">#77787A</color>
+    <color name="face_liveness_result_small_title_text_black">#77787A</color>
+    <color name="face_liveness_result_small_title_text_custom">#77787A</color>
+    <color name="face_liveness_result_title_text">#171D24</color>
+    <color name="face_liveness_result_title_text_black">#EFF0F1</color>
+    <color name="face_liveness_result_title_text_custom">#171D24</color>
+    <color name="face_liveness_timeout_dialog_bg">#FFFFFF</color>
+    <color name="face_liveness_timeout_dialog_bg_black">#373B40</color>
+    <color name="face_liveness_timeout_dialog_bg_custom">#FFFFFF</color>
+    <color name="face_liveness_timeout_dialog_recollect_bg">#ff0080ff</color>
+    <color name="face_liveness_timeout_dialog_recollect_bg_black">#ff0094ff</color>
+    <color name="face_liveness_timeout_dialog_recollect_bg_custom">#ff0080ff</color>
+    <color name="face_liveness_timeout_dialog_recollect_press_bg">#990080ff</color>
+    <color name="face_liveness_timeout_dialog_recollect_press_bg_black">#990094ff</color>
+    <color name="face_liveness_timeout_dialog_recollect_press_bg_custom">#990080ff</color>
+    <color name="face_liveness_timeout_dialog_recollect_text">#FFFFFF</color>
+    <color name="face_liveness_timeout_dialog_recollect_text_black">#FFFFFF</color>
+    <color name="face_liveness_timeout_dialog_recollect_text_custom">#FFFFFF</color>
+    <color name="face_liveness_timeout_dialog_return_bg">#ffd9dfe6</color>
+    <color name="face_liveness_timeout_dialog_return_bg_black">#ff636A73</color>
+    <color name="face_liveness_timeout_dialog_return_bg_custom">#ffd9dfe6</color>
+    <color name="face_liveness_timeout_dialog_return_press_bg">#99d9dfe6</color>
+    <color name="face_liveness_timeout_dialog_return_press_bg_black">#99636A73</color>
+    <color name="face_liveness_timeout_dialog_return_press_bg_custom">#99d9dfe6</color>
+    <color name="face_liveness_timeout_dialog_return_text">#171D24</color>
+    <color name="face_liveness_timeout_dialog_return_text_black">#EFF0F1</color>
+    <color name="face_liveness_timeout_dialog_return_text_custom">#171D24</color>
+    <color name="face_liveness_timeout_dialog_title_text">#171D24</color>
+    <color name="face_liveness_timeout_dialog_title_text_black">#EFF0F1</color>
+    <color name="face_liveness_timeout_dialog_title_text_custom">#171D24</color>
+    <color name="face_liveness_tips_small_text">#787E85</color>
+    <color name="face_liveness_tips_small_text_black">#989899</color>
+    <color name="face_liveness_tips_small_text_custom">#787E85</color>
+    <color name="face_liveness_tips_text">#171D24</color>
+    <color name="face_liveness_tips_text_black">#EFF0F1</color>
+    <color name="face_liveness_tips_text_custom">#171D24</color>
+    <color name="face_liveness_verify_bg">#F0F1F2</color>
+    <color name="face_liveness_verify_bg_black">#18191A</color>
+    <color name="face_liveness_verify_bg_custom">#F0F1F2</color>
+    <dimen name="agreement_content_font">14sp</dimen>
+    <dimen name="agreement_title_font">16sp</dimen>
+    <dimen name="bottom_text_margin">12dp</dimen>
+    <dimen name="collect_bottom_font">12sp</dimen>
+    <dimen name="home_button_font">16sp</dimen>
+    <dimen name="home_sort_describe_font">14sp</dimen>
+    <dimen name="home_sort_font">18sp</dimen>
+    <dimen name="home_title_font1">24sp</dimen>
+    <dimen name="home_title_font2">28sp</dimen>
+    <dimen name="qua_param_active_font">16sp</dimen>
+    <dimen name="qua_param_line">1dp</dimen>
+    <dimen name="qua_param_sort_font">16sp</dimen>
+    <dimen name="quality_describe_font">13sp</dimen>
+    <dimen name="quality_sort_enter_font">16sp</dimen>
+    <dimen name="quality_sort_font">16sp</dimen>
+    <dimen name="setting_sort_font">16sp</dimen>
+    <dimen name="setting_tips_font">13sp</dimen>
+    <dimen name="success_button_font">16sp</dimen>
+    <dimen name="success_score_font">16sp</dimen>
+    <dimen name="success_title_font">20sp</dimen>
+    <dimen name="title_font">18sp</dimen>
+    <dimen name="title_height">56dp</dimen>
+    <string name="app_name">Baidu-IDL-FaceSDK</string>
+    <string name="collect_bottom_txt"/>
+    <string name="collect_button_home">回到首页</string>
+    <string name="collect_button_recollect">重新采集</string>
+    <string name="collect_failure">人脸采集失败</string>
+    <string name="collect_home">采集流程中断，点击按钮重新采集</string>
+    <string name="collect_success">人脸采集成功</string>
+    <string name="collect_tips_1">建议到光线柔和的白墙背景操作</string>
+    <string name="collect_tips_2">请确保是本人操作且正脸采集</string>
+    <string name="detect_no_face">未检测到人脸</string>
+    <string name="error_camera_open_failed">摄像头调起失败</string>
+    <string name="error_cancel_collect_process">采集流程取消</string>
+    <string name="error_cloud_verify_failed">云端验证异常</string>
+    <string name="error_collect_after_process_exception">采集后内部异常</string>
+    <string name="error_collect_before_process_exception">采集前内部异常</string>
+    <string name="error_collect_timeout">采集超时</string>
+    <string name="error_color_exception">炫彩异常</string>
+    <string name="error_have_had_collect_process">已有采集流程运行中</string>
+    <string name="error_live_verify_exception">活体验证步骤异常</string>
+    <string name="error_liveness_score_exception">活体分数异常</string>
+    <string name="error_network_exception">网络异常</string>
+    <string name="error_no"/>
+    <string name="error_no_agreement">未同意隐私协议</string>
+    <string name="error_permission_exception">无摄像头/麦克风权限</string>
+    <string name="error_preview_exception">预览异常</string>
+    <string name="error_record_failed">视频录制错误</string>
+    <string name="error_risk_verify_failed">风控验证失败</string>
+    <string name="error_safety_init_failed">安全模块加载失败</string>
+    <string name="error_safety_no_init">安全SDK未初始化</string>
+    <string name="error_select_image_exception">筛选图片异常</string>
+    <string name="error_thread_exception">线程异常</string>
+    <string name="faceLivenessActionEyeText">眨眨眼</string>
+    <string name="faceLivenessActionHeadDownText">缓慢低头</string>
+    <string name="faceLivenessActionHeadLeftText">向左缓慢转头</string>
+    <string name="faceLivenessActionHeadRightText">向右缓慢转头</string>
+    <string name="faceLivenessActionHeadUpText">缓慢抬头</string>
+    <string name="faceLivenessActionMouthText">张张嘴</string>
+    <string name="faceLivenessChinOccludedText">下巴有遮挡</string>
+    <string name="faceLivenessColorError"/>
+    <string name="faceLivenessCompletionText">非常好</string>
+    <string name="faceLivenessDetectTimeoutText">检测超时，请按照提示重试</string>
+    <string name="faceLivenessFacialFaceCorrectionText">请调整人脸</string>
+    <string name="faceLivenessHeadDownText">请略微低头</string>
+    <string name="faceLivenessHeadLeftText">请略微向左转头</string>
+    <string name="faceLivenessHeadRightText">请略微向右转头</string>
+    <string name="faceLivenessHeadUpText">请略微抬头</string>
+    <string name="faceLivenessIlliumPoorText">请使环境光线再亮些</string>
+    <string name="faceLivenessKeepFacePositiveText">请保持正脸</string>
+    <string name="faceLivenessLeftCheekOccludedText">左脸颊有遮挡</string>
+    <string name="faceLivenessLeftEyeNotOpenText">左眼未睁开</string>
+    <string name="faceLivenessLeftEyeOccludedText">左眼有遮挡</string>
+    <string name="faceLivenessMouthOccludedText">嘴部有遮挡</string>
+    <string name="faceLivenessMovetoFrameText">把脸移入框内</string>
+    <string name="faceLivenessNoseOccludedText">鼻子有遮挡</string>
+    <string name="faceLivenessRightCheekOccludedText">右脸颊有遮挡</string>
+    <string name="faceLivenessRightEyeNotOpenText">右眼未睁开</string>
+    <string name="faceLivenessRightEyeOccludedText">右眼有遮挡</string>
+    <string name="faceLivenessScreenColorChanging">变光中，请保持正脸</string>
+    <string name="faceLivenessScreenWillFlash">屏幕即将闪烁，请保持正脸</string>
+    <string name="faceLivenessVerifyFailedText">验证失败</string>
+    <string name="faceLivenessZoomInText">请将脸部靠近一点</string>
+    <string name="faceLivenessZoomOutText">请将脸部离远一点</string>
+    <string name="faceLivenessblurredText">请握稳手机，视线正对屏幕</string>
+    <style name="DefaultDialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+    <style name="Theme_Black" parent="Theme_NoTitle">
+        <!--采集页面-->
+        <item name="face_liveness_verify_bg">@color/face_liveness_verify_bg_black</item>
+        <item name="face_liveness_tips_text">@color/face_liveness_tips_text_black</item>
+        <item name="face_liveness_tips_small_text">@color/face_liveness_tips_small_text_black</item>
+        <item name="face_liveness_initial_border">@color/face_liveness_initial_border_black</item>
+        <item name="face_liveness_progress_border">@color/face_liveness_progress_border_black</item>
+
+        <!--成功失败页面-->
+        <item name="face_liveness_result_title_text">@color/face_liveness_result_title_text_black</item>
+        <item name="face_liveness_result_small_title_text">@color/face_liveness_result_small_title_text_black</item>
+        <item name="face_liveness_result_score_text">@color/face_liveness_result_score_text_black</item>
+        <item name="face_liveness_result_recollect_text">@color/face_liveness_result_recollect_text_black</item>
+        <item name="face_liveness_result_return_text">@color/face_liveness_result_return_text_black</item>
+
+        <item name="face_liveness_result_bg">@color/face_liveness_result_bg_black</item>
+        <item name="face_liveness_result_return_bg">@color/face_liveness_result_return_bg_black</item>
+        <item name="face_liveness_result_return_pressed_bg">@color/face_liveness_result_return_pressed_bg_black</item>
+        <item name="face_liveness_result_recollect_bg">@color/face_liveness_result_recollect_bg_black</item>
+        <item name="face_liveness_result_recollect_pressed_bg">@color/face_liveness_result_recollect_pressed_bg_black</item>
+    </style>
+    <style name="Theme_Custom" parent="Theme_NoTitle">
+        <!--采集页面-->
+        <item name="face_liveness_verify_bg">@color/face_liveness_verify_bg_custom</item>
+        <item name="face_liveness_tips_text">@color/face_liveness_tips_text_custom</item>
+        <item name="face_liveness_tips_small_text">@color/face_liveness_tips_small_text_custom</item>
+        <item name="face_liveness_initial_border">@color/face_liveness_initial_border_custom</item>
+        <item name="face_liveness_progress_border">@color/face_liveness_progress_border_custom</item>
+
+        <!--成功失败页面-->
+        <item name="face_liveness_result_title_text">@color/face_liveness_result_title_text_custom</item>
+        <item name="face_liveness_result_small_title_text">@color/face_liveness_result_small_title_text_custom</item>
+        <item name="face_liveness_result_score_text">@color/face_liveness_result_score_text_custom</item>
+        <item name="face_liveness_result_recollect_text">@color/face_liveness_result_recollect_text_custom</item>
+        <item name="face_liveness_result_return_text">@color/face_liveness_result_return_text_custom</item>
+
+        <item name="face_liveness_result_bg">@color/face_liveness_result_bg_custom</item>
+        <item name="face_liveness_result_return_bg">@color/face_liveness_result_return_bg_custom</item>
+        <item name="face_liveness_result_return_pressed_bg">@color/face_liveness_result_return_pressed_bg_custom</item>
+        <item name="face_liveness_result_recollect_bg">@color/face_liveness_result_recollect_bg_custom</item>
+        <item name="face_liveness_result_recollect_pressed_bg">@color/face_liveness_result_recollect_pressed_bg_custom</item>
+    </style>
+    <style name="Theme_NoTitle" parent="android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+    <style name="Theme_White" parent="Theme_NoTitle">
+        <!--采集页面-->
+        <item name="face_liveness_verify_bg">@color/face_liveness_verify_bg</item>
+        <item name="face_liveness_tips_text">@color/face_liveness_tips_text</item>
+        <item name="face_liveness_tips_small_text">@color/face_liveness_tips_small_text</item>
+        <item name="face_liveness_initial_border">@color/face_liveness_initial_border</item>
+        <item name="face_liveness_progress_border">@color/face_liveness_progress_border</item>
+
+        <!--成功失败页面-->
+        <item name="face_liveness_result_title_text">@color/face_liveness_result_title_text</item>
+        <item name="face_liveness_result_small_title_text">@color/face_liveness_result_small_title_text</item>
+        <item name="face_liveness_result_score_text">@color/face_liveness_result_score_text</item>
+        <item name="face_liveness_result_recollect_text">@color/face_liveness_result_recollect_text</item>
+        <item name="face_liveness_result_return_text">@color/face_liveness_result_return_text</item>
+
+        <item name="face_liveness_result_bg">@color/face_liveness_result_bg</item>
+        <item name="face_liveness_result_return_bg">@color/face_liveness_result_return_bg</item>
+        <item name="face_liveness_result_return_pressed_bg">@color/face_liveness_result_return_pressed_bg</item>
+        <item name="face_liveness_result_recollect_bg">@color/face_liveness_result_recollect_bg</item>
+        <item name="face_liveness_result_recollect_pressed_bg">@color/face_liveness_result_recollect_pressed_bg</item>
+    </style>
+    <declare-styleable name="CircleImageView">
+        <attr format="dimension" name="border_width"/>
+        <attr format="color" name="border_color"/>
+    </declare-styleable>
+    <declare-styleable name="FaceAuraColorView">
+        <attr name="face_liveness_verify_bg"/>
+        <attr name="face_liveness_tips_text"/>
+        <attr name="face_liveness_tips_small_text"/>
+        <attr name="face_liveness_initial_border"/>
+        <attr name="face_liveness_progress_border"/>
+    </declare-styleable>
+    <declare-styleable name="FaceDetectRoundView">
+        <attr name="face_liveness_verify_bg"/>
+        <attr name="face_liveness_tips_text"/>
+        <attr name="face_liveness_tips_small_text"/>
+        <attr name="face_liveness_initial_border"/>
+        <attr name="face_liveness_progress_border"/>
+    </declare-styleable>
+</resources>

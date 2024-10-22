@@ -25,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_14"
+            android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@+id/anchorSeatInfo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -87,6 +88,7 @@
             android:backgroundTint="@color/whiteColorAlpha80"
             android:drawableStart="@drawable/icon_swarp"
             android:drawablePadding="@dimen/dp_2"
+            android:visibility="invisible"
             android:gravity="center"
             android:paddingHorizontal="@dimen/dp_6"
             android:text="转为专属"

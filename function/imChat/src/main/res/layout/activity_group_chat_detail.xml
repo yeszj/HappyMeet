@@ -56,7 +56,7 @@
                         app:fontType="@string/fontBold"
                         app:layout_constraintBottom_toTopOf="@+id/iv_groupId"
                         app:layout_constraintStart_toStartOf="@+id/iv_groupId"
-                        tools:text="红娘喵斯拉的相亲群" />
+                        tools:text="红娘喵斯拉的交友群" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
                         android:id="@+id/iv_groupId"

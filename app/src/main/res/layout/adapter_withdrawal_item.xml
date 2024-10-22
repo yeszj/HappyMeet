@@ -43,15 +43,14 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="30元" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/tv_tag"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_18"
             android:background="@drawable/tag_first_withdrawal"
             android:gravity="center"
-            android:paddingHorizontal="@dimen/dp_4"
-            android:paddingVertical="@dimen/dp_2"
-            android:text="@{withdrawalInfo.tag}"
+            drawableUrl="@{withdrawalInfo.tag}"
+            android:adjustViewBounds="true"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
             android:visibility="@{TextUtils.isEmpty(withdrawalInfo.tag)?View.INVISIBLE:View.VISIBLE,default = invisible}"

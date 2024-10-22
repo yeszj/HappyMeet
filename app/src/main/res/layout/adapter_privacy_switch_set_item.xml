@@ -6,7 +6,7 @@
     <data>
         <variable
             name="switchInfo"
-            type="cn.huanyuan.happymeet.bean.SwitchConfigInfo" />
+            type="cn.huanyuan.sweetlove.bean.SwitchConfigInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

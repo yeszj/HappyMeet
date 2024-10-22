@@ -28,7 +28,6 @@
             android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_40"
             app:layout_constraintTop_toTopOf="parent"
             app:titleColor="@color/white"
             app:titleLeftIco="@drawable/svg_white_back"
@@ -134,62 +133,111 @@
                         app:layout_constraintTop_toBottomOf="@+id/tv_payWay" />
 
 
-                    <View
-                        android:id="@+id/bgAccountInfo"
-                        app:layout_constraintTop_toBottomOf="@+id/paySelectView"
+                    <LinearLayout
+                        android:id="@+id/vg_noBind"
                         android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_height="@dimen/dp_96"
                         android:layout_marginHorizontal="@dimen/dp_12"
-                        android:background="@drawable/bg_pay_account"
-                        android:layout_height="@dimen/dp_82"/>
-                    <cn.yanhu.baselib.view.CustomFontTextView
-                        android:id="@+id/tv_realName"
-                        android:layout_width="wrap_content"
-                        android:textSize="@dimen/sp_14"
-                        android:textColor="@color/fontTextColor"
-                        android:text="真实姓名    孟*瑶"
-                        android:paddingTop="@dimen/dp_20"
-                        android:layout_marginStart="@dimen/dp_16"
-                        app:layout_constraintTop_toTopOf="@+id/bgAccountInfo"
-                        app:layout_constraintStart_toStartOf="@+id/bgAccountInfo"
-                        android:layout_height="wrap_content"/>
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/iv_wxAvatar"
-                        android:layout_width="@dimen/dp_20"
-                        android:src="@drawable/icon_portrait"
-                        android:visibility="gone"
-                        app:layout_constraintStart_toStartOf="@+id/tv_realName"
-                        app:layout_constraintTop_toTopOf="@+id/tv_account"
-                        app:layout_constraintEnd_toStartOf="@+id/tv_account"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_account"
-                        android:layout_height="@dimen/dp_20"/>
-
-                    <cn.yanhu.baselib.view.CustomFontTextView
-                        android:id="@+id/tv_account"
-                        android:layout_width="wrap_content"
-                        android:textSize="@dimen/sp_14"
-                        app:layout_constraintStart_toEndOf="@+id/iv_wxAvatar"
-                        android:textColor="@color/fontTextColor"
-                        android:text="支付宝账号    530****69@qq.com"
-                        android:layout_marginBottom="@dimen/dp_20"
-                        app:layout_constraintBottom_toBottomOf="@+id/bgAccountInfo"
-                        android:layout_height="wrap_content"/>
-
-                    <cn.yanhu.baselib.view.CustomFontTextView
-                        android:id="@+id/tv_bind"
-                        android:layout_width="wrap_content"
-                        android:layout_margin="@dimen/dp_8"
-                        android:paddingHorizontal="@dimen/dp_8"
-                        android:text="立即绑定"
-                        android:textColor="#2D9AFF"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:background="@drawable/bg_ali_no_bind"
                         android:gravity="center"
-                        android:textSize="@dimen/sp_12"
-                        app:fontType="@string/fontMedium"
-                        android:background="@drawable/white_corner_5"
-                        app:layout_constraintEnd_toEndOf="@+id/bgAccountInfo"
-                        app:layout_constraintTop_toTopOf="@id/bgAccountInfo"
-                        android:layout_height="@dimen/dp_22"/>
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@+id/paySelectView">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_nobindTip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="您还未绑定支付宝账户"
+                            android:textSize="@dimen/sp_14" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_clickBind"
+                            android:layout_width="@dimen/dp_80"
+                            android:layout_height="@dimen/dp_30"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:background="@drawable/white_corner_20"
+                            android:backgroundTint="#2D9AFF"
+                            android:gravity="center"
+                            android:text="点击绑定"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            app:fontType="@string/fontMedium" />
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/bgAccountInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_82"
+                        android:layout_marginHorizontal="@dimen/dp_12"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:background="@drawable/bg_pay_account"
+                        android:visibility="visible"
+                        app:layout_constraintTop_toBottomOf="@+id/paySelectView">
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_nameTag"
+                            android:layout_width="@dimen/dp_80"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_16"
+                            android:paddingTop="@dimen/dp_20"
+                            android:text="真实姓名"
+                            android:textColor="@color/fontTextColor"
+                            android:textSize="@dimen/sp_14"
+                            app:layout_constraintStart_toStartOf="@+id/bgAccountInfo"
+                            app:layout_constraintTop_toTopOf="@+id/bgAccountInfo" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_realName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_10"
+                            android:paddingTop="@dimen/dp_20"
+                            android:text="真实姓名"
+                            android:textColor="@color/fontTextColor"
+                            android:textSize="@dimen/sp_14"
+                            app:layout_constraintStart_toEndOf="@+id/tv_nameTag"
+                            app:layout_constraintTop_toTopOf="@+id/bgAccountInfo" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_accountTag"
+                            android:layout_width="@dimen/dp_80"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp_20"
+                            android:text="支付宝账号"
+                            android:textColor="@color/fontTextColor"
+                            android:textSize="@dimen/sp_14"
+                            app:layout_constraintBottom_toBottomOf="@+id/bgAccountInfo"
+                            app:layout_constraintStart_toStartOf="@+id/tv_nameTag" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_10"
+                            android:layout_marginBottom="@dimen/dp_20"
+                            android:text="530****69@qq.com"
+                            android:textColor="@color/fontTextColor"
+                            android:textSize="@dimen/sp_14"
+                            app:layout_constraintBottom_toBottomOf="@+id/bgAccountInfo"
+                            app:layout_constraintStart_toEndOf="@+id/tv_accountTag" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_bind"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_22"
+                            android:layout_margin="@dimen/dp_8"
+                            android:background="@drawable/white_corner_5"
+                            android:gravity="center"
+                            android:paddingHorizontal="@dimen/dp_8"
+                            android:text="更换绑定"
+                            android:textColor="#2D9AFF"
+                            android:textSize="@dimen/sp_12"
+                            app:fontType="@string/fontMedium"
+                            app:layout_constraintEnd_toEndOf="@+id/bgAccountInfo"
+                            app:layout_constraintTop_toTopOf="@id/bgAccountInfo" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                     <cn.yanhu.baselib.view.CustomFontTextView
@@ -232,20 +280,20 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_check"
             android:layout_width="@dimen/dp_25"
-            app:layout_constraintEnd_toStartOf="@+id/tv_agreement"
-            app:layout_constraintTop_toTopOf="@+id/tv_agreement"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_agreement"
-            android:src="@drawable/svg_unselected_r20"
+            android:layout_height="@dimen/dp_25"
             android:padding="@dimen/dp_5"
-            android:layout_height="@dimen/dp_25"/>
+            android:src="@drawable/svg_unselected_r20"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_agreement"
+            app:layout_constraintEnd_toStartOf="@+id/tv_agreement"
+            app:layout_constraintTop_toTopOf="@+id/tv_agreement" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_agreement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/dp_5"
-            android:paddingVertical="@dimen/dp_10"
             android:gravity="center_vertical"
+            android:paddingVertical="@dimen/dp_10"
             android:text="我已阅读并同意同意用户提现协议"
             android:textColor="@color/fontGrayColor"
             android:textSize="@dimen/sp_12"

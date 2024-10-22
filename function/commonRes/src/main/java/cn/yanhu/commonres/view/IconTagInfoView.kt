@@ -1,6 +1,7 @@
 package cn.yanhu.commonres.view
 
 import android.content.Context
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -55,6 +56,9 @@ class IconTagInfoView : LinearLayout {
 
     fun setTagValue(tagInfo:TagInfo){
         tvTag.text = tagInfo.value
+        if (TextUtils.isEmpty(tagInfo.icon)){
+            ivIcon.visibility = View.GONE
+        }
         GlideUtils.load(context,tagInfo.icon,ivIcon,-1)
     }
 }

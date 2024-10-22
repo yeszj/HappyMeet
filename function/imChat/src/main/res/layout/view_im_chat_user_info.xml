@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="userInfo"
+            type="cn.yanhu.commonres.bean.BaseUserInfo" />
+        <import type="androidx.core.content.ContextCompat" />
+        <import type="cn.yanhu.commonres.R" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <cn.yanhu.baselib.view.StrokeGradientTextView
+            android:id="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_14"
+            tools:text="som"
+            android:textColor="@color/cl_common"
+            android:visibility="visible" />
+        <ImageView
+            android:id="@+id/iv_gender"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_15"
+            android:layout_marginStart="@dimen/dp_2"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
+            app:layout_constraintStart_toEndOf="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
+
+        <TextView
+            android:id="@+id/tv_basicInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_2"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{userInfo.strNoGenderInfo}"
+            android:textColor="@color/cl_common_opacity_60"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintTop_toTopOf="@+id/iv_gender"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_gender"
+            app:layout_constraintStart_toEndOf="@+id/iv_gender"
+            tools:text="32岁" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

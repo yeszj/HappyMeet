@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.baidu.secsdk.merge" >
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="29" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+    <permission
+        android:name="${applicationId}.permission.liantian.RECEIVE"
+        android:protectionLevel="signatureOrSystem" />
+
+    <uses-permission android:name="${applicationId}.permission.liantian.RECEIVE" />
+
+    <application>
+        <provider
+            android:name="com.baidu.liantian.LiantianProvider"
+            android:authorities="${applicationId}.liantian.ac.provider"
+            android:exported="false" />
+
+        <meta-data
+            android:name="x30_env"
+            android:value="1" />
+        <meta-data
+            android:name="x6_env"
+            android:value="1" />
+        <meta-data
+            android:name="x0_env"
+            android:value="1" />
+    </application>
+
+</manifest>

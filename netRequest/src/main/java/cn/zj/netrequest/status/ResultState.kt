@@ -2,7 +2,6 @@ package cn.zj.netrequest.status
 
 import androidx.lifecycle.MutableLiveData
 import cn.zj.netrequest.R
-import com.blankj.utilcode.BuildConfig
 import com.blankj.utilcode.util.StringUtils.getString
 import cn.zj.netrequest.application.ApplicationProxy
 import com.hjq.toast.ToastUtils
@@ -58,7 +57,7 @@ fun <T> MutableLiveData<ResultState<T>>.paresResult(result: T) {
  */
 fun <T> MutableLiveData<ResultState<T>>.paresException(e: Throwable, isShowToast: Boolean = true) {
     if (e is CustomException) {
-        if ((e.code == ErrorCode.TOKEN_INVALID || e.code == ErrorCode.TOKEN_FAIL || e.code == ErrorCode.UNLOGIN)) {
+        if ((e.code == ErrorCode.TOKEN_INVALID || e.code == ErrorCode.TOKEN_FAIL || e.code == ErrorCode.UNLOGIN || e.code == ErrorCode.CODE_DEVICE_CHANGE || e.code == ErrorCode.ACCOUNT_BLOCK)) {
             //token失效，重新登录
             ApplicationProxy.instance.loginInvalid()
             if (isShowToast) {
@@ -71,7 +70,7 @@ fun <T> MutableLiveData<ResultState<T>>.paresException(e: Throwable, isShowToast
         }
         this.value = ResultState.onAppError(e)
     } else {
-        if (BuildConfig.DEBUG && isShowToast) {
+        if (isShowToast) {
             e.printStackTrace()
             var message = e.message
             if (e is UnknownHostException) {
@@ -101,7 +100,7 @@ fun dealNetException(e: Throwable, isShowToast: Boolean = true) {
             }
         }
     } else {
-        if (BuildConfig.DEBUG && isShowToast) {
+        if (isShowToast) {
             e.printStackTrace()
             var message = e.message
             if (e is UnknownHostException) {

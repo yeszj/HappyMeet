@@ -7,19 +7,19 @@
 
         <variable
             name="myRankInfo"
-            type="cn.huanyuan.happymeet.bean.RankInfo" />
+            type="cn.huanyuan.sweetlove.bean.RankInfo" />
 
         <variable
             name="rankInfo1"
-            type="cn.huanyuan.happymeet.bean.RankInfo" />
+            type="cn.huanyuan.sweetlove.bean.RankInfo" />
 
         <variable
             name="rankInfo2"
-            type="cn.huanyuan.happymeet.bean.RankInfo" />
+            type="cn.huanyuan.sweetlove.bean.RankInfo" />
 
         <variable
             name="rankInfo3"
-            type="cn.huanyuan.happymeet.bean.RankInfo" />
+            type="cn.huanyuan.sweetlove.bean.RankInfo" />
 
 
         <import type="android.view.View" />

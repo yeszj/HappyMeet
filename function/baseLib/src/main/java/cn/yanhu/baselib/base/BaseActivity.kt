@@ -7,6 +7,8 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -60,6 +62,7 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
         com.hjq.toast.ToastUtils.init(mContext.application)
         //设置禁止截屏、录屏标志
 //        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setEnterAnim()
         setOrientation()
         mBinding = DataBindingUtil.setContentView(this, layoutId)
@@ -74,7 +77,12 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
         initRefresh()
         addBackPressListener()
     }
-
+    open fun setTitleMarginTop(view: View?) {
+        if (view != null) {
+            val statusBarHeight = StatusBarUtil.getStatusBarHeight(mContext)
+            ViewUtils.setMarginTop(view, statusBarHeight)
+        }
+    }
     open fun initBeforeContentView(){}
 
     private fun addBackPressListener() {

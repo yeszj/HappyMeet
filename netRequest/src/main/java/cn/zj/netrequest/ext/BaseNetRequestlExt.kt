@@ -11,7 +11,42 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.hjq.toast.ToastUtils
 import kotlinx.coroutines.*
+
 const val TAG = "okhttp.OkHttpClient"
+
+@OptIn(DelicateCoroutinesApi::class)
+fun <T> request2(
+    block: suspend () -> BaseBean<T>,
+    listener: OnRequestResultListener<T>,
+    isShowToast: Boolean = true,
+) {
+    GlobalScope.launch {
+        kotlin.runCatching {
+            block()
+        }.onSuccess {
+            ThreadUtils.runOnUiThread {
+                if (it.code == ErrorCode.SUCCESS) {
+                    listener.onSuccess(it)
+                } else {
+                    listener.onFail(it.code, it.msg)
+                    dealNetException(CustomException(it.code, it.msg), isShowToast)
+                }
+            }
+        }.onFailure {
+            ThreadUtils.runOnUiThread {
+                if (it is CustomException) {
+                    listener.onFail(it.code, it.msg)
+                } else {
+                    listener.onFail(-1, it.message)
+                }
+                if (isShowToast && it !is CancellationException) {
+                    ToastUtils.show(it.message)
+                }
+            }
+        }
+    }
+
+}
 
 fun <T> request(
     block: suspend () -> BaseBean<T>,
@@ -75,7 +110,7 @@ fun <T> request(
                         listener.onFail(it.code, it.msg)
                         dealNetException(CustomException(it.code, it.msg), isShowToast)
                     } else {
-                        Log.d(TAG,"request：bean:${it} errorMs:${it.message}")
+                        Log.d(TAG, "request：bean:${it} errorMs:${it.message}")
                         listener.onFail(-1, it.message)
                         if (isShowToast && it !is CancellationException) {
                             ToastUtils.show(it.message)
@@ -117,7 +152,7 @@ fun <T> request(
                 }
             }.onFailure {
                 ThreadUtils.runOnUiThread {
-                    Log.d(TAG,"request：bean:${it} errorMs:${it.message}")
+                    Log.d(TAG, "request：bean:${it} errorMs:${it.message}")
                     listener.onFail(-1, it.message)
                     if (isShowToast && it !is CancellationException) {
                         ToastUtils.show(it.message)
@@ -127,7 +162,6 @@ fun <T> request(
         }
     }
 }
-
 
 
 interface OnRequestResultListener<T> {

@@ -36,7 +36,7 @@
             android:maxLines="1"
             android:text="@{groupInfo.groupName}"
             android:paddingTop="@dimen/dp_8"
-            tools:text="浙江相亲交友群"
+            tools:text="浙江交友交友群"
             android:textColor="@color/fontTextColor"
             android:textSize="@dimen/sp_15"
             app:fontType="@string/fontMedium"

@@ -21,11 +21,11 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_cover"
             imageUrl="@{userinfo.coverImg}"
-            placeholderId="@{R.drawable.pic_default_bg}"
+            placeholderId="@{R.drawable.shape_bg_gray}"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_360"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/default_avatar_bg_1" />
+            tools:src="@drawable/shape_bg_gray" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_online"
@@ -36,8 +36,8 @@
             android:backgroundTint="@color/whiteAlpha40"
             android:drawableStart="@drawable/svg_online"
             android:gravity="center"
-            android:paddingEnd="@dimen/dp_8"
             android:paddingStart="@dimen/dp_5"
+            android:paddingEnd="@dimen/dp_8"
             android:text="在线"
             android:textSize="@dimen/sp_12"
             android:visibility="@{userinfo.online?View.VISIBLE:View.INVISIBLE}"
@@ -64,19 +64,20 @@
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_22"
             android:gravity="center_vertical"
-            tools:text="慢两排"
             android:text="@{userinfo.nickName}"
             android:textColor="@color/fontTextColor"
             android:textSize="@dimen/sp_17"
             app:fontType="@string/fontBold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_cover" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_cover"
+            tools:text="慢两排" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_2"
             android:src="@drawable/icon_realname"
+            android:visibility="@{userinfo.auth?View.VISIBLE:View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
             app:layout_constraintStart_toEndOf="@+id/tv_nickName"
             app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
@@ -87,9 +88,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_9"
-            android:layout_marginBottom="@dimen/dp_5"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
             app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="@dimen/dp_5"
+            android:layout_height="@dimen/dp_10"
+            android:visibility="@{userinfo.level>0?View.VISIBLE:View.GONE}"
+            app:layout_constraintStart_toEndOf="@+id/userLevel"
+            app:layout_constraintTop_toTopOf="@+id/userLevel" />
 
         <cn.yanhu.commonres.view.UserTagView
             android:id="@+id/userAge"
@@ -97,10 +105,9 @@
             userGender="@{userinfo.gender}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/userLevel"
-            app:layout_constraintStart_toEndOf="@+id/userLevel"
-            app:layout_constraintTop_toTopOf="@+id/userLevel" />
+            android:layout_marginTop="@dimen/dp_9"
+            app:layout_constraintStart_toEndOf="@+id/divider5"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
 
         <cn.yanhu.commonres.view.UserTagView
             userProvince='@{userinfo.province}'
@@ -128,25 +135,26 @@
             placeholderId="@{-1}"
             android:layout_width="@dimen/dp_60"
             android:layout_height="@dimen/dp_60"
-            app:riv_oval="true"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/iv_guardFrame"
             app:layout_constraintEnd_toEndOf="@+id/iv_guardFrame"
             app:layout_constraintStart_toStartOf="@+id/iv_guardFrame"
             app:layout_constraintTop_toTopOf="@+id/iv_guardFrame"
+            app:riv_oval="true"
             tools:src="@drawable/icon_portrait" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_guardFrame"
             imageUrl="@{userinfo.guardInfo.guardFrame}"
             placeholderId="@{-1}"
-            app:layout_constraintTop_toBottomOf="@+id/iv_cover"
-            app:layout_constraintBottom_toTopOf="@id/divider"
             android:layout_width="@dimen/dp_105"
             android:layout_height="@dimen/dp_105"
             android:layout_marginEnd="@dimen/dp_5"
             android:visibility="@{userinfo.guardInfo!=null ?View.VISIBLE:View.INVISIBLE}"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_cover" />
+
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
@@ -154,6 +162,7 @@
             android:layout_marginTop="@dimen/dp_20"
             android:background="@color/blackAlpha96"
             app:layout_constraintTop_toBottomOf="@+id/tagId" />
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_info"
             android:layout_width="wrap_content"
@@ -183,22 +192,24 @@
 
         <com.zhy.view.flowlayout.FlowLayout
             android:id="@+id/flowLayoutInfo"
-            app:layout_constraintTop_toBottomOf="@+id/tv_personInfo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_2"
             android:paddingStart="@dimen/dp_12"
             android:paddingEnd="@dimen/dp_2"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_2" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_personInfo" />
+
         <View
             android:id="@+id/divider2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:layout_marginTop="@dimen/dp_20"
             android:layout_marginHorizontal="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_20"
             android:background="@color/blackAlpha96"
             app:layout_constraintTop_toBottomOf="@+id/flowLayoutInfo" />
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
@@ -211,25 +222,28 @@
             android:textSize="@dimen/sp_14"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_description"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_12"
             android:gravity="center_vertical"
+            android:paddingEnd="@dimen/dp_10"
             android:text="@{userinfo.description}"
-            tools:text = "世上无难事只怕有钱人，物以类聚人以穷分。"
             android:textColor="@color/fontTextColor"
             android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tv_desc"
-            app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc"
+            tools:text="世上无难事只怕有钱人，物以类聚人以穷分。世上无难事只怕有钱人，物以类聚人以穷分。" />
 
         <View
             android:id="@+id/divider3"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:layout_marginTop="@dimen/dp_20"
             android:layout_marginHorizontal="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_20"
             android:background="@color/blackAlpha96"
             app:layout_constraintTop_toBottomOf="@+id/tv_description" />
 
@@ -248,14 +262,14 @@
 
         <com.zhy.view.flowlayout.FlowLayout
             android:id="@+id/flowLayoutCondition"
-            app:layout_constraintTop_toBottomOf="@+id/tv_condition"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_2"
             android:paddingStart="@dimen/dp_12"
             android:paddingEnd="@dimen/dp_2"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_2" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_condition" />
 
         <View
             android:id="@+id/divider4"
@@ -274,6 +288,7 @@
             android:text="动态"
             android:textColor="@color/fontTextColor"
             android:textSize="@dimen/sp_16"
+            android:visibility="gone"
             app:fontType="@string/fontBold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider4" />

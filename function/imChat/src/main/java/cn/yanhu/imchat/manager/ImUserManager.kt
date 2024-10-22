@@ -3,19 +3,15 @@ package cn.yanhu.imchat.manager
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.imchat.api.imChatRxApi
+import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.GsonUtils
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.friend.FriendService
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.StickTopSessionInfo
-import com.netease.nimlib.sdk.uinfo.UserService
-import com.netease.nimlib.sdk.uinfo.model.NimUserInfo
-import com.netease.yunxin.kit.chatkit.repo.ConversationRepo
-import com.netease.yunxin.kit.chatkit.ui.common.ChatCallback
-import com.netease.yunxin.kit.corekit.im.model.UserField
-import com.netease.yunxin.kit.corekit.im.provider.FetchCallback
-import com.netease.yunxin.kit.corekit.im.repo.CommonRepo
+import com.hyphenate.EMCallBack
+import com.hyphenate.EMValueCallBack
+import com.hyphenate.chat.EMClient
+import com.hyphenate.chat.EMUserInfo
 
 
 /**
@@ -27,112 +23,53 @@ object ImUserManager {
 
 
     fun getSelfUserInfo():UserDetailInfo{
-        val userInfo = getUserInfo(AppCacheManager.userId)
-        return  GsonUtils.fromJson(userInfo.extension,UserDetailInfo::class.java)
+        return  GsonUtils.fromJson(AppCacheManager.userInfo ,UserDetailInfo::class.java)
     }
 
-    fun getUserInfo(account:String):NimUserInfo{
-        return NIMClient.getService(
-            UserService::class.java
-        ).getUserInfo(account)
-    }
-
-    fun updateUserInfo(field: UserField, value: Any) {
-        val map: MutableMap<UserField, Any> = HashMap(1)
-        map[field] = value
-        CommonRepo.updateUserInfo(
-            map,
-            object : FetchCallback<Void> {
-                override fun onSuccess(param: Void?) {
-                }
-
-                override fun onFailed(code: Int) {
-                }
-
-                override fun onException(exception: Throwable?) {
-                }
+    fun updateUserInfo(key: EMUserInfo.EMUserInfoType, value: String) {
+        EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(
+            key,
+            value,
+            object : EMValueCallBack<String?> {
+                override fun onSuccess(value: String?) {}
+                override fun onError(error: Int, errorMsg: String) {}
             })
     }
 
-    fun updateUserInfo(map: MutableMap<UserField, Any>) {
-        CommonRepo.updateUserInfo(
-            map,
-            object : FetchCallback<Void> {
-                override fun onSuccess(param: Void?) {
-                }
-
-                override fun onFailed(code: Int) {
-                }
-
-                override fun onException(exception: Throwable?) {
-                }
+    fun updateUserInfo(userInfo: EMUserInfo) {
+        EMClient.getInstance().userInfoManager()
+            .updateOwnInfo(userInfo, object : EMValueCallBack<String?> {
+                override fun onSuccess(value: String?) {}
+                override fun onError(error: Int, errorMsg: String) {}
             })
     }
 
-    /**
-     * 判断用户是否已被拉黑
-     *
-     * @param account 用戶帐号
-     * @return 该用户是否在黑名单列表中
-     */
-    fun isInBlack(account: String): Boolean {
-        return NIMClient.getService(
-            FriendService::class.java
-        ).isInBlackList(account)
-    }
 
     fun setUserBlack(isChecked: Boolean, userId: String) {
         if (isChecked) {
-            NIMClient.getService(FriendService::class.java).addToBlackList(userId)
-                .setCallback(object : RequestCallback<Void> {
-                    override fun onSuccess(result: Void?) {
-                    }
-
-                    override fun onFailed(code: Int) {
-                        showToast(code.toString())
-                    }
-
-                    override fun onException(exception: Throwable?) {
-                        showToast(exception?.message)
-                    }
-                })
-        } else {
-            NIMClient.getService(FriendService::class.java).removeFromBlackList(userId)
-                .setCallback(object : RequestCallback<Void> {
-                    override fun onSuccess(result: Void?) {
-                    }
-                    override fun onFailed(code: Int) {
-                        showToast(code.toString())
-                    }
-                    override fun onException(exception: Throwable?) {
-                        showToast(exception?.message)
-                    }
-                })
-        }
-    }
-
-
-    /**
-     * 判断用户是否需要消息提醒/免打扰
-     * @param account 用户帐号
-     * @return true表示需要提醒；false表示免打扰
-     */
-    fun isNeedMessageNotify(account: String): Boolean {
-        return NIMClient.getService(FriendService::class.java).isNeedMessageNotify(account)
-    }
-
-    /**
-     * 设置是否免打扰
-     */
-    fun setNotify(isChecked: Boolean, sessionId: String,sessionType:SessionTypeEnum = SessionTypeEnum.P2P) {
-        ConversationRepo.setNotify(
-            sessionId,
-            sessionType,
-            !isChecked,
-            object : ChatCallback<Void>() {
-                override fun onSuccess(param: Void?) {
+            request({ imChatRxApi.blockUser(userId)},object : OnRequestResultListener<String>{
+                override fun onSuccess(data: BaseBean<String>) {
+                    showToast("用户已被拉黑")
                 }
             })
+//            EMClient.getInstance().contactManager().asyncAddUserToBlackList(userId,true,object : EMCallBack{
+//                override fun onSuccess() {
+//                }
+//                override fun onError(p0: Int, p1: String?) {
+//                }
+//            })
+        } else {
+            request({ imChatRxApi.cancelBlock(userId)},object : OnRequestResultListener<String>{
+                override fun onSuccess(data: BaseBean<String>) {
+                }
+            })
+//            EMClient.getInstance().contactManager().asyncRemoveUserFromBlackList(userId,object : EMCallBack{
+//                override fun onSuccess() {
+//                }
+//                override fun onError(p0: Int, p1: String?) {
+//                }
+//            })
+        }
     }
 
 
@@ -141,41 +78,20 @@ object ImUserManager {
      * @param accId 用户帐号
      * @return true已经置顶；false未置顶
      */
-    fun isStickTop(accId: String,sessionType:SessionTypeEnum = SessionTypeEnum.P2P): Boolean {
-        return ConversationRepo.isStickTop(accId, sessionType)
+    fun isStickTop(conversationId: String): Boolean {
+        val conversation = EMClient.getInstance().chatManager().getConversation(conversationId)
+        return conversation.isPinned
     }
 
 
     /**
      * 设置消息置顶/取消置顶
      */
-    fun setStickTop(isChecked: Boolean, userId: String,sessionType:SessionTypeEnum = SessionTypeEnum.P2P) {
-        if (isChecked) {
-            ConversationRepo.addStickTop(
-                userId,
-                sessionType,
-                "",
-                object : ChatCallback<StickTopSessionInfo>() {
-                    override fun onSuccess(param: StickTopSessionInfo?) {
-                        ConversationRepo.notifyStickTop(
-                            userId,
-                            sessionType
-                        )
-                    }
-                })
-        } else {
-            ConversationRepo.removeStickTop(
-                userId,
-                sessionType,
-                "",
-                object : ChatCallback<Void>() {
-                    override fun onSuccess(param: Void?) {
-                        ConversationRepo.notifyStickTop(
-                            userId,
-                            sessionType
-                        )
-                    }
-                })
-        }
+    fun setStickTop(isChecked: Boolean, conversationId: String) {
+        EMClient.getInstance().chatManager()
+            .asyncPinConversation(conversationId, isChecked, object : EMCallBack {
+                override fun onSuccess() {}
+                override fun onError(code: Int, error: String) {}
+            })
     }
 }

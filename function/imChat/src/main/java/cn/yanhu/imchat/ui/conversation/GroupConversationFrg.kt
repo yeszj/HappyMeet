@@ -27,7 +27,7 @@ class GroupConversationFrg : BaseFragment<FrgGroupConversationBinding, ImChatVie
         RecommendGroupAdapter()
     }
     override fun initData() {
-        addFragment(ImConversationFragment.newsInstance(ImConversationFragment.TYPE_GROUP))
+       // addFragment(ImConversationFragment.newsInstance(ImConversationFragment.TYPE_GROUP))
         mBinding.recyclerView.adapter = recommendGroupAdapter
         requestData()
     }

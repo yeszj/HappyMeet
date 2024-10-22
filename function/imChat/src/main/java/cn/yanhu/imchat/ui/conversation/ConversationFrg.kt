@@ -1,5 +1,6 @@
 package cn.yanhu.imchat.ui.conversation
 
+import android.annotation.SuppressLint
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseFragment
+import cn.yanhu.baselib.callBack.OnSingleClickListener
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewPager2Helper
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -19,6 +21,7 @@ import cn.yanhu.imchat.ImChatViewModel
 import cn.yanhu.imchat.R
 import cn.yanhu.imchat.databinding.FrgConversationBinding
 import cn.yanhu.imchat.databinding.ViewImListTopBinding
+import cn.zj.netrequest.ext.parseState
 import com.permissionx.guolindev.PermissionX
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
@@ -42,7 +45,7 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
     private fun initTabLayout() {
         val magicIndicator = mBinding.tabLayout
         val commonNavigator = CommonNavigator(mContext)
-        val list = mutableListOf("全部消息", "亲密关系")
+        val list = mutableListOf("全部消息")
         commonNavigator.adapter = CommonIndicatorAdapter(
             mBinding.viewPager,
             list.toTypedArray(),
@@ -57,14 +60,52 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
         ViewPager2Helper.bind(magicIndicator, mBinding.viewPager)
     }
 
+
+
     private var frgList: ArrayList<Fragment> = arrayListOf()
     private fun initVpData() {
-        frgList.add(ImConversationFragment.newsInstance(ImConversationFragment.TYPE_SINGLE_ALL))
+        val imConversationListFrg = IMConversationListFrg.newsInstance(false, IMConversationListFrg.TYPE_ALL)
+        frgList.add(imConversationListFrg)
 
-        frgList.add(ImConversationFragment.newsInstance(ImConversationFragment.TYPE_SINGLE_INTIMATE))
+       // frgList.add(ImConversationFragment.newsInstance(ImConversationFragment.TYPE_SINGLE_INTIMATE))
 
         mBinding.viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
         mBinding.viewPager.offscreenPageLimit = frgList.size
+    }
+
+
+    override fun requestData() {
+        super.requestData()
+        mViewModel.getSystemMsg()
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun registerNecessaryObserver() {
+        super.registerNecessaryObserver()
+        mViewModel.systemMsgObserver.observe(this){ it ->
+            parseState(it,{
+                val unReadCount = it.unReadSystemCount
+
+                if (unReadCount > 0) {
+                    topBinding.tvUnReadSystemMsg.visibility = View.VISIBLE
+                    if (unReadCount > 99) {
+                        topBinding.tvUnReadSystemMsg.text = "99+"
+                    } else {
+                        topBinding.tvUnReadSystemMsg.text = unReadCount.toString()
+                    }
+                } else {
+                    topBinding.tvUnReadSystemMsg.visibility = View.INVISIBLE
+                }
+                val systemNotice = it.systemNotice
+                if (systemNotice!=null){
+                    topBinding.imSystemMsgTime.text = systemNotice.time
+                    topBinding.imSystemMsgContent.text = systemNotice.content
+                }else{
+                    topBinding.imSystemMsgTime.text = ""
+                    topBinding.imSystemMsgContent.text = "暂无官方消息"
+                }
+            })
+        }
     }
 
     //验证权限
@@ -81,6 +122,11 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
                 topBinding.noticeApplyPermission.setOnClickListener { isFloatPermission() } //申请悬浮窗
             }
         }
+        topBinding.noticeCancel.setOnSingleClickListener(object : OnSingleClickListener{
+            override fun onSingleClick(v: View?) {
+                topBinding.noticeRl.visibility = View.GONE
+            }
+        })
     }
     private fun addTopMsgView(){
         val imInflater = LayoutInflater.from(mContext).inflate(R.layout.view_im_list_top, null)
@@ -89,6 +135,10 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
         topBinding.browserCl.setOnSingleClickListener {
             RouteIntent.lunchSeenMeHistory()
             View.INVISIBLE.also { topBinding.tvReadCount.visibility = it }
+        }
+        topBinding.notifyRl.setOnSingleClickListener {
+            RouteIntent.lunchSystemMsgPage()
+            View.INVISIBLE.also { topBinding.tvUnReadSystemMsg.visibility = it }
         }
     }
 
@@ -113,7 +163,7 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
     }
 
     private fun isFloatPermission() {
-        PermissionXUtils.checkAlertPermission(activity, object :
+        PermissionXUtils.checkAlertPermission(activity,"退出", object :
             PermissionXUtils.OnAlertPermissionListener {
            override fun onSuccess() {
                 showToast("已打开悬浮窗权限")

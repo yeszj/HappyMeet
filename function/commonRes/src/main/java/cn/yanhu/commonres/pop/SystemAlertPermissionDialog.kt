@@ -14,7 +14,7 @@ import com.permissionx.guolindev.dialog.RationaleDialog
  * created: 2023/12/4
  * desc:
  */
-class SystemAlertPermissionDialog(context: Context,private val onClickCloseListener: OnClickCloseListener) :
+class SystemAlertPermissionDialog(context: Context, private val cancelTxt:String, private val onClickCloseListener: OnClickCloseListener) :
     RationaleDialog(context, R.style.CustomDialog) {
 
     private var btnCancel: AppCompatButton? = null
@@ -26,9 +26,17 @@ class SystemAlertPermissionDialog(context: Context,private val onClickCloseListe
         btnCancel = findViewById(R.id.btn_cancel)
         btnNext = findViewById(R.id.btn_next)
         ivClose = findViewById(R.id.iv_close)
+        btnCancel!!.text = cancelTxt
         btnCancel?.setOnClickListener {
             dismiss()
             onClickCloseListener.onClose()
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if(hasFocus){
+            setCanceledOnTouchOutside(true)
         }
     }
 

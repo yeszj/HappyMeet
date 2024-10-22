@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="introduction"
+            type="String" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        style="@style/chat_im_parent_style"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/timestamp"
+            style="@style/chat_text_date_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/alert_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_30"
+            android:background="@drawable/shape_item_un_select"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_8">
+          <androidx.appcompat.widget.AppCompatImageView
+              android:id="@+id/iv_tipIcon"
+              android:layout_width="@dimen/dp_20"
+              android:layout_height="@dimen/dp_20"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_centetTip"
+                android:layout_width="wrap_content"
+                android:textSize="@dimen/sp_14"
+                android:layout_marginStart="@dimen/dp_4"
+                android:textColor="#80333333"
+                tools:text="红包已过期，90玫瑰已退回你的账户"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

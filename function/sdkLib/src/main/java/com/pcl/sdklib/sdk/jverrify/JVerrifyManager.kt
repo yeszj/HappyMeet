@@ -10,4 +10,5 @@ package com.pcl.sdklib.sdk.jverrify
  * desc:
  */
 object JVerrifyManager {
+
 }

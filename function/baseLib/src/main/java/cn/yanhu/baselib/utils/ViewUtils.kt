@@ -1,7 +1,10 @@
 package cn.yanhu.baselib.utils
 
+import android.graphics.Outline
+import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 
 /**
  * @author zhengjun
@@ -9,6 +12,24 @@ import android.view.ViewGroup
  * @create at 2018/8/14 11:40
  */
 object ViewUtils {
+    fun setViewCorner(view: View, radius: Int) {
+        view.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                val rect = Rect()
+                view.getGlobalVisibleRect(rect)
+                val leftMargin = 0
+                val topMargin = 0
+                val selfRect = Rect(
+                    leftMargin, topMargin,
+                    rect.right - rect.left - leftMargin,
+                    rect.bottom - rect.top - topMargin
+                )
+                outline.setRoundRect(selfRect, radius.toFloat())
+            }
+        }
+        view.clipToOutline = true
+    }
+
     fun setMarginLeftAndTop(view: View, leftMargin: Int, topMargin: Int) {
         val layoutParams = view.layoutParams
         if (layoutParams is ViewGroup.MarginLayoutParams) {
@@ -140,7 +161,7 @@ object ViewUtils {
     }
 
     fun setPaddingTop(view: View?, topMargin: Int) {
-        view?.setPadding(0, topMargin, 0, 0)
+        view?.setPadding(view.paddingLeft, topMargin, view.paddingRight, view.paddingBottom)
     }
 
     fun setPaddingLeft(view: View?, leftMargin: Int) {

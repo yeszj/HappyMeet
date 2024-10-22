@@ -3,11 +3,9 @@ package cn.zj.netrequest.upload
 import android.text.TextUtils
 import android.util.Log
 import cn.zj.netrequest.FilePartManager
-import cn.zj.netrequest.R
 import com.blankj.utilcode.util.ThreadUtils
 import cn.zj.netrequest.status.ErrorCode
 import com.blankj.utilcode.BuildConfig
-import com.blankj.utilcode.util.StringUtils.getString
 import cn.zj.netrequest.application.ApplicationProxy
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
@@ -41,7 +39,8 @@ object UploadFileClient {
 
     fun uploadFile(
         imagePath: String,
-        progressRequestListener: UploadFileProgressListener
+        progressRequestListener: UploadFileProgressListener,
+        source: String=""
     ) {
         ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<JSONObject>() {
             override fun onSuccess(result: JSONObject?) {
@@ -50,7 +49,7 @@ object UploadFileClient {
                     if (result.optInt("code") == ErrorCode.SUCCESS) {
                         progressRequestListener.onUploadSuccess(result.optString("data"))
                     } else {
-                        progressRequestListener.onUploadFail(getString(R.string.file_size_too_big))
+                        progressRequestListener.onUploadFail(result.optString("msg"))
                     }
                 }
             }
@@ -58,7 +57,8 @@ object UploadFileClient {
             override fun doInBackground(): JSONObject? {
                 return executePostFile(
                     imagePath,
-                    progressRequestListener
+                    progressRequestListener,
+                    source = source
                 )
             }
         })
@@ -66,7 +66,6 @@ object UploadFileClient {
 
 
     fun uploadFile(
-        url: String,
         path: String,
         bucket: String,
         fileName: String,
@@ -79,7 +78,7 @@ object UploadFileClient {
                     if (result.optInt("code") == ErrorCode.SUCCESS) {
                         progressRequestListener.onUploadSuccess(result.optString("data"))
                     } else {
-                        progressRequestListener.onUploadFail(getString(R.string.file_size_too_big))
+                        progressRequestListener.onUploadFail(result.optString("msg"))
                     }
                 }
             }
@@ -88,7 +87,7 @@ object UploadFileClient {
 
                 return executePostFile(
                     path,
-                    progressRequestListener, bucket, fileName
+                    progressRequestListener, bucket, fileName,""
                 )
             }
         })
@@ -98,12 +97,11 @@ object UploadFileClient {
         path: String,
         progressRequestListener: UploadFileProgressListener?,
         bucket: String = "",
-        fileName: String = ""
+        fileName: String = "",source:String = ""
     ): JSONObject{
         val client = okHttpClient
-        val body: RequestBody = FilePartManager.getParam(path, "file")
+        val body: RequestBody = FilePartManager.getParam(path, "file", source)
         val header = ApplicationProxy.instance.getHead()
-
         val builder = Request.Builder()
         for ((key, value) in header) {
             Log.d("okhttp.OkHttpClient", "$key:$value")

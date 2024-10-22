@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    style="@style/chat_im_parent_style">
+
+    <TextView
+        android:id="@+id/timestamp"
+        style="@style/chat_text_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_chat_activity">
+
+        <include layout="@layout/ease_im_chat_avatar" />
+
+        <FrameLayout
+            android:id="@+id/bubble"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/userInfoView"
+            android:layout_marginRight="@dimen/dp_50"
+            android:layout_toRightOf="@id/vg_avatar"
+            android:layout_marginTop="@dimen/dp_5"
+            tools:layout_height="@dimen/dp_40"
+            android:background="@drawable/ease_chat_bubble_receive_bg"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:paddingVertical="@dimen/dp_9"
+            android:layout_height="wrap_content">
+            <cn.yanhu.commonres.view.AutoLineLayout
+                android:id="@+id/vg_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="30dp"
+                android:orientation="horizontal" />
+        </FrameLayout>
+
+        <cn.yanhu.imchat.view.ImChatUserInfoView
+            android:id="@+id/userInfoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/vg_avatar"
+            android:visibility="gone" />
+        <include layout="@layout/view_message_coin_reward"/>
+        <include layout="@layout/ease_receive_im_chat_card_tip"/>
+    </RelativeLayout>
+
+</LinearLayout>

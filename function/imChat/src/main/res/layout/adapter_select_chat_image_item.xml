@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="funcInfo"
+            type="cn.yanhu.imchat.bean.ChatFuncInfo" />
+
+        <import type="android.view.View" />
+        <import type="android.text.TextUtils"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_70"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@{funcInfo.name}"
+                android:textColor="@{!funcInfo.hasLock?@color/cl_common:@color/cl_common_opacity_50}"
+                android:textSize="@dimen/sp_15"
+                tools:text="发照片"
+                tools:textColor="@color/cl_common" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_5"
+                android:text="@{funcInfo.lockDesc}"
+                android:textColor="@color/cl_common_opacity_50"
+                android:textSize="@dimen/sp_12"
+                android:visibility="@{(!funcInfo.hasLock||TextUtils.isEmpty(funcInfo.lockDesc))?View.GONE:View.VISIBLE}"
+                tools:text="亲密等级Lv.2解锁" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0_5"
+            android:layout_gravity="bottom"
+            android:visibility="@{funcInfo.id == 3?View.GONE:View.VISIBLE}"
+            android:background="#0A000000" />
+    </LinearLayout>
+</layout>

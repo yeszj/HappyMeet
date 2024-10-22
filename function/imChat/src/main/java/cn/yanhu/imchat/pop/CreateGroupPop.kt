@@ -39,7 +39,7 @@ class CreateGroupPop(val context: FragmentActivity, val groupInfo: GroupDetailIn
     }
 
     private lateinit var mBinding: PopCreateGroupBinding
-    private var groupIconUrl: String = ImUserManager.getSelfUserInfo().portrait
+    private var groupIconUrl: String = ImUserManager.getSelfUserInfo()!!.portrait
     override fun onCreate() {
         super.onCreate()
         mBinding = PopCreateGroupBinding.bind(popupImplView)

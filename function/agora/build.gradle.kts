@@ -58,8 +58,9 @@ dependencies {
     implementation(project(mapOf("path" to ":function:commonRes")))
     kapt ("com.alibaba:arouter-compiler:${rootProject.ext.get("arouter")}")
     //api("io.agora.rtc:full-rtc-basic:4.3.0")
-    api("io.agora.rtc:agora-special-full:4.1.1.28")
+    //api("io.agora.rtc:agora-special-full:4.1.1.28")
     implementation(project(mapOf("path" to ":function:sdkLib")))
     implementation(project(mapOf("path" to ":function:imChat")))
+    implementation(project(mapOf("path" to ":function:localRepo:extension_aar")))
 
 }

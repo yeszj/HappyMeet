@@ -29,7 +29,7 @@
             android:padding="@dimen/dp_1"
             android:scaleType="centerCrop"
             imageUrl="@{userinfo.portrait}"
-            android:src="@drawable/default_avatar_bg_1"
+            android:src="@drawable/avatar_male_normal"
             app:layout_constraintStart_toEndOf="@+id/iv_selfAvatar"
             app:layout_constraintTop_toTopOf="parent"
             app:riv_oval="true" />
@@ -42,7 +42,7 @@
             android:background="@drawable/circle_dot_gradient_bottom_white"
             android:padding="@dimen/dp_1"
             android:scaleType="centerCrop"
-            android:src="@drawable/default_avatar_bg_2"
+            android:src="@drawable/avatar_male_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:riv_oval="true" />

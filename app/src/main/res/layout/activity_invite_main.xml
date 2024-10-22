@@ -6,7 +6,7 @@
     <data>
         <variable
             name="inviteInfo"
-            type="cn.huanyuan.happymeet.bean.InviteInfo" />
+            type="cn.huanyuan.sweetlove.bean.InviteInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -71,7 +71,7 @@
                     style="@style/constraintHorizonCenter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="邀请你加入趣相亲"
+                    android:text="邀请你加入暖遇"
                     android:textColor="@color/whiteColorAlpha60"
                     android:textSize="@dimen/sp_14"
                     app:fontType="@string/fontMedium"
@@ -123,7 +123,7 @@
                     android:layout_width="@dimen/dp_128"
                     android:layout_height="@dimen/dp_128"
                     android:layout_marginBottom="@dimen/dp_41"
-                    android:src="@drawable/default_avatar_bg_1"
+                    android:src="@drawable/ease_default_avatar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:riv_corner_radius="@dimen/dp_6" />
             </LinearLayout>

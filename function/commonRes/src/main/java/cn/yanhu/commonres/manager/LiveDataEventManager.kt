@@ -9,6 +9,8 @@ import com.jeremyliao.liveeventbus.LiveEventBus
  */
 object LiveDataEventManager {
     const val SWITCH_MAIN_TAB = "switchMainTab"
+    const  val REFRESH_SAMECITY_TAB = "refresh_samecity_tab"
+
     const  val SWITCH_TO_SAME_CITY = "switch_to_same_city"
     const val LIKE_MOMENT_SUCCESS = "like_moment_success"
 
@@ -27,6 +29,8 @@ object LiveDataEventManager {
     const val DELETE_MOMENT_SUCCESS = "deleteMomentSuccess"
 
     const val PAY_RESULT = "pay_result"
+
+    const val ALI_AUTH_SUCCESS = "ali_auth_success"
 
     const val WX_AUTH_SUCCESS = "wx_auth_success"
 

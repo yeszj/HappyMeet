@@ -61,7 +61,7 @@ dependencies {
     //https://github.com/li-xiaojun/XPopup/
     api("com.github.li-xiaojun:XPopup:2.10.0")
     api("com.github.bumptech.glide:glide:${rootProject.ext.get("glide")}")
-    annotationProcessor("com.github.bumptech.glide:compiler:${rootProject.ext.get("glide")}")
+    kapt("com.github.bumptech.glide:compiler:${rootProject.ext.get("glide")}")
     //https://github.com/wasabeef/glide-transformations
     api("jp.wasabeef:glide-transformations:4.3.0")
     //https://github.com/lihangleo2/ShadowLayout
@@ -105,4 +105,6 @@ dependencies {
     //https://github.com/getActivity/Logcat
     debugImplementation("com.github.getActivity:Logcat:11.86")
     api("com.github.getActivity:EasyWindow:10.6")
+    // https://github.com/yhaolpz/FloatWindow
+    api("com.github.yhaolpz:FloatWindow:1.0.9")
 }

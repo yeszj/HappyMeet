@@ -1,0 +1,37 @@
+{
+  "onlineImageQuality": "LOW",
+  "onlineLivenessQuality": "NORMAL",
+  "version": "3.0.0",
+  "solutionType": 2,
+  "planId": 21492,
+  "faceActionNum": 3,
+  "faceLivenessType": 2,
+  "livenessThreshold": 0.4,
+  "collection": 2,
+  "policeCheck": 0,
+  "policeThreshold": 80,
+  "clientImageQuality": {
+    "occlusion": "LOW",
+    "illumination": "LOW",
+    "blur": "LOW"
+  },
+  "localImageQuality": {
+    "loose": {
+      "minIllum": 30,
+      "maxIllum": 240,
+      "leftEyeOcclusion": 0.95,
+      "rightEyeOcclusion": 0.95,
+      "noseOcclusion": 0.95,
+      "mouseOcclusion": 0.95,
+      "leftContourOcclusion": 0.95,
+      "rightContourOcclusion": 0.95,
+      "chinOcclusion": 0.95,
+      "pitch": 30,
+      "yaw": 18,
+      "roll": 30,
+      "blur": 0.8
+    },
+    "normal": {},
+    "strict": {}
+  }
+}

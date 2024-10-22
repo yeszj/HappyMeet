@@ -2,10 +2,12 @@ package cn.yanhu.commonres.bean;
 
 import android.text.TextUtils;
 
-import androidx.databinding.BaseObservable;
+import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+import androidx.databinding.Observable;
+import androidx.databinding.PropertyChangeRegistry;
+
+import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
 
@@ -16,10 +18,8 @@ import cn.yanhu.commonres.BR;
  * created: 2023/12/18
  * desc:
  */
-@Entity
-public class BaseUserInfo extends BaseObservable implements Serializable {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+public class BaseUserInfo extends LitePalSupport implements Serializable, Observable {
+    private long id;
     private String userId;
     private String portrait;
     private String nickName;
@@ -39,14 +39,24 @@ public class BaseUserInfo extends BaseObservable implements Serializable {
 
     private String description;
 
-    private int onlineStatus;
+    private Integer onlineStatus;
 
+    private int status;
+
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public boolean isOnline(){
         return onlineStatus == 0;
     }
 
-    public int getOnlineStatus() {
+    public Integer getOnlineStatus() {
         return onlineStatus;
     }
 
@@ -109,11 +119,11 @@ public class BaseUserInfo extends BaseObservable implements Serializable {
         this.hometown = hometown;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -183,5 +193,53 @@ public class BaseUserInfo extends BaseObservable implements Serializable {
     public void setProvince(String province) {
         this.province = province;
         notifyPropertyChanged(BR.province);
+    }
+    private transient PropertyChangeRegistry mCallbacks;
+    @Override
+    public void addOnPropertyChangedCallback(@NonNull OnPropertyChangedCallback callback) {
+        synchronized (this) {
+            if (mCallbacks == null) {
+                mCallbacks = new PropertyChangeRegistry();
+            }
+        }
+        mCallbacks.add(callback);
+    }
+
+    @Override
+    public void removeOnPropertyChangedCallback(@NonNull OnPropertyChangedCallback callback) {
+        synchronized (this) {
+            if (mCallbacks == null) {
+                return;
+            }
+        }
+        mCallbacks.remove(callback);
+    }
+
+    /**
+     * Notifies listeners that all properties of this instance have changed.
+     */
+    public void notifyChange() {
+        synchronized (this) {
+            if (mCallbacks == null) {
+                return;
+            }
+        }
+        mCallbacks.notifyCallbacks(this, 0, null);
+    }
+
+    /**
+     * Notifies listeners that a specific property has changed. The getter for the property
+     * that changes should be marked with {@link Bindable} to generate a field in
+     * <code>BR</code> to be used as <code>fieldId</code>.
+     *
+     * @param fieldId The generated BR id for the Bindable field.
+     */
+    public void notifyPropertyChanged(int fieldId) {
+        synchronized (this) {
+            if (mCallbacks == null) {
+                return;
+            }
+        }
+        mCallbacks.notifyCallbacks(this, fieldId, null);
     }
 }

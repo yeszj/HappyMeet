@@ -17,8 +17,6 @@ public class RewardAnimUtils {
 
     /**
      * 获取礼物入场动画
-     *
-     * @return
      */
     public static Animation getInAnimation(Context context) {
         return AnimationUtils.loadAnimation(context, R.anim.gift_in);
@@ -26,8 +24,6 @@ public class RewardAnimUtils {
 
     /**
      * 获取礼物出场动画
-     *
-     * @return
      */
     public static AnimationSet getOutAnimation(Context context) {
         return (AnimationSet) AnimationUtils.loadAnimation(context, R.anim.gift_out);
@@ -40,8 +36,6 @@ public class RewardAnimUtils {
 
     /**
      * 获取礼物出场动画
-     *
-     * @return
      */
     public static AnimationSet getUserEnterOutAnimation(Context context) {
         return (AnimationSet) AnimationUtils.loadAnimation(context, R.anim.uer_enter_out);

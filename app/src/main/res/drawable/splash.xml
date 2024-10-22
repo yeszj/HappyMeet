@@ -9,11 +9,19 @@
     <!--注意此处的bottom要和activity_splash.xml中的logo图marginBottom的值保持一致-->
     <item
         android:gravity="center_horizontal"
-        android:top="@dimen/dp_146"
         tools:ignore="UnusedAttribute">
         <!-- 图片 -->
         <bitmap
-            android:gravity="center|top"
-            android:src="@mipmap/ic_launcher" />
+            android:gravity="center"
+            android:src="@mipmap/icon_splash_logo" />
     </item>
+<!--    <item-->
+
+<!--        android:gravity="center_horizontal|bottom"-->
+<!--        android:bottom="@dimen/dp_150">-->
+<!--        &lt;!&ndash; 图片 &ndash;&gt;-->
+<!--        <bitmap-->
+<!--            android:gravity="bottom"-->
+<!--            android:src="@mipmap/icon_app_splash_name" />-->
+<!--    </item>-->
 </layer-list>

@@ -34,6 +34,20 @@
             android:value="NW4BZ-R2UCJ-B26F6-FWUEW-2HZD2-RKBHF" />
         <!--腾讯定位配置-end-->
 
-
+        <activity
+            android:name=".sdk.baiduFace.VerifyFailureActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.huanyuan.sweetlove.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 微信支付验证界面 -->
+        <activity
+            android:name="cn.huanyuan.sweetlove.wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" /> <!-- 美颜设置界面 -->
     </application>
 </manifest>

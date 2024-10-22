@@ -7,7 +7,7 @@
 
         <variable
             name="levelInfo"
-            type="cn.huanyuan.happymeet.bean.LevelPrivilegeInfo" />
+            type="cn.huanyuan.sweetlove.bean.LevelPrivilegeInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

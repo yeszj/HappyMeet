@@ -22,6 +22,7 @@
             android:layout_marginStart="@dimen/dp_13"
             android:layout_marginEnd="@dimen/dp_13"
             android:background="@drawable/shape_notice_bg"
+            tools:visibility="visible"
             android:visibility="gone">
 
             <ImageView
@@ -45,14 +46,15 @@
                 android:textColor="@color/colorMain"
                 android:textSize="@dimen/sp_12" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/notice_apply_permission"
-                android:layout_width="@dimen/dp_62"
-                android:layout_height="@dimen/dp_26"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:adjustViewBounds="true"
                 android:layout_marginEnd="@dimen/dp_10"
-                android:background="@mipmap/ic_open_notification" />
+                android:src="@mipmap/ic_open_notification" />
 
         </RelativeLayout>
 
@@ -63,15 +65,14 @@
             android:layout_marginStart="@dimen/dp_13"
             android:layout_marginEnd="@dimen/dp_13">
 
-            <com.makeramen.roundedimageview.RoundedImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/im_system_msg_icon"
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_50"
-                android:src="@mipmap/ic_launcher_round"
+                android:src="@drawable/circle_logo"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:riv_oval="true" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:id="@+id/im_system_msg_title"
@@ -144,6 +145,7 @@
             android:id="@+id/browser_cl"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_74"
+            android:visibility="gone"
             android:layout_marginStart="@dimen/dp_12"
             android:layout_marginEnd="@dimen/dp_12">
 

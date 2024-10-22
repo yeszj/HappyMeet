@@ -11,6 +11,7 @@
 
         <import type="android.view.View" />
         <import type="cn.yanhu.commonres.R"/>
+        <import type="cn.yanhu.commonres.manager.ImageThumbUtils"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +22,7 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_cover"
-            imageUrl="@{roomBean.coverUrl}"
+            imageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.coverUrl)}"
             placeholderId="@{R.drawable.pic_default_bg}"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_166"
@@ -30,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:riv_corner_radius="@dimen/dp_10"
-            tools:src="@drawable/default_avatar_bg_6" />
+            tools:src="@drawable/ease_default_avatar" />
 
         <View
             android:id="@+id/statuBg"
@@ -69,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="@dimen/dp_6"
-            android:text='@{roomBean.roomType==0?"对方在线":roomBean.roomType==1?"视频相亲":"专属相亲"}'
+            android:text='@{roomBean.roomType==0?"对方在线":roomBean.roomType==1?"视频交友":"专属交友"}'
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
             app:fontType="@string/fontMedium"
@@ -111,7 +112,7 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_avatar"
-            imageUrl="@{roomBean.ownerInfo.portrait}"
+            imageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.ownerInfo.portrait)}"
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
             android:layout_marginStart="@dimen/dp_4"

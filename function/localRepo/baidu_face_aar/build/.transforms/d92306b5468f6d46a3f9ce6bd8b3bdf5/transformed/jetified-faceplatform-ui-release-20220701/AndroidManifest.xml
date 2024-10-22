@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.baidu.idl.face.platform.ui"
+    android:versionCode="1003"
+    android:versionName="V5.2" >
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="29" />
+
+    <application android:label="@string/app_name" >
+
+        <!-- 采集成功页面 -->
+        <activity
+            android:name="com.baidu.idl.face.platform.ui.CollectionSuccessActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_NoTitle" />
+
+        <!-- 采集失败页面 -->
+        <activity
+            android:name="com.baidu.idl.face.platform.ui.CollectFailureActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_NoTitle" />
+
+        <!-- 炫彩活体采集界面 -->
+        <activity
+            android:name="com.baidu.idl.face.platform.ui.FaceColorLivenessActivity"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_NoTitle" />
+
+        <!-- 炫彩活体采集界面（含视频录制） -->
+        <activity
+            android:name="com.baidu.idl.face.platform.ui.FaceColorLivenessVideoActivity"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_NoTitle" />
+
+        <!-- 静默活体采集界面 -->
+        <activity
+            android:name="com.baidu.idl.face.platform.ui.FaceSilenceLivenessActivity"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_NoTitle" />
+
+        <!-- 动作活体采集界面 -->
+        <activity
+            android:name="com.baidu.idl.face.platform.ui.FaceActionLivenessActivity"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_NoTitle" />
+
+        <!-- 动作活体采集界面（含视频录制） -->
+        <activity
+            android:name="com.baidu.idl.face.platform.ui.FaceActionLivenessVideoActivity"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_NoTitle" />
+    </application>
+
+</manifest>

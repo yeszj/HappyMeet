@@ -42,7 +42,7 @@ android {
 }
 
 dependencies {
-
+    api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar","*.aar"))))
     implementation("androidx.core:core-ktx:${cfg["ktxVersion"]}")
     implementation("androidx.appcompat:appcompat:${cfg["appcompatVersion"]}")
     implementation("com.google.android.material:material:${cfg["materialVersion"]}")
@@ -50,15 +50,23 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation(project(mapOf("path" to ":function:commonRes")))
-    implementation("com.huawei.hms:push:6.12.0.300")
+    implementation(project(mapOf("path" to ":dimens")))
+    kapt("com.github.bumptech.glide:compiler:${rootProject.ext.get("glide")}")
+
     implementation("com.meizu.flyme.internet:push-internal:4.1.0")
     implementation("com.huawei.agconnect:agconnect-core:1.8.1.300")
-    kapt ("com.alibaba:arouter-compiler:${rootProject.ext.get("arouter")}")
+    kapt("com.alibaba:arouter-compiler:${rootProject.ext.get("arouter")}")
+    api(project(mapOf("path" to ":function:ease-im-kit")))
+    api("io.hyphenate:hyphenate-chat:4.5.0")
+    //荣耀推送
+    api("com.hihonor.mcs:push:7.0.61.303")
+    //华为推送
+    implementation("com.huawei.hms:push:6.12.0.300")
+    api("commons-codec:commons-codec:1.15")
+    //七鱼客服
+    implementation("com.qiyukf.unicorn:unicorn:9.1.0")
+    implementation(project(mapOf("path" to ":function:localRepo:mi_push_aar")))
+    implementation(project(mapOf("path" to ":function:localRepo:oppo_push_aar")))
 
-    // 会话列表功能组件
-    api("com.netease.yunxin.kit.conversation:conversationkit-ui:9.7.0")
-    // 聊天功能组件
-    api("com.netease.yunxin.kit.chat:chatkit-ui:9.7.0")
-//    api("com.netease.yunxin.kit.call:call-ui:2.2.0")
-//    api("com.netease.nimlib:avsignalling:9.14.2")
+
 }

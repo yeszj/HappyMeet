@@ -2,10 +2,20 @@ package cn.yanhu.baselib.utils
 
 import android.app.ActivityManager
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.PixelFormat
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.text.TextUtils
 import android.text.format.Formatter
 import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.view.ActionMode
 import androidx.core.content.ContextCompat
 import cn.yanhu.baselib.R
 import com.blankj.utilcode.util.ActivityUtils
@@ -24,19 +34,51 @@ import java.util.regex.Pattern
  * desc:
  */
 object CommonUtils {
+    fun subZeroAndDot(s: String): String {
+//        KLog.i("进入" + s);
+        var s = s
+        if (s.indexOf(".") > 0) {
+            s = s.replace("0+?$".toRegex(), "") //去掉多余的0
+            s = s.replace("[.]$".toRegex(), "") //如最后一位是.则去掉
+        }
+        //        KLog.i("离开" + s);
+        return s
+    }
 
+    @JvmStatic
+    fun <T>reverseList(list: MutableList<T>){
+        list.reverse()
+    }
+    fun drawableToBitmap(drawable: Drawable): Bitmap {
+        // 取 drawable 的长宽
+        val w = drawable.intrinsicWidth
+        val h = drawable.intrinsicHeight
+
+        // 取 drawable 的颜色格式
+        val config =
+            if (drawable.opacity != PixelFormat.OPAQUE) Bitmap.Config.ARGB_8888 else Bitmap.Config.RGB_565
+        // 建立对应 bitmap
+        val bitmap = Bitmap.createBitmap(w, h, config)
+        // 建立对应 bitmap 的画布
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, w, h)
+        // 把 drawable 内容画到画布中
+        drawable.draw(canvas)
+        return bitmap
+    }
+    @JvmStatic
     fun getDimension(dimenId: Int): Int {
         val topActivity = ActivityUtils.getTopActivity()
         return topActivity?.resources?.getDimensionPixelSize(dimenId)
             ?: Utils.getApp().resources.getDimensionPixelSize(dimenId)
     }
 
-
+    @JvmStatic
     fun getSpByDimen(dimenId: Int): Int {
         val dimension: Int = getDimension(dimenId)
         return DisplayUtils.px2sp(dimension.toFloat())
     }
-
+    @JvmStatic
     fun getColor(colorId: Int): Int {
         return ContextCompat.getColor(ActivityUtils.getTopActivity(), colorId)
     }
@@ -173,5 +215,90 @@ object CommonUtils {
             return true
         }
         return false
+    }
+
+    @JvmOverloads
+    fun EditText.disableCopy(disablePaste: Boolean = true) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val callback = object : ActionMode.Callback, android.view.ActionMode.Callback {
+                override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                    //创建菜单项ActionMode，返回false表示不创建，事件结束
+                    return false
+                }
+
+                override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                    //菜单项更新，返回false表示没有更新，事件结束
+                    return false
+                }
+
+                override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+                    //选择菜单项的某一项，返回true表示拦截点击事件，事件结束
+                    return true
+                }
+
+                override fun onDestroyActionMode(mode: ActionMode?) {
+                    //菜单项ActionMode销毁，什么也不做
+                }
+
+                override fun onCreateActionMode(
+                    mode: android.view.ActionMode?,
+                    menu: Menu?
+                ): Boolean {
+                    return false
+                }
+
+                override fun onPrepareActionMode(
+                    mode: android.view.ActionMode?,
+                    menu: Menu?
+                ): Boolean {
+                    return false
+                }
+
+                override fun onActionItemClicked(
+                    mode: android.view.ActionMode?,
+                    item: MenuItem?
+                ): Boolean {
+                    return true
+                }
+                override fun onDestroyActionMode(mode: android.view.ActionMode?) {
+                }
+            }
+            //禁用复制
+            this.customSelectionActionModeCallback = callback
+            //禁用粘贴
+            if (disablePaste)
+                this.customInsertionActionModeCallback = callback
+        } else {
+            //通过反射来禁用复制和粘贴
+            disableCopyAndPasteByReflect(disablePaste)
+        }
+    }
+
+    private fun EditText.disableCopyAndPasteByReflect(disablePaste: Boolean) {
+        try {
+            //因为Editor包含两个boolean字段： mInsertionControllerEnabled、mSelectionControllerEnabled，
+            // 其中mInsertionControllerEnabled表示粘贴，为false就不起作用
+            // 其中mSelectionControllerEnabled表示选中文本，为false就不起作用
+            //所以，获取Editor之后，将这两个boolean字段设为false就可以禁用复制和粘贴
+
+            //1、获取EditText的Editor实例
+            val editorField = TextView::class.java.getDeclaredField("mEditor")
+            editorField.isAccessible = true
+            val editorInstance = editorField.get(this)
+
+            val editorClass = Class.forName("android.widget.Editor")
+            //2、获取Editor的mSelectionControllerEnabled字段，设为false禁用复制
+            val selectField = editorClass.getDeclaredField("mSelectionControllerEnabled")
+            selectField.isAccessible = true
+            selectField.set(editorInstance, false)
+            //3、获取Editor的mInsertionControllerEnabled字段，设为false禁用粘贴
+            if (disablePaste) {
+                val insertField = editorClass.getDeclaredField("mInsertionControllerEnabled")
+                insertField.isAccessible = true
+                insertField.set(editorInstance, false)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

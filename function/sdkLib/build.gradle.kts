@@ -37,7 +37,8 @@ android {
 }
 
 dependencies {
-
+    api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar","*.aar"))))
+    //noinspection GradleDependency
     implementation("androidx.core:core-ktx:${cfg["ktxVersion"]}")
     implementation("androidx.appcompat:appcompat:${cfg["appcompatVersion"]}")
     implementation("com.google.android.material:material:${cfg["materialVersion"]}")
@@ -45,7 +46,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     api("com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.5.4")
-    api("cn.jiguang.sdk:jverification:3.1.9")
+    api("cn.jiguang.sdk:jverification:3.2.5")
     implementation(project(mapOf("path" to ":function:commonRes")))
     api("com.alipay.sdk:alipaysdk-android:+@aar")
     //微信
@@ -55,7 +56,10 @@ dependencies {
     // 友盟统计SDK
     api("com.umeng.umsdk:common:9.6.7")// 必选
     api("com.umeng.umsdk:asms:1.8.0")// 必选
-
     //七鱼客服
-    api("com.qiyukf.unicorn:unicorn:9.1.0")
+    api("com.qiyukf.unicorn:unicorn:9.8.0")
+    implementation(project(mapOf("path" to ":function:localRepo:baidu_face_aar")))
+    implementation(project(mapOf("path" to ":function:localRepo:baidu_face_aar2")))
+    implementation(project(mapOf("path" to ":function:localRepo:baidu_face_aar3")))
+
 }

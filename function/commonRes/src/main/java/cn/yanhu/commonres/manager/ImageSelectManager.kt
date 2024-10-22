@@ -69,7 +69,7 @@ object ImageSelectManager {
                         ImageSelectUtils.selectVideo(mContext,isCrop,width,height,maxSelectNum,call)
                     }
                     ImageSelectUtils.TYPE_CAMERA ->{
-                        ImageSelectUtils.openCamara(mContext,isCrop,type = SelectMimeType.ofAll(),call=call)
+                        ImageSelectUtils.openCamara(mContext,isCrop,type = SelectMimeType.ofImage(),call=call)
                     }
                     ImageSelectUtils.TYPE_CAMERA_VIDEO ->{
                         ImageSelectUtils.openCamara(mContext,isCrop,type = SelectMimeType.ofVideo(),call)

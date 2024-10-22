@@ -1,10 +1,6 @@
 package cn.yanhu.imchat.manager
 
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomNotification
-import com.netease.nimlib.sdk.msg.model.CustomNotificationConfig
+import com.hyphenate.chat.EMClient
 
 
 /**
@@ -14,11 +10,13 @@ import com.netease.nimlib.sdk.msg.model.CustomNotificationConfig
  */
 object ImMsgManager {
     const val TYPE_SEND_GIFT = "sendGift"
+    const val MSG_CUSTOM_EMOJI = "msg_custom_emoji" //自定义小表情和文字混排消息
+
     /**
      * 获取总未读消息数
      */
     fun getUnReadMsgCount(): Int {
-        return NIMClient.getService(MsgService::class.java).totalUnreadCount
+        return EMClient.getInstance().chatManager().unreadMessageCount
     }
 
     /**
@@ -27,16 +25,6 @@ object ImMsgManager {
      */
     fun sendCustomNotificationMsg(receiverId:String,json:String){
         // 构造自定义通知，指定接收者
-        val notification = CustomNotification()
-        notification.sessionId = receiverId
-        notification.sessionType = SessionTypeEnum.P2P
-        notification.content = json
-        notification.isSendToOnlineUserOnly = true
-        val config = CustomNotificationConfig()
-        config.enablePush = false
-        config.enableUnreadCount = false
-        notification.config = config
-        NIMClient.getService(MsgService::class.java).sendCustomNotification(notification)
     }
 
 

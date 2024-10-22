@@ -114,7 +114,7 @@
             android:layout_marginStart="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_20"
             android:layout_marginEnd="@dimen/dp_16"
-            android:text="@string/sure_title"
+            android:text="确定"
             android:gravity="center"
             android:textColor="@color/white"
             app:fontType="@string/fontBold"

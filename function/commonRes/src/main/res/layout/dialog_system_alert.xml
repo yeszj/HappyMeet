@@ -4,14 +4,15 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="@dimen/dp_300"
+        android:background="@drawable/white_corner_20"
+        android:layout_height="wrap_content">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_top"
             app:riv_corner_radius_top_left="@dimen/dp_20"
             app:riv_corner_radius_top_right="@dimen/dp_20"
-            android:layout_width="@dimen/dp_325"
+            android:layout_width="@dimen/dp_300"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             app:layout_constraintEnd_toEndOf="parent"
@@ -21,9 +22,8 @@
 
         <View
             android:id="@+id/viewBg"
-            android:layout_width="@dimen/dp_325"
+            android:layout_width="@dimen/dp_300"
             android:layout_height="0dp"
-            android:background="@drawable/shape_bottom_praise_tips_bg"
             app:layout_constraintBottom_toBottomOf="@id/divider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/dp_13"
             android:text="当前未开启悬浮窗权限"
-            android:textColor="#FF2A68"
+            android:textColor="@color/colorMain"
             android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,25 +46,26 @@
             android:id="@+id/tv_desc"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:paddingTop="@dimen/dp_20"
-            android:textColor="@color/fontTextColor"
-            android:textSize="@dimen/sp_14"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_15"
             android:paddingStart="@dimen/dp_25"
             android:paddingEnd="@dimen/dp_25"
             app:layout_constraintEnd_toEndOf="@id/viewBg"
             app:layout_constraintStart_toStartOf="@id/viewBg"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
-            android:text="为了房间最小化的功能目的，需获取悬浮窗权限，不授权将无法使用上述功能" />
+            android:text="将房间小窗化，需获取悬浮窗权限，否则无法以小窗口显示" />
         <cn.yanhu.baselib.view.CustomFontButton
             android:id="@+id/btn_cancel"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dp_50"
+            android:layout_height="@dimen/dp_42"
             android:layout_marginStart="@dimen/dp_25"
             android:layout_marginTop="@dimen/dp_32"
             android:layout_marginBottom="@dimen/dp_24"
-            android:background="@drawable/shape_light_gray_alpha95"
+            android:background="@drawable/white_corner_30"
             android:gravity="center"
+            android:backgroundTint="@color/blackAlpha96"
             android:layout_marginEnd="@dimen/dp_m_10"
             android:textColor="@color/fontGrayColor"
             android:textSize="@dimen/sp_16"
@@ -76,12 +77,12 @@
         <cn.yanhu.baselib.view.CustomFontButton
             android:id="@+id/btn_next"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dp_50"
+            android:layout_height="@dimen/dp_42"
             android:layout_marginStart="@dimen/dp_25"
             android:layout_marginTop="@dimen/dp_32"
             android:layout_marginEnd="@dimen/dp_25"
             android:layout_marginBottom="@dimen/dp_24"
-            android:background="@drawable/common_shape_click_bg"
+            android:background="@drawable/common_shape_btn_gradient_r30"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16"

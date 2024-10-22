@@ -13,7 +13,7 @@
 
         <variable
             name="viewModel"
-            type="cn.huanyuan.happymeet.ui.login.LoginViewModel" />
+            type="cn.huanyuan.sweetlove.ui.login.LoginViewModel" />
 
         <import type="android.text.TextUtils" />
     </data>

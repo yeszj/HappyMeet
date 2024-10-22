@@ -34,7 +34,7 @@
             app:layout_constraintStart_toStartOf="@+id/bgUser"
             android:layout_marginStart="@dimen/dp_12"
             app:riv_oval="true"
-            tools:src = "@drawable/default_avatar_bg_6"
+            tools:src = "@drawable/ease_default_avatar"
             android:layout_height="@dimen/dp_50"/>
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_nickName"
@@ -62,33 +62,7 @@
             app:layout_constraintTop_toBottomOf="@+id/bgUser"
             android:layout_marginHorizontal="@dimen/dp_12"
             android:layout_marginTop="@dimen/dp_12"
-            android:layout_height="@dimen/dp_108"/>
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_mute"
-            android:layout_width="wrap_content"
-            android:text="消息免打扰"
-            android:paddingStart="@dimen/dp_12"
-            android:textSize="@dimen/sp_15"
-            android:gravity="center_vertical"
-            app:fontType="@string/fontMedium"
-            android:textColor="@color/fontTextColor"
-            android:paddingEnd="@dimen/dp_12"
-            app:layout_constraintStart_toStartOf="@+id/bg2"
-            app:layout_constraintTop_toTopOf="@+id/bg2"
             android:layout_height="@dimen/dp_54"/>
-        <androidx.appcompat.widget.AppCompatToggleButton
-            android:id="@+id/toggle_mute"
-            android:layout_width="@dimen/dp_35"
-            app:layout_constraintEnd_toEndOf="@+id/bg2"
-            app:layout_constraintTop_toTopOf="@+id/tv_mute"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_mute"
-            android:textOff=""
-            android:textOn=""
-            android:checked="true"
-            android:layout_marginEnd="@dimen/dp_7"
-            android:background="@drawable/toggle_style"
-            android:layout_height="@dimen/dp_20"/>
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_top"
@@ -116,14 +90,26 @@
             android:background="@drawable/toggle_style"
             android:layout_height="@dimen/dp_20"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_12"
+            app:layout_constraintTop_toBottomOf="@+id/bg2"
+            android:nestedScrollingEnabled="false"
+            android:background="@drawable/white_corner_10"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="3"
+            tools:listitem="@layout/adapter_chat_price_set_item" />
+
         <View
             android:id="@+id/bg3"
             android:layout_width="match_parent"
             android:background="@drawable/white_corner_10"
-            app:layout_constraintTop_toBottomOf="@+id/bg2"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView"
             android:layout_marginHorizontal="@dimen/dp_12"
             android:layout_marginTop="@dimen/dp_12"
-            android:layout_height="@dimen/dp_108"/>
+            android:layout_height="@dimen/dp_54"/>
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_black"
@@ -160,6 +146,7 @@
             android:gravity="center_vertical"
             android:drawableEnd="@drawable/ic_right_arrow"
             app:fontType="@string/fontMedium"
+            android:visibility="gone"
             android:textColor="@color/fontTextColor"
             android:paddingEnd="@dimen/dp_12"
             android:drawableTint="@color/color_666666"

@@ -11,5 +11,6 @@ data class RoseRechargeResponse(
     val roseBalance: String,
     val isFirstRecharge: Boolean,
     val rechargeAgreement:String,
+    val defaultSelect:Int,
     val list: MutableList<RoseRechargeBean>
 )

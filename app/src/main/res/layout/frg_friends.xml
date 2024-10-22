@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/dp_12"
             android:paddingTop="@dimen/dp_12"
-            android:text="我的好友(7)"
+            android:text="我的好友(0)"
             android:textColor="@color/fontTextColor"
             android:textSize="@dimen/sp_14"
             app:fontType="@string/fontBold"

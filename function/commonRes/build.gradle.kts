@@ -57,6 +57,7 @@ dependencies {
     api("xyz.doikki.android.dkplayer:videocache:3.3.7")
     //api("xyz.doikki.android.dkplayer:player-exo:3.3.7")
 
+    kapt("com.github.bumptech.glide:compiler:${rootProject.ext.get("glide")}")
 
     api ("com.github.jd-alexander:LikeButton:0.2.3")
     kapt ("androidx.room:room-compiler:2.6.1")
@@ -67,6 +68,8 @@ dependencies {
     api ("com.airbnb.android:lottie:6.4.0")
 
     //https://gitcode.com/lihangleo2/ViewPager2Demo/overview
-    api("com.github.lihangleo2:SmartViewPager2Adapter:2.1.3")
+    api("com.github.lihangleo2:SmartViewPager2Adapter:3.1.3")
+    api ("com.caverock:androidsvg:1.4")
+    api ("org.litepal.guolindev:core:3.2.3")
 
 }

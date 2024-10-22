@@ -9,7 +9,7 @@
 
         <variable
             name="item"
-            type="cn.huanyuan.happymeet.bean.TaskInfo" />
+            type="cn.huanyuan.sweetlove.bean.TaskInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

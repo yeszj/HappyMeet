@@ -49,7 +49,7 @@ class P2pChatTopUserView : LinearLayout {
     }
 
     private fun ViewP2pChatTopUserBinding.getSelfInfo() {
-        selfAvatar = ImUserManager.getSelfUserInfo().portrait
+        selfAvatar = ImUserManager.getSelfUserInfo()?.portrait
     }
 
     private fun ViewP2pChatTopUserBinding.initAdapter() {

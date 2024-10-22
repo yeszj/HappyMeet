@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/animation_person_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_40"
+        android:layout_gravity="left"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/shape_send_gift_bg">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/gift_userheader_ll"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_3"
+            android:layout_marginTop="@dimen/dp_3"
+            android:layout_marginEnd="@dimen/dp_3"
+            android:layout_marginBottom="@dimen/dp_3">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/gift_userheader_iv"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+               app:riv_oval="true" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/gift_userheader_iv_frame"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="@dimen/dp_0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/gift_usernickname_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_6"
+            android:layout_toRightOf="@id/gift_userheader_ll"
+            android:text="xxx"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/gift_usersign_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gift_usernickname_tv"
+            android:layout_alignLeft="@id/gift_usernickname_tv"
+            android:layout_marginTop="@dimen/dp_4"
+            android:ellipsize="end"
+            android:text="送一个xxx"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_11" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/animation_gift"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_toRightOf="@id/gift_usersign_tv"
+            android:layout_marginStart="@dimen/dp_25"
+            />
+
+        <TextView
+            android:id="@+id/animation_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="x 1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_24"
+            android:textStyle="bold"
+            android:layout_toEndOf="@id/animation_gift"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_5"/>
+    </RelativeLayout>
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/animation_light"-->
+    <!--        android:layout_width="@dimen/dp_40"-->
+    <!--        android:layout_height="@dimen/dp_40"-->
+    <!--        android:layout_marginLeft="120dp"/>-->
+
+
+</FrameLayout>

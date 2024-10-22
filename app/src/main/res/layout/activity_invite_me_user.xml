@@ -53,7 +53,7 @@
             android:layout_marginTop="@dimen/dp_6"
             android:ellipsize="end"
             android:maxWidth="@dimen/dp_140"
-            android:paddingStart="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_10"
             android:singleLine="true"
             android:text="@{userinfo.nickName}"
             tools:text="慢两拍慢两拍慢两拍"
@@ -84,10 +84,11 @@
             userLevel="@{userinfo.level}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_10"
             android:layout_marginBottom="@dimen/dp_6"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
-            app:layout_constraintStart_toEndOf="@+id/iv_avatar" />
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName" />
 
         <cn.yanhu.commonres.view.UserTagView
             android:id="@+id/userAge"
@@ -95,10 +96,9 @@
             userGender="@{userinfo.gender}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/userLevel"
             app:layout_constraintStart_toEndOf="@+id/userLevel"
-            app:layout_constraintTop_toTopOf="@+id/userLevel" />
+            android:layout_marginBottom="@dimen/dp_6"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar" />
 
         <cn.yanhu.commonres.view.UserTagView
             userProvince='@{userinfo.province}'

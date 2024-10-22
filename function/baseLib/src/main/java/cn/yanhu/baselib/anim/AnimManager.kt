@@ -194,6 +194,20 @@ object AnimManager {
         return animatorSet
     }
 
+    @JvmStatic
+    fun showScaleAnim(animView: View,scaleValue: Float): AnimatorSet {
+        val objectAnimator = ObjectAnimator.ofFloat(animView, "scaleX", 1f, scaleValue, 1f)
+        val objectAnimator2 = ObjectAnimator.ofFloat(animView, "scaleY", 1f,scaleValue, 1f)
+        objectAnimator.repeatCount = ValueAnimator.INFINITE
+        objectAnimator2.repeatCount = ValueAnimator.INFINITE
+        val animatorSet = AnimatorSet()
+        animatorSet.duration = 1000
+        animatorSet.playTogether(objectAnimator, objectAnimator2)
+        if (!animatorSet.isRunning) {
+            animatorSet.start()
+        }
+        return animatorSet
+    }
     fun showOneScaleView(animView: View?, duration: Int): AnimatorSet {
         val objectAnimator = ObjectAnimator.ofFloat(animView, "scaleX", 1f, 1.2f, 1f)
         val objectAnimator2 = ObjectAnimator.ofFloat(animView, "scaleY", 1f, 1.2f, 1f)

@@ -6,8 +6,8 @@ package cn.yanhu.commonres.manager
  * desc:
  */
 object RoomTypeManager {
-    const val TYPE_PUBLIC_BLIND = 1 //大厅相亲房
-    const val TYPE_PRIVATE_BLIND = 2//专属相亲房
+    const val TYPE_PUBLIC_BLIND = 1 //大厅交友房
+    const val TYPE_PRIVATE_BLIND = 2//专属交友房
     const val TYPE_SEVEN_ROOM = 3 //七人交友房
     const val TYPE_SEVEN_ANGEL = 4 //七人天使房
     const val TYPE_AUCTION_ROOM = 5 //拍卖房

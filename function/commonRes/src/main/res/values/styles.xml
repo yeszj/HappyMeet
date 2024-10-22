@@ -119,4 +119,14 @@
         </attr>
         <attr name="highlight_view_autoStart" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="CircleBarView">
+        <attr name="progress_color" format="color" />
+        <attr name="bg_color" format="color" />
+
+        <attr name="bar_width" format="dimension" />
+
+        <attr name="start_angle" format="float" />
+        <attr name="sweep_angle" format="float" />
+    </declare-styleable>
 </resources>

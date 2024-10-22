@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="giftMsgInfo"
+            type="cn.yanhu.agora.bean.GiftMsgInfo" />
+        <variable
+            name="userInfo"
+            type="cn.yanhu.commonres.bean.BaseUserInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/white_corner_10"
+        android:backgroundTint="@color/blackAlpha80"
+        android:paddingEnd="@dimen/dp_10">
+
+        <cn.yanhu.commonres.view.UserAvatarView
+            android:id="@+id/userAvatar"
+            avatarUrl="@{userInfo.portrait}"
+            avatarUserId="@{userInfo.userId}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:avatarSize="@dimen/dp_32"
+            app:isShowSvgAvatar="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:svgAvatarSize="@dimen/dp_40" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_4"
+            android:text="@{userInfo.nickName}"
+            android:textColor="@{userInfo.gender==1?@color/manColor:@color/femaleColor}"
+            android:textSize="@dimen/sp_14"
+            tools:textColor="@color/femaleColor"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
+            app:layout_constraintStart_toEndOf="@+id/userAvatar"
+            app:layout_constraintTop_toTopOf="@+id/userAvatar"
+            tools:text="女性昵称" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="@+id/userAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/userAvatar">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/dp_10"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                app:fontType="@string/fontMedium"
+                android:text="送给" />
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:textColor="@color/femaleColor"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                android:textColor="@{giftMsgInfo.targetUserInfo.gender==1?@color/manColor:@color/femaleColor}"
+                android:text="@{giftMsgInfo.targetUserInfo.nickName}"
+                tools:text="主持落落" />
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                app:fontType="@string/fontMedium"
+                android:text='@{giftMsgInfo.giftInfo.name+"x1"}'
+                tools:text="比心x188" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                placeholderId="@{-1}"
+                imageUrl="@{giftMsgInfo.giftInfo.giftIcon}"
+                android:src="@drawable/icon_rose_16" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

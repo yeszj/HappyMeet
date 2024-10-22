@@ -43,12 +43,12 @@ class UserLevelView : LinearLayout {
     @SuppressLint("SetTextI18n")
     fun setUserLevel(userLevel: Int) {
         if (userLevel <= 0) {
-            tvLevel.visibility = View.GONE
+            visibility = View.GONE
         } else {
             val levelBg = LevelTagConfig.getLevelTagBg(userLevel)
             tvLevel.setBackgroundResource(levelBg)
             tvLevel.text = "Lv.$userLevel"
-            tvLevel.visibility = View.VISIBLE
+            visibility = View.VISIBLE
         }
     }
 

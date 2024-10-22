@@ -1,6 +1,7 @@
 package cn.yanhu.commonres.bean.response
 
-import cn.yanhu.commonres.bean.RoomListBean
+import cn.yanhu.commonres.bean.RoomDetailInfo
+
 
 /**
  * @author: zhengjun
@@ -8,5 +9,5 @@ import cn.yanhu.commonres.bean.RoomListBean
  * desc:
  */
 data class RoomListResponse(
-    val roomList: MutableList<RoomListBean>
+    val roomList: MutableList<RoomDetailInfo>
 )
