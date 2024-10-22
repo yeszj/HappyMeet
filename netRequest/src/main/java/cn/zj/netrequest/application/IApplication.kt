@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
+import cn.zj.netrequest.OnRoomLeaveListener
 
 interface IApplication {
     fun loginInvalid()
@@ -26,4 +27,5 @@ interface IApplication {
     fun hasLoadAgoraSdk():Boolean
 
     fun jumpToPage(className:String,intent: Intent)
+    fun finishLiveRoomActivity(onRoomLeaveListener: OnRoomLeaveListener)
 }

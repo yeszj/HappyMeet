@@ -7,6 +7,7 @@ import cn.yanhu.agora.databinding.ActivityLiveRoomBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.base.BaseActivity
+import cn.zj.netrequest.OnRoomLeaveListener
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.config.IntentKeyConfig
@@ -71,6 +72,10 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
         super.exactDestroy()
         liveRoomFrg?.exitRoom()
         AgoraManager.isLiveRoom = false
+    }
+
+    fun roomLeave(onRoomLeaveListener: OnRoomLeaveListener){
+        liveRoomFrg?.roomLeave(onRoomLeaveListener)
     }
 
 

@@ -490,6 +490,7 @@ public class AgoraManager implements IMediaExtensionObserver {
             mRtcEngine.disableVideo();
             RtcEngine.destroy();
         }
+        mRtcEngine = null;
         isInitSuccess = false;
         iRtcEngineEventHandlerListener = null;
     }

@@ -2,9 +2,9 @@ package cn.yanhu.imchat.manager
 
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
+import cn.zj.netrequest.OnRoomLeaveListener
 import cn.zj.netrequest.application.ApplicationProxy
 import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.ThreadUtils
 import com.lxj.xpopup.core.BasePopupView
 
 object CutLiveRoomUtils {
@@ -26,14 +26,12 @@ object CutLiveRoomUtils {
             return
         }
         msgDialog =  DialogUtils.showConfirmDialog("",{
-            DialogUtils.showLoading()
-            ApplicationProxy.instance.getLiveRoomActivity()?.finish()
-            ThreadUtils.getMainHandler().postDelayed({
-                changeListener.sure()
-                DialogUtils.dismissLoading()
-            }, 500)
+            ApplicationProxy.instance.finishLiveRoomActivity(object : OnRoomLeaveListener{
+                override fun onLeaveSuccess() {
+                    changeListener.sure()
+                }
+            })
         },{
-
         },msg,cancel = "取消",confirm = "确定离开")
         msgDialog?.show()
     }

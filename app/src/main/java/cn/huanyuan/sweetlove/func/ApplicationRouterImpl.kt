@@ -18,6 +18,7 @@ import cn.yanhu.agora.ui.liveRoom.live.LiveRoomActivity
 import cn.yanhu.baselib.cache.UserPref
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.router.RouteIntent
+import cn.zj.netrequest.OnRoomLeaveListener
 import cn.zj.netrequest.application.IApplication
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.Utils
@@ -117,6 +118,11 @@ class ApplicationRouterImpl : IApplication {
         } else {
             topActivity.startActivity(intent)
         }
+    }
+
+    override fun finishLiveRoomActivity(onRoomLeaveListener: OnRoomLeaveListener) {
+        val liveRoomActivity = getLiveRoomActivity() as LiveRoomActivity?
+        liveRoomActivity?.roomLeave(onRoomLeaveListener)
     }
 
 

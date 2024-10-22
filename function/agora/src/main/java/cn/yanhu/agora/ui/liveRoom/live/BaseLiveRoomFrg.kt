@@ -33,6 +33,7 @@ import cn.yanhu.agora.queuetask.ApplySeatTask
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.anim.AnimManager
 import cn.yanhu.baselib.base.BaseFragment
+import cn.zj.netrequest.OnRoomLeaveListener
 import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
@@ -595,17 +596,29 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     private var roomLeaveInfo: RoomLeaveResponse? = null
 
     //离开频道
-    private fun roomLeave() {
-        isLeave = true
-        mViewModel.roomLeave(roomId, roomSourceBean.uuid)
-        mViewModel.roomLeaveObserver.observe(this) {
-            parseState(it, {
-                roomLeaveInfo = it
-                leaveRoomFinish()
-            }, {
-                leaveRoomFinish()
-            })
+     fun roomLeave(onRoomLeaveListener: OnRoomLeaveListener?=null) {
+        if (isLeave){
+            return
         }
+        DialogUtils.showLoading()
+        isLeave = true
+        mViewModel.roomLeave(roomId, roomSourceBean.uuid,object : OnRequestResultListener<RoomLeaveResponse>{
+            override fun onSuccess(data: BaseBean<RoomLeaveResponse>) {
+                roomLeaveInfo = data.data
+                destroyRoom()
+                DialogUtils.dismissLoading()
+                onRoomLeaveListener?.onLeaveSuccess()
+                leaveRoomFinish()
+                clearAgora()
+            }
+
+            override fun onFail(code: Int?, msg: String?) {
+                DialogUtils.dismissLoading()
+                onRoomLeaveListener?.onLeaveSuccess()
+                leaveRoomFinish()
+            }
+
+        })
     }
 
     protected fun userSetSeat(operate: String) {
@@ -1051,20 +1064,24 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     private fun destroyRoom() {
         // 移除聊天室回调
-        roomLeave()
-        closeMiniWindow()
-        EMClient.getInstance().chatroomManager().leaveChatRoom(roomSourceBean.uid)
-        handler?.removeCallbacksAndMessages(null)
-        EMClient.getInstance().chatroomManager().removeChatRoomListener(this)
+        AgoraManager.getInstence().setDownVideo(AppCacheManager.userId.toInt(), true)
         AgoraManager.getInstence().leaveChannel()
-        clearAgora()
-        logcom(LiveRoomActivity.LIVE_ROOM_TAG, "销毁房间---roomId${roomId}")
+        EMClient.getInstance().chatroomManager().leaveChatRoom(roomSourceBean.uid,object : EMCallBack{
+            override fun onSuccess() {
+            }
+            override fun onError(code: Int, error: String?) {
+            }
+        })
         pauseAnimView()
         clearAnimView()
+        logcom(LiveRoomActivity.LIVE_ROOM_TAG, "销毁房间---roomId${roomId}")
+        EMClient.getInstance().chatroomManager().removeChatRoomListener(this@BaseLiveRoomFrg)
+        handler?.removeCallbacksAndMessages(null)
+        closeMiniWindow()
+       // clearAgora()
     }
 
     private fun clearAgora() {
-        AgoraManager.getInstence().setDownVideo(AppCacheManager.userId.toInt(), true)
         AgoraManager.getInstence().clearRtcConnection()
         AgoraManager.getInstence().onDestory()
     }

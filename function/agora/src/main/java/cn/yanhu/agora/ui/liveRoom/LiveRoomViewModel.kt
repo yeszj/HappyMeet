@@ -70,9 +70,8 @@ class LiveRoomViewModel : BaseViewModel() {
         request({ agoraRxApi.getRoomDetail(roomId, roomType) }, roomDetailLivedata, false)
     }
 
-    val roomLeaveObserver = MutableLiveData<ResultState<RoomLeaveResponse>>()
-    fun roomLeave(roomId: String, uuid: String) {
-        request({ agoraRxApi.roomLeave(roomId, uuid) }, roomLeaveObserver, false, isShowToast = false)
+    fun roomLeave(roomId: String, uuid: String,onRequestResultListener: OnRequestResultListener<RoomLeaveResponse>) {
+        request({ agoraRxApi.roomLeave(roomId, uuid) }, onRequestResultListener,  isShowToast = false)
     }
 
     val closeRoomObserver = MutableLiveData<ResultState<String>>()

@@ -7,6 +7,7 @@ import cn.yanhu.agora.miniwindow.MiniWindowManager
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.manager.AppCacheManager
+import com.blankj.utilcode.util.ThreadUtils
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.yhao.floatwindow.PermissionListener
 
@@ -25,6 +26,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
             }
         })
     }
+
     override fun initData() {
         super.initData()
         mBinding.rvSeat.adapter = seatUserAdapter
@@ -54,16 +56,16 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                                     seatUserAdapter.showUserList(if (item.id == 2) "1" else "2")
                                 } else {
                                     //上麦
-                                    if (AppCacheManager.isMan()){
-                                        if (position==1){
+                                    if (AppCacheManager.isMan()) {
+                                        if (position == 1) {
                                             userSetSeat(if (roomSourceBean.autoSeat) SEAT_TYPE_AUTO else SEAT_TYPE_APPLY)
-                                        }else{
+                                        } else {
                                             showToast("该座位仅对女用户开放")
                                         }
-                                    }else{
-                                        if (position==2){
+                                    } else {
+                                        if (position == 2) {
                                             userSetSeat(if (roomSourceBean.autoSeat) SEAT_TYPE_AUTO else SEAT_TYPE_APPLY)
-                                        }else{
+                                        } else {
                                             showToast("该座位仅对男用户开放")
                                         }
                                     }
@@ -113,13 +115,16 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
 
     override fun refreshSeatInfo(it: MutableList<RoomSeatInfo>, uid: Int) {
         //seatUserAdapter.submitList(it)
-        for (i in 0 until it.size) {
-            val seatInfo = it[i]
-            if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
-                seatUserAdapter[i] = seatInfo
-                seatUserAdapter.notifyItemChanged(i)
+        ThreadUtils.getMainHandler().post {
+            for (i in 0 until it.size) {
+                val seatInfo = it[i]
+                if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
+                    seatUserAdapter[i] = seatInfo
+                    seatUserAdapter.notifyItemChanged(i)
+                }
             }
         }
+
     }
 
     override fun refreshSeatMicStatus(seatPosition: Int, mickUser: Boolean) {
@@ -127,16 +132,17 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
 
-
     override fun userLeaveChanged(uid: Int) {
         super.userLeaveChanged(uid)
-        for (i in 0 until seatUserAdapter.items.size) {
-            val item = seatUserAdapter.getItem(i) ?: break
-            if (item.roomUserSeatInfo?.userId?.toInt() == uid) {
-                if (roomSourceBean.ownerInfo?.userId != uid.toString()) {
-                    item.roomUserSeatInfo = null
+        ThreadUtils.getMainHandler().post {
+            for (i in 0 until seatUserAdapter.items.size) {
+                val item = seatUserAdapter.getItem(i) ?: break
+                if (item.roomUserSeatInfo?.userId?.toInt() == uid) {
+                    if (roomSourceBean.ownerInfo?.userId != uid.toString()) {
+                        item.roomUserSeatInfo = null
+                    }
+                    seatUserAdapter.notifyItemChanged(i)
                 }
-                seatUserAdapter.notifyItemChanged(i)
             }
         }
     }
