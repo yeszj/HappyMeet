@@ -18,6 +18,8 @@ object WebUrlManager {
 
     const val WITHDRAW_AGREEMENT = "https://thread.tcjhz.com/agreement/sweetlove-tx.html"
 
+    val LOG_OFF = ApplicationProxy.instance.getServeAddress() + "destoryUser"
+
     val SECURITY_AGREEMENT = ApplicationProxy.instance.getServeAddress() + "safe/reminder"
 
 }

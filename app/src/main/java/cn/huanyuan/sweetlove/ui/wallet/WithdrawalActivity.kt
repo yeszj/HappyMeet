@@ -202,7 +202,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     @SuppressLint("SetTextI18n")
     private fun setWithdrawRule(){
         mBinding.tvRule.text = "1.提现时间：9:00-18:00，每日可提现5次。\n" +
-                "2.本平台支持提现10分钟内到账，申请提现后请及时查看到账情况，超过24小时未到账请联系客服。\n" +
+                "2.本平台支持17点前提现当日到账，17点后提现次日到；申请提现后请及时查看到账情况，超过3天未到账请及时联系客服。\n" +
                 "3.提现时将从提现金额中扣除${CommonUtils.multiplyString(selectItem!!.ratio.toPlainString(),"100")}%作为手续费和平台服务费。"
     }
 

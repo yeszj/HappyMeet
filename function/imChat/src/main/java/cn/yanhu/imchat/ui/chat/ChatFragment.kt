@@ -351,7 +351,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     }
 
     private var failMsgDialog: BasePopupView? = null
-    private fun showFailTips(errorMsg: String?) {
+    private fun showFailTips(errorMsg: String?, code: Int = -1) {
         if (isPopShow(failMsgDialog)) {
             return
         }
@@ -359,7 +359,11 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         if (topActivity == null || topActivity.isDestroyed || topActivity !is ImChatActivity) {
             return
         }
-        failMsgDialog = showConfirmDialog("温馨提示", {}, errorMsg!!, "我知道了")
+        failMsgDialog = showConfirmDialog("温馨提示", {
+            if (code == ErrorCode.CODE_NEED_REAL_NAME) {
+                RouteIntent.lunchToRealNamPage()
+            }
+        }, errorMsg!!, if (code == ErrorCode.CODE_NEED_REAL_NAME) "去认证" else "我知道了")
     }
 
     /**
@@ -475,7 +479,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         sendUserInfo.userId = conversationId
         sendUserInfo.roomId = conversationId.toInt()
         sendGiftPop = SendGiftPop.showDialog(mContext as FragmentActivity,
-            sendUserInfo,SendGiftRequest.SOURCE_CHAT,0,
+            sendUserInfo, SendGiftRequest.SOURCE_CHAT, 0,
             object : SendGiftPop.OnSendGiftListener {
                 override fun onSendGift(item: GiftInfo) {
                     EmMsgManager.sendGiftMessage(item, conversationId, chatLayout)
@@ -553,7 +557,8 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
      */
     @SuppressLint("CheckResult")
     private fun sendCheck(chatType: String, type: String, callBackListener: CallBackListener) {
-        request({ imChatRxApi.sendCheck(conversationId, chatType, type) },
+        request(
+            { imChatRxApi.sendCheck(conversationId, chatType, type) },
             object : OnRequestResultListener<ChatCheckInfo> {
                 override fun onSuccess(data: BaseBean<ChatCheckInfo>) {
                     val checkInfo = data.data
@@ -742,16 +747,16 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                     updateMsgFail(message, "")
                     showRechargeListDialog()
                 } else {
-                    updateMsgFail(message, errorMsg)
+                    updateMsgFail(message, errorMsg, code)
                 }
             }
         })
     }
 
-    private fun updateMsgFail(message: EMMessage, errorMsg: String?) {
+    private fun updateMsgFail(message: EMMessage, errorMsg: String?, code: Int = -1) {
         removeClickRecordMsg(message)
         if (!TextUtils.isEmpty(errorMsg)) {
-            showFailTips(errorMsg)
+            showFailTips(errorMsg, code)
         }
         message.setStatus(EMMessage.Status.FAIL)
         EMClient.getInstance().chatManager().updateMessage(message)

@@ -13,7 +13,7 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.widget.spans.CustomClickSpan
 import cn.yanhu.baselib.widget.spans.Spans
 import com.blankj.utilcode.util.StringUtils
-import com.pcl.sdklib.sdk.union.UnionServiceUtils
+import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
 
 /**
  * @author: zhengjun
@@ -49,7 +49,7 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
                 CommonUtils.getColor(cn.yanhu.baselib.R.color.customer_service_blue),
                 object : CustomClickSpan.OnAllSpanClickListener {
                     override fun onClick(widget: View?) {
-                        UnionServiceUtils.askCustomer()
+                        WxCustomerServiceUtils.askCustomer()
                     }
                 })
         ).build()

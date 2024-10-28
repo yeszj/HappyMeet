@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="menuInfo"
             type="cn.yanhu.commonres.bean.MineMenuBean" />
@@ -10,25 +11,32 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/dp_10"
-        android:paddingBottom="@dimen/dp_10"
-        android:gravity="center_horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/dp_48"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/dp_12">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="@dimen/dp_32"
-            android:layout_height="@dimen/dp_32"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
             imageUrl="@{menuInfo.image}"
-            tools:src="@drawable/icon_room_gift"/>
+            placeholderId="@{-1}"
+            android:src="@drawable/icon_log_off" />
+
         <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="@dimen/dp_8"
+            android:text="@{menuInfo.title}"
             android:textColor="@color/fontTextColor"
             android:textSize="@dimen/sp_14"
-            android:paddingTop="@dimen/dp_8"
-            android:text="@{menuInfo.title}"
-            tools:text="在线客服"/>
+            tools:text="在线客服" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/svg_arrow_right" />
 
     </LinearLayout>
 </layout>

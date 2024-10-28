@@ -2,7 +2,7 @@
 <resources>
 
     <style name="SplashTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/bg_splash_color</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/icon_splash_logo2</item>
 <!--        <item name="android:windowSplashScreenBrandingImage">@mipmap/icon_app_splash_name</item>-->
         <item name="windowSplashScreenAnimationDuration">200</item>

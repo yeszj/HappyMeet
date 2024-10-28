@@ -4,7 +4,7 @@
     <!-- 背景颜色 -->
 
     <item
-        android:drawable="@color/white" />
+        android:drawable="@drawable/bg_login_bg" />
 
     <!--注意此处的bottom要和activity_splash.xml中的logo图marginBottom的值保持一致-->
     <item

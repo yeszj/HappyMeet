@@ -25,7 +25,7 @@ import com.blankj.utilcode.util.Utils
 import com.hyphenate.EMCallBack
 import com.hyphenate.chat.EMClient
 import com.pcl.sdklib.sdk.location.LocationCacheManager
-import com.pcl.sdklib.sdk.union.UnionServiceUtils
+import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
 
 /**
  * @author: zhengjun
@@ -74,7 +74,7 @@ class ApplicationRouterImpl : IApplication {
     }
 
     override fun askCustomer() {
-        UnionServiceUtils.askCustomer()
+        WxCustomerServiceUtils.askCustomer()
     }
 
     override fun showRechargePop(mContext: FragmentActivity, isDismissWhenPaySuccess: Boolean) {

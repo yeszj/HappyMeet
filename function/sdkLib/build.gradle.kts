@@ -56,8 +56,6 @@ dependencies {
     // 友盟统计SDK
     api("com.umeng.umsdk:common:9.6.7")// 必选
     api("com.umeng.umsdk:asms:1.8.0")// 必选
-    //七鱼客服
-    api("com.qiyukf.unicorn:unicorn:9.8.0")
     implementation(project(mapOf("path" to ":function:localRepo:baidu_face_aar")))
     implementation(project(mapOf("path" to ":function:localRepo:baidu_face_aar2")))
     implementation(project(mapOf("path" to ":function:localRepo:baidu_face_aar3")))

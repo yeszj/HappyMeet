@@ -17,4 +17,5 @@ object Constants {
     const val OAID = "oaid"
 
     const val BEAUTYSDKINFO = "beautySdkInfo"
+    const val IS_SHOW_TEEN = "is_show_teen"
 }

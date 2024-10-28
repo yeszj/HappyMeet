@@ -25,6 +25,7 @@ object AppCacheManager {
     var rechargeInfo by ConfigPref(Constants.RECHARGEINFO,"")
     var giftInfo by ConfigPref(Constants.GIFTINFO,"")
     var oaid by ConfigPref(Constants.OAID,"")
+    var hasShowTeenApp by ConfigPref(Constants.IS_SHOW_TEEN, false)
 
     @JvmStatic
     fun isWoman():Boolean{

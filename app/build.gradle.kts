@@ -19,8 +19,8 @@ android {
         applicationId = "cn.huanyuan.sweetlove"
         minSdk = cfg["minSdkVersion"] as Int
         targetSdk = cfg["targetSdkVersion"] as Int
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
@@ -54,7 +54,7 @@ android {
             buildConfigField(
                 "String",
                 "BASE_SERVER_ADDRESS",
-                "\"http://qxq.hanyonjoy.com/\""
+                "\"http://dev-qxq.hanyonjoy.com/\""
             )
 
         }
@@ -85,6 +85,9 @@ android {
         create("meetDefault") {
             dimension = "meetDefault"
         }
+        create("360") {
+            dimension = "meetDefault"
+        }
     }
 }
 
@@ -95,6 +98,7 @@ dependencies {
     implementation("com.google.android.material:material:${cfg["materialVersion"]}")
     implementation(project(mapOf("path" to ":function:dynamic")))
     testImplementation("junit:junit:${cfg["junitVersion"]}")
+    //noinspection KaptUsageInsteadOfKsp
     kapt("com.github.bumptech.glide:compiler:${rootProject.ext.get("glide")}")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -105,5 +109,6 @@ dependencies {
     api("com.alibaba:arouter-api:${rootProject.ext.get("arouter")}")
     // https://github.com/alibaba/ARouter
     kapt("com.alibaba:arouter-compiler:${rootProject.ext.get("arouter")}")
+    //noinspection KaptUsageInsteadOfKsp
     kapt("androidx.room:room-compiler:2.6.1")
 }

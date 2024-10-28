@@ -60,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/dp_10"
-                    android:text="暖遇保护你的隐私安全"
+                    android:text="暖遇交友保护你的隐私安全"
                     android:textColor="@color/fontTextColor"
                     android:textSize="@dimen/sp_18"
                     app:fontType="@string/fontMedium"

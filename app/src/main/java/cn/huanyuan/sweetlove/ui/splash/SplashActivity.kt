@@ -31,7 +31,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
-
+import cn.huanyuan.sweetlove.R
 
 /**
  * @author: witness
@@ -63,6 +63,7 @@ class SplashActivity : FragmentActivity(
         //隐藏标题栏
         actionBar?.hide()
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
         if ((intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT != 0)) {
             finish()
             return

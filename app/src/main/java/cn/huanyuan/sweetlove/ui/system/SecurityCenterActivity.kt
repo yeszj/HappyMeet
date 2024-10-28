@@ -1,13 +1,11 @@
 package cn.huanyuan.sweetlove.ui.system
 
 import cn.huanyuan.sweetlove.R
-import cn.huanyuan.sweetlove.bean.SecurityInfo
 import cn.huanyuan.sweetlove.databinding.ActivitySecurityCenterBinding
 import cn.huanyuan.sweetlove.ui.system.adapter.SecurityMenuAdapter
-import cn.huanyuan.sweetlove.ui.system.adapter.SecurityProhibitBannerAdapter
+import cn.yanhu.commonres.bean.MineMenuBean
+import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.PageIntentUtil
-import cn.zj.netrequest.ext.parseState
-import com.bumptech.glide.Glide
 
 /**
  * @author: zhengjun
@@ -20,9 +18,9 @@ class SecurityCenterActivity :
         SystemViewModel::class.java
     ) {
     private val securityMenuAdapter by lazy { SecurityMenuAdapter() }
-    private var securityInfo: SecurityInfo? = null
     override fun initData() {
         setFullScreenStatusBar()
+        setStatusBarStyle(false)
         mBinding.apply {
             rvMenu.adapter = securityMenuAdapter
             securityMenuAdapter.setOnItemClickListener { _, _, position ->
@@ -30,42 +28,9 @@ class SecurityCenterActivity :
                 PageIntentUtil.url2Page(mContext, item.url)
             }
         }
-        getSecurityInfo()
+        val list = mutableListOf<MineMenuBean>()
+        list.add(MineMenuBean(1,"https://happymeet-new.oss-cn-hangzhou.aliyuncs.com/image/securityCenter/icon_log_off.png","注销账号",WebUrlManager.LOG_OFF,"1"))
+        securityMenuAdapter.submitList(list)
     }
 
-    override fun initListener() {
-        mBinding.ivBanner.setOnClickListener {
-            if (securityInfo != null) {
-                PageIntentUtil.url2Page(mContext, securityInfo!!.safetyReminderUrl)
-            }
-        }
-    }
-
-    private fun getSecurityInfo() {
-        mViewModel.getSecurityInfo()
-    }
-
-    override fun registerNecessaryObserver() {
-        super.registerNecessaryObserver()
-        mViewModel.securityInfoObservable.observe(this) { it ->
-            parseState(it, {
-                securityInfo = it
-                securityMenuAdapter.submitList(it.serviceConfigs)
-                Glide.with(mContext).load(it.safetyReminderImg).into(mBinding.ivBanner)
-                val violationUserIds = it.violationUserIds
-                if (violationUserIds != null && violationUserIds.size > 0) {
-                    val chunked = violationUserIds.chunked(6)
-                    bindProhibitInfo(chunked)
-                }
-            })
-        }
-    }
-
-    private fun bindProhibitInfo(data: List<List<String>>) {
-        val adapter = SecurityProhibitBannerAdapter(mContext, data)
-        mBinding.bannerProhibit.addBannerLifecycleObserver(mContext)
-            .setAdapter(adapter)
-            .isAutoLoop(true)
-            .start()
-    }
 }

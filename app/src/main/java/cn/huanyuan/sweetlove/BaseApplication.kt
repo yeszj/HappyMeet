@@ -6,7 +6,6 @@ import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.http.HttpResponseCache
 import android.os.Build
@@ -14,8 +13,9 @@ import android.os.Looper
 import android.text.TextUtils
 import android.view.Gravity
 import cn.huanyuan.sweetlove.func.ApplicationRouterImpl
-import cn.huanyuan.sweetlove.func.ImChatMsgNotifyTask
+import cn.huanyuan.sweetlove.func.task.ImChatMsgNotifyTask
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
+import cn.huanyuan.sweetlove.func.task.AppPopTask
 import cn.huanyuan.sweetlove.net.HttpHeadInterceptor
 import cn.yanhu.baselib.crash.CrashUtils
 import cn.yanhu.baselib.crash.ExceptionHandler
@@ -60,14 +60,6 @@ import com.hyphenate.chat.EMMessage
 import com.hyphenate.chat.EMUserInfo
 import com.opensource.svgaplayer.SVGAParser
 import com.pcl.sdklib.manager.SdkParamsManager
-import com.pcl.sdklib.sdk.union.UnionRequestPermissionEvent
-import com.qiyukf.nimlib.sdk.StatusBarNotificationConfig
-import com.qiyukf.unicorn.api.ImageLoaderListener
-import com.qiyukf.unicorn.api.Unicorn
-import com.qiyukf.unicorn.api.UnicornImageLoader
-import com.qiyukf.unicorn.api.YSFOptions
-import com.qiyukf.unicorn.api.event.EventProcessFactory
-import com.qiyukf.unicorn.api.event.SDKEvents
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
 import okhttp3.Interceptor
@@ -86,7 +78,7 @@ class BaseApplication : Application() {
             Utils.init(this)
             ApplicationProxy.instance = ApplicationRouterImpl.getInstance()
             init()
-            if (!BuildConfig.DEBUG){
+            if (!BuildConfig.DEBUG) {
                 checkException()
             }
             registerAppStatusListener()
@@ -159,20 +151,6 @@ class BaseApplication : Application() {
 
     private fun init() {
         LitePal.initialize(this);
-        Unicorn.config(
-            this, "3f9a2096a3b5dc05c7525429aab70eda", options(), object : UnicornImageLoader {
-                override fun loadImageSync(s: String, i: Int, i1: Int): Bitmap? {
-                    return null
-                }
-                override fun loadImage(
-                    s: String,
-                    i: Int,
-                    i1: Int,
-                    imageLoaderListener: ImageLoaderListener
-                ) {
-                }
-            }
-        )
         //设置LOG开关，默认为false
         UMConfigure.setLogEnabled(false)
         //预初始化友盟
@@ -204,7 +182,6 @@ class BaseApplication : Application() {
     fun initSdk() {
         DeviceIdentifier.register(this)
         initImConfig()
-        initQiyu()
         initUm()
         SVGAParser.shareParser().init(this)
     }
@@ -222,9 +199,9 @@ class BaseApplication : Application() {
         )
         // 微信设置
         PlatformConfig.setWeixin(SdkParamsManager.WX_APP_ID, SdkParamsManager.WX_APP_SECRET)
-        PlatformConfig.setWXFileProvider(BuildConfig.APPLICATION_ID+".fileprovider")
+        PlatformConfig.setWXFileProvider(BuildConfig.APPLICATION_ID + ".fileprovider")
         UMConfigure.getOaid(this) { oaid: String? ->
-            if (!TextUtils.isEmpty(oaid)){
+            if (!TextUtils.isEmpty(oaid)) {
                 AppCacheManager.oaid = oaid!!
             }
 //            if (isFirst) {
@@ -237,9 +214,6 @@ class BaseApplication : Application() {
         }
     }
 
-    private fun initQiyu() {
-        Unicorn.initSdk()
-    }
 
     private fun initImConfig() {
         EMInitUtils.initIM(this)
@@ -266,15 +240,22 @@ class BaseApplication : Application() {
                 if (ConfigParamsManager.HAS_LOAD_CHAT) {
                     ThreadUtils.getMainHandler().post {
                         getMsgUserInfo(messages)
-                        LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.RECEIVE_CHAT_MSG, messages)
+                        LiveDataEventManager.sendLiveDataMessage(
+                            EventBusKeyConfig.RECEIVE_CHAT_MSG,
+                            messages
+                        )
                     }
                 }
             }
+
             override fun onCmdMessageReceived(messages: MutableList<EMMessage>) {
                 //收到透传消息
                 ThreadUtils.getMainHandler().post {
                     messages.forEach {
-                        LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.RECEIVE_CMD_MSG, it)
+                        LiveDataEventManager.sendLiveDataMessage(
+                            EventBusKeyConfig.RECEIVE_CMD_MSG,
+                            it
+                        )
                         dealCommonCmdMsg(it)
                     }
                 }
@@ -283,7 +264,10 @@ class BaseApplication : Application() {
             override fun onMessageRecalled(messages: MutableList<EMMessage>) {
                 super.onMessageRecalled(messages)
                 ThreadUtils.getMainHandler().post {
-                    LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.RECALLED_MSG, messages)
+                    LiveDataEventManager.sendLiveDataMessage(
+                        EventBusKeyConfig.RECALLED_MSG,
+                        messages
+                    )
                 }
             }
         }
@@ -317,6 +301,7 @@ class BaseApplication : Application() {
                         }
                     }
                 }
+
                 override fun onError(error: Int, errorMsg: String) {
                 }
             })
@@ -345,7 +330,7 @@ class BaseApplication : Application() {
         appMsgNotifyInfo.nickName = nickName
         appMsgNotifyInfo.portrait = emUserInfo?.avatarUrl.toString()
         val stringAttribute = message.getStringAttribute(ChatConstant.CUSTOM_SEND_USER_INFO, "")
-        logcom( "sendUserInfo=$stringAttribute")
+        logcom("sendUserInfo=$stringAttribute")
         if (!TextUtils.isEmpty(stringAttribute)) {
             val sendUserInfo: UserDetailInfo? =
                 GsonUtils.fromJson(stringAttribute, UserDetailInfo::class.java)
@@ -362,36 +347,25 @@ class BaseApplication : Application() {
         imMsgNotifyTaskManager.addTask(ImChatMsgNotifyTask(appMsgNotifyInfo))
     }
 
+
     private fun dealCommonCmdMsg(message: EMMessage) {
         val source = message.getIntAttribute("source", -1)
-        if (source==CmdMsgTypeConfig.ADD_FRIEND){
+        if (source == CmdMsgTypeConfig.ADD_FRIEND) {
             val userInfo = ChatUserInfoManager.getUserInfo(message.conversationId())
             userInfo?.apply {
                 this.isFriend = true
                 ChatUserInfoManager.saveUserInfo(this)
             }
 
-        }else if(source == ChatConstant.ACTION_PHONE_CALL_VIDEO){
+        } else if (source == ChatConstant.ACTION_PHONE_CALL_VIDEO) {
             val callInfo = message.getStringAttribute("callInfo")
             RouteIntent.toToWaitPhoneActivity(callInfo)
         }
     }
 
 
-    private fun options(): YSFOptions {
-        val options = YSFOptions()
-        val statusBarNotificationConfig = StatusBarNotificationConfig()
-        options.statusBarNotificationConfig = statusBarNotificationConfig
-        options.sdkEvents = SDKEvents()
-        options.sdkEvents.eventProcessFactory = EventProcessFactory { eventType: Int ->
-            if (eventType == 5) {
-                //sdk申请权限事件
-                return@EventProcessFactory UnionRequestPermissionEvent()
-            }
-            null
-        }
-        return options
-    }
+
+
 
     private fun initToastStyle() {
         ToastUtils.getDefaultMaker().setGravity(Gravity.CENTER, 0, 0)
@@ -439,8 +413,7 @@ class BaseApplication : Application() {
         var intent: Intent? = null
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             try {
-                var flagExported = false
-                flagExported = flags and RECEIVER_EXPORTED != 0
+                val flagExported = flags and RECEIVER_EXPORTED != 0
                 val flagNotExported = flags and RECEIVER_NOT_EXPORTED != 0
                 if (!flagExported && !flagNotExported) {
                     intent = super.registerReceiver(receiver, filter, flags or RECEIVER_EXPORTED)
@@ -455,14 +428,19 @@ class BaseApplication : Application() {
             super.registerReceiver(receiver, filter, flags)
         }
     }
+
     override fun onTerminate() {
         super.onTerminate()
         ARouterWrapper.destory()
     }
 
     companion object {
+        private val appPopTaskQueueManagerImpl = TaskQueueManagerImpl()
         init {
             RefreshManager.init(SmartRefreshProcessor())
+        }
+        fun addPopTask(type: Int, content: String) {
+            appPopTaskQueueManagerImpl.addTask(AppPopTask(type, content))
         }
     }
 }

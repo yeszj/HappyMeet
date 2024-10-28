@@ -38,6 +38,7 @@ import cn.yanhu.commonres.loading.MainLoadingCallBack
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouterPath
+import cn.yanhu.commonres.task.AppPopTypeManager
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.custom.message.push.PushManager
 import cn.zj.netrequest.ext.OnRequestResultListener
@@ -216,6 +217,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     private fun onGetTabSuccess() {
         mViewModel.tabInfoObservable.observe(this) { it ->
             parseState(it, {
+                if (!AppCacheManager.hasShowTeenApp){
+                    BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP,"")
+                    AppCacheManager.hasShowTeenApp = true
+                }
                 tabList = it
                 if (mFragmentList.size <= 0) {
                     initFrg()

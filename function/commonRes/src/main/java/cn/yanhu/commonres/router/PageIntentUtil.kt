@@ -22,6 +22,7 @@ object PageIntentUtil {
     const val PAGE_PRICE_SET = "{clsPath:cn.huanyuan.sweetlove.ui.setting.ChatPriceSetActivity}"
     const val PAGE_SECURITY_CENTER = "{clsPath:cn.huanyuan.sweetlove.ui.system.SecurityCenterActivity}"
     const val PAGE_ABOUT_US = "{clsPath:cn.huanyuan.sweetlove.ui.system.AboutUsActivity}"
+
     @JvmStatic
     fun url2Page(mContext: Context, url: String?) {
         if (TextUtils.isEmpty(url)) {

@@ -153,8 +153,8 @@ object DialogUtils {
     ): BasePopupView {
         val asConfirm = XPopup.Builder(context)
             .autoDismiss(isAutoDismiss)
-            .dismissOnTouchOutside(false)
-            .dismissOnBackPressed(false)
+            .dismissOnTouchOutside(true)
+            .dismissOnBackPressed(true)
             .asConfirm(
                 title,
                 content,

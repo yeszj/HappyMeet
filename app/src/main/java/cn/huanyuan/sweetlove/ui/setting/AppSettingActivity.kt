@@ -151,23 +151,19 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
 
         list.add(
             SettingItemInfo(
+                name = "安全指南", showDivider = false, pageUrl = WebUrlManager.SECURITY_AGREEMENT
+            )
+        )
+
+        list.add(
+            SettingItemInfo(
                 ContextCompat.getDrawable(
                     mContext,
                     cn.yanhu.commonres.R.drawable.white_bottom_corner_10
                 ),
-                name = "安全指南", showDivider = true, pageUrl = WebUrlManager.SECURITY_AGREEMENT
+                name = "安全中心", showDivider = true, pageUrl = PageIntentUtil.PAGE_SECURITY_CENTER
             )
         )
-
-//        list.add(
-//            SettingItemInfo(
-//                ContextCompat.getDrawable(
-//                    mContext,
-//                    cn.yanhu.commonres.R.drawable.white_bottom_corner_10
-//                ),
-//                name = "安全中心", showDivider = true, pageUrl = PageIntentUtil.PAGE_SECURITY_CENTER
-//            )
-//        )
 
         list.add(
             SettingItemInfo(

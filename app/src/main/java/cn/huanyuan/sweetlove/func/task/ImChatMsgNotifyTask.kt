@@ -1,4 +1,4 @@
-package cn.huanyuan.sweetlove.func
+package cn.huanyuan.sweetlove.func.task
 
 import cn.jiguang.verifysdk.CtLoginActivity
 import cn.yanhu.agora.manager.AgoraManager

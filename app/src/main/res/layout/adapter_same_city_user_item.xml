@@ -25,6 +25,7 @@
             android:layout_marginStart="@dimen/dp_m_5"
             avatarUrl="@{userinfo.portrait}"
             avatarUserId="@{userinfo.userId}"
+            app:isCanClick="false"
             avatarFrameUrl="@{userinfo.avatarFrame}"
             app:isShowSvgAvatar="true"
             app:layout_constraintStart_toStartOf="parent"
