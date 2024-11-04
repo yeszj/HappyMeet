@@ -19,6 +19,7 @@ import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.EditUserInfo
 import cn.yanhu.commonres.bean.LoginSuccessInfo
 import cn.yanhu.commonres.bean.MineMenuBean
+import cn.yanhu.commonres.bean.ReportConfigInfo
 import cn.yanhu.commonres.bean.SystemMessageInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.bean.request.DressBuyRequest
@@ -180,11 +181,13 @@ interface ApiService {
     ): BaseBean<WalletRecordResponse>
 
 
-    @POST("app/v1/user/complaintUser")
+    @POST("app/v1/operates/reportUser")
     suspend fun complaintUser(
         @Body complaintInfo: ComplaintInfo?,
     ): BaseBean<Boolean>
 
+    @GET("app/v1/operates/report/getConfigs")
+    suspend fun getReportConfigs(): BaseBean<MutableList<ReportConfigInfo>>
 
     @GET("app/v1/auth/getSecurityCenter")
     suspend fun getSecurityInfo(): BaseBean<SecurityInfo>

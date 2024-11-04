@@ -151,11 +151,12 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
                 return if (banners.isNotEmpty()) {
                     return TYPE_BANNER
                 } else {
-                    if (roomListBean.roomType < 3) {
-                        TYPE_ROOM
-                    } else {
-                        TYPE_FRIENDS
-                    }
+                    TYPE_ROOM
+//                    if (roomListBean.roomType < 3) {
+//                        TYPE_ROOM
+//                    } else {
+//                        TYPE_FRIENDS
+//                    }
                 }
             }
         })

@@ -18,4 +18,6 @@ object Constants {
 
     const val BEAUTYSDKINFO = "beautySdkInfo"
     const val IS_SHOW_TEEN = "is_show_teen"
+    const val SELECTBEAUTYFILTER = "selectBeautyFilter"
+
 }

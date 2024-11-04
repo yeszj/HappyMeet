@@ -9,32 +9,32 @@ import cn.zj.netrequest.BR
  * created: 2024/3/12
  * desc:投诉实体
  */
-class ComplaintInfo : BaseObservable(){
+class ComplaintInfo : BaseObservable() {
     @Bindable
-    var complaintType:String = ""
+    var typeIds: String = ""
         set(value) {
             field = value
-            notifyPropertyChanged(BR.complaintType)
+            notifyPropertyChanged(BR._all)
         }
 
     @Bindable
-    var complaintUserId:String = ""
+    var userId: String = ""
         set(value) {
             field = value
-            notifyPropertyChanged(BR.complaintUserId)
+            notifyPropertyChanged(BR._all)
         }
 
     @Bindable
-    var complaintReason:String = ""
+    var description: String = ""
         set(value) {
             field = value
-            notifyPropertyChanged(BR.complaintReason)
+            notifyPropertyChanged(BR.description)
         }
 
     @Bindable
-    var picList:MutableList<String> = mutableListOf()
+    var images: String = ""
         set(value) {
             field = value
-            notifyPropertyChanged(BR.picList)
+            notifyPropertyChanged(BR._all)
         }
 }

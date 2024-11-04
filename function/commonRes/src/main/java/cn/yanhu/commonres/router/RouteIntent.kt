@@ -63,8 +63,9 @@ object RouteIntent {
         ARouter.getInstance().build(RouterPath.ROUTER_ROSE_RECHARGE).navigation()
     }
 
-    fun lunchReportPage() {
-        ARouter.getInstance().build(RouterPath.ROUTER_REPORT).navigation()
+    fun lunchReportPage(userId:String? = null) {
+        ARouter.getInstance().build(RouterPath.ROUTER_REPORT)
+            .withString(IntentKeyConfig.ID,userId).navigation()
     }
 
     fun lunchSeenMeHistory() {

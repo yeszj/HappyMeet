@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="roomInfo"
+            type="cn.yanhu.commonres.bean.RoomDetailInfo" />
+        <import type="android.view.View"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_roomCover"
+            imageUrl="@{roomInfo.ownerInfo.portrait}"
+            placeholderId="@{-1}"
+            android:layout_width="@dimen/dp_34"
+            android:layout_height="@dimen/dp_34"
+            android:layout_marginStart="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true"
+            tools:src="@drawable/avatar_male_normal" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_roomName"
+            style="@style/common_white_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_6"
+            android:text="@{roomInfo.ownerInfo.nickName}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toEndOf="@+id/iv_roomCover"
+            app:layout_constraintTop_toTopOf="@+id/iv_roomCover"
+            tools:text="落落的交友房" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_15"
+            android:layout_marginStart="@dimen/dp_4"
+            android:src="@drawable/icon_private_tag"
+            android:visibility="@{roomInfo.roomType==2?View.VISIBLE:View.INVISIBLE,default = invisible}"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_roomName"
+            app:layout_constraintStart_toEndOf="@+id/tv_roomName"
+            app:layout_constraintTop_toTopOf="@+id/tv_roomName"
+            tools:visibility="visible" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            style="@style/common_white_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{"ID:"+roomInfo.ownerInfo.userId}'
+            android:textColor="@color/whiteColorAlpha50"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_roomCover"
+            app:layout_constraintStart_toStartOf="@+id/tv_roomName"
+            tools:text="ID 24082" />
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_onlineNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_4"
+            android:background="@drawable/white_corner_12"
+            android:backgroundTint="#1AFFFFFF"
+            android:gravity="center"
+            android:minWidth="@dimen/dp_34"
+            android:paddingStart="@dimen/dp_6"
+            android:paddingTop="@dimen/dp_3"
+            android:paddingEnd="@dimen/dp_6"
+            android:paddingBottom="@dimen/dp_3"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_exit"
+            app:layout_constraintEnd_toStartOf="@+id/iv_exit"
+            app:layout_constraintTop_toTopOf="@+id/iv_exit"
+            tools:text="5" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_exit"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:padding="@dimen/dp_8"
+            android:src="@drawable/icon_room_exit"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_roomCover"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_roomCover" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

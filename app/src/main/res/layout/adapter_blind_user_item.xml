@@ -38,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_22"
             android:layout_marginTop="@dimen/dp_10"
-            android:background="@{roomBean.roomType==0?@drawable/shape_oline_tag:roomBean.roomType==1?@drawable/shape_video_blinddate_tag:@drawable/shape_exclusive_blinddate_tag}"
+            android:background="@{roomBean.roomType==0?@drawable/shape_oline_tag:roomBean.roomType==2?@drawable/shape_exclusive_blinddate_tag: roomBean.roomType==3? @drawable/shape_seven_blinddate_tag:@drawable/shape_video_blinddate_tag}"
             app:layout_constraintEnd_toEndOf="@+id/tv_status"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_cover"
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="@dimen/dp_6"
-            android:text='@{roomBean.roomType==0?"对方在线":roomBean.roomType==1?"视频交友":"专属交友"}'
+            android:text='@{roomBean.roomTypeName}'
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
             app:fontType="@string/fontMedium"

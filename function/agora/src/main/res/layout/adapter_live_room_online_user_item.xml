@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="userinfo"
+            type="cn.yanhu.commonres.bean.UserDetailInfo" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_68"
+        android:paddingStart="@dimen/dp_12"
+        android:paddingEnd="@dimen/dp_12">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/avatarView"
+            imageUrl="@{userinfo.portrait}"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="@dimen/dp_44"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true"
+            tools:src="@drawable/ease_default_avatar" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            android:drawablePadding="@dimen/dp_2"
+            android:ellipsize="end"
+            android:maxEms="8"
+            android:maxLines="1"
+            android:text="@{userinfo.nickName}"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toEndOf="@+id/avatarView"
+            app:layout_constraintTop_toTopOf="@+id/avatarView"
+            tools:text="佊岸、花开" />
+
+
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/userAge"
+            userAge="@{userinfo.age}"
+            userGender="@{userinfo.gender}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+            app:layout_constraintStart_toEndOf="@+id/avatarView" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            userProvince='@{userinfo.province}'
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/userAge"
+            app:layout_constraintStart_toEndOf="@+id/userAge"
+            app:layout_constraintTop_toTopOf="@+id/userAge" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_invite"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_26"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:background="@drawable/white_corner_20"
+            android:backgroundTint="@color/colorMain"
+            android:gravity="center"
+            android:text='@{userinfo.seatNum>0?"下麦":"邀请"}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="邀请" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

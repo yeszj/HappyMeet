@@ -2,6 +2,7 @@ package cn.yanhu.agora.ui.beautifyFace
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.text.TextUtils
 import android.view.View
 import android.widget.SeekBar
 import cn.yanhu.agora.R
@@ -9,6 +10,7 @@ import cn.yanhu.agora.adapter.BeautyFaceSetAdapter
 import cn.yanhu.agora.bean.BeautyBean
 import cn.yanhu.agora.databinding.ActivityBeautyFaceSetBinding
 import cn.yanhu.agora.manager.AgoraManager
+import cn.yanhu.agora.manager.dbCache.BeautyFaceParamCacheManager
 import cn.yanhu.agora.manager.BeautySetManager
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.base.BaseActivity
@@ -17,13 +19,13 @@ import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.view.TitleBar
+import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.utils.PermissionXUtils
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.google.gson.Gson
 
 
 /**
@@ -31,31 +33,73 @@ import com.google.gson.Gson
  */
 @Route(path = RouterPath.ROUTER_BEAUTIFUL_FACE)
 class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoomViewModel>(
-    R.layout.activity_beauty_face_set,
-    LiveRoomViewModel::class.java
-)  {
+    R.layout.activity_beauty_face_set, LiveRoomViewModel::class.java
+) {
     private val beautyFaceSetAdapter by lazy { BeautyFaceSetAdapter() }
-    private var beautyAllList: MutableList<BeautyBean> = mutableListOf()
-    private var beautyList: MutableList<BeautyBean> = mutableListOf()
+
+    private var beautySkinList: MutableList<BeautyBean> = mutableListOf()
+    private var beautyTypeList: MutableList<BeautyBean> = mutableListOf()
+    private var beautyFilterList: MutableList<BeautyBean> = mutableListOf()
+
     private var selectFacePosition = -1
     private var selectBeautyTypePosition = -1
-    private var isBeautyFace = true
+    private var selectFilterPosition = 0
+    private var type: Int = 1
     override fun initData() {
         setFullScreenStatusBar()
         mBinding.alertkey = ""
         checkPermission()
         mBinding.rvBeauty.adapter = beautyFaceSetAdapter
+        getSkinCareList()
+        getSkinTypeList()
+        getSkinFilterList()
+    }
+
+    private fun getSkinCareList() {
         ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
             override fun doInBackground(): Boolean {
-                beautyAllList = BeautySetManager.getInstance().beautyList
+                beautySkinList = BeautySetManager.getInstance().skinCareList
                 return true
             }
+
             override fun onSuccess(result: Boolean?) {
-                beautyList = beautyAllList.subList(0, 5)
-                beautyFaceSetAdapter.submitList(beautyList)
+                beautyFaceSetAdapter.submitList(beautySkinList)
             }
         })
+    }
 
+    private fun getSkinTypeList() {
+        ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
+            override fun doInBackground(): Boolean {
+                beautyTypeList = BeautySetManager.getInstance().skinTypeList
+                return true
+            }
+
+            override fun onSuccess(result: Boolean?) {
+            }
+        })
+    }
+
+    private fun getSkinFilterList() {
+        ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
+            override fun doInBackground(): Boolean {
+                beautyFilterList = BeautySetManager.getInstance().originSkinFilterList
+                return true
+            }
+
+            override fun onSuccess(result: Boolean?) {
+                if (!TextUtils.isEmpty(AppCacheManager.selectBeautyFilter)) {
+                    val beautyBean =
+                        GsonUtils.fromJson(AppCacheManager.selectBeautyFilter, BeautyBean::class.java)
+                    selectFilterPosition = beautyFilterList.indexOfFirst {
+                        if (it.filterName == beautyBean.filterName){
+                            it.value = beautyBean.value
+                        }
+                        it.filterName == beautyBean.filterName
+                    }
+                }
+            }
+        })
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -74,6 +118,10 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
             //美型
             switchToBeautyType()
         }
+        mBinding.beautySetFilter.setOnSingleClickListener {
+            //滤镜
+            switchToBeautyFilter()
+        }
         initTitleListener()
     }
 
@@ -86,7 +134,14 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
 
             override fun rightButtonOnClick(v: View?) {
                 //保存
-                SPUtils.getInstance().put("beautySetList", Gson().toJson(beautyAllList))
+                beautyTypeList.forEach {
+                    BeautyFaceParamCacheManager.saveParams(it)
+                }
+                beautySkinList.forEach {
+                    BeautyFaceParamCacheManager.saveParams(it)
+                }
+                AppCacheManager.selectBeautyFilter =
+                    GsonUtils.toJson(beautyFilterList[selectFilterPosition])
                 showToast("保存成功")
                 finish()
             }
@@ -100,49 +155,86 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
     }
 
     private fun switchToBeautyType() {
-        isBeautyFace = false
+        type = 2
         mBinding.beautySetMking.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.femaleColor))
         mBinding.beautySetSkin.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
-        beautyList = beautyAllList.subList(5, beautyAllList.size)
-        beautyFaceSetAdapter.submitList(beautyList)
+        mBinding.beautySetFilter.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
+
+        beautyFaceSetAdapter.submitList(beautyTypeList)
         mBinding.alertkey = ""
         beautyFaceSetAdapter.setSelectPosition(selectBeautyTypePosition)
         if (selectBeautyTypePosition != -1) {
-            val beautyBean = beautyList[selectBeautyTypePosition]
+            val beautyBean = beautyTypeList[selectBeautyTypePosition]
+            mBinding.rvBeauty.scrollToPosition(selectBeautyTypePosition)
+            setSeekProgress(beautyBean)
+        }
+    }
+
+    private fun switchToBeautyFilter() {
+        type = 3
+        mBinding.beautySetFilter.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.femaleColor))
+        mBinding.beautySetSkin.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
+        mBinding.beautySetMking.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
+
+        beautyFaceSetAdapter.submitList(beautyFilterList)
+        mBinding.alertkey = ""
+        if (selectFilterPosition != -1) {
+            beautyFaceSetAdapter.setSelectPosition(selectFilterPosition)
+            mBinding.rvBeauty.scrollToPosition(selectFilterPosition)
+            val beautyBean = beautyFilterList[selectFilterPosition]
             setSeekProgress(beautyBean)
         }
     }
 
     private fun switchToBeautyFace() {
-        isBeautyFace = true
+        type = 1
+        mBinding.beautySetFilter.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
         mBinding.beautySetSkin.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.femaleColor))
         mBinding.beautySetMking.setTextColor(CommonUtils.getColor(cn.zj.netrequest.R.color.white))
-        beautyList = beautyAllList.subList(0, 5)
-        beautyFaceSetAdapter.submitList(beautyList)
+        beautyFaceSetAdapter.submitList(beautySkinList)
         mBinding.alertkey = ""
-        beautyFaceSetAdapter.setSelectPosition(selectFacePosition)
         if (selectFacePosition != -1) {
-            val beautyBean = beautyList[selectFacePosition]
-            setSeekProgress(beautyBean)
+            beautyFaceSetAdapter.setSelectPosition(selectFacePosition)
+            mBinding.rvBeauty.scrollToPosition(selectFacePosition)
+            val selectItem = beautySkinList[selectFacePosition]
+            setSeekProgress(selectItem)
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun showRefreshDialog() = DialogUtils.showConfirmDialog("是否恢复所有参数？", {
-        for (beautyBean in BeautySetManager.getInstance().beautyList) {
-            for (bean in beautyAllList) {
-                if (beautyBean.key.equals(bean.key)) {
-                    bean.value = beautyBean.value
-                }
-            }
+        beautySkinList = BeautySetManager.getInstance().originSkinCareList
+        for (beautyBean in beautySkinList) {
             if (mBinding.alertkey.equals(beautyBean.key)) {
                 mBinding.tvProgressValue.text = beautyBean.value.toString()
                 mBinding.seekBar.progress = beautyBean.value
             }
-            BeautySetManager.getInstance()
-                .setBeautyProperty(beautyBean.key, beautyBean.value)
+            BeautySetManager.getInstance().setBeautyProperty(beautyBean.key, beautyBean.value)
         }
-        beautyFaceSetAdapter.notifyDataSetChanged()
+        beautyTypeList = BeautySetManager.getInstance().originSkinTypList
+        for (beautyBean in beautyTypeList) {
+            if (mBinding.alertkey.equals(beautyBean.key)) {
+                mBinding.tvProgressValue.text = beautyBean.value.toString()
+                mBinding.seekBar.progress = beautyBean.value
+            }
+            BeautySetManager.getInstance().setBeautyProperty(beautyBean.key, beautyBean.value)
+        }
+
+        val beautyBean = beautyFilterList[0]
+        AppCacheManager.selectBeautyFilter = ""
+        BeautySetManager.getInstance().setBeautyFilter(beautyBean.value, beautyBean.filterName)
+        when (type) {
+            1 -> {
+                beautyFaceSetAdapter.submitList(beautySkinList)
+            }
+            2 -> {
+                beautyFaceSetAdapter.submitList(beautyTypeList)
+            }
+            else -> {
+                selectFilterPosition = 0
+                switchToBeautyFilter()
+            }
+        }
     }, cancel = "取消")
 
     private fun addOnSeekBarListener() {
@@ -154,41 +246,63 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                BeautySetManager.getInstance()
-                    .setBeautyProperty(mBinding.alertkey, seekBar!!.progress)
-                for (beautyBean in beautyList) {
-                    if (beautyBean.key.equals(mBinding.alertkey)) {
-                        beautyBean.value = seekBar.progress
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                selectItem?.apply {
+                    if ("filter_level" == this.key) {
+                        BeautySetManager.getInstance()
+                            .setBeautyFilter(seekBar.progress, this.filterName)
+                    } else {
+                        BeautySetManager.getInstance().setBeautyProperty(this.key, seekBar.progress)
                     }
+                    this.value = seekBar.progress
                 }
+
             }
 
         })
     }
 
+    private var selectItem: BeautyBean? = null
     private fun addAdapterItemListener() {
         beautyFaceSetAdapter.setOnItemClickListener(object :
             BaseQuickAdapter.OnItemClickListener<BeautyBean> {
             override fun onClick(
-                adapter: BaseQuickAdapter<BeautyBean, *>,
-                view: View,
-                position: Int
+                adapter: BaseQuickAdapter<BeautyBean, *>, view: View, position: Int
             ) {
-                if (isBeautyFace) {
-                    selectFacePosition = position
-                } else {
-                    selectBeautyTypePosition = position
+                when (type) {
+                    1 -> {
+                        selectFacePosition = position
+                    }
+
+                    2 -> {
+                        selectBeautyTypePosition = position
+                    }
+
+                    else -> {
+                        selectFilterPosition = position
+                    }
                 }
-                val item = beautyFaceSetAdapter.getItem(position) ?: return
+                selectItem = beautyFaceSetAdapter.getItem(position) ?: return
                 beautyFaceSetAdapter.setSelectPosition(position)
-                setSeekProgress(item)
+                setSeekProgress(selectItem!!)
+                selectItem?.apply {
+                    if ("filter_level" == this.key) {
+                        BeautySetManager.getInstance().setBeautyFilter(this.value, this.filterName)
+                    } else {
+                        BeautySetManager.getInstance().setBeautyProperty(this.key, this.value)
+                    }
+                }
             }
         })
     }
 
     private fun setSeekProgress(item: BeautyBean) {
-        mBinding.alertkey = item.key
+        selectItem = item
+        if (item.filterName == "origin"){
+            mBinding.alertkey = ""
+        }else{
+            mBinding.alertkey = item.key
+        }
         mBinding.seekBar.progress = item.value
         mBinding.tvProgressValue.text = item.value.toString()
     }
@@ -197,15 +311,14 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
         val permissions = ArrayList<String>()
         permissions.add(Manifest.permission.CAMERA)
         permissions.add(Manifest.permission.RECORD_AUDIO)
-        PermissionXUtils.checkPermission(
-            mContext,
+        PermissionXUtils.checkPermission(mContext,
             permissions,
             "对爱交友想访问您的以下权限，用于美颜设置",
             "您拒绝授权权限，将无法体验部分功能",
             object : PermissionXUtils.PermissionListener {
                 override fun onSuccess() {
-                    AgoraManager.getInstence()
-                        .init(mContext,  1, mBinding.beautySetSf)
+                    AgoraManager.getInstence().init(mContext, 1, mBinding.beautySetSf)
+                    AgoraManager.getInstence().setVideoEncoderConfiguration(360, 800)
                 }
 
                 override fun onFail() {

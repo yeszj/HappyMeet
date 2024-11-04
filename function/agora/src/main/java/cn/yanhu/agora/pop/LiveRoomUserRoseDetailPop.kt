@@ -11,6 +11,7 @@ import cn.yanhu.baselib.refresh.NoMoreDataFootView
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.router.RouteIntent
+import com.alibaba.android.arouter.utils.TextUtils
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.BottomPopupView
@@ -42,7 +43,11 @@ class LiveRoomUserRoseDetailPop(context: Context, private val roseInfo: UserRece
         val list = roseInfo.list
         userAdapter.submitList(list)
         mBiding.tvTotalRoseNum.text = "本场玫瑰：${roseInfo.roseNum}"
-        mBiding.tvNickName.text = "${roseInfo.nickName}收到的玫瑰明细"
+        if (TextUtils.isEmpty(roseInfo.nickName)){
+            mBiding.tvNickName.text = "本场贡献榜"
+        }else{
+            mBiding.tvNickName.text = "${roseInfo.nickName}收到的玫瑰明细"
+        }
         userAdapter.isStateViewEnable = list.size <= 0
         userAdapter.addOnItemChildClickListener(R.id.userAvatar,
             object : BaseQuickAdapter.OnItemChildClickListener<UserDetailInfo> {

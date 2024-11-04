@@ -3,12 +3,12 @@ package cn.yanhu.agora.manager
 import androidx.fragment.app.FragmentActivity
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.EnterCheckResponse
+import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.miniwindow.MiniWindowManager
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.Spans
-import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
@@ -105,7 +105,7 @@ object LiveRoomManager {
                             })
                         } else {
                             val roomInfo = enterCheckResponse.roomInfo
-                            roomInfo.roomType = RoomListBean.TYPE_THREE_ROOM
+                            //roomInfo.roomType = RoomListBean.TYPE_THREE_ROOM
                             RouteIntent.lunchToLiveRoom(context, roomInfo)
                         }
                     } else {
@@ -149,8 +149,8 @@ object LiveRoomManager {
         onRoomNoExitListener: OnRoomNoExitListener?
     ) {
 
-        val content = Spans.builder().text("申请后可进入专属交友房间免费交友\n\n")
-            .text(if (data.info.seatNum == 2) "专属房间需消耗" + data.info.price + "🌹/分钟，是否申请?" else "")
+        val content = Spans.builder().text("申请后可进入专属交友房间免费交友")
+            .text(if (data.info.seatNum == 2) "\n\n专属房间需消耗" + data.info.price + "🌹/分钟，是否申请?" else "")
             .color(
                 CommonUtils.getColor(
                     cn.yanhu.baselib.R.color.colorMain

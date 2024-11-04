@@ -30,6 +30,7 @@ class SecurityCenterActivity :
         }
         val list = mutableListOf<MineMenuBean>()
         list.add(MineMenuBean(1,"https://happymeet-new.oss-cn-hangzhou.aliyuncs.com/image/securityCenter/icon_log_off.png","注销账号",WebUrlManager.LOG_OFF,"1"))
+
         securityMenuAdapter.submitList(list)
     }
 

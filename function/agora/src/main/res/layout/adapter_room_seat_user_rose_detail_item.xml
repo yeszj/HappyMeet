@@ -89,7 +89,6 @@
             app:layout_constraintTop_toTopOf="@+id/userAvatar"
             tools:text="Jasmine" />
 
-
         <cn.yanhu.commonres.view.UserTagView
             android:id="@+id/userAge"
             userAge="@{rankInfo.age}"
@@ -101,16 +100,15 @@
             app:layout_constraintStart_toEndOf="@id/userAvatar"
             tools:visibility="visible" />
 
-
         <cn.yanhu.commonres.view.UserTagView
             android:id="@+id/userProvince"
             userProvince="@{rankInfo.province}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/userLevel"
+            app:layout_constraintBottom_toBottomOf="@+id/userAge"
             app:layout_constraintStart_toEndOf="@id/userAge"
-            app:layout_constraintTop_toTopOf="@+id/userLevel"
+            app:layout_constraintTop_toTopOf="@+id/userAge"
             tools:visibility="invisible" />
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_value"

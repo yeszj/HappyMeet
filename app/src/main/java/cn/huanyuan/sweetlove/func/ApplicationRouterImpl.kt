@@ -10,7 +10,7 @@ import cn.huanyuan.sweetlove.func.dialog.RoseRechargePop
 import cn.huanyuan.sweetlove.net.HttpHeadConfig
 import cn.huanyuan.sweetlove.ui.login.LoginActivity
 import cn.huanyuan.sweetlove.ui.main.MainActivity
-import cn.yanhu.agora.manager.AgoraSdkCacheManager
+import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
 import cn.yanhu.agora.miniwindow.EaseCallFloatWindow
 import cn.yanhu.agora.miniwindow.MiniWindowManager

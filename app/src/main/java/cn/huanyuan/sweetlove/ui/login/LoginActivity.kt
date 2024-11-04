@@ -12,6 +12,7 @@ import cn.yanhu.baselib.anim.AnimUtils
 import cn.yanhu.baselib.anim.ShakeAnimator
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.SoftHideKeyBoardUtil
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.CustomClickSpan
@@ -22,6 +23,7 @@ import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.ext.parseState
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.pcl.sdklib.sdk.jverrify.JiGuangSDKUtils
 import kotlin.system.exitProcess
@@ -39,6 +41,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
 
     private var isPrivacyCheck = false
     override fun initData() {
+        SoftHideKeyBoardUtil.assistActivity(mContext)
         setFullScreenStatusBar(true)
         setAgreementInfo()
         initJiGuangLogin()
@@ -96,6 +99,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
         }
         mBinding.bgCode.setOnSingleClickListener {
             if (checkCondition()) {
+                KeyboardUtils.hideSoftInput(mBinding.etPhone)
                 VerifyCodeActivity.lunch(mContext, mBinding.etPhone.text.toString())
             }
         }

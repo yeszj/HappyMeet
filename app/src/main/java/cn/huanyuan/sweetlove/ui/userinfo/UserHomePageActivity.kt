@@ -118,7 +118,7 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
     private fun showOperatePop(): CommonOperatePop {
         val list = mutableListOf<OperateInfo>()
         list.add(OperateInfo("拉黑", cn.yanhu.commonres.R.color.cl_common, 1))
-       // list.add(OperateInfo("举报", cn.yanhu.commonres.R.color.colorTextRed, 2))
+        list.add(OperateInfo("举报", cn.yanhu.commonres.R.color.colorTextRed, 2))
         return CommonOperatePop.showDialog(
             mContext,
             list,
@@ -127,7 +127,7 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                     if (operateInfo.type == 1) {
                         ImUserManager.setUserBlack(true, userId)
                     } else {
-                        RouteIntent.lunchReportPage()
+                        RouteIntent.lunchReportPage(userId)
                     }
                 }
             })

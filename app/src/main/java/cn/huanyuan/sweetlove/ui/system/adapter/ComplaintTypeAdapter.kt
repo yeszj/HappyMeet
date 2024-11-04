@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.databinding.AdapterComplaintTypeItemBinding
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.commonres.bean.ReportConfigInfo
 import com.chad.library.adapter4.BaseQuickAdapter
 
 /**
@@ -15,7 +16,8 @@ import com.chad.library.adapter4.BaseQuickAdapter
  * created: 2024/3/12
  * desc:
  */
-class ComplaintTypeAdapter:BaseQuickAdapter<String,ComplaintTypeAdapter.VH>() {
+class ComplaintTypeAdapter :
+    BaseQuickAdapter<ReportConfigInfo.ConfigInfo, ComplaintTypeAdapter.VH>() {
     class VH(
         parent: ViewGroup,
         val binding: AdapterComplaintTypeItemBinding = AdapterComplaintTypeItemBinding.inflate(
@@ -23,16 +25,21 @@ class ComplaintTypeAdapter:BaseQuickAdapter<String,ComplaintTypeAdapter.VH>() {
         )
     ) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onBindViewHolder(holder: VH, position: Int, item: String?) {
+    override fun onBindViewHolder(holder: VH, position: Int, item: ReportConfigInfo.ConfigInfo?) {
         holder.binding.apply {
-            tvType.text = item
+            tvType.text = item?.desc
             changeSelect(position)
             executePendingBindings()
         }
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int, item: String?, payloads: List<Any>) {
-        if (payloads.isNotEmpty()){
+    override fun onBindViewHolder(
+        holder: VH,
+        position: Int,
+        item: ReportConfigInfo.ConfigInfo?,
+        payloads: List<Any>
+    ) {
+        if (payloads.isNotEmpty()) {
             holder.binding.apply {
                 changeSelect(position)
                 executePendingBindings()
@@ -41,7 +48,8 @@ class ComplaintTypeAdapter:BaseQuickAdapter<String,ComplaintTypeAdapter.VH>() {
     }
 
     private fun AdapterComplaintTypeItemBinding.changeSelect(position: Int) {
-        if (position == selectPosition) {
+        val item = getItem(position)?:return
+        if (item.select) {
             tvType.backgroundTintList =
                 ColorStateList.valueOf(CommonUtils.getColor(R.color.colorMain))
             tvType.setTextColor(CommonUtils.getColor(R.color.white))
@@ -56,14 +64,9 @@ class ComplaintTypeAdapter:BaseQuickAdapter<String,ComplaintTypeAdapter.VH>() {
         return VH(parent)
     }
 
-    private var selectPosition: Int = -1
-    fun setSelectPosition(position:Int) {
-        val oldPosition = selectPosition
-        if (selectPosition!=position){
-            selectPosition = position
-            notifyItemChanged(oldPosition,true)
-            notifyItemChanged(selectPosition,true)
-        }
-
+    fun setSelectPosition(position: Int) {
+        val item = getItem(position) ?: return
+        item.select = !item.select
+        notifyItemChanged(position, true)
     }
 }

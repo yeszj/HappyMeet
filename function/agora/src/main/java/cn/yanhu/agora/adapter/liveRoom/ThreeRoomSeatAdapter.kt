@@ -36,7 +36,7 @@ import com.chad.library.adapter4.BaseMultiItemAdapter
  * created: 2024/4/1
  * desc:
  */
-class ThreeRoomSeatAdapter(val onRoomItemClickListener: OnRoomItemClickListener) :
+class ThreeRoomSeatAdapter :
     BaseMultiItemAdapter<RoomSeatInfo>() {
     class VH(
         val binding: AdapterThreeRoomAnchorSeatItemBinding
@@ -83,10 +83,10 @@ class ThreeRoomSeatAdapter(val onRoomItemClickListener: OnRoomItemClickListener)
                             CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_4)
                         )
                     }
-                    ivRose.setOnSingleClickListener {
-                        onRoomItemClickListener.onClickRose(item!!)
-                        //showUserReceiveRoseDetailPop(item)
+                    viewRank.setOnSingleClickListener {
+                        showUserReceiveRoseDetailPop(item)
                     }
+
                     executePendingBindings()
                 }
             }
@@ -129,6 +129,7 @@ class ThreeRoomSeatAdapter(val onRoomItemClickListener: OnRoomItemClickListener)
             ) {
                 if (payloads.isNotEmpty()) {
                     holder.binding.apply {
+                        this.roomInfo = roomDetailInfo
                         setApplyInfo()
                     }
                 }
@@ -137,6 +138,8 @@ class ThreeRoomSeatAdapter(val onRoomItemClickListener: OnRoomItemClickListener)
             override fun onBind(holder: VH, position: Int, item: RoomSeatInfo?) {
                 holder.binding.apply {
                     anchorSeatInfo.seatInfo = item
+                    this.isOwner = roomDetailInfo!!.ownerInfo!!.userId == AppCacheManager.userId
+                    this.roomInfo = roomDetailInfo
                     val tag = anchorSeatInfo.itemVideoSf.tag
                     if (tag == null || tag !is SurfaceView) {
                         val surfaceView = TextureView(context)
@@ -150,9 +153,8 @@ class ThreeRoomSeatAdapter(val onRoomItemClickListener: OnRoomItemClickListener)
                         addVideoSf(tag, item!!)
                     }
                     setApplyInfo()
-                    anchorSeatInfo.ivRose.setOnSingleClickListener {
-                        onRoomItemClickListener.onClickRose(item)
-                        //showUserReceiveRoseDetailPop(item)
+                    anchorSeatInfo.viewRank.setOnSingleClickListener {
+                        showUserReceiveRoseDetailPop(item)
                     }
                     executePendingBindings()
                 }
@@ -261,11 +263,9 @@ class ThreeRoomSeatAdapter(val onRoomItemClickListener: OnRoomItemClickListener)
 
     private var liveRoomUserListPop: LiveRoomUserListPop? = null
     fun showUserList(gender: String) {
-        // DialogUtils.showLoading()
         request({ agoraRxApi.getInviteList(roomDetailInfo?.roomId, gender, "0") },
             object : OnRequestResultListener<MutableList<UserDetailInfo>> {
                 override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
-                    // DialogUtils.dismissLoading()
                     val userList = data.data ?: return
                     if (CommonUtils.isPopShow(liveRoomUserListPop)) {
                         return
@@ -273,13 +273,8 @@ class ThreeRoomSeatAdapter(val onRoomItemClickListener: OnRoomItemClickListener)
                     liveRoomUserListPop = LiveRoomUserListPop.showDialog(
                         context,
                         userList,
-                        roomDetailInfo!!.ownerInfo!!
+                        roomDetailInfo!!
                     )
-                }
-
-                override fun onFail(code: Int?, msg: String?) {
-                    super.onFail(code, msg)
-                    // DialogUtils.dismissLoading()
                 }
             })
     }

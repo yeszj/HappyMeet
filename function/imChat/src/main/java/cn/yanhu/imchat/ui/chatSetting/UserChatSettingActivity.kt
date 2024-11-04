@@ -113,7 +113,7 @@ class UserChatSettingActivity : BaseActivity<ActivityUserChatSettingBinding, ImC
             RouteIntent.lunchPersonHomePage(chatUserId)
         }
         mBinding.tvReport.setOnSingleClickListener {
-            RouteIntent.lunchReportPage()
+            RouteIntent.lunchReportPage(chatUserId)
         }
     }
 

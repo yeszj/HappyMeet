@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomLeaveResponse
+import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.agora.bean.request.CreateRoomRequest
 import cn.yanhu.commonres.bean.RoomSeatInfo
@@ -100,5 +101,18 @@ class LiveRoomViewModel : BaseViewModel() {
 
     fun operateLeave(roomId: String, operateUserId: String,onRequestResultListener: OnRequestResultListener<String>) {
         request({ agoraRxApi.operateLeave(roomId, operateUserId) }, onRequestResultListener, false)
+    }
+
+    fun switchRoomType(roomId: String, roomType: String,onRequestResultListener: OnRequestResultListener<Boolean>) {
+        request({ agoraRxApi.switchRoomType(roomId, roomType) }, onRequestResultListener, true)
+    }
+
+    fun switchTypeConfirm(roomId: String, onRequestResultListener: OnRequestResultListener<Boolean>) {
+        request({ agoraRxApi.switchTypeConfirm(roomId) }, onRequestResultListener, true)
+    }
+
+    val roseRankListObservable = MutableLiveData<ResultState<UserReceiveRoseInfo>>()
+    fun getRoomRoseList(roomId: String) {
+        request({ agoraRxApi.getRoomRoseList(roomId) }, roseRankListObservable, false)
     }
 }

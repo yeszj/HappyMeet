@@ -48,7 +48,7 @@ class SeatUserOperatePop(
             onOperateUserListener.onAddFriend(userInfo)
         }
         mBinding.tvReport.setOnSingleClickListener {
-            RouteIntent.lunchReportPage()
+            RouteIntent.lunchReportPage(userInfo.userId)
         }
     }
 

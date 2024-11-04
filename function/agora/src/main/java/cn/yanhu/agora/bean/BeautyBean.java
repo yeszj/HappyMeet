@@ -1,20 +1,52 @@
 package cn.yanhu.agora.bean;
 
-import androidx.databinding.BaseObservable;
+
+import org.litepal.crud.LitePalSupport;
 
 
-public class BeautyBean extends BaseObservable {
 
-    private int icon;
+public class BeautyBean extends LitePalSupport {
+    private String type;
+    private long id;
+    private String icon;
+    private String checkIcon;
     private String name;
     private String key;
     private Integer value;
+    private String filterName;
 
-    public BeautyBean(int icon, String name, String key, Integer value) {
-        this.icon = icon;
-        this.name = name;
-        this.key = key;
-        this.value = value;
+
+    public String getFilterName() {
+        return filterName;
+    }
+
+    public void setFilterName(String filterName) {
+        this.filterName = filterName;
+    }
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getCheckIcon() {
+        return checkIcon;
+    }
+
+    public void setCheckIcon(String checkIcon) {
+        this.checkIcon = checkIcon;
     }
 
     public String getName() {
@@ -25,11 +57,11 @@ public class BeautyBean extends BaseObservable {
         this.name = name;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 
@@ -49,4 +81,6 @@ public class BeautyBean extends BaseObservable {
     public void setValue(Integer value) {
         this.value = value;
     }
+
+
 }

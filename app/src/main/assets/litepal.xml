@@ -2,7 +2,7 @@
 <litepal>
     <dbname value="sweetlove" />
 
-    <version value="19" />
+    <version value="26" />
 
     <!--
     	Define your models in the list with mapping tag, LitePal will
@@ -17,7 +17,8 @@
         <mapping class="com.hyphenate.easeui.domain.EaseEmojicon"/>
         <mapping class="cn.yanhu.commonres.bean.UserDetailInfo"/>
         <mapping class="cn.yanhu.imchat.bean.GroupUserInfo"/>
-        <mapping  class="cn.yanhu.agora.bean.AgoraSdkCacheInfo"/>
+        <mapping class="cn.yanhu.agora.bean.AgoraSdkCacheInfo"/>
+        <mapping class="cn.yanhu.agora.bean.BeautyBean"/>
     </list>
     <list>
     </list>

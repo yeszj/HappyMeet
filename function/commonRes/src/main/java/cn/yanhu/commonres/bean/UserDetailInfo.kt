@@ -10,7 +10,7 @@ import java.io.Serializable
  * created: 2024/2/6
  * desc:
  */
-open class UserDetailInfo : BaseUserInfo(),Serializable {
+open class UserDetailInfo : BaseUserInfo(), Serializable {
     var isMatchmaker = false ////是否是月老/红娘
     var banners: MutableList<BannerBean> = mutableListOf()
     var needUploadPortrait = false
@@ -18,20 +18,26 @@ open class UserDetailInfo : BaseUserInfo(),Serializable {
     var personInfo: MutableList<TagInfo> = mutableListOf()
     var friendCondition: MutableList<TagInfo> = mutableListOf()
     var guardInfo: GuardInfo? = null
-    var roomId:Int = 0
-    var roomType:Int = 0
-    var isAdmin:Boolean = false
+    var roomId: Int = 0
+    var roomType: Int = 0
+    var isAdmin: Boolean = false
     var thumbnail: List<String> = mutableListOf()
-    var basicTagInfo:MutableList<String> = mutableListOf()
-    var isFriend:Boolean = false
-    var needRoseNum:Int = 0
-    var colseVideo:Boolean = false
-    var colseMic:Boolean = false
-    var sameSex:Boolean = false
-    var seatNum:Int = 0
-    var roseNum:String = "0"
+    var basicTagInfo: MutableList<String> = mutableListOf()
+    var isFriend: Boolean = false
+    var needRoseNum: Int = 0
+    var colseVideo: Boolean = false
+    var colseMic: Boolean = false
+    var sameSex: Boolean = false
+    var seatNum: Int = 0
 
-    fun isBlinding():Boolean{
+    @Bindable
+    var roseNum: String = "0"
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.roseNum)
+        }
+
+    fun isBlinding(): Boolean {
         return RoomTypeManager.isBlinding(roomType)
     }
 
@@ -39,9 +45,8 @@ open class UserDetailInfo : BaseUserInfo(),Serializable {
     var coverImg: String = ""
         set(value) {
             field = value
-            notifyPropertyChanged(BR._all)
+            notifyPropertyChanged(BR.coverImg)
         }
-
 
 
     fun isShowRedStyle(): Boolean {

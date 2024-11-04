@@ -77,14 +77,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_8"
                 android:gravity="center"
-                android:text='@{seatInfo.seatRoseNum+"玫瑰一次"}'
+                android:text='@{seatInfo.seatRoseNum+"玫瑰/次"}'
                 android:textColor="@color/whiteAlpha40"
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium"
                 app:layout_constraintEnd_toEndOf="@+id/tv_joinSeat"
                 app:layout_constraintStart_toStartOf="@+id/tv_joinSeat"
                 app:layout_constraintTop_toBottomOf="@+id/tv_joinSeat"
-                tools:text="20玫瑰一次" />
+                tools:text="20玫瑰/次" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -197,6 +197,61 @@
                 tools:src="@drawable/icon_voice_on_fill"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_rank3"
+                android:layout_width="@dimen/dp_24"
+                tools:src="@drawable/ease_default_avatar"
+                app:layout_constraintTop_toTopOf="@+id/iv_rank2"
+                app:riv_oval="true"
+                imageUrl='@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>2)?seatInfo.roomUserSeatInfo.userList.get(2).portrait:""}'
+                android:visibility="@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>2)?View.VISIBLE:View.INVISIBLE,default = invisible}"
+                android:scaleType="centerCrop"
+                app:riv_border_color="@color/white"
+                tools:visibility="visible"
+                app:riv_border_width="@dimen/dp_0_5"
+                android:layout_marginStart="@dimen/dp_m_5"
+                app:layout_constraintStart_toEndOf="@+id/iv_rank2"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_rank2"
+                android:layout_height="@dimen/dp_24"/>
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_rank2"
+                android:layout_width="@dimen/dp_24"
+                tools:src="@drawable/ease_default_avatar"
+                android:layout_marginStart="@dimen/dp_m_5"
+                app:riv_oval="true"
+                imageUrl='@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>1)?seatInfo.roomUserSeatInfo.userList.get(1).portrait:""}'
+                android:visibility="@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>1)?View.VISIBLE:View.INVISIBLE,default = invisible}"
+                android:scaleType="centerCrop"
+                tools:visibility="visible"
+                app:riv_border_color="@color/white"
+                app:riv_border_width="@dimen/dp_0_5"
+                app:layout_constraintTop_toTopOf="@+id/iv_rank1"
+                app:layout_constraintStart_toEndOf="@+id/iv_rank1"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_rank1"
+                android:layout_height="@dimen/dp_24"/>
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_rank1"
+                android:layout_width="@dimen/dp_24"
+                tools:src="@drawable/avatar_male_normal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_oval="true"
+                imageUrl='@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>0)?seatInfo.roomUserSeatInfo.userList.get(0).portrait:""}'
+                android:visibility="@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>0)?View.VISIBLE:View.INVISIBLE,default = invisible}"
+                android:scaleType="centerCrop"
+                tools:visibility="visible"
+                app:riv_border_color="@color/white"
+                app:riv_border_width="@dimen/dp_0_5"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginStart="@dimen/dp_4"
+                android:layout_height="@dimen/dp_24"/>
+            <View
+                android:id="@+id/viewRank"
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="@+id/iv_rank1"
+                app:layout_constraintEnd_toEndOf="@id/iv_rank3"
+                app:layout_constraintTop_toTopOf="@+id/iv_rank1"
+                android:layout_height="@dimen/dp_20"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

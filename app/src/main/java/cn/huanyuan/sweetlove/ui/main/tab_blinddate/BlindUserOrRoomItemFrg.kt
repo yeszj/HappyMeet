@@ -9,12 +9,14 @@ import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
+import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.loading.RoomLoadingCallBack
 import cn.yanhu.commonres.router.RouteIntent
 import cn.zj.netrequest.ext.parseState
 import com.chad.library.adapter4.util.setOnDebouncedItemClick
+import com.hyphenate.chat.EMMessage
 import com.jeremyliao.liveeventbus.LiveEventBus
 
 /**
@@ -73,6 +75,14 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
         LiveEventBus.get<String>(EventBusKeyConfig.CLOSELIVEROOM).observe(this) {
             page = 1
             requestData()
+        }
+        LiveEventBus.get<EMMessage>(EventBusKeyConfig.RECEIVE_CMD_MSG).observe(this){
+            val source = it.getIntAttribute("source", -1)
+            if (source == ChatConstant.ACTION_MSG_SWITCH_TYPE_CONFIRM || source == ChatConstant.ACTION_MSG_SWITCH_TYPE_PLAZA){
+                //有房主将房间切换位专属或者大厅 刷新页面
+                page = 1
+                requestData()
+            }
         }
     }
 

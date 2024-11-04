@@ -160,7 +160,16 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_16"
                     android:textStyle="bold" />
-
+                <TextView
+                    android:id="@+id/beauty_set_filter"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="滤镜"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

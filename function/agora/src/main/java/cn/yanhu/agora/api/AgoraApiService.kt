@@ -5,6 +5,7 @@ import cn.yanhu.agora.bean.ConfigSdkVersion
 import cn.yanhu.agora.bean.EnterCheckResponse
 import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomLeaveResponse
+import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.bean.request.CreateRoomRequest
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
@@ -26,8 +27,7 @@ interface AgoraApiService {
 
     @GET("app/v1/room/list")
     suspend fun getRoomList(
-        @Query("type") type: Int,
-        @Query("page") page: Int
+        @Query("type") type: Int, @Query("page") page: Int
     ): BaseBean<RoomListResponse>
 
     @GET("app/v1/agora/getAgoraToken")
@@ -66,8 +66,7 @@ interface AgoraApiService {
 
     @GET("app/v1/config/agoraConfigInf")
     suspend fun agoraConfigInf(
-        @Query("type") type: Int,
-        @Query("version") version: Int
+        @Query("type") type: Int, @Query("version") version: Int
     ): BaseBean<ConfigSdkVersion>
 
     @GET("app/v1/chat/call/checkCallBalance")
@@ -99,8 +98,7 @@ interface AgoraApiService {
      */
     @POST("/app/v1/room/operateLeave")
     suspend fun operateLeave(
-        @Query("roomId") roomId: String,
-        @Query("operatedUserId") operatedUserId: String
+        @Query("roomId") roomId: String, @Query("operatedUserId") operatedUserId: String
     ): BaseBean<String>
 
     /**
@@ -108,9 +106,9 @@ interface AgoraApiService {
      */
     @POST("/app/v1/room/leave")
     suspend fun roomLeave(
-        @Query("roomId") roomId: String,
-        @Query("uuid") uuid: String
+        @Query("roomId") roomId: String, @Query("uuid") uuid: String
     ): BaseBean<RoomLeaveResponse>
+
     /**
      * 用户上麦/下麦
      */
@@ -133,8 +131,7 @@ interface AgoraApiService {
 
     @POST("/app/v1/room/autoSeat")
     suspend fun autoSeat(
-        @Query("roomId") roomId: String,
-        @Query("status") status: String
+        @Query("roomId") roomId: String, @Query("status") status: String
     ): BaseBean<String>
 
     /**
@@ -164,22 +161,38 @@ interface AgoraApiService {
         @Query("type") type: String?
     ): BaseBean<MutableList<UserDetailInfo>>
 
+    @GET("app/v1/room/onlineUsers")
+    suspend fun getOnlineUserList(
+        @Query("roomId") roomId: String?, @Query("page") page: Int
+    ): BaseBean<RoomOnlineResponse>
+
     @GET("app/v1/room/getRoomUserRoseList")
     suspend fun getRoomUserRoseList(
         @Query("roomId") roomId: String?,
         @Query("seatUserId") operatedUserId: String?,
     ): BaseBean<UserReceiveRoseInfo>
 
+    @GET("app/v1/room/getRoomRoseList")
+    suspend fun getRoomRoseList(
+        @Query("roomId") roomId: String
+    ): BaseBean<UserReceiveRoseInfo>
 
     /**
      * 管理员关闭房间
      */
     @POST("/app/v1/room/admin/closeRoom")
     suspend fun closeRoom(
-        @Query("roomId") roomId: Int,
-        @Query("reason") reason: String?,
-        @Query("uuid") uuid: String?
+        @Query("roomId") roomId: Int, @Query("reason") reason: String?, @Query("uuid") uuid: String?
     ): BaseBean<String>
 
+    /**
+     * 切换房间类型
+     */
+    @POST("/app/v1/room/switchType")
+    suspend fun switchRoomType(
+        @Query("roomId") roomId: String, @Query("roomType") roomType: String
+    ): BaseBean<Boolean>
 
+    @POST("/app/v1/room/switchTypeConfirm")
+    suspend fun switchTypeConfirm(@Query("roomId") roomId: String): BaseBean<Boolean>
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_155">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_32"
+            android:orientation="horizontal"
+            tools:itemCount="5"
+            android:paddingEnd="@dimen/dp_8"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toStartOf="@+id/tv_onlineNum"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/dp_23"
+            tools:listitem="@layout/adapter_live_room_rose_rank_item" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_onlineNum"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_marginTop="@dimen/dp_23"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            android:background="@drawable/circle_dot_white"
+            android:backgroundTint="@color/whiteColorAlpha50"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

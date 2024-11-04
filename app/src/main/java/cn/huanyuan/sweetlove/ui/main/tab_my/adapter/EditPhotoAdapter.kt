@@ -46,7 +46,11 @@ class EditPhotoAdapter(private var isShowDelete:Boolean = false) :
                 }else{
                     ivDelete.visibility = View.INVISIBLE
                 }
-                GlideUtils.load(context,ImageThumbUtils.getThumbUrl(item.url),ivPhoto, placeholderId = -1)
+                if (item.isNetUrl()){
+                    GlideUtils.load(context,ImageThumbUtils.getThumbUrl(item.url),ivPhoto, placeholderId = -1)
+                }else{
+                    GlideUtils.load(context,item.url,ivPhoto, placeholderId = -1)
+                }
                 if (item.isUploadFinish()){
                     tvProgress.visibility = View.INVISIBLE
                     if (item.isVideo){

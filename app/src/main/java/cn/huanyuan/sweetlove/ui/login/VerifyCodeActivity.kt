@@ -15,6 +15,7 @@ import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.SimpleTextWatcher
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.zj.netrequest.ext.parseState
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -56,11 +57,18 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
         mViewModel.sendVerifyCode()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
         mViewModel.codeLivedata.observe(this){ it ->
             parseState(it,{
                 showToast(it)
+                if (it=="白名单用户"){
+                    mBinding.etCode.setText("2024")
+                    startPhoneLogin()
+                }else{
+                    KeyboardUtils.showSoftInput(mBinding.etCode)
+                }
                 startCodeTimeDown()
             })
         }

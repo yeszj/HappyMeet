@@ -12,6 +12,9 @@ import com.lxj.xpopup.animator.TranslateAnimator
 import com.lxj.xpopup.enums.PopupAnimation
 import com.lxj.xpopup.impl.FullScreenPopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
+import com.opensource.svgaplayer.SVGACallback
+import com.opensource.svgaplayer.SVGAParser
+import com.opensource.svgaplayer.SVGAVideoEntity
 
 /**
  * @author: zhengjun
@@ -28,7 +31,24 @@ class SvgaImageAnimPop(context: Context, val url: String) : FullScreenPopupView(
     override fun onCreate() {
         super.onCreate()
         mBinding = PopSvgaImageAnimBinding.bind(popupImplView)
-        SVGAUtils.loadSVGAAnim(mBinding.chatSvga, url)
+        SVGAUtils.loadSVGAAnim(mBinding.chatSvga, url,object : SVGAParser.ParseCompletion{
+            override fun onComplete(videoItem: SVGAVideoEntity) {
+            }
+            override fun onError() {
+                dismiss()
+            }
+        })
+        mBinding.chatSvga.callback = object : SVGACallback{
+            override fun onFinished() {
+                dismiss()
+            }
+            override fun onPause() {
+            }
+            override fun onRepeat() {
+            }
+            override fun onStep(frame: Int, percentage: Double) {
+            }
+        }
         mBinding.chatSvga.setOnSingleClickListener { dismiss() }
     }
 

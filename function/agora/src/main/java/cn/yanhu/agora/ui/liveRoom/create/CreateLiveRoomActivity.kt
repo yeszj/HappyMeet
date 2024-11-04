@@ -1,5 +1,6 @@
 package cn.yanhu.agora.ui.liveRoom.create
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.view.View
@@ -27,6 +28,7 @@ import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
+import cn.yanhu.commonres.utils.PermissionXUtils
 import cn.zj.netrequest.ext.parseState
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ActivityUtils
@@ -56,10 +58,6 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
         mBinding.rvType.adapter = roomTypeAdapter
         mBinding.isFree = true
         roomTypeAdapter.setOnItemClickListener { _, _, position ->
-            if (position!=0){
-                showToast("该房间类型暂未开放，敬请期待")
-                return@setOnItemClickListener
-            }
             roomTypeAdapter.setSelectPosition(
                 position
             )
@@ -164,7 +162,25 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
             showToast("请输入房间欢迎语")
             return
         }
-        mViewModel.createRoom(createRoomRequest)
+        checkPermission()
+    }
+
+    private fun checkPermission() {
+        val arrayList = ArrayList<String>()
+        arrayList.add(Manifest.permission.CAMERA)
+        arrayList.add(Manifest.permission.RECORD_AUDIO)
+        PermissionXUtils.checkPermission(mContext,
+            arrayList,
+            "为了便于使用上麦、实名认证等服务，请先同意麦克风、声音、摄像头权限",
+            "您拒绝授权相关权限，无法使用部分功能",
+            object : PermissionXUtils.PermissionListener {
+                override fun onSuccess() {
+                    mViewModel.createRoom(createRoomRequest)
+                }
+
+                override fun onFail() {
+                }
+            })
     }
 
     private fun showBuyLiveTimePop() {

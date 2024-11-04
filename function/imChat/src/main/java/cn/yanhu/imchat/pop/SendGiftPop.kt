@@ -13,7 +13,6 @@ import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
-import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.imchat.R
 import cn.yanhu.imchat.adapter.SendGiftItemAdapter
 import cn.yanhu.imchat.api.imChatRxApi
@@ -66,7 +65,7 @@ class SendGiftPop(
             ApplicationProxy.instance.showRechargePop(context, true)
         }
         mBinding.tvUserDetail.setOnSingleClickListener {
-            RouteIntent.lunchPersonHomePage(sendUserInfo.userId)
+            onSendGiftListener.onShowUserInfo(sendUserInfo.userId)
         }
         LiveEventBus.get<Boolean>(LiveDataEventManager.PAY_RESULT).observe(context) {
             if (it) {
@@ -152,6 +151,7 @@ class SendGiftPop(
 
     interface OnSendGiftListener {
         fun onSendGift(item: GiftInfo)
+        fun onShowUserInfo(userId:String){}
     }
 
     companion object {

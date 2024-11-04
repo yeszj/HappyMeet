@@ -33,7 +33,7 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
     private boolean isSelect;
 
     private String avatarFrame;
-    private int level;
+    private Integer level;
 
     private String leveIcon;
 
@@ -41,10 +41,13 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
 
     private Integer onlineStatus;
 
-    private int status;
+    private Integer status;
 
 
-    public int getStatus() {
+    public Integer getStatus() {
+        if (status == null) {
+            return 0;
+        }
         return status;
     }
 
@@ -52,7 +55,7 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
         this.status = status;
     }
 
-    public boolean isOnline(){
+    public boolean isOnline() {
         return onlineStatus == 0;
     }
 
@@ -72,7 +75,10 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
         this.description = description;
     }
 
-    public int getLevel() {
+    public Integer getLevel() {
+        if (level == null) {
+            return 0;
+        }
         return level;
     }
 
@@ -105,8 +111,9 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
     }
 
     public String getStrUserInfo() {
-        return (gender == 1 ? "男" : "女") +" । "+ age + "岁" + (TextUtils.isEmpty(province) ? "" : " । " + province) + (TextUtils.isEmpty(hometown) ? "" : " । 老家" + hometown);
+        return (gender == 1 ? "男" : "女") + " । " + age + "岁" + (TextUtils.isEmpty(province) ? "" : " । " + province) + (TextUtils.isEmpty(hometown) ? "" : " । 老家" + hometown);
     }
+
     public String getStrNoGenderInfo() {
         return age + "岁" + (TextUtils.isEmpty(province) ? "" : " । " + province) + (TextUtils.isEmpty(hometown) ? "" : " । 老家" + hometown);
     }
@@ -194,7 +201,9 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
         this.province = province;
         notifyPropertyChanged(BR.province);
     }
+
     private transient PropertyChangeRegistry mCallbacks;
+
     @Override
     public void addOnPropertyChangedCallback(@NonNull OnPropertyChangedCallback callback) {
         synchronized (this) {

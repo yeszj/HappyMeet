@@ -39,9 +39,9 @@ class RoomSeatInfo : BaseObservable(), Serializable {
     var ifLeave: Boolean = false
         set(value) {
             field = value
-            notifyPropertyChanged(BR._all)
+            notifyPropertyChanged(BR.ifLeave)
         }
     var seatRoseNum: Int = 0
     var seatUserRose:Boolean = false
-    var roomUserSeatInfo: UserDetailInfo? = null
+    var roomUserSeatInfo: SeatUserInfo? = null
 }

@@ -405,7 +405,9 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                 }
 
                 override fun onSuccess(conversationList: MutableList<EaseConversationInfo>) {
-                    conversationListLayout.setData(conversationList)
+                    val distinctBy =
+                        conversationList.distinctBy { (it.info as EMConversation).conversationId() }
+                    conversationListLayout.setData(distinctBy)
                     ConfigParamsManager.HAS_LOAD_CHAT = true
                 }
             }

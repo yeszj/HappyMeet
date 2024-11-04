@@ -83,15 +83,15 @@
 
             <ImageView
                 android:id="@+id/btn_set_mode_voice"
-                android:layout_width="@dimen/dp_32"
-                android:layout_height="@dimen/dp_32"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
                 android:layout_marginStart="@dimen/dp_10"
                 android:src="@drawable/ic_im_chat_mic" />
 
             <ImageView
                 android:id="@+id/btn_set_mode_keyboard"
-                android:layout_width="@dimen/dp_32"
-                android:layout_height="@dimen/dp_32"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
                 android:layout_marginStart="@dimen/dp_10"
                 android:src="@drawable/icon_keyboard"
                 android:visibility="gone" />

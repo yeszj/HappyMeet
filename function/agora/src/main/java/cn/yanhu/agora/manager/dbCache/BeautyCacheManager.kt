@@ -1,4 +1,4 @@
-package cn.yanhu.agora.manager
+package cn.yanhu.agora.manager.dbCache
 
 import android.text.TextUtils
 import cn.yanhu.agora.bean.BeautyFileCacheInfo

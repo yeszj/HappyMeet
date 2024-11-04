@@ -11,18 +11,18 @@ public class AgoraSdkCacheInfo extends LitePalSupport {
     private String fileSize;
     private long id;
 
-    private int version;
+    private Integer version;
 
-    public AgoraSdkCacheInfo(String fileSize, int version) {
+    public AgoraSdkCacheInfo(String fileSize, Integer version) {
         this.fileSize = fileSize;
         this.version = version;
     }
 
-    public int getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 
@@ -38,7 +38,7 @@ public class AgoraSdkCacheInfo extends LitePalSupport {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 }

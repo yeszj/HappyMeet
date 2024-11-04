@@ -6,7 +6,7 @@ import android.view.View
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.ActivityErrorLogPostBinding
 import cn.huanyuan.sweetlove.func.dialog.ErrorLogTimeSelectPop
-import cn.huanyuan.sweetlove.ui.system.adapter.ComplaintTypeAdapter
+import cn.huanyuan.sweetlove.ui.system.adapter.ErrorTypeAdapter
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -25,7 +25,7 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
     SystemViewModel::class.java
 ) {
 
-    private val complaintTypeAdapter by lazy { ComplaintTypeAdapter() }
+    private val complaintTypeAdapter by lazy { ErrorTypeAdapter() }
 
     override fun initData() {
         setStatusBarStyle(false)
@@ -36,7 +36,7 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
         complaintTypeAdapter.setSelectPosition(0)
         complaintTypeAdapter.setOnItemClickListener { _, _, position ->
             val item = complaintTypeAdapter.getItem(position)
-            mViewModel.complaintInfo.value?.complaintType = item!!
+            mViewModel.complaintInfo.value?.typeIds = item!!
             complaintTypeAdapter.setSelectPosition(position)
         }
         val build = Spans.builder().text(

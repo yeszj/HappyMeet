@@ -67,6 +67,20 @@ object EmMsgManager {
     }
 
     @JvmStatic
+    fun sendAgreeSeatApplyMsg(userId:String,nickName:String,roomId:String,seatId:String){
+        val map = HashMap<String, Any>()
+        map["ownerNickname"] = nickName
+        map["roomId"] = roomId
+        map["seatId"] =seatId
+        sendCmdMessagePeople(
+            userId,
+            ChatConstant.ACTION_MSG_APPLY_SET_UP_SUCCESS,
+            map,
+
+            )
+    }
+
+    @JvmStatic
     fun sendCmdMessagePeople(
         toUid: String,
         action: Int,

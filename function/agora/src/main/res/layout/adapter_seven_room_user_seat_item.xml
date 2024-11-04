@@ -21,21 +21,32 @@
         android:layout_height="@dimen/dp_142"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
-
-        <SurfaceView
-            android:id="@+id/surfaceView"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_avatarBg"
+            maskRadius="@{25}"
+            maskSampling="@{2}"
+            maskUrl="@{seatInfo.roomUserSeatInfo.portrait}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible" />
-
-
+            android:scaleType="centerCrop"
+            tools:ignore="MissingConstraints" />
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_video_sf"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{seatInfo.ifLeave?View.INVISIBLE:View.VISIBLE}"
+            tools:visibility="gone" />
+
+
+        <LinearLayout
             android:id="@+id/vg_emptySeat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
             android:visibility="@{seatInfo.roomUserSeatInfo==null?View.VISIBLE:View.INVISIBLE}"
             tools:visibility="invisible">
+
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_seat"
@@ -48,31 +59,35 @@
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:id="@+id/tv_joinSeat"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_30"
+                android:layout_height="@dimen/dp_26"
                 android:background="@drawable/bg_seat_invite"
                 android:gravity="center"
                 android:paddingHorizontal="@dimen/dp_12"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_15"
-                app:fontType="@string/fontMedium"
-                app:layout_constraintTop_toBottomOf="@+id/iv_seat"
-                tools:text="邀请男嘉宾" />
-
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:id="@+id/tv_joinSeatRoseNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
-                android:gravity="center"
-                android:text='@{seatInfo.seatRoseNum+"玫瑰一次"}'
-                android:textColor="@color/whiteAlpha40"
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium"
-                app:layout_constraintEnd_toEndOf="@+id/tv_joinSeat"
-                app:layout_constraintStart_toStartOf="@+id/tv_joinSeat"
-                app:layout_constraintTop_toBottomOf="@+id/tv_joinSeat"
-                tools:text="20玫瑰一次" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@+id/iv_seat"
+                tools:text="邀请上麦" />
+
+        </LinearLayout>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="@dimen/dp_16"
+            android:backgroundTint="@color/blackAlpha80"
+            tools:text="4"
+            tools:visibility="invisible"
+            android:text="@{String.valueOf(seatInfo.id-1)}"
+            android:visibility="@{seatInfo.roomUserSeatInfo==null?View.VISIBLE:View.INVISIBLE}"
+            android:layout_marginTop="@dimen/dp_7"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/white_right_corner_10"
+            android:layout_height="@dimen/dp_16"/>
+
+
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vg_userInfo"
@@ -85,17 +100,8 @@
                 android:id="@+id/vg_userStatusChange"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{!seatInfo.videoUser|| seatInfo.ifLeave?View.VISIBLE:View.INVISIBLE}">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_avatarBg"
-                    maskRadius="@{25}"
-                    maskSampling="@{2}"
-                    maskUrl="@{seatInfo.roomUserSeatInfo.portrait}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    tools:ignore="MissingConstraints" />
+                tools:visibility="invisible"
+                android:visibility="@{seatInfo.ifLeave?View.VISIBLE:View.INVISIBLE}">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="match_parent"
@@ -108,7 +114,7 @@
                     style="@style/common_white_shadow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='@{seatInfo.ifLeave?"暂时离开":"摄像头已关闭"}'
+                    android:text="暂时离开"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_16"
                     app:fontType="@string/fontMedium"
@@ -152,7 +158,7 @@
                 style="@style/common_white_shadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{seatInfo.roomUserSeatInfo.strNoGenderInfo}"
+                android:text="@{seatInfo.roomUserSeatInfo.roseNum}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_10"
                 android:gravity="center_vertical"
@@ -163,6 +169,7 @@
                 tools:text="122" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_sendRose"
                 android:layout_width="@dimen/dp_28"
                 android:layout_height="@dimen/dp_28"
                 android:layout_margin="@dimen/dp_4"
@@ -174,6 +181,7 @@
                 android:id="@+id/iv_videoStatus"
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
+                android:visibility="invisible"
                 android:layout_marginEnd="@dimen/dp_6"
                 android:layout_marginBottom="@dimen/dp_4"
                 android:src="@drawable/icon_video_on_fill"
@@ -186,9 +194,68 @@
                 android:layout_height="@dimen/dp_20"
                 android:layout_marginEnd="@dimen/dp_6"
                 android:layout_marginBottom="@dimen/dp_6"
-                android:src="@drawable/icon_voice_on_fill"
+                tools:src="@drawable/icon_voice_on_fill"
+                android:src="@{seatInfo.mikeUser?@drawable/icon_voice_on_fill:@drawable/icon_micro_off}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_rank3"
+                android:layout_width="@dimen/dp_20"
+                tools:src="@drawable/ease_default_avatar"
+                app:layout_constraintTop_toTopOf="@+id/iv_rank2"
+                app:riv_oval="true"
+                imageUrl='@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>2)?seatInfo.roomUserSeatInfo.userList.get(2).portrait:""}'
+                android:visibility="@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>2)?View.VISIBLE:View.INVISIBLE,default = invisible}"
+                android:scaleType="centerCrop"
+                app:riv_border_color="@color/white"
+                tools:visibility="visible"
+                app:riv_border_width="@dimen/dp_0_5"
+                android:layout_marginStart="@dimen/dp_m_5"
+                app:layout_constraintStart_toEndOf="@+id/iv_rank2"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_rank2"
+                android:layout_height="@dimen/dp_20"/>
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_rank2"
+                android:layout_width="@dimen/dp_20"
+                tools:src="@drawable/ease_default_avatar"
+                android:layout_marginStart="@dimen/dp_m_5"
+                app:riv_oval="true"
+                imageUrl='@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>1)?seatInfo.roomUserSeatInfo.userList.get(1).portrait:""}'
+                android:visibility="@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>1)?View.VISIBLE:View.INVISIBLE,default = invisible}"
+                android:scaleType="centerCrop"
+                tools:visibility="visible"
+                app:riv_border_color="@color/white"
+                app:riv_border_width="@dimen/dp_0_5"
+                app:layout_constraintTop_toTopOf="@+id/iv_rank1"
+                app:layout_constraintStart_toEndOf="@+id/iv_rank1"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_rank1"
+                android:layout_height="@dimen/dp_20"/>
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_rank1"
+                android:layout_width="@dimen/dp_20"
+                tools:src="@drawable/avatar_male_normal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_oval="true"
+                imageUrl='@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>0)?seatInfo.roomUserSeatInfo.userList.get(0).portrait:""}'
+                android:visibility="@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>0)?View.VISIBLE:View.INVISIBLE,default = invisible}"
+                android:scaleType="centerCrop"
+                tools:visibility="visible"
+                app:riv_border_color="@color/white"
+                app:riv_border_width="@dimen/dp_0_5"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginStart="@dimen/dp_4"
+                android:layout_height="@dimen/dp_20"/>
+            <View
+                android:id="@+id/viewRank"
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="@+id/iv_rank1"
+                app:layout_constraintEnd_toEndOf="@id/iv_rank3"
+                app:layout_constraintTop_toTopOf="@+id/iv_rank1"
+                android:layout_height="@dimen/dp_20"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

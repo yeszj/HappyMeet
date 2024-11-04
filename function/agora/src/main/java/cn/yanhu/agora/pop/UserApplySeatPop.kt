@@ -5,7 +5,6 @@ import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.PopUserApplySeatBinding
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
-import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.imchat.manager.EmMsgManager
 import com.blankj.utilcode.util.VibrateUtils
 import com.hyphenate.chat.EMMessage
@@ -35,16 +34,7 @@ class UserApplySeatPop(context: Context, val it: EMMessage,val roomID:String) : 
         GlideUtils.load(context, portrait, mBiding.ivAvatar)
         mBiding.tvNickName.text = fromNickName
         mBiding.tvAgree.setOnSingleClickListener {
-            val map = HashMap<String, Any>()
-            map["ownerNickname"] = fromNickName
-            map["roomId"] = roomID
-            map["seatId"] =seatId
-            EmMsgManager.sendCmdMessagePeople(
-                fromUid,
-                ChatConstant.ACTION_MSG_APPLY_SET_UP_SUCCESS,
-                map,
-
-            )
+            EmMsgManager.sendAgreeSeatApplyMsg(fromUid,fromNickName,roomID,seatId)
             dismiss()
         }
         mBiding.tvRefuse.setOnSingleClickListener {

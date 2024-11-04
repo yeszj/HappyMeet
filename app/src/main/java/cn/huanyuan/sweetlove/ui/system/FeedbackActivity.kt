@@ -14,13 +14,14 @@ import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.EditPhotoInfo
+import cn.yanhu.commonres.bean.ReportConfigInfo
+import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.ImageSelectManager
 import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.upload.UploadFileClient
 import cn.zj.netrequest.upload.UploadFileProgressListener
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
@@ -31,7 +32,7 @@ import com.luck.picture.lib.interfaces.OnResultCallbackListener
  * created: 2024/3/12
  * desc:投诉与反馈
  */
-@Route(path =  RouterPath.ROUTER_REPORT)
+@Route(path = RouterPath.ROUTER_REPORT)
 class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
     R.layout.activity_feedback,
     SystemViewModel::class.java
@@ -45,36 +46,57 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
 
     override fun initData() {
         setStatusBarStyle(false)
-        mViewModel.complaintInfo.value = ComplaintInfo()
+        val userId = intent.getStringExtra(IntentKeyConfig.ID)
+        val complaintInfo = ComplaintInfo()
+        if (!TextUtils.isEmpty(userId)){
+            complaintInfo.userId = userId.toString()
+        }
+        mViewModel.complaintInfo.value = complaintInfo
         mBinding.complaintInfo = mViewModel.complaintInfo.value
         initEditAdapter()
         mBinding.rvType.adapter = complaintTypeAdapter
-        val stringArray =
-            StringUtils.getStringArray(cn.yanhu.commonres.R.array.complaint_type)
-        complaintTypeAdapter.submitList(stringArray.toMutableList())
         complaintTypeAdapter.setOnItemClickListener { _, _, position ->
-            val item = complaintTypeAdapter.getItem(position)
-            mViewModel.complaintInfo.value?.complaintType = item!!
             complaintTypeAdapter.setSelectPosition(position)
         }
+        requestData()
     }
+
+    override fun requestData() {
+        super.requestData()
+        mViewModel.getReportConfigs()
+    }
+
 
     override fun initListener() {
         super.initListener()
         mBinding.btnCommit.setOnSingleClickListener {
+            val typeIdList = mutableListOf<String>()
+            complaintTypeAdapter.items.forEach {
+                if (it.select) {
+                    typeIdList.add(it.id.toString())
+                }
+            }
+            mViewModel.complaintInfo.value?.typeIds = typeIdList.joinToString(",")
             val complaintInfo = mViewModel.complaintInfo.value
-            if (TextUtils.isEmpty(complaintInfo?.complaintType)) {
+            if (TextUtils.isEmpty(complaintInfo?.typeIds)) {
                 showToast("请选择违规类型")
-            } else if (TextUtils.isEmpty(complaintInfo?.complaintUserId)) {
+            } else if (TextUtils.isEmpty(complaintInfo?.userId)) {
                 showToast("请输入被投诉人ID")
                 mBinding.etId.setShakeAnimation()
-            } else if (TextUtils.isEmpty(complaintInfo?.complaintReason)) {
+            } else if (TextUtils.isEmpty(complaintInfo?.description)) {
                 showToast("请输入投诉原因")
                 mBinding.etReason.setShakeAnimation()
-            } else if (complaintInfo?.complaintReason!!.length < 5) {
+            } else if (complaintInfo?.description!!.length < 5) {
                 showToast("投诉原因至少5个字")
                 mBinding.etReason.setShakeAnimation()
             } else {
+                val images = mutableListOf<String>()
+                editPhotoAdapter.items.forEach {
+                    if (it.isNetUrl()) {
+                        images.add(it.url)
+                    }
+                }
+                mViewModel.complaintInfo.value?.images = images.joinToString(",")
                 mViewModel.complaintUser()
             }
         }
@@ -82,6 +104,15 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
 
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
+        mViewModel.reportConfigObservable.observe(this) { it ->
+            parseState(it, { it ->
+                val list = mutableListOf<ReportConfigInfo.ConfigInfo>()
+                it.forEach {
+                    list.addAll(it.list)
+                }
+                complaintTypeAdapter.submitList(list)
+            })
+        }
         mViewModel.complaintResultObservable.observe(this) {
             parseState(it, {
                 showToast("提交成功")
@@ -195,12 +226,9 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
                         editPhotoInfo.progress = 100
                         val positionByItem = editPhotoAdapter.getPositionByItem(editPhotoInfo.url)
                         if (positionByItem != -1) {
+                            editPhotoInfo.url = url
                             editPhotoAdapter.notifyItemChanged(positionByItem)
                         }
-                        ThreadUtils.getMainHandler().postDelayed({
-                            editPhotoInfo.url = url
-                            mViewModel.complaintInfo.value?.picList?.add(url)
-                        }, 150)
                     }
                 }
 

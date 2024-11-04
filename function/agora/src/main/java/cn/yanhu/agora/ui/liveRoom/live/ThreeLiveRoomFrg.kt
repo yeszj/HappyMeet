@@ -1,15 +1,24 @@
 package cn.yanhu.agora.ui.liveRoom.live
 
+import android.view.LayoutInflater
 import android.view.View
+import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.adapter.liveRoom.ThreeRoomSeatAdapter
-import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
-import cn.yanhu.agora.miniwindow.MiniWindowManager
+import cn.yanhu.agora.bean.RoomOnlineResponse
+import cn.yanhu.agora.databinding.ViewThreeRoomTopViewBinding
+import cn.yanhu.baselib.R
+import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.DialogUtils
+import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.bean.RoomSeatInfo
+import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.manager.AppCacheManager
-import com.blankj.utilcode.util.ThreadUtils
+import cn.yanhu.imchat.manager.EmMsgManager
+import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.status.BaseBean
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.yhao.floatwindow.PermissionListener
 
 /**
  * @author: zhengjun
@@ -17,174 +26,155 @@ import com.yhao.floatwindow.PermissionListener
  * desc:
  */
 class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
-    private val seatUserAdapter by lazy {
-        ThreeRoomSeatAdapter(object : ThreeRoomSeatAdapter.OnRoomItemClickListener {
-            override fun onClickRose(roomSeatInfo: RoomSeatInfo) {
-                roomSeatInfo.roomUserSeatInfo?.apply {
-                    showSendGiftPop(this)
-                }
-            }
-        })
-    }
-
     override fun initData() {
+        seatUserAdapter =
+            ThreeRoomSeatAdapter()
+        addTopTitleView()
         super.initData()
         mBinding.rvSeat.adapter = seatUserAdapter
-        val childItemClickListener =
-            object : BaseQuickAdapter.OnItemChildClickListener<RoomSeatInfo> {
-                override fun onItemClick(
-                    adapter: BaseQuickAdapter<RoomSeatInfo, *>,
-                    view: View,
-                    position: Int
-                ) {
-                    val item = seatUserAdapter.getItem(position) ?: return
+        if (isOwner){
+            topTitleBinding.tvOnlineNum.visibility = View.VISIBLE
+        }else{
+            topTitleBinding.tvOnlineNum.visibility = View.INVISIBLE
+        }
+    }
 
-                    when (view.id) {
-                        cn.yanhu.agora.R.id.iv_voiceStatus -> {
-                            //开关麦
-                            val roomUserSeatInfo = item.roomUserSeatInfo ?: return
-                            if (localUserId.toString() == roomUserSeatInfo.userId) {
-                                switchMikeAlert(!item.mikeUser, item.id)
-                            }
-                        }
+    private lateinit var topTitleBinding: ViewThreeRoomTopViewBinding
+    private fun addTopTitleView(){
+        val rankView =
+            LayoutInflater.from(mContext).inflate(cn.yanhu.agora.R.layout.view_three_room_top_view, null)
+        topTitleBinding = DataBindingUtil.bind(rankView)!!
+        topTitleBinding.tvOnlineNum.setOnSingleClickListener {
+            showOnlineUserList()
+        }
+        topTitleBinding.ivExit.setOnSingleClickListener {
+            showFloatWindow(1)
+        }
+        mBinding.flTopView.addView(rankView)
+    }
 
-                        cn.yanhu.agora.R.id.vg_parent, cn.yanhu.agora.R.id.anchorSeatInfo -> {
-                            val roomUserSeatInfo = item.roomUserSeatInfo
-                            if (roomUserSeatInfo == null) {
-                                if (isOwner) {
-                                    //邀请上麦弹框
-                                    seatUserAdapter.showUserList(if (item.id == 2) "1" else "2")
-                                } else {
-                                    //上麦
-                                    if (AppCacheManager.isMan()) {
-                                        if (position == 1) {
-                                            userSetSeat(if (roomSourceBean.autoSeat) SEAT_TYPE_AUTO else SEAT_TYPE_APPLY)
-                                        } else {
-                                            showToast("该座位仅对女用户开放")
-                                        }
-                                    } else {
-                                        if (position == 2) {
-                                            userSetSeat(if (roomSourceBean.autoSeat) SEAT_TYPE_AUTO else SEAT_TYPE_APPLY)
-                                        } else {
-                                            showToast("该座位仅对男用户开放")
-                                        }
-                                    }
-                                }
-                            } else {
-                                showUserPop(item)
-                            }
-                        }
-                    }
-                }
-
-            }
-        seatUserAdapter.addOnItemChildClickListener(
-            cn.yanhu.agora.R.id.anchorSeatInfo,
-            childItemClickListener
-        )
-        seatUserAdapter.addOnItemChildClickListener(
-            cn.yanhu.agora.R.id.vg_parent,
-            childItemClickListener
-        )
-        seatUserAdapter.addOnItemChildClickListener(
-            cn.yanhu.agora.R.id.iv_voiceStatus,
-            childItemClickListener
-        )
+    override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {
+        super.refreshOnlineUser(onlineResponse)
+        topTitleBinding.tvOnlineNum.text = onlineResponse.onlineNum.toString()
     }
 
 
     override fun getRoomInfoSuccess() {
         super.getRoomInfoSuccess()
-        seatUserAdapter.roomDetailInfo = roomSourceBean
-        if (seatUserAdapter.roomDetailInfo == null) {
-            seatUserAdapter.notifyItemChanged(0)
-        } else {
-            seatUserAdapter.notifyItemChanged(0, true)
-        }
+        topTitleBinding.roomInfo = roomSourceBean
     }
 
-    override fun getRoomSeatSuccess(seatList: MutableList<RoomSeatInfo>) {
-        seatUserAdapter.submitList(seatList)
-    }
+    private val childItemClickListener =
+        object : BaseQuickAdapter.OnItemChildClickListener<RoomSeatInfo> {
+            override fun onItemClick(
+                adapter: BaseQuickAdapter<RoomSeatInfo, *>, view: View, position: Int
+            ) {
+                val item = seatUserAdapter.getItem(position) ?: return
 
-
-    override fun addHostSurfaceView() {
-        seatUserAdapter.notifyItemChanged(0)
-    }
-
-
-    override fun refreshSeatInfo(it: MutableList<RoomSeatInfo>, uid: Int) {
-        //seatUserAdapter.submitList(it)
-        ThreadUtils.getMainHandler().post {
-            for (i in 0 until it.size) {
-                val seatInfo = it[i]
-                if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
-                    seatUserAdapter[i] = seatInfo
-                    seatUserAdapter.notifyItemChanged(i)
-                }
-            }
-        }
-
-    }
-
-    override fun refreshSeatMicStatus(seatPosition: Int, mickUser: Boolean) {
-        seatUserAdapter.getItem(seatPosition)?.mikeUser = mickUser
-    }
-
-
-    override fun userLeaveChanged(uid: Int) {
-        super.userLeaveChanged(uid)
-        ThreadUtils.getMainHandler().post {
-            for (i in 0 until seatUserAdapter.items.size) {
-                val item = seatUserAdapter.getItem(i) ?: break
-                if (item.roomUserSeatInfo?.userId?.toInt() == uid) {
-                    if (roomSourceBean.ownerInfo?.userId != uid.toString()) {
-                        item.roomUserSeatInfo = null
+                when (view.id) {
+                    cn.yanhu.agora.R.id.tv_switch -> {
+                        //切换成专属房间/大厅
+                        showSwitchRoomTypePop()
                     }
-                    seatUserAdapter.notifyItemChanged(i)
+
+                    cn.yanhu.agora.R.id.iv_voiceStatus -> {
+                        //开关麦
+                        val roomUserSeatInfo = item.roomUserSeatInfo ?: return
+                        if (localUserId.toString() == roomUserSeatInfo.userId) {
+                            switchMikeAlert(!item.mikeUser, item.id)
+                        }
+                    }
+
+                    cn.yanhu.agora.R.id.vg_parent, cn.yanhu.agora.R.id.anchorSeatInfo -> {
+                        val roomUserSeatInfo = item.roomUserSeatInfo
+                        if (roomUserSeatInfo == null) {
+                            if (isOwner) {
+                                //邀请上麦弹框
+                                (seatUserAdapter as ThreeRoomSeatAdapter).showUserList(if (item.id == 2) "1" else "2")
+                            } else {
+                                //上麦
+                                if (AppCacheManager.isMan()) {
+                                    if (position == 1) {
+                                        userSetSeat(if (roomSourceBean.autoSeat) SEAT_TYPE_AUTO else SEAT_TYPE_APPLY)
+                                    } else {
+                                        showToast("该座位仅对女用户开放")
+                                    }
+                                } else {
+                                    if (position == 2) {
+                                        userSetSeat(if (roomSourceBean.autoSeat) SEAT_TYPE_AUTO else SEAT_TYPE_APPLY)
+                                    } else {
+                                        showToast("该座位仅对男用户开放")
+                                    }
+                                }
+                            }
+                        } else {
+                            if (roomUserSeatInfo.userId == AppCacheManager.userId){
+                                showUserPop(roomUserSeatInfo.userId)
+                            }else{
+                                showSendGiftPop(roomUserSeatInfo)
+                            }
+                        }
+                    }
                 }
             }
+
         }
+
+    override fun initListener() {
+        super.initListener()
+        seatUserAdapter.addOnItemChildClickListener(
+            cn.yanhu.agora.R.id.anchorSeatInfo, childItemClickListener
+        )
+        seatUserAdapter.addOnItemChildClickListener(
+            cn.yanhu.agora.R.id.vg_parent, childItemClickListener
+        )
+        seatUserAdapter.addOnItemChildClickListener(
+            cn.yanhu.agora.R.id.iv_voiceStatus, childItemClickListener
+        )
+        seatUserAdapter.addOnItemChildClickListener(
+            cn.yanhu.agora.R.id.tv_switch, childItemClickListener
+        )
     }
 
-    override fun userVideoStatusChanged(uid: Int, isShowProload: Boolean) {
-        super.userVideoStatusChanged(uid, isShowProload)
-        seatUserAdapter.items.forEach {
-            if (it.roomUserSeatInfo?.userId?.toInt() == uid) {
-                it.ifLeave = isShowProload
-            }
-        }
+    private fun showSwitchRoomTypePop() {
+        val content = Spans.builder()
+            .text(if (roomSourceBean.isPrivateRoom()) "确定要转为大厅直播吗？" else "转为专属房间后只保留麦上的男女嘉宾，确认要转换吗？\n\n")
+            .text(if (roomSourceBean.isPrivateRoom()) "" else "温馨提示：专属房间需要付费，男嘉宾同意后才可转换成功")
+            .color(
+                CommonUtils.getColor(
+                    R.color.colorMain
+                )
+            ).build()
+
+        DialogUtils.showConfirmDialog(if (roomSourceBean.isPrivateRoom()) "转为大厅房间" else "转为专属房间",
+            {
+                switchRoomType()
+            },
+            {
+
+            },
+            content,
+            cancelBg = R.drawable.shape_cancel_btn_r30
+        )
     }
 
-    override fun isInSeatByUserId(uid: Int): Boolean {
-        for (j in seatUserAdapter.items.indices) {
-            val roomSeatResListDTO =
-                seatUserAdapter.getItem(j) ?: return false
-            val roomUserSeatInfo =
-                roomSeatResListDTO.roomUserSeatInfo
-            if (roomUserSeatInfo != null) {
-                val userId: Int = roomUserSeatInfo.userId.toInt()
-                if (userId == uid) {
-                    return true
+    private fun switchRoomType() {
+        val roomType = if (roomSourceBean.isPrivateRoom()) 1 else 2
+        mViewModel.switchRoomType(roomId,
+            roomType.toString(),
+            object : OnRequestResultListener<Boolean> {
+                override fun onSuccess(data: BaseBean<Boolean>) {
+                    if (roomType == 1) {
+                        roomSourceBean.roomType = roomType
+                        EmMsgManager.sendCmdMessageToChatRoom(
+                            roomSourceBean.uid, "", ChatConstant.ACTION_MSG_SWITCH_TYPE_PLAZA
+                        )
+                        showToast("房间已切换为大厅")
+                    } else {
+                        showToast("已发送消息至男嘉宾，男嘉宾同意后可转至专属房间")
+                    }
                 }
-            }
-        }
-        return false
+            })
     }
 
-    override fun doShowFloatWindow() {
-        super.doShowFloatWindow()
-        val findViewHolderForAdapterPosition =
-            seatUserAdapter.recyclerView.findViewHolderForAdapterPosition(0) as ThreeRoomSeatAdapter.VH
-        val surfaceView =
-            findViewHolderForAdapterPosition.binding.anchorSeatInfo.itemVideoSf.tag as View?
-        LiveRoomVideoMiniManager.getInstance()
-            .show(mContext, 2, roomSourceBean.ownerInfo, object : PermissionListener {
-                override fun onSuccess() {
-                    MiniWindowManager.switchLiveToMiniFloat(mContext)
-                }
-
-                override fun onFail() {}
-            }, surfaceView)
-    }
 }

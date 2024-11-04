@@ -6,7 +6,7 @@ import android.view.View
 import cn.yanhu.agora.databinding.ActivityToWaitPhoneBinding
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.agora.R
-import cn.yanhu.agora.manager.AgoraSdkCacheManager
+import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.manager.ImPhoneMsgManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
 import cn.yanhu.baselib.utils.CommonUtils
@@ -153,6 +153,11 @@ class ToWaitPhoneActivity : BaseActivity<ActivityToWaitPhoneBinding, ImPhoneView
             ChatCallStatusConfig.STATUS_COMMIT,
             callInfo.uid
         )
+
+    }
+
+    override fun registerNecessaryObserver() {
+        super.registerNecessaryObserver()
         mViewModel.chatCallObserver.observe(this) { it ->
             parseState(it, {
                 EmMsgManager.sendCmdMessagePeople(
@@ -167,6 +172,8 @@ class ToWaitPhoneActivity : BaseActivity<ActivityToWaitPhoneBinding, ImPhoneView
                 isClickAgree = false
                 if (ErrorCode.CODE_NO_BALANCE == it.code) {
                     ApplicationProxy.instance.showRechargePop(mContext, true)
+                }else if (it.code == ErrorCode.CODE_NEED_REAL_NAME){
+                    RouteIntent.lunchToRealNamPage()
                 } else {
                     refuseCall()
                 }

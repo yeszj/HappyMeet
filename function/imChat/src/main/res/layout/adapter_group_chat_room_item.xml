@@ -55,7 +55,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_10"
                 app:fontType="@string/fontMedium"
-                android:text="视频交友中" />
+                android:text="相亲中" />
         </LinearLayout>
         <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="wrap_content"

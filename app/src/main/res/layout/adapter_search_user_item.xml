@@ -115,11 +115,11 @@
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{userinfo.blinding ? `视频交友中` : `七人交友中`}"
+                android:text="@{userinfo.blinding ? `相亲中` : `交友中`}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium"
-                tools:text="视频交友中" />
+                tools:text="相亲中" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,16 +12,21 @@ import android.os.Build
 import android.os.Looper
 import android.text.TextUtils
 import android.view.Gravity
+import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.func.ApplicationRouterImpl
-import cn.huanyuan.sweetlove.func.task.ImChatMsgNotifyTask
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
 import cn.huanyuan.sweetlove.func.task.AppPopTask
+import cn.huanyuan.sweetlove.func.task.ImChatMsgNotifyTask
 import cn.huanyuan.sweetlove.net.HttpHeadInterceptor
+import cn.yanhu.agora.api.agoraRxApi
+import cn.yanhu.agora.manager.AgoraManager
+import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.baselib.crash.CrashUtils
 import cn.yanhu.baselib.crash.ExceptionHandler
 import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.refresh.SmartRefreshProcessor
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.widget.router.ARouterWrapper
@@ -40,15 +45,19 @@ import cn.yanhu.imchat.manager.EMInitUtils
 import cn.yanhu.imchat.manager.EaseHelper.initEaseUI
 import cn.zj.netrequest.RetrofitUtil
 import cn.zj.netrequest.application.ApplicationProxy
+import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.factory.CustomizeGsonConverterFactory
 import cn.zj.netrequest.https.CertificateManageHelper
 import cn.zj.netrequest.intercept.HttpCacheInterceptor
 import cn.zj.netrequest.intercept.HttpCommonInterceptor
+import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ProcessUtils
 import com.blankj.utilcode.util.ThreadUtils
+import com.blankj.utilcode.util.ThreadUtils.runOnUiThread
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
 import com.github.gzuliyujiang.oaid.DeviceIdentifier
@@ -360,11 +369,37 @@ class BaseApplication : Application() {
         } else if (source == ChatConstant.ACTION_PHONE_CALL_VIDEO) {
             val callInfo = message.getStringAttribute("callInfo")
             RouteIntent.toToWaitPhoneActivity(callInfo)
+        } else if (source == ChatConstant.ACTION_MSG_APPLY_SET_UP_SUCCESS) {
+            if (!AgoraManager.isLiveRoom) {
+                //申请上麦成功
+                val roomId = message.getStringAttribute("roomId")
+                val seatId = message.getStringAttribute("seatId")
+                val ownerNickname = message.getStringAttribute("ownerNickname")
+                runOnUiThread { showApplySuccessDialog(roomId, seatId, ownerNickname) }
+            }
         }
     }
 
+    private fun showApplySuccessDialog(roomId: String, seatId: String, ownerNickname: String) {
 
+        DialogUtils.showConfirmDialog("上麦申请成功", {
+            userSetSeat(roomId, seatId)
+        }, {
+        }, "$ownerNickname 同意了你的上麦请求", confirm = "进入房间")
 
+    }
+
+    private fun userSetSeat(roomId: String, seatId: String) {
+        request({ agoraRxApi.userSetSeat(roomId, "2", seatId, AppCacheManager.userId) },
+            object : OnRequestResultListener<String> {
+                override fun onSuccess(data: BaseBean<String>) {
+                    LiveRoomManager.toLiveRoomPage(
+                        ActivityUtils.getTopActivity() as FragmentActivity,
+                        roomId
+                    )
+                }
+            })
+    }
 
 
     private fun initToastStyle() {
@@ -436,9 +471,11 @@ class BaseApplication : Application() {
 
     companion object {
         private val appPopTaskQueueManagerImpl = TaskQueueManagerImpl()
+
         init {
             RefreshManager.init(SmartRefreshProcessor())
         }
+
         fun addPopTask(type: Int, content: String) {
             appPopTaskQueueManagerImpl.addTask(AppPopTask(type, content))
         }

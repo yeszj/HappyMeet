@@ -122,6 +122,7 @@ class LiveRoomChatMessageAdapter :
             ChatRoomMsgInfo.ITEM_SYSTEM_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH> {
                 override fun onBind(holder: VH, position: Int, item: ChatRoomMsgInfo?) {
+                    holder.binding.tvNotice.text = item?.content
                 }
 
                 override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH {

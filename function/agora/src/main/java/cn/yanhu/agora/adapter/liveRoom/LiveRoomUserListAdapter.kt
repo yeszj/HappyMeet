@@ -24,11 +24,6 @@ class LiveRoomUserListAdapter : BaseQuickAdapter<UserDetailInfo, LiveRoomUserLis
     override fun onBindViewHolder(holder: VH, position: Int, item: UserDetailInfo?) {
         holder.binding.apply {
             userinfo = item
-            if (item?.seatNum!! >0){
-                tvInvite.alpha = 0.5f
-            }else{
-                tvInvite.alpha = 1f
-            }
             executePendingBindings()
         }
     }
@@ -36,4 +31,5 @@ class LiveRoomUserListAdapter : BaseQuickAdapter<UserDetailInfo, LiveRoomUserLis
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
         return VH(parent)
     }
+
 }

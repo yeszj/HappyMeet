@@ -7,6 +7,7 @@ import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.AgoraSdkCacheInfo
 import cn.yanhu.agora.bean.ConfigSdkVersion
 import cn.yanhu.agora.listener.OnDownloadProgressListener
+import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.utils.DeviceInfoUtil

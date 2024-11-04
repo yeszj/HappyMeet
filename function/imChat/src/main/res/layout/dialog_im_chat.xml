@@ -22,7 +22,7 @@
                 android:id="@+id/dg_chat_list_fg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_25"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHeight_min="@dimen/dp_640"
                 app:layout_constraintTop_toTopOf="parent" />

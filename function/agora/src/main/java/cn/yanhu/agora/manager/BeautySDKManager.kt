@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.BeautyFileCacheInfo
 import cn.yanhu.agora.bean.ConfigSdkVersion
+import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.zj.netrequest.download.DownloadUtil
 import cn.zj.netrequest.download.FileDownloadListener

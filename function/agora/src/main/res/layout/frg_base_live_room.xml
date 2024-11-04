@@ -8,62 +8,34 @@
         <variable
             name="roomInfo"
             type="cn.yanhu.commonres.bean.RoomDetailInfo" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/vg_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_three_room">
+        android:background="@{roomInfo.roomType==3?@drawable/bg_seven_live_room:roomInfo.roomType==2?@drawable/bg_three_private_room:@drawable/bg_three_room}"
+        tools:background="@drawable/bg_three_private_room">
 
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/iv_roomCover"
-            imageUrl="@{roomInfo.ownerInfo.portrait}"
-            placeholderId="@{-1}"
-            android:layout_width="@dimen/dp_34"
-            android:layout_height="@dimen/dp_34"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_40"
-            app:layout_constraintStart_toStartOf="parent"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{roomInfo.roomType==2?View.VISIBLE:View.INVISIBLE}"
+            android:background="@drawable/bg_gradient_private_room" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:riv_oval="true"
-            tools:src="@drawable/avatar_male_normal" />
+            android:layout_height="@dimen/dp_40"/>
+        <FrameLayout
+            android:id="@+id/fl_topView"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_roomName"
-            style="@style/common_white_shadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_6"
-            android:text="@{roomInfo.ownerInfo.nickName}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_14"
-            app:fontType="@string/fontMedium"
-            app:layout_constraintStart_toEndOf="@+id/iv_roomCover"
-            app:layout_constraintTop_toTopOf="@+id/iv_roomCover"
-            tools:text="落落的交友房" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            style="@style/common_white_shadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text='@{"ID:"+roomInfo.ownerInfo.userId}'
-            android:textColor="@color/whiteColorAlpha50"
-            android:textSize="@dimen/sp_12"
-            app:fontType="@string/fontMedium"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_roomCover"
-            app:layout_constraintStart_toStartOf="@+id/tv_roomName"
-            tools:text="ID 24082" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_exit"
-            android:layout_width="@dimen/dp_36"
-            android:layout_height="@dimen/dp_36"
-            android:padding="@dimen/dp_8"
-            android:src="@drawable/icon_room_exit"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_roomCover"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_roomCover" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_seat"
@@ -71,11 +43,17 @@
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
             app:layoutManager="com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/iv_roomCover"
+            app:layout_constraintTop_toBottomOf="@+id/fl_topView"
             app:spanCount="2"
             tools:itemCount="3"
             tools:listitem="@layout/adapter_three_room_user_seat_item" />
 
+        <FrameLayout
+            android:id="@+id/fl_customView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/rv_seat"
+            app:layout_constraintTop_toTopOf="@+id/rv_seat" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_seatStatus"
@@ -88,6 +66,39 @@
             app:layout_constraintBottom_toTopOf="@+id/bgInput"
             app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/vg_applySeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/bg_gradient_seat_btn"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:paddingVertical="@dimen/dp_4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_seat">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_apply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="申请上麦"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_roseSeatNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20玫瑰/次"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                app:fontType="@string/fontMedium" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/vg_autoSeat"
@@ -174,12 +185,12 @@
             android:minWidth="@dimen/dp_23"
             android:paddingHorizontal="@dimen/dp_6"
             android:paddingVertical="@dimen/dp_2"
-            tools:text="99"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_10"
             app:fontType="@string/fontBold"
             app:layout_constraintEnd_toEndOf="@+id/iv_message"
-            app:layout_constraintTop_toTopOf="@+id/iv_message" />
+            app:layout_constraintTop_toTopOf="@+id/iv_message"
+            tools:text="99" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_setting"

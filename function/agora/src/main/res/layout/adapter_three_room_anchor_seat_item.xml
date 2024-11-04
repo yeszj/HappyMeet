@@ -4,7 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="isOwner"
+            type="java.lang.Boolean" />
+        <import type="android.view.View"/>
+        <variable
+            name="roomInfo"
+            type="cn.yanhu.commonres.bean.RoomDetailInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,6 +87,7 @@
 
 
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_switch"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_22"
             android:layout_marginTop="@dimen/dp_14"
@@ -88,10 +95,12 @@
             android:backgroundTint="@color/whiteColorAlpha80"
             android:drawableStart="@drawable/icon_swarp"
             android:drawablePadding="@dimen/dp_2"
-            android:visibility="invisible"
+            android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
+            tools:visibility="visible"
             android:gravity="center"
             android:paddingHorizontal="@dimen/dp_6"
-            android:text="转为专属"
+            tools:text="转为专属"
+            android:text='@{roomInfo.privateRoom?"转为大厅":"转为专属"}'
             android:textColor="@color/whiteAlpha40"
             android:textSize="@dimen/sp_12"
             app:layout_constraintEnd_toEndOf="parent"

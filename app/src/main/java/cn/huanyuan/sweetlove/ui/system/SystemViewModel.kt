@@ -5,6 +5,7 @@ import cn.huanyuan.sweetlove.bean.ComplaintInfo
 import cn.huanyuan.sweetlove.bean.SecurityInfo
 import cn.huanyuan.sweetlove.net.rxApi
 import cn.yanhu.commonres.bean.BaseUserInfo
+import cn.yanhu.commonres.bean.ReportConfigInfo
 import cn.yanhu.commonres.bean.SystemMessageInfo
 import cn.zj.netrequest.BaseViewModel
 import cn.zj.netrequest.ext.request
@@ -50,6 +51,13 @@ class SystemViewModel : BaseViewModel() {
         request({ rxApi.complaintUser(complaintInfo.value) }, complaintResultObservable,
             isShowDialog = true,
             loadingHasContent = true
+        )
+    }
+
+    val reportConfigObservable = MutableLiveData<ResultState<MutableList<ReportConfigInfo>>>()
+    fun getReportConfigs() {
+        request({ rxApi.getReportConfigs() }, reportConfigObservable,
+            isShowDialog = true
         )
     }
 

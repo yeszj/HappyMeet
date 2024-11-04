@@ -69,13 +69,13 @@
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_invite"
-            android:layout_width="@dimen/dp_50"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_26"
+            android:paddingHorizontal="@dimen/dp_10"
             android:background="@drawable/white_corner_20"
             android:backgroundTint="@color/colorMain"
-            android:enabled="@{userinfo.seatNum>0?false:true}"
             android:gravity="center"
-            android:text='@{userinfo.seatNum>0?"已申请":"邀请"}'
+            android:text='@{userinfo.seatNum>0?"允许上麦":"邀请"}'
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
             app:fontType="@string/fontMedium"
