@@ -180,7 +180,7 @@
                     android:gravity="center"
                     android:minHeight="@dimen/dp_40"
                     android:paddingVertical="@dimen/dp_10"
-                    android:text="畅聊卡/玫瑰已用完，充值继续聊"
+                    android:text="添加好友才可聊天"
                     android:textColor="@color/colorTextRed"
                     android:textSize="@dimen/sp_16" />
 

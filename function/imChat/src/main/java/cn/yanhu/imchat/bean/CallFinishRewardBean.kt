@@ -10,5 +10,6 @@ data class CallFinishRewardBean(
     val chatType: String, //聊天类型 0语音 1视频
     val goldNum: String,//金币数量
     val videoCardGoldNum: String, //视频卡奖励金币
-    val ifBalanceNoEnough:Boolean //是否余额不足挂断
+    val ifBalanceNoEnough:Boolean, //是否余额不足挂断
+    val rewardUserId:String?
 )

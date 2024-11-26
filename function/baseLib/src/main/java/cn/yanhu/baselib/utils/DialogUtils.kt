@@ -1,5 +1,6 @@
 package cn.yanhu.baselib.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
 import android.view.Gravity
@@ -20,6 +21,7 @@ import cn.yanhu.baselib.bean.AttachParamsInfo
 import cn.yanhu.baselib.pop.CommonAttachListPopupView
 import cn.yanhu.baselib.utils.ext.showToast
 import com.blankj.utilcode.util.ClipboardUtils
+import com.lxj.xpopup.enums.PopupAnimation
 import com.lxj.xpopup.interfaces.XPopupCallback
 
 /**
@@ -188,21 +190,22 @@ object DialogUtils {
             .show()
     }
 
+    @SuppressLint("StaticFieldLeak")
     private var loadingDialog: BasePopupView? = null
-
     @JvmStatic
-    fun showLoading(title: String? = CommonUtils.getString(R.string.loading)): BasePopupView? {
+    fun showLoading(title: String? = CommonUtils.getString(R.string.loading),hasShadow:Boolean = true): BasePopupView? {
         if (loadingDialog == null || !loadingDialog!!.isShow) {
             loadingDialog = XPopup.Builder(ActivityUtils.getTopActivity())
                 .dismissOnTouchOutside(false)
                 .dismissOnBackPressed(true)
+                .popupAnimation(PopupAnimation.NoAnimation)
+                .hasShadowBg(hasShadow)
                 .isDestroyOnDismiss(true)
                 .asLoading(title)
                 .show()
         }
         return loadingDialog
     }
-
     @JvmStatic
     fun dismissLoading() {
         ThreadUtils.runOnUiThread {

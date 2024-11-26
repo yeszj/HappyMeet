@@ -25,6 +25,8 @@ import cn.huanyuan.sweetlove.ui.main.tab_wallet.TabWalletFrg
 import cn.yanhu.agora.listener.OnDownloadProgressListener
 import cn.yanhu.agora.manager.AgoraSdkDownloadManager
 import cn.yanhu.agora.manager.BeautySDKManager
+import cn.yanhu.agora.manager.RtcEngineInit
+import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.base.BaseTabAdapter
 import cn.yanhu.baselib.utils.CommonUtils
@@ -83,12 +85,28 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         getRechargeInfo()
         getGiftInfo()
         checkVersion()
+        initRtcEngine()
+
+    }
+
+    private fun initRtcEngine() {
+        if (AgoraSdkCacheManager.hasLoadAgoraSdk()) {
+            ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
+                override fun doInBackground(): Boolean {
+                    RtcEngineInit.initRtcEngine(mContext)
+                    return true
+                }
+
+                override fun onSuccess(result: Boolean?) {
+                }
+            })
+        }
     }
 
     override fun initListener() {
         super.initListener()
         LiveEventBus.get<Boolean>(EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS)
-            .observe(this) { o ->
+            .observe(this) {
                 showDownloadSdkProgressPop(
                     sdkDownloadProgress
                 )
@@ -372,10 +390,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun sendHomeKeyEvent() {
-        val homeIntent = Intent(Intent.ACTION_MAIN)
-        homeIntent.addCategory(Intent.CATEGORY_HOME)
-        homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(homeIntent)
+        moveTaskToBack(true)
+
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

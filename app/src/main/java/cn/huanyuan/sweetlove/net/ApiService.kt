@@ -21,6 +21,7 @@ import cn.yanhu.commonres.bean.LoginSuccessInfo
 import cn.yanhu.commonres.bean.MineMenuBean
 import cn.yanhu.commonres.bean.ReportConfigInfo
 import cn.yanhu.commonres.bean.SystemMessageInfo
+import cn.yanhu.commonres.bean.TabConfigInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.bean.request.DressBuyRequest
 import cn.yanhu.commonres.bean.request.DressUpRequest
@@ -65,7 +66,9 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("/app/v1/userCenter/updatePersonalPageSingle")
-    suspend fun updatePersonalPageSingle(@Field("type") type:Int,@Field("content") content:String): BaseBean<String>
+    suspend fun updatePersonalPageSingle(
+        @Field("type") type: Int, @Field("content") content: String
+    ): BaseBean<String>
 
 
     @GET("app/v1/user/getAuthCenterInfo")
@@ -73,8 +76,7 @@ interface ApiService {
 
     @GET("app/v1/room/list")
     suspend fun getRoomList(
-        @Query("type") type: Int,
-        @Query("page") page: Int
+        @Query("type") type: Int, @Query("page") page: Int
     ): BaseBean<RoomListResponse>
 
     @GET("app/v1/rank/getGuardRankList")
@@ -110,9 +112,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("app/v1/user/login")
     suspend fun login(
-        @Field("phone") phone: String,
-        @Field("source") source: Int,
-        @Field("code") code: String
+        @Field("phone") phone: String, @Field("source") source: Int, @Field("code") code: String
     ): BaseBean<LoginSuccessInfo>
 
 
@@ -161,8 +161,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("app/v1/account/withdrawal")
     suspend fun withdrawal(
-        @Field("type") type: Int?,
-        @Field("withdrawalId") withdrawalId: Int
+        @Field("type") type: Int?, @Field("withdrawalId") withdrawalId: Int
     ): BaseBean<Boolean>
 
     @FormUrlEncoded
@@ -227,6 +226,9 @@ interface ApiService {
         @Query("type") type: Int
     ): BaseBean<DressUpResponse>
 
+    @GET("app/v1/commodity/getTabs")
+    suspend fun getStoreTabs(): BaseBean<List<TabConfigInfo>>
+
     @GET("app/v1/commodity/getMyDressUpInfo")
     suspend fun getMyDressUpInfo(
         @Query("type") type: Int
@@ -264,10 +266,12 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("app/v1/auth/realNameAuth")
-    suspend fun realNameProve(@Field("realName") realName:String,@Field("idCard") idCard:String): BaseBean<String>
+    suspend fun realNameProve(
+        @Field("realName") realName: String, @Field("idCard") idCard: String
+    ): BaseBean<String>
 
     @GET("app/v1/auth/checkAuth")
-    suspend fun checkBaiduFace():BaseBean<CheckBaiduFaceResult>
+    suspend fun checkBaiduFace(): BaseBean<CheckBaiduFaceResult>
 
     /**
      * 查询是否可以百度人脸认证
@@ -294,5 +298,5 @@ interface ApiService {
      * 搜索页面 搜索用户列表
      */
     @GET("/app/v1/home/search")
-    suspend  fun searchUserList(@Query("content") content: String?): BaseBean<MutableList<UserDetailInfo>>
+    suspend fun searchUserList(@Query("content") content: String?): BaseBean<MutableList<UserDetailInfo>>
 }

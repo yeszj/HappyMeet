@@ -152,6 +152,7 @@ object AgoraSdkDownloadManager {
             ).save()
         }
         FileUtils.delete(getAgoraUnZipFile())
+        RtcEngineInit.initRtcEngine(ActivityUtils.getTopActivity())
         LiveEventBus.get<Boolean>(EventBusKeyConfig.DOWNLOAD_AGORA_SDK_SUCCESS).post(true)
     }
 

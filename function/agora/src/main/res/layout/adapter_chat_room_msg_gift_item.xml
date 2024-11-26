@@ -24,13 +24,14 @@
             android:id="@+id/userAvatar"
             avatarUrl="@{userInfo.portrait}"
             avatarUserId="@{userInfo.userId}"
+            avatarFrameUrl="@{userInfo.avatarFrame}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:avatarSize="@dimen/dp_32"
             app:isShowSvgAvatar="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:svgAvatarSize="@dimen/dp_40" />
+            app:svgAvatarSize="@dimen/dp_45" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_nickName"

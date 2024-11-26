@@ -87,7 +87,7 @@
             android:id="@+id/tv_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dp_15"
+            android:paddingBottom="@dimen/dp_50"
             android:text="@{callInfo.chatType == 0 ? `对方邀请你语音通话`:`对方邀请你视频通话`}"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
@@ -109,8 +109,8 @@
             android:paddingTop="@dimen/dp_4"
             android:paddingEnd="@dimen/dp_8"
             android:paddingBottom="@dimen/dp_4"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/wait_phone_refuse"
-            android:visibility="@{callInfo.chatUser.gender == 1 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 

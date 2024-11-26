@@ -20,10 +20,11 @@ class HttpCommonInterceptor : Interceptor {
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
-
+        val requestTime = System.currentTimeMillis()
         val request = chain.request()
         val newBuilder = request.newBuilder()
         val method = request.method
+        val response: Response ;
         if (method=="GET"){
             val getBuilder = request.url.newBuilder();
             for ((key, value) in mBodyParamsMap) {
@@ -36,7 +37,7 @@ class HttpCommonInterceptor : Interceptor {
                     "requestBody::", modifiedUrl.toUrl().query
                 )
             }
-            return chain.proceed(build)
+            response = chain.proceed(build)
         }else{
             if (request.body is FormBody){
                 val formBody = request.body as FormBody
@@ -52,9 +53,15 @@ class HttpCommonInterceptor : Interceptor {
                     bodyBuilder.add(key, value)
                 }
                 newBuilder.method(request.method, bodyBuilder.build())
-                return chain.proceed(newBuilder.build())
+                response = chain.proceed(newBuilder.build())
+            }else{
+                response = chain.proceed(chain.request())
             }
-            return chain.proceed(chain.request())
         }
+        Log.d(
+            "requestSpendTime",
+            "requestSpendTime=" + (System.currentTimeMillis() - requestTime) + "ms"
+        )
+        return response;
     }
 }

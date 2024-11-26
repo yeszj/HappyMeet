@@ -15,7 +15,7 @@ import com.chad.library.adapter4.BaseQuickAdapter
  * created: 2024/10/17
  * desc:
  */
-class LiveRoomUserRoseAdapter : BaseQuickAdapter<UserDetailInfo, LiveRoomUserRoseAdapter.VH>() {
+class LiveRoomUserRankAdapter : BaseQuickAdapter<UserDetailInfo, LiveRoomUserRankAdapter.VH>() {
     class VH(
         parent: ViewGroup,
         val binding: AdapterRoomSeatUserRoseDetailItemBinding = AdapterRoomSeatUserRoseDetailItemBinding.inflate(
@@ -33,20 +33,23 @@ class LiveRoomUserRoseAdapter : BaseQuickAdapter<UserDetailInfo, LiveRoomUserRos
                     vgRank.visibility = View.VISIBLE
                     ivRank.setImageResource(cn.yanhu.commonres.R.drawable.icon_rank1)
                 }
+
                 1 -> {
                     tvNum.visibility = View.INVISIBLE
                     vgRank.visibility = View.VISIBLE
                     ivRank.setImageResource(cn.yanhu.commonres.R.drawable.icon_rank2)
                 }
+
                 2 -> {
                     tvNum.visibility = View.INVISIBLE
                     vgRank.visibility = View.VISIBLE
                     ivRank.setImageResource(cn.yanhu.commonres.R.drawable.icon_rank3)
                 }
+
                 else -> {
                     tvNum.visibility = View.VISIBLE
                     vgRank.visibility = View.INVISIBLE
-                    tvNum.text = (position+1).toString()
+                    tvNum.text = (position + 1).toString()
                 }
             }
             executePendingBindings()

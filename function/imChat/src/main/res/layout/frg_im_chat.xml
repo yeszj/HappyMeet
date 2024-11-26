@@ -4,123 +4,148 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="userInfo"
             type="cn.yanhu.commonres.bean.UserDetailInfo" />
     </data>
 
-    <LinearLayout
-        android:id="@+id/vg_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F4F4F4"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:orientation="vertical">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_back"
-                android:layout_width="@dimen/dp_36"
-                android:padding="@dimen/dp_8"
-                android:layout_marginStart="@dimen/dp_10"
-                app:layout_constraintStart_toStartOf="parent"
-                android:src="@drawable/svg_black_back"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_height="@dimen/dp_36"/>
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_more"
-                android:layout_width="@dimen/dp_36"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:src="@drawable/svg_more_dot_black"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginEnd="@dimen/dp_12"
-                android:layout_height="@dimen/dp_36"/>
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:id="@+id/tv_nickName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_50"
-                android:textColor="@color/color_222222"
-                android:textSize="@dimen/sp_15"
-                android:text="@{userInfo.nickName}"
-                app:fontType="@string/fontMedium"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/iv_back"
-                tools:text="护士小王" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_auth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_tag_has_auth"
-                android:visibility="@{userInfo.auth?View.VISIBLE:View.INVISIBLE}"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
-                app:layout_constraintStart_toEndOf="@+id/tv_nickName"
-                app:layout_constraintTop_toTopOf="@+id/tv_nickName"
-                tools:visibility="visible" />
-
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_50"
-                android:textColor="@{userInfo.online?@color/onlineColor:@color/color_888888}"
-                android:textSize="@dimen/sp_12"
-                android:text='@{userInfo.online?"在线":"暂时不在线"}'
-                app:fontType="@string/fontMedium"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_back"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="暂时不在线" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/vg_addFriendTips"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_height="@dimen/dp_47"
-            android:layout_marginHorizontal="@dimen/dp_12"
-            android:background="@drawable/white_corner_10"
-            android:backgroundTint="@color/blackAlpha96"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/dp_12">
-
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="加好友对方优先看到你"
-                android:textColor="@color/color_222222"
-                android:textSize="@dimen/sp_14" />
-
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:id="@+id/tv_addFriend"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_27"
-                android:background="@drawable/white_corner_20"
-                android:backgroundTint="@color/colorMain"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/dp_10"
-                android:text="加好友丨20玫瑰"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_13" />
-        </LinearLayout>
-
-        <!--        <cn.yanhu.imchat.view.P2pChatTopUserView-->
-        <!--            android:id="@+id/userView"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginTop="@dimen/dp_10" />-->
-
-
-        <FrameLayout
-            android:id="@+id/containerLayout"
+            android:id="@+id/vg_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    </LinearLayout>
+            android:background="#F4F4F4"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:padding="@dimen/dp_8"
+                    android:src="@drawable/svg_black_back"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_more"
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_marginEnd="@dimen/dp_12"
+                    android:src="@drawable/svg_more_dot_black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_nickName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_50"
+                    android:text="@{userInfo.nickName}"
+                    android:textColor="@color/color_222222"
+                    android:textSize="@dimen/sp_15"
+                    app:fontType="@string/fontMedium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/iv_back"
+                    tools:text="护士小王" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_auth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_tag_has_auth"
+                    android:visibility="@{userInfo.auth?View.VISIBLE:View.INVISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
+                    app:layout_constraintStart_toEndOf="@+id/tv_nickName"
+                    app:layout_constraintTop_toTopOf="@+id/tv_nickName"
+                    tools:visibility="visible" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_50"
+                    android:text='@{userInfo.online?"在线":"暂时不在线"}'
+                    android:textColor="@{userInfo.online?@color/onlineColor:@color/color_888888}"
+                    android:textSize="@dimen/sp_12"
+                    app:fontType="@string/fontMedium"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_back"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="暂时不在线" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <LinearLayout
+                android:id="@+id/vg_addFriendTips"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_47"
+                android:layout_marginHorizontal="@dimen/dp_12"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@drawable/white_corner_10"
+                android:backgroundTint="@color/blackAlpha96"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_12">
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="加好友对方优先看到你"
+                    android:textColor="@color/color_222222"
+                    android:textSize="@dimen/sp_14" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_addFriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_27"
+                    android:background="@drawable/white_corner_20"
+                    android:backgroundTint="@color/colorMain"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/dp_10"
+                    android:text="加好友丨20玫瑰"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_13" />
+            </LinearLayout>
+
+            <!--        <cn.yanhu.imchat.view.P2pChatTopUserView-->
+            <!--            android:id="@+id/userView"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout_marginTop="@dimen/dp_10" />-->
+
+
+            <FrameLayout
+                android:id="@+id/containerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        </LinearLayout>
+
+        <com.opensource.svgaplayer.SVGAImageView
+            android:id="@+id/svg_giftAnim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:clickable="false"
+            android:scaleType="centerCrop"
+            app:autoPlay="false"
+            app:clearsAfterDetached="true"
+            app:fillMode="Clear"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:loopCount="1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

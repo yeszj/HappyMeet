@@ -11,7 +11,6 @@ import android.view.View;
 import androidx.fragment.app.FragmentActivity;
 
 import com.blankj.utilcode.util.ThreadUtils;
-import com.hjq.toast.ToastUtils;
 
 
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener;
@@ -23,7 +22,6 @@ import io.agora.rtc2.IMediaExtensionObserver;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcConnection;
 import io.agora.rtc2.RtcEngine;
-import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
@@ -76,23 +74,16 @@ public class AgoraManager implements IMediaExtensionObserver {
     }
 
     public void init(Activity baseContext, Integer userRole, View surfaceView) {
-        try {
-            RtcEngineConfig config = new RtcEngineConfig();
-            config.mContext = baseContext;
-            config.mAppId = "301729ee939d4470b6b60a795e9ccc22";
-            config.mEventHandler = mRtcEventHandler;
-            config.mExtensionObserver = this;
-            // 添加美颜插件
-            config.addExtension("AgoraFaceUnityExtension");
-            config.mNativeLibPath = AgoraSdkDownloadManager.getSoPath();
-            mRtcEngine = (RtcEngineEx) RtcEngineEx.create(config);
-            // 启用插件
-            int i = mRtcEngine.enableExtension("FaceUnity", "Effect", true);
-        } catch (Exception e) {
-          // TraceUtils.getInstance().onEventObject("app_agora_fail", e.getMessage());
-            ToastUtils.show("直播间初始化异常,请重新进入直播间尝试");
-            logcom("声网：" + e.getMessage());
-            return;
+        mRtcEngine = RtcEngineInit.INSTANCE.getMRtcEngine();
+        if (mRtcEngine==null){
+            RtcEngine.destroy();
+            mRtcEngine = RtcEngineInit.INSTANCE.initRtcEngine(baseContext);
+            if (mRtcEngine==null){
+                return;
+            }
+        }
+        if (iRtcEngineEventHandlerListener!=null){
+            mRtcEngine.addHandler(mRtcEventHandler);
         }
         mRtcEngine.enableAudioVolumeIndication(2000, 3, false);
         mRtcEngine.adjustPlaybackSignalVolume(128);
@@ -102,7 +93,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         mRtcEngine.enableVideo();
         // 在互动直播中，设置频道场景为 BROADCASTING
         mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
-
+        setupLocalAudio(true);
         // 根据实际情况，设置用户角色为 BROADCASTER 或 AUDIENCE
         mRtcEngine.setClientRole(userRole != 0 ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE);
         BeautySetManager.getInstance().initExtension(mRtcEngine);
@@ -112,7 +103,6 @@ public class AgoraManager implements IMediaExtensionObserver {
             BeautySetManager.getInstance().enableBeauty(true);
             mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
         }
-        //AgoraVideoWriteTest.registerVideoFrameObserver(mRtcEngine);
     }
 
 
@@ -336,7 +326,9 @@ public class AgoraManager implements IMediaExtensionObserver {
         @Override
         public void onTokenPrivilegeWillExpire(String token) {
             logcom("onTokenPrivilegeWillExpire");
-            iRtcEngineEventHandlerListener.agoraListener(TOKEN_WILL_EXPIRE, 0);
+            if (iRtcEngineEventHandlerListener!=null){
+                iRtcEngineEventHandlerListener.agoraListener(TOKEN_WILL_EXPIRE, 0);
+            }
             super.onTokenPrivilegeWillExpire(token);
         }
 
@@ -344,7 +336,9 @@ public class AgoraManager implements IMediaExtensionObserver {
         @Override
         public void onRequestToken() {
             logcom("onRequestToken");
-            iRtcEngineEventHandlerListener.agoraListener(TOKEN_EXPIRE, 0);
+            if (iRtcEngineEventHandlerListener!=null) {
+                iRtcEngineEventHandlerListener.agoraListener(TOKEN_EXPIRE, 0);
+            }
             super.onRequestToken();
         }
 
@@ -353,7 +347,9 @@ public class AgoraManager implements IMediaExtensionObserver {
             logcom("有人上麦：" + uid);
             if (isInitSuccess) {
                 logcom("上麦：" + uid);
-                iRtcEngineEventHandlerListener.agoraListener(USER_SET_UP, uid);
+                if (iRtcEngineEventHandlerListener!=null) {
+                    iRtcEngineEventHandlerListener.agoraListener(USER_SET_UP, uid);
+                }
             }
             super.onUserJoined(uid, elapsed);
         }
@@ -361,18 +357,20 @@ public class AgoraManager implements IMediaExtensionObserver {
         @Override
         public void onUserOffline(int uid, int reason) {
             logcom("onUserOffline：" + uid + "  reason：" + reason);
+            if (iRtcEngineEventHandlerListener!=null){
 
-            if (reason == Constants.USER_OFFLINE_BECOME_AUDIENCE) {//用户下麦
-                logcom("下麦：" + uid);
-                iRtcEngineEventHandlerListener.agoraListener(USER_SIT_DOWN, uid);
+                if (reason == Constants.USER_OFFLINE_BECOME_AUDIENCE) {//用户下麦
+                    logcom("下麦：" + uid);
+                    iRtcEngineEventHandlerListener.agoraListener(USER_SIT_DOWN, uid);
 
-            } else if (reason == 1) {//远端用户超时掉线
-                logcom("远端用户超时掉线：" + uid);
-                iRtcEngineEventHandlerListener.agoraListener(USER_SHORT_LEAVE, uid);
+                } else if (reason == 1) {//远端用户超时掉线
+                    logcom("远端用户超时掉线：" + uid);
+                    iRtcEngineEventHandlerListener.agoraListener(USER_SHORT_LEAVE, uid);
 
-            } else if (reason == 0) {//用户离开
-                logcom("用户离开：" + uid);
-                iRtcEngineEventHandlerListener.agoraListener(USER_QUIT, uid);
+                } else if (reason == 0) {//用户离开
+                    logcom("用户离开：" + uid);
+                    iRtcEngineEventHandlerListener.agoraListener(USER_QUIT, uid);
+                }
             }
             super.onUserOffline(uid, reason);
         }
@@ -396,7 +394,9 @@ public class AgoraManager implements IMediaExtensionObserver {
             writeRtcLog("onLocalVideoStateChanged %s %d %d", source.toString(), state, error);
             if (source.getValue() == VIDEO_SOURCE_CAMERA_PRIMARY && state == 3 && error == 4) {
                 mRtcEngine.enableLocalVideo(true);
-                iRtcEngineEventHandlerListener.agoraListener(USER_ERROR_CAMERA_DISABLED, -1);
+                if (iRtcEngineEventHandlerListener!=null) {
+                    iRtcEngineEventHandlerListener.agoraListener(USER_ERROR_CAMERA_DISABLED, -1);
+                }
             }
 
             if (source.getValue() == VIDEO_SOURCE_CAMERA_PRIMARY && state == 1 && error == 0) {
@@ -410,22 +410,24 @@ public class AgoraManager implements IMediaExtensionObserver {
             super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
             logcom(String.format("远端视频回调 uid=%d state=%d reason=%d elapsed=%d", uid, state, reason, elapsed));
             writeRtcLog("远端视频回调 uid=%d state=%d reason=%d elapsed=%d", uid, state, reason, elapsed);
-            if (state == 2) {
-                if (reason == 2) {
-                    logcom("远端视频恢复正常播放   uid：" + uid + "————elapsed：" + elapsed);
-                    iRtcEngineEventHandlerListener.agoraListener(REMOTE_USER_VIDEO_UP, uid);
+            if (iRtcEngineEventHandlerListener!=null) {
+                if (state == 2) {
+                    if (reason == 2) {
+                        logcom("远端视频恢复正常播放   uid：" + uid + "————elapsed：" + elapsed);
+                        iRtcEngineEventHandlerListener.agoraListener(REMOTE_USER_VIDEO_UP, uid);
 
-                } else {
-                    logcom("远端视频启用   uid：" + uid + "————elapsed：" + elapsed);
-                    iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_INIT_FINISH, uid);
+                    } else {
+                        logcom("远端视频启用   uid：" + uid + "————elapsed：" + elapsed);
+                        iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_INIT_FINISH, uid);
+                    }
+
+                } else if (state == REMOTE_VIDEO_STATE_FAILED) {
+                    //远端视频流播放失败
+                    iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_PLAY_FAIL, uid);
+                } else if ((reason == 5 || reason == 7 || reason == 8) || state >= 3) {
+                    logcom("远端视频卡顿、停止   uid：" + uid + "————elapsed：" + elapsed);
+                    iRtcEngineEventHandlerListener.agoraListener(REMOTE_USER_VIDEO_DOWN, uid);
                 }
-
-            } else if (state == REMOTE_VIDEO_STATE_FAILED) {
-                //远端视频流播放失败
-                iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_PLAY_FAIL, uid);
-            } else if ((reason == 5 || reason == 7 || reason == 8) || state >= 3) {
-                logcom("远端视频卡顿、停止   uid：" + uid + "————elapsed：" + elapsed);
-                iRtcEngineEventHandlerListener.agoraListener(REMOTE_USER_VIDEO_DOWN, uid);
             }
         }
 
@@ -433,29 +435,35 @@ public class AgoraManager implements IMediaExtensionObserver {
         public void onFirstRemoteVideoFrame(int uid, int width, int height, int elapsed) {
             super.onFirstRemoteVideoFrame(uid, width, height, elapsed);
             logcom("远端视频初始化完成   uid：" + uid + "————elapsed：" + elapsed);
-            iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_INIT_FINISH, uid);
+            if (iRtcEngineEventHandlerListener!=null) {
+                iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_INIT_FINISH, uid);
+            }
         }
 
         @Override
         public void onFirstLocalVideoFrame(Constants.VideoSourceType source, int width, int height, int elapsed) {
             super.onFirstLocalVideoFrame(source, width, height, elapsed);
-            iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_INIT_FINISH, -1);
+            if (iRtcEngineEventHandlerListener!=null) {
+                iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_INIT_FINISH, -1);
+            }
         }
 
         @Override
         public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
             super.onNetworkQuality(uid, txQuality, rxQuality);
             logcom("网络状态，uid：" + uid + "————txQuality：" + txQuality + "————rxQuality：" + rxQuality);
-            if (uid == 0) {
-                if (txQuality >= 4 || rxQuality >= 4) {
-                    if (txQuality == 6 || rxQuality == 6) {
-                        iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_DOWN, uid);
+            if (iRtcEngineEventHandlerListener!=null) {
+                if (uid == 0) {
+                    if (txQuality >= 4 || rxQuality >= 4) {
+                        if (txQuality == 6 || rxQuality == 6) {
+                            iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_DOWN, uid);
+                        } else {
+                            iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_BAD, uid);
+                        }
                     } else {
-                        iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_BAD, uid);
-                    }
-                } else {
-                    iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_GOOD, uid);
+                        iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_GOOD, uid);
 
+                    }
                 }
             }
         }
@@ -469,10 +477,12 @@ public class AgoraManager implements IMediaExtensionObserver {
         @Override
         public void onAudioVolumeIndication(AudioVolumeInfo[] speakers, int totalVolume) {
             super.onAudioVolumeIndication(speakers, totalVolume);
-            if (speakers != null && speakers.length > 0) {
-                int uid = speakers[0].uid;
-                if (uid != 0) {
-                    iRtcEngineEventHandlerListener.onAudioVolumeIndication(speakers, totalVolume);
+            if (iRtcEngineEventHandlerListener!=null) {
+                if (speakers != null && speakers.length > 0) {
+                    int uid = speakers[0].uid;
+                    if (uid != 0) {
+                        iRtcEngineEventHandlerListener.onAudioVolumeIndication(speakers, totalVolume);
+                    }
                 }
             }
         }
@@ -488,9 +498,9 @@ public class AgoraManager implements IMediaExtensionObserver {
             mRtcEngine.leaveChannel();
             mRtcEngine.stopPreview();
             mRtcEngine.disableVideo();
-            RtcEngine.destroy();
+            //RtcEngine.destroy();
         }
-        mRtcEngine = null;
+       // mRtcEngine = null;
         isInitSuccess = false;
         iRtcEngineEventHandlerListener = null;
     }

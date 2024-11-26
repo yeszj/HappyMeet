@@ -22,4 +22,7 @@ object WebUrlManager {
 
     val SECURITY_AGREEMENT = ApplicationProxy.instance.getServeAddress() + "safe/reminder"
 
+    const val ANGLE_ROOM_RULE = "https://video.chanyinet.com/agreement/angel_room_rules.html"
+
+
 }

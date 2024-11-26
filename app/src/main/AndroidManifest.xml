@@ -145,7 +145,6 @@
         <activity
             android:name=".ui.userinfo.dressUp.DressUpCenterActivity"
             android:configChanges="orientation|screenSize|screenLayout"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.userinfo.dressUp.MyDressUpActivity"

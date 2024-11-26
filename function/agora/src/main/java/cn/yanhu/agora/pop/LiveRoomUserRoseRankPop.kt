@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import cn.yanhu.agora.R
-import cn.yanhu.agora.adapter.liveRoom.LiveRoomUserRoseAdapter
+import cn.yanhu.agora.adapter.liveRoom.LiveRoomUserRankAdapter
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.databinding.PopLiveRoomUserRoseDetailBinding
 import cn.yanhu.baselib.refresh.NoMoreDataFootView
@@ -22,9 +22,9 @@ import com.lxj.xpopup.core.BottomPopupView
  * desc:
  */
 @SuppressLint("ViewConstructor")
-class LiveRoomUserRoseDetailPop(context: Context, private val roseInfo: UserReceiveRoseInfo) :
+class LiveRoomUserRoseRankPop(context: Context, private val roseInfo: UserReceiveRoseInfo) :
     BottomPopupView(context) {
-    private val userAdapter by lazy { LiveRoomUserRoseAdapter() }
+    private val userAdapter by lazy { LiveRoomUserRankAdapter() }
     override fun getImplLayoutId(): Int {
         return R.layout.pop_live_room_user_rose_detail
     }
@@ -43,9 +43,9 @@ class LiveRoomUserRoseDetailPop(context: Context, private val roseInfo: UserRece
         val list = roseInfo.list
         userAdapter.submitList(list)
         mBiding.tvTotalRoseNum.text = "本场玫瑰：${roseInfo.roseNum}"
-        if (TextUtils.isEmpty(roseInfo.nickName)){
+        if (TextUtils.isEmpty(roseInfo.nickName)) {
             mBiding.tvNickName.text = "本场贡献榜"
-        }else{
+        } else {
             mBiding.tvNickName.text = "${roseInfo.nickName}收到的玫瑰明细"
         }
         userAdapter.isStateViewEnable = list.size <= 0
@@ -67,8 +67,8 @@ class LiveRoomUserRoseDetailPop(context: Context, private val roseInfo: UserRece
         @JvmStatic
         fun showDialog(
             mContext: Context, roseInfo: UserReceiveRoseInfo
-        ): LiveRoomUserRoseDetailPop {
-            val matchPop = LiveRoomUserRoseDetailPop(mContext, roseInfo)
+        ): LiveRoomUserRoseRankPop {
+            val matchPop = LiveRoomUserRoseRankPop(mContext, roseInfo)
             val builder =
                 XPopup.Builder(mContext)
             builder.asCustom(matchPop).show()

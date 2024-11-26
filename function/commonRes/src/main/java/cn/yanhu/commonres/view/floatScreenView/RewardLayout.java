@@ -97,7 +97,7 @@ public class RewardLayout extends LinearLayout {
          *
          * @param view
          */
-        void addAnim(View view);
+        void addAnim(View view,T mBean);
 
         /**
          * 添加退出动画
@@ -436,7 +436,7 @@ public class RewardLayout extends LinearLayout {
         invalidate();
 
         if (adapter != null) {
-            adapter.addAnim(giftView);
+            adapter.addAnim(giftView,mBean);
         }
 
     }

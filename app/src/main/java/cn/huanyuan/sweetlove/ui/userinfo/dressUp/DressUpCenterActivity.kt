@@ -12,6 +12,8 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewPager2Helper
 import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.baselib.widget.indicator.CommonIndicatorAdapter
+import cn.yanhu.commonres.bean.TabConfigInfo
+import cn.zj.netrequest.ext.parseState
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
 /**
@@ -25,10 +27,13 @@ class DressUpCenterActivity : BaseActivity<ActivityDressUpBinding, DressUpViewMo
 ) {
     override fun initData() {
         setFullScreenStatusBar()
-        initTabLayout()
-        initVpData()
+        requestData()
     }
 
+    override fun requestData() {
+        super.requestData()
+        mViewModel.getStoreTabs()
+    }
 
     override fun initListener() {
         super.initListener()
@@ -42,10 +47,26 @@ class DressUpCenterActivity : BaseActivity<ActivityDressUpBinding, DressUpViewMo
         })
     }
 
-    private fun initTabLayout() {
+    override fun registerNecessaryObserver() {
+        super.registerNecessaryObserver()
+        mViewModel.tabListObservable.observe(this){ it ->
+            parseState(it,{
+                if (frgList.size<=0){
+                    initTabLayout(it)
+                }
+            })
+        }
+    }
+
+    private var frgList: ArrayList<Fragment> = arrayListOf()
+    private fun initTabLayout(tabList:List<TabConfigInfo>) {
+        val list = mutableListOf<String>()
+        tabList.forEach {
+            list.add(it.name)
+            frgList.add(DressUpFrg.newInstance(it.id))
+        }
         val magicIndicator = mBinding.tabLayout
         val commonNavigator = CommonNavigator(mContext)
-        val list = mutableListOf("头像框", "座驾","聊天气泡","靓号")
         commonNavigator.adapter = CommonIndicatorAdapter(
             mBinding.viewPager,
             list.toTypedArray(),
@@ -57,17 +78,12 @@ class DressUpCenterActivity : BaseActivity<ActivityDressUpBinding, DressUpViewMo
         commonNavigator.isAdjustMode = false
         magicIndicator.navigator = commonNavigator
         ViewPager2Helper.bind(magicIndicator, mBinding.viewPager)
-    }
 
-    private var frgList: ArrayList<Fragment> = arrayListOf()
-    private fun initVpData() {
-        frgList.add(DressUpFrg.newInstance(DressUpFrg.TYPE_AVATAR_FRAME))
-        frgList.add(DressUpFrg.newInstance(DressUpFrg.TYPE_CAR))
-        frgList.add(DressUpFrg.newInstance(DressUpFrg.TYPE_CHAT_POP))
-        frgList.add(DressUpFrg.newInstance(DressUpFrg.TYPE_BEAUTIFUL_ACCOUNT))
         mBinding.viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
         mBinding.viewPager.offscreenPageLimit = frgList.size
+
     }
+
 
     companion object{
         fun lunch(context: Context){

@@ -23,7 +23,8 @@
             app:isShowSvgAvatar="true"
             avatarUrl="@{msgInfo.sendUserInfo.portrait}"
             avatarUserId="@{msgInfo.sendUserInfo.userId}"
-            app:svgAvatarSize="@dimen/dp_40"
+            avatarFrameUrl="@{msgInfo.sendUserInfo.avatarFrame}"
+            app:svgAvatarSize="@dimen/dp_45"
             app:avatarSize="@dimen/dp_32"
             android:layout_height="wrap_content"/>
 
@@ -35,6 +36,7 @@
             android:textColor="@{msgInfo.sendUserInfo.gender==1?@color/manColor:@color/femaleColor}"
             android:text="@{msgInfo.sendUserInfo.nickName}"
             android:textSize="@dimen/sp_14"
+            android:layout_marginTop="@dimen/dp_5"
             android:layout_marginStart="@dimen/dp_4"
             app:fontType="@string/fontMedium"
             app:layout_constraintTop_toTopOf="@+id/userAvatar"

@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:avatarSize="@dimen/dp_60"
-            android:layout_marginStart="@dimen/dp_m_5"
+            app:avatarMarginLeft="@dimen/dp_m_5"
             avatarUrl="@{userinfo.portrait}"
             avatarUserId="@{userinfo.userId}"
             app:isCanClick="false"

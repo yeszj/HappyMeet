@@ -15,7 +15,6 @@ import io.agora.rtc2.Constants;
 import io.agora.rtc2.IMediaExtensionObserver;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
-import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 
@@ -69,20 +68,16 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
     }
 
     public void init(Context baseContext,boolean isVideo) {
-        try {
-            RtcEngineConfig config = new RtcEngineConfig();
-            config.mContext = baseContext;
-            config.mAppId = "301729ee939d4470b6b60a795e9ccc22";
-            config.mEventHandler = mRtcEventHandler;
-            config.mExtensionObserver = this;
-            config.mNativeLibPath = AgoraSdkDownloadManager.getSoPath();
-            // 加载插件
-            config.addExtension("AgoraFaceUnityExtension");
-            mRtcEngine = RtcEngine.create(config);
-            // 启用插件
-            int i = mRtcEngine.enableExtension("FaceUnity", "Effect", true);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+        mRtcEngine = RtcEngineInit.INSTANCE.getMRtcEngine();
+        if (mRtcEngine==null){
+            RtcEngine.destroy();
+            mRtcEngine = RtcEngineInit.INSTANCE.initRtcEngine(baseContext);
+            if (mRtcEngine==null){
+                return;
+            }
+        }
+        if (iRtcEngineEventHandlerListener!=null){
+            mRtcEngine.addHandler(mRtcEventHandler);
         }
 
         // 在互动直播中，设置频道场景为 BROADCASTING
@@ -92,6 +87,7 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
         mRtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
         mRtcEngine.adjustPlaybackSignalVolume(128);
         mRtcEngine.adjustRecordingSignalVolume(128);
+        mRtcEngine.enableLocalAudio(true);
         if(isVideo){
             // SDK 默认关闭视频。调用 enableVideo 开启视频
             setVideoEncoderConfiguration(720,1280);
@@ -282,12 +278,14 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
             mRtcEngine.enableLocalAudio(false);
             mRtcEngine.enableLocalVideo(false);
             mRtcEngine.setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
+            mRtcEngine.stopPreview();
+            mRtcEngine.disableVideo();
             userInfo = null;
             mRtcEngine.removeHandler(mRtcEventHandler);
             iRtcEngineEventHandlerListener = null;
             mRtcEngine.leaveChannel();
-            mRtcEngine = null;
-            RtcEngine.destroy();
+           // mRtcEngine = null;
+           // RtcEngine.destroy();
         }
     }
 

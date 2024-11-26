@@ -16,10 +16,11 @@ import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.agora.databinding.AdapterSevenRoomAnchorSeatItemBinding
 import cn.yanhu.agora.databinding.AdapterSevenRoomUserSeatItemBinding
 import cn.yanhu.agora.manager.AgoraManager
-import cn.yanhu.agora.pop.LiveRoomUserRoseDetailPop
+import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
+import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
@@ -29,9 +30,10 @@ import com.chad.library.adapter4.BaseMultiItemAdapter
 /**
  * @author: zhengjun
  * created: 2024/4/1
- * desc:
+ * desc:多人房 座位
+ * 7人和9人
  */
-class SevenRoomSeatAdapter :
+class MoreSeatRoomAdapter(val roomType: Int) :
     BaseMultiItemAdapter<RoomSeatInfo>() {
     class VH(
         val binding: AdapterSevenRoomAnchorSeatItemBinding
@@ -46,8 +48,12 @@ class SevenRoomSeatAdapter :
     init {
         bindAnchorSeatItem()
         bindUserSeatItem().onItemViewType { position, _ ->
-            if (position == 0) {
-                TYPE_ANCHOR_SEAT
+            if (roomType == RoomListBean.FRG_SEVEN_ROOM) {
+                if (position == 0) {
+                    TYPE_ANCHOR_SEAT
+                } else {
+                    TYPE_USER_SEAR
+                }
             } else {
                 TYPE_USER_SEAR
             }
@@ -59,9 +65,24 @@ class SevenRoomSeatAdapter :
             override fun onBind(holder: VH2, position: Int, item: RoomSeatInfo?) {
                 //绑定男女嘉宾位置信息
                 holder.binding.apply {
-                    if (position==2 || position == 5){
+                    if (position == 0) {
+                        tvOwner.visibility = View.VISIBLE
+                    } else {
+                        tvOwner.visibility = View.INVISIBLE
+                    }
+                    val isShowNoTopBg: Boolean
+                    if (roomType == RoomListBean.FRG_NINE_ROOM) {
+                        isShowNoTopBg = position == 1 || position == 4 || position == 7
+                        ViewUtils.setViewHeight(
+                            vgParent,
+                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
+                        )
+                    } else {
+                        isShowNoTopBg = position == 2 || position == 5
+                    }
+                    if (isShowNoTopBg) {
                         vgParent.setBackgroundResource(R.drawable.bg_seat_no_top_stroke)
-                    }else{
+                    } else {
                         vgParent.setBackgroundResource(R.drawable.bg_seat_bottom_stroke)
                     }
                     upDataSeats(position)
@@ -74,7 +95,7 @@ class SevenRoomSeatAdapter :
                             setEmptySeatInfo(item)
                         }
                     }
-                   viewRank.setOnSingleClickListener {
+                    viewRank.setOnSingleClickListener {
                         showUserReceiveRoseDetailPop(item)
                     }
                     executePendingBindings()
@@ -95,6 +116,7 @@ class SevenRoomSeatAdapter :
         addItemType(TYPE_ANCHOR_SEAT, object : OnMultiItemAdapterListener<RoomSeatInfo, VH> {
             override fun onBind(holder: VH, position: Int, item: RoomSeatInfo?) {
                 holder.binding.apply {
+                    anchorSeatInfo.tvOwner.visibility = View.VISIBLE
                     anchorSeatInfo.seatInfo = item
                     anchorSeatInfo.vgParent.setBackgroundResource(R.drawable.bg_seat_no_stroke)
                     val tag = anchorSeatInfo.itemVideoSf.tag
@@ -130,7 +152,7 @@ class SevenRoomSeatAdapter :
         })
     }
 
-    private var liveRoomUserRoseDetailPop: LiveRoomUserRoseDetailPop? = null
+    private var liveRoomUserRoseDetailPop: LiveRoomUserRoseRankPop? = null
     private fun showUserReceiveRoseDetailPop(item: RoomSeatInfo?) {
         request({
             agoraRxApi.getRoomUserRoseList(
@@ -143,7 +165,7 @@ class SevenRoomSeatAdapter :
                     return
                 }
                 liveRoomUserRoseDetailPop =
-                    LiveRoomUserRoseDetailPop.showDialog(context, data.data!!)
+                    LiveRoomUserRoseRankPop.showDialog(context, data.data!!)
             }
         })
     }
@@ -159,8 +181,9 @@ class SevenRoomSeatAdapter :
             val currentSurfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = surfaceViewMap
             val liveRoomSeatBean: LiveRoomSeatBean? =
                 currentSurfaceViewMap[position]
+            var surfaceView: View?
             if (liveRoomSeatBean == null) {
-                val surfaceView = TextureView(context)
+                surfaceView = TextureView(context)
                 currentSurfaceViewMap[position] =
                     LiveRoomSeatBean(dto.roomUserSeatInfo!!.userId.toInt(), surfaceView)
 
@@ -169,7 +192,7 @@ class SevenRoomSeatAdapter :
                 addVideoSf(surfaceView, dto)
 
             } else if (dto.roomUserSeatInfo!!.userId.toInt() != liveRoomSeatBean.uid) {
-                var surfaceView = liveRoomSeatBean.surfaceView
+                surfaceView = liveRoomSeatBean.surfaceView
                 if (surfaceView == null) {
                     surfaceView = TextureView(context)
                 }
@@ -179,7 +202,7 @@ class SevenRoomSeatAdapter :
                 addVideoSf(surfaceView, dto)
 
             } else {
-                var surfaceView = liveRoomSeatBean.surfaceView
+                surfaceView = liveRoomSeatBean.surfaceView
                 if (surfaceView == null) {
                     surfaceView = TextureView(context)
                 }
@@ -188,6 +211,7 @@ class SevenRoomSeatAdapter :
                 this.itemVideoSf.addView(surfaceView)
                 addVideoSf(surfaceView, dto)
             }
+            itemVideoSf.tag = surfaceView
         } else {
             this.itemVideoSf.removeAllViews()
         }

@@ -61,6 +61,7 @@ public class ChatPhoneNew extends BaseEaseChatRow {
             String stringAttribute = message.getStringAttribute(ChatConstant.CUSTOM_MSG, "");
             String rewardGoldSum1;
             String videoCardRewardSum = "0";
+            String rewardUserId = "";
             if (TextUtils.isEmpty(stringAttribute)) {
                 chatType = params.get("chatType");
                 rewardGoldSum1 = params.get(ImMessageParamsConfig.KEY_REWARD_GOLD_SUM);
@@ -73,12 +74,12 @@ public class ChatPhoneNew extends BaseEaseChatRow {
                 chatType = callFinishRewardBean.getChatType();
                 rewardGoldSum1 = callFinishRewardBean.getGoldNum();
                 videoCardRewardSum = callFinishRewardBean.getVideoCardGoldNum();
-
+                rewardUserId = callFinishRewardBean.getRewardUserId();
                 String desc = "";
                 if (callFinishRewardBean.getIfBalanceNoEnough()) {
                     desc = "余额不足通话结束，";
                 }
-                contentView.setText((TextUtils.isEmpty(desc)?(chatType.equals("0") ? "语音通话" : "视频通话"):desc) + "时长 " + DateUtils.stringForTime(
+                contentView.setText((TextUtils.isEmpty(desc) ? (chatType.equals("0") ? "语音通话" : "视频通话") : desc) + "时长 " + DateUtils.stringForTime(
                         callFinishRewardBean.getSeconds() * 1000L
                 ));
             }
@@ -91,8 +92,7 @@ public class ChatPhoneNew extends BaseEaseChatRow {
             LinearLayout coinLl = inflate.findViewById(R.id.coin_ll);
             TextView coinTxt = inflate.findViewById(R.id.coin_txt);
             ImageView ivCoin = inflate.findViewById(R.id.iv_coin);
-
-            if (!TextUtils.isEmpty(rewardGoldSum1) && AppCacheManager.isWoman()) {
+            if (!TextUtils.isEmpty(rewardGoldSum1) && (TextUtils.isEmpty(rewardUserId) ? AppCacheManager.isWoman() : AppCacheManager.INSTANCE.getUserId().equals(rewardUserId))) {
                 int rewardGoldSum = Integer.parseInt(rewardGoldSum1);
                 if (rewardGoldSum > 0) {
                     coinLl.setVisibility(VISIBLE);
@@ -110,9 +110,8 @@ public class ChatPhoneNew extends BaseEaseChatRow {
             } else {
                 coinLl.setVisibility(GONE);
             }
-
-
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

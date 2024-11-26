@@ -54,6 +54,7 @@ dependencies {
     // api("io.github.scwang90:refresh-header-classics:${smartRefreshVersion}")    //经典刷新头
     api("io.github.scwang90:refresh-footer-classics:${smartRefreshVersion}")      //经典加载
     api("io.github.scwang90:refresh-header-material:${smartRefreshVersion}")     //谷歌刷新头
+    api("io.github.scwang90:refresh-footer-ball:${smartRefreshVersion}")
     api("me.weishu:free_reflection:3.0.1")
     api("com.github.gzu-liyujiang:Android_CN_OAID:4.2.4")
     //https://github.com/CymChad/BaseRecyclerViewAdapterHelper

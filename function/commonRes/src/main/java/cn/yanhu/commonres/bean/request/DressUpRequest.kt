@@ -6,7 +6,6 @@ package cn.yanhu.commonres.bean.request
  * desc:
  */
 data class DressUpRequest(
-    val commodityId: Int,
-    val commodityType: Int,
+    val id: Int,
     val operation: Int, //0=卸下装扮；1=装备装扮
 )

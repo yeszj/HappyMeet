@@ -16,14 +16,13 @@ import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.ActivityFromWaitPhoneBinding
-import cn.yanhu.agora.manager.AgoraManager
+import cn.yanhu.agora.manager.AgoraPhoneManager
 import cn.yanhu.agora.manager.ImPhoneMsgManager
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.imchat.manager.ChatCallStatusConfig
 import cn.yanhu.imchat.manager.EmMsgManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.GsonUtils
-import com.blankj.utilcode.util.ThreadUtils
 import com.hyphenate.chat.EMMessage
 import com.jeremyliao.liveeventbus.LiveEventBus
 
@@ -37,7 +36,7 @@ class FromWaitPhoneActivity : BaseActivity<ActivityFromWaitPhoneBinding, ImPhone
         setFullScreenStatusBar(false)
         playRing()
         val content = intent.extras?.getString(IntentKeyConfig.DATA)
-        if (TextUtils.isEmpty(content)){
+        if (TextUtils.isEmpty(content)) {
             finish()
             return
         }
@@ -48,10 +47,9 @@ class FromWaitPhoneActivity : BaseActivity<ActivityFromWaitPhoneBinding, ImPhone
         mBinding.callInfo = callInfo
         mBinding.executePendingBindings()
         startConnectCountDownTime()
-        ThreadUtils.getMainHandler().postDelayed({
-            AgoraManager.getInstence()
-                .init(mContext, 1, mBinding.surfaceView)
-        },50)
+        AgoraPhoneManager.getInstance()
+            .init(mContext, true)
+        AgoraPhoneManager.getInstance().setupLocalVideo(mBinding.surfaceView)
     }
 
     private var timer: CountDownTimer? = null
@@ -70,7 +68,7 @@ class FromWaitPhoneActivity : BaseActivity<ActivityFromWaitPhoneBinding, ImPhone
     /*
      * 取消一对一通话
      * */
-    private fun cancelCall(isTimeOut:Boolean = false) {
+    fun cancelCall(isTimeOut: Boolean = false) {
         val userId: String = java.lang.String.valueOf(callInfo.chatUser.id)
         mViewModel.call(
             userId,
@@ -83,9 +81,9 @@ class FromWaitPhoneActivity : BaseActivity<ActivityFromWaitPhoneBinding, ImPhone
             AppCacheManager.userId,
             ChatConstant.ACTION_PHONE_CALL_REFUSE
         )
-        if (isTimeOut){
+        if (isTimeOut) {
             ImPhoneMsgManager.sendTimeOutMsg(callInfo.chatType, java.lang.String.valueOf(userId))
-        }else{
+        } else {
             ImPhoneMsgManager.sendCancelMsg(
                 callInfo.chatType,
                 java.lang.String.valueOf(userId)
@@ -114,11 +112,14 @@ class FromWaitPhoneActivity : BaseActivity<ActivityFromWaitPhoneBinding, ImPhone
             if (source == ChatConstant.ACTION_PHONE_CALL_REFUSE) { //一对一通话取消
                 finish()
             } else if (source == ChatConstant.ACTION_PHONE_CALL_ANSWER) { //一对一通话同意
+                isAgree = true
                 RouteIntent.toVideoPhonePage(callInfo)
                 finish()
             }
         }
     }
+
+    private var isAgree = false;
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -138,7 +139,9 @@ class FromWaitPhoneActivity : BaseActivity<ActivityFromWaitPhoneBinding, ImPhone
 
     override fun exactDestroy() {
         super.exactDestroy()
-        AgoraManager.getInstence().onDestory()
+        if (!isAgree){
+            AgoraPhoneManager.getInstance().onDestory()
+        }
         mediaPlayerRing?.stop()
         mediaPlayerRing?.release()
         mediaPlayerRing = null

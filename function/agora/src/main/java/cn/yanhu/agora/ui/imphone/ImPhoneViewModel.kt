@@ -55,6 +55,17 @@ class ImPhoneViewModel: BaseViewModel()  {
         })
     }
 
+    fun call(chatUserId: String, chatType: String, status: String, uid: String,onRequestResultListener: OnRequestResultListener<ChatCallResponseInfo>) {
+        val hashMap = HashMap<String, String>()
+        hashMap["chatUserId"] = chatUserId
+        hashMap["chatType"] = chatType
+        hashMap["status"] = status
+        if (status != "0") {
+            hashMap["uid"] = uid
+        }
+        request2({ agoraRxApi.call(hashMap) }, onRequestResultListener)
+    }
+
     fun startCall(chatUserId: String, chatType: String, status: String, uid: String) {
         val hashMap = HashMap<String, String>()
         hashMap["chatUserId"] = chatUserId

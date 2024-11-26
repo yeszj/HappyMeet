@@ -115,7 +115,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         }
     }
     private var callInfo: ChatCallResponseInfo? = null
-    private var chatUserId: Int = 0
+     var chatUserId: Int = 0
     override fun initData() {
         try {
             AgoraManager.isLiveRoom = true
@@ -264,7 +264,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         val remainTime = mBinding.remainTime!!
         if (remainTime > 0) {
             mBinding.remainTime = remainTime - 1
-        } else if (remainTime <= 0 && mBinding.remainTimer.visibility == View.VISIBLE) {
+        } else if ( mBinding.remainTimer.visibility == View.VISIBLE) {
             showUserInfo()
         }
     }
@@ -273,7 +273,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         val freeTime = mBinding.freeTime!!
         if (freeTime > 0) {
             mBinding.freeTime = freeTime - 1
-        } else if (freeTime <= 0 && mBinding.freeTimer.visibility == View.VISIBLE) {
+        } else if ( mBinding.freeTimer.visibility == View.VISIBLE) {
             mBinding.freeTimer.visibility = View.GONE
         }
     }
@@ -397,9 +397,9 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
 
     private fun sdkInit() {
         try {
+            AgoraPhoneManager.getInstance().setRtcEngineEventHandlerListener(this)
             //声网初始化
             AgoraPhoneManager.getInstance().init(this, true)
-            AgoraPhoneManager.getInstance().setRtcEngineEventHandlerListener(this)
             //是否进入频道  0：进入
             val joined = AgoraPhoneManager.getInstance().joinChannel(
                 callInfo!!.user.id.toInt(),
@@ -612,7 +612,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         })
     }
 
-    private fun leave(onLeaveListener: OnLeaveListener) {
+     fun leave(onLeaveListener: OnLeaveListener) {
         if (callInfo == null) {
             return
         }

@@ -61,6 +61,11 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         userInfo?.apply {
             bindUserInfo(this)
         }
+        chatFragment.setAddFriendListener(object : ChatFragment.OnAddFriendTipsListener{
+            override fun onAddFriend() {
+                showAddFriendPop()
+            }
+        })
         playUnShowGiftAnim()
     }
 
@@ -71,6 +76,17 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         } else {
             mContext.finish()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        clearAnimView()
+    }
+
+    private fun clearAnimView() {
+        mBinding.svgGiftAnim.clearsAfterDetached = true
+        mBinding.svgGiftAnim.stopAnimation(true)
+        mBinding.svgGiftAnim.clear()
     }
 
     /**
@@ -119,7 +135,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
             return
         }
         //显示礼物特效svg动画
-        giftAnimTaskManager.addTask(GiftPopAnimTask(url!!))
+        giftAnimTaskManager.addTask(GiftPopAnimTask(url!!,mBinding.svgGiftAnim))
     }
 
     override fun initListener() {
@@ -163,6 +179,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
                         val params = (message.body as EMCustomMessageBody).params
                         if (params["isApplySuccess"] == "1") {
                             userInfo?.isFriend = true
+                            chatFragment.setUserInfo(userInfo)
                         }
                     }
                 }
@@ -191,6 +208,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
             parseState(it, {
                 userInfo?.isFriend = true
                 ChatUserInfoManager.saveUserInfo(userInfo)
+                chatFragment.setUserInfo(userInfo)
                 mBinding.vgAddFriendTips.visibility = View.GONE
                 EmMsgManager.sendCmdMessagePeople(userId, CmdMsgTypeConfig.ADD_FRIEND, null)
 //                EmMsgManager.sendApplyFriend(

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import cn.yanhu.baselib.utils.GlideUtils
+import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.R
 import cn.yanhu.commonres.bean.BaseUserInfo
@@ -27,6 +28,7 @@ import com.opensource.svgaplayer.SVGAParser
  * desc:
  */
 class UserAvatarView : LinearLayout {
+    private var avatarMarginLeft: Float = 0F
     private lateinit var ivAvatar: RoundedImageView
     private lateinit var svgAvatar: SVGAImageView
     private var isShowSvga: Boolean = false
@@ -58,6 +60,7 @@ class UserAvatarView : LinearLayout {
         val svgaAvatarSize = attrArray.getDimension(R.styleable.UserAvatarView_svgAvatarSize, 64f)
         val avatarBorderSize =
             attrArray.getDimension(R.styleable.UserAvatarView_avatarBorderSize, 0f)
+        avatarMarginLeft = attrArray.getDimension(R.styleable.UserAvatarView_avatarMarginLeft, 0f)
         val avatarBorderColor = attrArray.getColor(R.styleable.UserAvatarView_avatarBorderColor, -1)
         isCanClick = attrArray.getBoolean(R.styleable.UserAvatarView_isCanClick,true)
         LayoutInflater.from(context).inflate(R.layout.view_user_avatar, this, true)
@@ -102,6 +105,13 @@ class UserAvatarView : LinearLayout {
         setAvatar(item, null)
     }
 
+    fun setAvatarSize(avatarSize:Int){
+        val layoutParams = ivAvatar.layoutParams
+        layoutParams.width = avatarSize
+        layoutParams.height = avatarSize
+        ivAvatar.layoutParams = layoutParams
+    }
+
     @SuppressLint("CheckResult")
     private fun setAvatar(item: BaseUserInfo, parseCompletion: SVGAParser.ParseCompletion?) {
         val tag = ivAvatar.tag
@@ -116,8 +126,10 @@ class UserAvatarView : LinearLayout {
 
         if (isShowSvga){
             if (!TextUtils.isEmpty(item.avatarFrame)) {
+                ViewUtils.setMarginLeft(this,0)
                 svgAvatar.visibility = View.VISIBLE
-                if (item.avatarFrame.endsWith(".png") || item.avatarFrame.endsWith(".jpg")) {
+                svgAvatar.visibility = View.VISIBLE
+                if (!item.avatarFrame.endsWith(".svga")) {
                     GlideUtils.load(
                         context,
                         item.avatarFrame,
@@ -149,6 +161,7 @@ class UserAvatarView : LinearLayout {
 
                 }
             } else {
+                ViewUtils.setMarginLeft(this,avatarMarginLeft.toInt())
                 clearAnim()
             }
         }

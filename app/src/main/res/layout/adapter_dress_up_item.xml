@@ -22,17 +22,30 @@
         android:background="@drawable/white_corner_10"
         android:backgroundTint="@color/blackAlpha80">
 
+        <View
+            android:id="@+id/iv_goodsBg"
+            android:layout_width="@dimen/dp_92"
+            android:layout_height="@dimen/dp_92"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/dp_6"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_cover"
             style="@style/constraintHorizonCenter"
-            imageUrl="@{itemInfo.cover}"
+            drawableUrl="@{itemInfo.cover}"
             placeholderId="@{-1}"
-            android:layout_width="@dimen/dp_92"
-            android:layout_height="@dimen/dp_92"
-            android:layout_marginTop="@dimen/dp_6"
-            app:layout_constraintTop_toTopOf="parent"
+            android:adjustViewBounds="true"
+            android:maxHeight="@dimen/dp_92"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_goodsBg"
+            app:layout_constraintStart_toStartOf="@+id/iv_goodsBg"
+            app:layout_constraintEnd_toEndOf="@+id/iv_goodsBg"
+            app:layout_constraintTop_toTopOf="@+id/iv_goodsBg"
             tools:ignore="MissingConstraints"
-            tools:src="@color/fontRedColor" />
+            tools:src="@drawable/avatar_woman_normal" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_name"
@@ -43,7 +56,7 @@
             android:text="@{itemInfo.name}"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_13"
-            app:layout_constraintTop_toBottomOf="@+id/iv_cover"
+            app:layout_constraintTop_toBottomOf="@+id/iv_goodsBg"
             tools:ignore="MissingConstraints"
             tools:text="贵族王冠" />
 
@@ -66,17 +79,30 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_4"
             android:background="@drawable/white_corner_5"
-            android:backgroundTint="@{itemInfo.have?@color/whiteColorAlpha70:@color/color_alpha40_ff003d}"
+            android:backgroundTint="@color/whiteColorAlpha70"
             android:gravity="center"
             android:paddingHorizontal="@dimen/dp_4"
             android:paddingVertical="@dimen/dp_2"
-            android:text='@{itemInfo.have?"已拥有":itemInfo.tag}'
+            android:text="已拥有"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
-            android:visibility="@{(itemInfo.have||!TextUtils.isEmpty(itemInfo.tag))?View.VISIBLE:View.INVISIBLE}"
+            android:visibility="@{itemInfo.have?View.VISIBLE:View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:backgroundTint="@color/color_alpha40_ff003d"
-            tools:text="最新" />
+            tools:text="已拥有" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_18"
+            android:layout_margin="@dimen/dp_4"
+            android:gravity="center"
+            android:adjustViewBounds="true"
+            drawableUrl="@{itemInfo.tag}"
+            android:textColor="@color/white"
+            tools:visibility="invisible"
+            android:textSize="@dimen/sp_12"
+            android:visibility="@{(!itemInfo.have&amp;&amp;!TextUtils.isEmpty(itemInfo.tag))?View.VISIBLE:View.INVISIBLE,default = invisible}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

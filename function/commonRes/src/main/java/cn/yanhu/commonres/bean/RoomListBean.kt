@@ -19,7 +19,7 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
     var roomName: String = ""
 
     @Bindable
-    var roomType = 0 //1-视频相亲-大厅 2-专属交友 0-用户 3-7人交友 4-7人天使 5-拍卖房
+    var roomType = 0 //1-视频相亲-大厅 2-专属交友 0-用户 3-7人交友 4-7人天使 5-9人房
         set(value) {
             field = value
             notifyPropertyChanged(BR._all)
@@ -36,11 +36,20 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
             0 -> {
                 "对方在线"
             }
-            2 -> {
+            TYPE_PRIVATE -> {
                 "专属交友"
             }
-            3 -> {
+            TYPE_SEVEN_FRIEND -> {
                 "七人交友"
+            }
+            TYPE_SEVEN_ANGLE -> {
+                "七人天使"
+            }
+            TYPE_NINE_FRIEND -> {
+                "九人交友"
+            }
+            TYPE_NINE_ANGLE -> {
+                "九人天使"
             }
             else -> {
                 "视频相亲"
@@ -57,23 +66,52 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
     }
 
     override fun getFragmentType(): Int {
-        if (roomType == 1 || roomType == 2) {
-            return TYPE_THREE_ROOM
-        } else if (roomType == 3 || roomType == 4) {
-            return TYPE_SEVEN_ROOM
+        return when (roomType) {
+            TYPE_PUBLIC, TYPE_PRIVATE -> {
+                FRG_THREE_ROOM
+            }
+
+            TYPE_SEVEN_FRIEND, TYPE_SEVEN_ANGLE -> {
+                FRG_SEVEN_ROOM
+            }
+
+            TYPE_NINE_FRIEND,TYPE_NINE_ANGLE -> {
+                FRG_NINE_ROOM
+            }
+
+            else -> FRG_OTHER_ROOM
         }
-        return TYPE_OTHER_ROOM
+    }
+
+    fun isSevenRoom():Boolean{
+        return roomType == TYPE_SEVEN_FRIEND
+    }
+
+    fun isAngleRoom():Boolean{
+        return roomType == TYPE_SEVEN_ANGLE || roomType == TYPE_NINE_ANGLE
+    }
+
+    fun isNineRoom():Boolean{
+        return roomType == TYPE_NINE_FRIEND
     }
 
     fun isPrivateRoom(): Boolean {
-        return roomType == 2
+        return roomType == TYPE_PRIVATE
     }
 
 
     companion object {
-        const val TYPE_THREE_ROOM = 1
-        const val TYPE_SEVEN_ROOM = 2
-        const val TYPE_OTHER_ROOM = 10
+        const val FRG_THREE_ROOM = 1
+        const val FRG_SEVEN_ROOM = 2
+        const val FRG_NINE_ROOM = 3
+        const val FRG_OTHER_ROOM = 10
+
+        const val TYPE_PUBLIC = 1
+        const val TYPE_PRIVATE= 2
+        const val TYPE_SEVEN_FRIEND = 3
+        const val TYPE_SEVEN_ANGLE = 4
+        const val TYPE_NINE_FRIEND = 5
+        const val TYPE_NINE_ANGLE = 6
     }
 
     @Transient

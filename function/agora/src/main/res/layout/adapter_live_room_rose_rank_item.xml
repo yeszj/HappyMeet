@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="cn.yanhu.baselib.utils.CommonUtils"/>
         <variable
             name="rankInfo"
             type="cn.yanhu.commonres.bean.UserDetailInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/dp_32"
-        android:layout_height="@dimen/dp_32"
+        android:layout_width="@dimen/dp_28"
+        android:layout_height="@dimen/dp_28"
         android:layout_marginEnd="@dimen/dp_4">
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:layout_width="@dimen/dp_32"
-            android:layout_height="@dimen/dp_32"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_28"
             android:scaleType="centerCrop"
             imageUrl="@{rankInfo.portrait}"
             android:src="@drawable/ease_default_avatar"
@@ -25,14 +26,13 @@
             app:riv_oval="true" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="@dimen/dp_12"
             android:background="@drawable/white_corner_20"
-            android:backgroundTint="#6B647A"
+            android:backgroundTint="@color/colorMain"
             android:gravity="center"
-            android:paddingHorizontal="@dimen/dp_4"
-            tools:text="265"
-            android:text="@{rankInfo.roseNum}"
+            tools:text="1.31k"
+            android:text="@{CommonUtils.INSTANCE.formatRoseNum(rankInfo.roseNum)}"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_9"
             app:layout_constraintBottom_toBottomOf="parent"

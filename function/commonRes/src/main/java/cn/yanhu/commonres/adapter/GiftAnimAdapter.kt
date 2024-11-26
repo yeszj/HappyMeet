@@ -100,7 +100,7 @@ class GiftAnimAdapter(private var clearListener: OnClearListener) :
         }
     }
 
-    override fun addAnim(view: View?) {
+    override fun addAnim(view: View?,mBean:ChatRoomGiftMsg ) {
         val textView = view!!.findViewById<TextView>(R.id.tv_gift_amount)
         val img = view.findViewById<ImageView>(R.id.iv_gift_img)
         // 整个giftview动画
@@ -125,6 +125,7 @@ class GiftAnimAdapter(private var clearListener: OnClearListener) :
         view.startAnimation(giftInAnim)
         img.startAnimation(imgInAnim)
     }
+
 
     override fun outAnim(): AnimationSet {
         return RewardAnimUtils.getOutAnimation(ActivityUtils.getTopActivity())

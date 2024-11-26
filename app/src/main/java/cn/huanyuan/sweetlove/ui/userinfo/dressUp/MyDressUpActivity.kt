@@ -6,12 +6,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.ActivityDressUpBinding
+import cn.yanhu.agora.miniwindow.MiniWindowManager
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewPager2Helper
 import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.baselib.widget.indicator.CommonIndicatorAdapter
+import cn.yanhu.commonres.bean.TabConfigInfo
+import cn.zj.netrequest.ext.parseState
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
 /**
@@ -23,12 +26,28 @@ class MyDressUpActivity : BaseActivity<ActivityDressUpBinding, DressUpViewModel>
     R.layout.activity_dress_up,
     DressUpViewModel::class.java
 ) {
+    private var frgList: ArrayList<Fragment> = arrayListOf()
     override fun initData() {
         setFullScreenStatusBar()
         mBinding.titleBar.setLeftTitleName("我的装扮")
         mBinding.titleBar.setTitleRightText("装扮中心")
-        initTabLayout()
-        initVpData()
+        requestData()
+    }
+
+    override fun requestData() {
+        super.requestData()
+        mViewModel.getStoreTabs()
+    }
+
+    override fun registerNecessaryObserver() {
+        super.registerNecessaryObserver()
+        mViewModel.tabListObservable.observe(this){ it ->
+            parseState(it,{
+                if (frgList.size<=0){
+                    initTabLayout(it)
+                }
+            })
+        }
     }
 
     override fun initListener() {
@@ -38,16 +57,25 @@ class MyDressUpActivity : BaseActivity<ActivityDressUpBinding, DressUpViewModel>
                 finish()
             }
             override fun rightButtonOnClick(v: View?) {
-                DressUpCenterActivity.lunch(mContext)
-                finish()
+                val upActivity = MiniWindowManager.getUpActivity()
+                if (upActivity!=null && upActivity is DressUpCenterActivity){
+                    finish()
+                }else{
+                    DressUpCenterActivity.lunch(mContext)
+                    finish()
+                }
             }
         })
     }
 
-    private fun initTabLayout() {
+    private fun initTabLayout(tabList:List<TabConfigInfo>) {
+        val list = mutableListOf<String>()
+        tabList.forEach {
+            list.add(it.name)
+            frgList.add(DressUpFrg.newInstance(it.id))
+        }
         val magicIndicator = mBinding.tabLayout
         val commonNavigator = CommonNavigator(mContext)
-        val list = mutableListOf("头像框", "座驾","聊天气泡","靓号")
         commonNavigator.adapter = CommonIndicatorAdapter(
             mBinding.viewPager,
             list.toTypedArray(),
@@ -59,17 +87,10 @@ class MyDressUpActivity : BaseActivity<ActivityDressUpBinding, DressUpViewModel>
         commonNavigator.isAdjustMode = false
         magicIndicator.navigator = commonNavigator
         ViewPager2Helper.bind(magicIndicator, mBinding.viewPager)
-    }
-
-    private var frgList: ArrayList<Fragment> = arrayListOf()
-    private fun initVpData() {
-        frgList.add(MyDressUpFrg.newInstance(MyDressUpFrg.TYPE_AVATAR_FRAME))
-        frgList.add(MyDressUpFrg.newInstance(MyDressUpFrg.TYPE_CAR))
-        frgList.add(MyDressUpFrg.newInstance(MyDressUpFrg.TYPE_CHAT_POP))
-        frgList.add(MyDressUpFrg.newInstance(MyDressUpFrg.TYPE_BEAUTIFUL_ACCOUNT))
         mBinding.viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
         mBinding.viewPager.offscreenPageLimit = frgList.size
     }
+
 
     companion object{
         fun lunch(context: Context){

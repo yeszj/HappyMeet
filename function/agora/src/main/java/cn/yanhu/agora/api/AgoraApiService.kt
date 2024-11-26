@@ -1,5 +1,7 @@
 package cn.yanhu.agora.api
 
+import cn.yanhu.agora.bean.AngleRankInfo
+import cn.yanhu.agora.bean.AngleRoomResultInfo
 import cn.yanhu.agora.bean.CheckCallBalanceRes
 import cn.yanhu.agora.bean.ConfigSdkVersion
 import cn.yanhu.agora.bean.EnterCheckResponse
@@ -14,6 +16,7 @@ import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.UserDetailInfo
+import cn.yanhu.commonres.bean.response.FriendsResponse
 import cn.yanhu.commonres.bean.response.RoomListResponse
 import cn.zj.netrequest.status.BaseBean
 import retrofit2.http.*
@@ -177,6 +180,16 @@ interface AgoraApiService {
         @Query("roomId") roomId: String
     ): BaseBean<UserReceiveRoseInfo>
 
+    @GET("app/v1/room/getAngelRankList")
+    suspend fun getRoomAngleRank(
+        @Query("roomId") roomId: String
+    ): BaseBean<List<AngleRankInfo>>
+
+    @GET("app/v1/room/getAngelWinner")
+    suspend fun getAngelWinner(
+        @Query("roomId") roomId: String
+    ): BaseBean<AngleRoomResultInfo>
+
     /**
      * 管理员关闭房间
      */
@@ -195,4 +208,7 @@ interface AgoraApiService {
 
     @POST("/app/v1/room/switchTypeConfirm")
     suspend fun switchTypeConfirm(@Query("roomId") roomId: String): BaseBean<Boolean>
+
+    @GET("app/v1/user/friendList")
+    suspend fun getFriendList(@Query("page") page: Int): BaseBean<FriendsResponse>
 }

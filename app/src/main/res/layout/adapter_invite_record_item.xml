@@ -57,34 +57,42 @@
             app:layout_constraintTop_toTopOf="@+id/avatarView"
             tools:text="佊岸、花开" />
 
-        <cn.yanhu.commonres.view.UserLevelView
-            android:id="@+id/userLevel"
-            userLevel="@{userinfo.level}"
+        <LinearLayout
+            android:id="@+id/vg_info"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_5"
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"
-            app:layout_constraintStart_toEndOf="@+id/avatarView" />
+            app:layout_constraintStart_toEndOf="@+id/avatarView"
+            android:layout_height="wrap_content">
+            <cn.yanhu.commonres.view.UserLevelView
+                android:id="@+id/userLevel"
+                userLevel="@{userinfo.level}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_5"
+                app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+                app:layout_constraintStart_toEndOf="@+id/avatarView" />
 
-        <cn.yanhu.commonres.view.UserTagView
-            android:id="@+id/userAge"
-            userAge="@{userinfo.age}"
-            userGender="@{userinfo.gender}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/userLevel"
-            app:layout_constraintStart_toEndOf="@+id/userLevel"
-            app:layout_constraintTop_toTopOf="@+id/userLevel" />
+            <cn.yanhu.commonres.view.UserTagView
+                android:id="@+id/userAge"
+                userAge="@{userinfo.age}"
+                userGender="@{userinfo.gender}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_5"
+                app:layout_constraintBottom_toBottomOf="@+id/userLevel"
+                app:layout_constraintStart_toEndOf="@+id/userLevel"
+                app:layout_constraintTop_toTopOf="@+id/userLevel" />
 
-        <cn.yanhu.commonres.view.UserTagView
-            userProvince='@{userinfo.province}'
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/userAge"
-            app:layout_constraintStart_toEndOf="@+id/userAge"
-            app:layout_constraintTop_toTopOf="@+id/userAge" />
+            <cn.yanhu.commonres.view.UserTagView
+                userProvince='@{userinfo.province}'
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/userAge"
+                app:layout_constraintStart_toEndOf="@+id/userAge"
+                app:layout_constraintTop_toTopOf="@+id/userAge" />
+        </LinearLayout>
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -103,7 +111,7 @@
             android:textColor="@color/colorMain"
             app:fontType="@string/fontBold"
             android:textSize="@dimen/sp_16"
-            app:layout_constraintBottom_toBottomOf="@+id/userLevel"
-            app:layout_constraintTop_toTopOf="@+id/userLevel" />
+            app:layout_constraintBottom_toBottomOf="@+id/vg_info"
+            app:layout_constraintTop_toTopOf="@+id/vg_info" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

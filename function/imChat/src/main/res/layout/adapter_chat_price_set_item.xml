@@ -25,7 +25,7 @@
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:textColor="@color/color_888888"
-            android:text="60玫瑰/条"
+            android:text="0玫瑰/分钟"
             android:textSize="@dimen/sp_13"
             app:fontType="@string/fontMedium"
             android:paddingStart="@dimen/dp_12"

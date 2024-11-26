@@ -1,7 +1,9 @@
 package cn.huanyuan.sweetlove.func.dialog
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.text.TextUtils
+import android.view.View
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.PopDressUpOperateBinding
@@ -14,12 +16,16 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.DressUpInfo
 import cn.yanhu.commonres.bean.request.DressUpRequest
-import cn.yanhu.commonres.manager.LiveDataEventManager
+import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.utils.SVGAUtils
 import cn.zj.netrequest.ext.OnBooleanResultListener
 import cn.zj.netrequest.ext.request
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.BottomPopupView
+import com.opensource.svgaplayer.SVGACallback
 
 /**
  * @author: zhengjun
@@ -31,9 +37,9 @@ class DressUpOperatePop(
     val context: FragmentActivity,
     val item: DressUpInfo,
     val type: Int,
-    private val roseBalance: String
-) :
-    BottomPopupView(context) {
+    private val roseBalance: String,
+    private val onDressUpListener: OnDressUpListener
+) : BottomPopupView(context) {
     override fun getImplLayoutId(): Int {
         return R.layout.pop_dress_up_operate
     }
@@ -43,65 +49,105 @@ class DressUpOperatePop(
         super.onCreate()
         mBinding = PopDressUpOperateBinding.bind(popupImplView)
         mBinding?.apply {
-            if (type == DressUpFrg.TYPE_CAR) {
-                ViewUtils.setViewSize(
-                    ivCover,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_196),
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_196)
-                )
-            }
             itemInfo = item
-            if (TextUtils.isEmpty(item.svgUrl)) {
-                GlideUtils.load(context, item.cover, ivCover)
+            val svga = item.svgUrl
+
+
+            if (!TextUtils.isEmpty(svga)) {
+                if (type != DressUpFrg.TYPE_CAR) {
+                    if (type == DressUpFrg.TYPE_USER_FLOAT) {
+                        ViewUtils.setViewSize(
+                            ivGoods,
+                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_187),
+                            CommonUtils.getDimension(
+                                com.zj.dimens.R.dimen.dp_50
+                            )
+                        )
+                    }
+                    tvRead.visibility = View.INVISIBLE
+                    SVGAUtils.loadSVGAAnim(ivGoods, svga)
+                } else {
+                    tvRead.visibility = View.VISIBLE
+                    vgPic.setOnSingleClickListener {
+                        SVGAUtils.loadSVGAAnim(svgaImageView, svga)
+                    }
+                    // 设置回调
+                    svgaImageView.callback = object : SVGACallback {
+                        override fun onPause() {
+                        }
+
+                        override fun onFinished() {
+                            svgaImageView.clear()
+                        }
+
+                        override fun onRepeat() {}
+                        override fun onStep(i: Int, v: Double) {}
+                    }
+                }
             } else {
-                SVGAUtils.loadSVGAAnim(ivCover, item.svgUrl)
+                tvRead.visibility = View.INVISIBLE
             }
+            loadDrawable()
             tvBuy.setOnSingleClickListener {
-                if (item.isTimeOut){
-                    DressGoodsBuyPop.showDialog(context,item,type,roseBalance)
+                if (item.isTimeOut) {
+                    DressGoodsBuyPop.showDialog(context, item, type, roseBalance)
                     dismiss()
-                }else {
+                } else {
                     startWear(item.isWear)
                 }
             }
+            vgOutline.setOnSingleClickListener { dismiss() }
+            vgContent.setOnSingleClickListener { }
         }
     }
 
+    private fun loadDrawable() {
+        GlideUtils.loadAsDrawable(context, item.cover, object : CustomTarget<Drawable>() {
+            override fun onResourceReady(
+                resource: Drawable, transition: Transition<in Drawable>?
+            ) {
+                mBinding!!.ivGoods.setImageDrawable(resource)
+            }
 
-    private fun startWear(isWear:Boolean) {
+            override fun onLoadCleared(placeholder: Drawable?) {
+            }
+
+        })
+    }
+
+    private fun startWear(isWear: Boolean) {
         val buyRequest = DressUpRequest(
             item.id,
-            type,
             if (isWear) 0 else 1,
         )
-        request({ rxApi.dressUpCommodity(buyRequest) },object : OnBooleanResultListener{
+        request({ rxApi.dressUpCommodity(buyRequest) }, object : OnBooleanResultListener {
             override fun onSuccess() {
-                if (isWear){
+                if (isWear) {
                     showToast("取消佩戴成功")
-                }else{
+                } else {
                     showToast("佩戴成功")
                 }
+                LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO).post(true)
                 item.isWear = !isWear
                 mBinding?.itemInfo = item
-                LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.DRESS_UP_SUCCESS,item.id)
+                onDressUpListener.onDressUpSuccess(item.id)
             }
         })
     }
 
 
+    interface OnDressUpListener{
+        fun onDressUpSuccess(id:Int)
+    }
 
     companion object {
         @JvmStatic
         fun showDialog(
-            mContext: FragmentActivity,
-            item: DressUpInfo,
-            type: Int,
-            roseBalance: String
+            mContext: FragmentActivity, item: DressUpInfo, type: Int, roseBalance: String,onDressUpListener: OnDressUpListener
         ): DressUpOperatePop {
-            val matchPop = DressUpOperatePop(mContext, item, type, roseBalance)
+            val matchPop = DressUpOperatePop(mContext, item, type, roseBalance,onDressUpListener)
             val builder = XPopup.Builder(mContext)
-            builder
-                .asCustom(matchPop).show()
+            builder.asCustom(matchPop).show()
             return matchPop
         }
     }

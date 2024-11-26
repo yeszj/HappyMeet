@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.adapter.liveRoom.LiveRoomRoseRankAdapter
-import cn.yanhu.agora.adapter.liveRoom.SevenRoomSeatAdapter
+import cn.yanhu.agora.adapter.liveRoom.MoreSeatRoomAdapter
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
-import cn.yanhu.agora.pop.LiveRoomUserRoseDetailPop
+import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.manager.AppCacheManager
@@ -14,66 +14,105 @@ import cn.zj.netrequest.ext.parseState
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager
 import cn.yanhu.agora.R
+import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.ViewSevenRoomRankViewBinding
+import cn.yanhu.agora.pop.RoomAngleRankPop
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
+import cn.yanhu.commonres.bean.RoomDetailInfo
+import cn.yanhu.commonres.bean.RoomListBean
+import cn.yanhu.commonres.config.IntentKeyConfig
+import cn.yanhu.commonres.manager.WebUrlManager
+import cn.yanhu.commonres.router.PageIntentUtil
+import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.status.BaseBean
 
 /**
  * @author: zhengjun
  * created: 2024/4/1
  * desc:
  */
-class SevenLiveRoomFrg : BaseLiveRoomFrg() {
+open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
 
-    private val rankAdapter by lazy { LiveRoomRoseRankAdapter() }
+    protected val rankAdapter by lazy { LiveRoomRoseRankAdapter() }
     override fun initData() {
+        roomSourceBean = requireArguments().getSerializable(IntentKeyConfig.DATA) as RoomDetailInfo
         seatUserAdapter =
-            SevenRoomSeatAdapter()
-        addRankView()
+            MoreSeatRoomAdapter(roomSourceBean.getFragmentType())
         super.initData()
+        addRankView()
         val layoutManager = mBinding.rvSeat.layoutManager as QuickGridLayoutManager
         layoutManager.spanCount = 3
         mBinding.rvSeat.adapter = seatUserAdapter
         getRoseRankList()
-        if (!isOwner) {
-            rankViewBinding.tvOnlineNum.visibility = View.GONE
-        }
+
     }
 
     private lateinit var rankViewBinding: ViewSevenRoomRankViewBinding
-    private fun addRankView() {
+    protected open fun addRankView() {
         val rankView =
             LayoutInflater.from(mContext).inflate(R.layout.view_seven_room_rank_view, null)
         rankViewBinding = DataBindingUtil.bind(rankView)!!
         val rvRank = rankViewBinding.rvRank
-        val tvOnlineNum = rankViewBinding.tvOnlineNum
+        rankViewBinding.isAngle = roomType == RoomListBean.TYPE_SEVEN_ANGLE
         rvRank.adapter = rankAdapter
         rankAdapter.setOnItemClickListener { _, _, _ ->
             userReceiveRoseInfo?.apply {
                 showRankListPop()
             }
         }
-        tvOnlineNum.setOnSingleClickListener {
+        rankViewBinding.ivExit.setOnSingleClickListener {
+            showFloatWindow(1)
+        }
+        rankViewBinding.tvOnlineNum.setOnSingleClickListener {
             showOnlineUserList()
         }
+        rankViewBinding.ivRank.setOnSingleClickListener {
+            showAngleRankPop()
+        }
+        rankViewBinding.ivRule.setOnSingleClickListener {
+            PageIntentUtil.url2Page(mContext, WebUrlManager.ANGLE_ROOM_RULE)
+        }
         mBinding.flCustomView.addView(rankView)
+        if (!isOwner) {
+            rankViewBinding.tvOnlineNum.visibility = View.INVISIBLE
+        }
     }
 
     override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {
         rankViewBinding.tvOnlineNum.text = onlineResponse.onlineNum.toString()
     }
 
-    private var liveRoomUserRoseDetailPop: LiveRoomUserRoseDetailPop? = null
+    private var liveRoomUserRoseDetailPop: LiveRoomUserRoseRankPop? = null
 
     /**
      * 显示排行榜单
      */
-    private fun showRankListPop() {
+    protected fun showRankListPop() {
         if (CommonUtils.isPopShow(liveRoomUserRoseDetailPop)) {
             return
         }
         liveRoomUserRoseDetailPop =
-            LiveRoomUserRoseDetailPop.showDialog(mContext, userReceiveRoseInfo!!)
+            LiveRoomUserRoseRankPop.showDialog(mContext, userReceiveRoseInfo!!)
+    }
+
+    /**
+     * 天使榜单
+     */
+    private var roomAngleRankPop: RoomAngleRankPop? = null
+    protected fun showAngleRankPop() {
+        if (CommonUtils.isPopShow(roomAngleRankPop)) {
+            return
+        }
+        mViewModel.getRoomAngleRank(roomId, object : OnRequestResultListener<List<AngleRankInfo>> {
+            override fun onSuccess(data: BaseBean<List<AngleRankInfo>>) {
+                var rankList = data.data
+                if (rankList == null) {
+                    rankList = mutableListOf()
+                }
+                roomAngleRankPop = RoomAngleRankPop.showDialog(mContext, rankList)
+            }
+        })
     }
 
     override fun getRoseRankList() {
@@ -81,7 +120,7 @@ class SevenLiveRoomFrg : BaseLiveRoomFrg() {
         mViewModel.getRoomRoseList(roomId)
     }
 
-    private var userReceiveRoseInfo: UserReceiveRoseInfo? = null
+    protected var userReceiveRoseInfo: UserReceiveRoseInfo? = null
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
         mViewModel.roseRankListObservable.observe(this) { it ->

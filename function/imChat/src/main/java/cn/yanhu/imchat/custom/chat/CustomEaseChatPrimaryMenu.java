@@ -48,6 +48,7 @@ import com.hyphenate.easeui.modules.chat.interfaces.IChatPrimaryMenu;
 import cn.yanhu.baselib.anim.AnimManager;
 import cn.yanhu.baselib.utils.CommonUtils;
 import cn.yanhu.baselib.utils.ext.ViewExtKt;
+import cn.yanhu.commonres.bean.UserDetailInfo;
 import cn.yanhu.imchat.R;
 import cn.yanhu.imchat.view.emojiicon.VerticalImageSpan2;
 
@@ -207,9 +208,8 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
             }
             return false;
         });
-        vgRechargeTips.setOnClickListener(v -> onChatTypeClickListener.onRecharge());
+        vgRechargeTips.setOnClickListener(v -> onChatTypeClickListener.onAddFriend());
     }
-
 
 
     public void goneQuickMsgs() {
@@ -260,7 +260,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
     @Override
     public void showTextStatus() {
         if (vgRechargeTips.getVisibility() == View.VISIBLE) {
-            onChatTypeClickListener.onRecharge();
+            onChatTypeClickListener.onAddFriend();
             return;
         }
         buttonSetModeVoice.setVisibility(VISIBLE);
@@ -279,7 +279,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
     @Override
     public void showVoiceStatus() {
         if (vgRechargeTips.getVisibility() == View.VISIBLE) {
-            onChatTypeClickListener.onRecharge();
+            onChatTypeClickListener.onAddFriend();
             return;
         }
         hideSoftKeyboard();
@@ -378,22 +378,34 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
 
         } else if (id == R.id.im_extend_emoji) {//表情
             if (vgRechargeTips.getVisibility() == View.VISIBLE) {
-                onChatTypeClickListener.onRecharge();
+                onChatTypeClickListener.onAddFriend();
                 return;
             }
             isShowEmoji = !isShowEmoji;
             onChatTypeClickListener.onShowEmojiInput(isShowEmoji);
 
         } else if (id == R.id.im_extend_photo) {//相册
+            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
+                onChatTypeClickListener.onAddFriend();
+                return;
+            }
             onChatTypeClickListener.clickPhoto();
 
         } else if (id == R.id.im_extend_recharge) {
             onChatTypeClickListener.onRecharge();
 
         } else if (id == R.id.im_extend_phone) {//通话
+            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
+                onChatTypeClickListener.onAddFriend();
+                return;
+            }
             onChatTypeClickListener.clickPhone();
 
         } else if (id == R.id.im_extend_gift) {//礼物
+            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
+                onChatTypeClickListener.onAddFriend();
+                return;
+            }
             onChatTypeClickListener.onSendGift();
         }
     }
@@ -522,33 +534,20 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
         this.onChatTypeClickListener = onChatTypeClickListener;
     }
 
-//    public void setFreeChatTipInfo(FreeChatTipBean data) {
-//        if (data.isFriend()) {
-//            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
-//                vgRechargeTips.setVisibility(View.GONE);
-//                edittext_layout.setVisibility(View.VISIBLE);
-//                editText.setHint("输入聊天内容");
-//                showNormalStatus();
-//            }
-//        } else {
-//            int chatCardCount = data.getChatCardCount();
-//            int darlingFreeCount = data.getDarlingFreeCount();
-//            if (chatCardCount > 0 || darlingFreeCount > 0) {
-//                editText.setHint("免费消息剩余" + (chatCardCount + darlingFreeCount) + "条");
-//            } else {
-//                editText.setHint("输入聊天内容");
-//            }
-//            if (darlingFreeCount <= 0 && chatCardCount <= 0 && !CommonUtils.INSTANCE.compareString(data.getRoseNum().toPlainString(), data.getChatConsumeRose().toPlainString())) {
-//                vgRechargeTips.setVisibility(View.VISIBLE);
-//                buttonPressToSpeak.setVisibility(View.GONE);
-//                edittext_layout.setVisibility(View.GONE);
-//            } else {
-//                vgRechargeTips.setVisibility(View.GONE);
-//                edittext_layout.setVisibility(View.VISIBLE);
-//                showNormalStatus();
-//            }
-//        }
-//    }
+    public void setUserInfo(UserDetailInfo userInfo) {
+        if (userInfo.isFriend()) {
+            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
+                vgRechargeTips.setVisibility(View.GONE);
+                edittext_layout.setVisibility(View.VISIBLE);
+                editText.setHint("输入聊天内容");
+                showNormalStatus();
+            }
+        } else {
+            vgRechargeTips.setVisibility(View.VISIBLE);
+            buttonPressToSpeak.setVisibility(View.GONE);
+            edittext_layout.setVisibility(View.GONE);
+        }
+    }
 
     public interface OnChatTypeClickListener {
         void clickVoice();
@@ -563,6 +562,8 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
 
 
         void onSendGift();
+
+        void onAddFriend();
 
         void onRecharge();
 

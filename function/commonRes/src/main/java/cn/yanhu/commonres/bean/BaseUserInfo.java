@@ -43,6 +43,24 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
 
     private Integer status;
 
+    private String carUrl;
+    private String  enterAnimUrl;
+
+    public String getCarUrl() {
+        return carUrl;
+    }
+
+    public void setCarUrl(String carUrl) {
+        this.carUrl = carUrl;
+    }
+
+    public String getEnterAnimUrl() {
+        return enterAnimUrl;
+    }
+
+    public void setEnterAnimUrl(String enterAnimUrl) {
+        this.enterAnimUrl = enterAnimUrl;
+    }
 
     public Integer getStatus() {
         if (status == null) {

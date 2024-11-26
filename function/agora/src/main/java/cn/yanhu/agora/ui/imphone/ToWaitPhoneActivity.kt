@@ -9,7 +9,6 @@ import cn.yanhu.agora.R
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.manager.ImPhoneMsgManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
-import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.StatusBarUtil
 import cn.yanhu.baselib.utils.ViewUtils
@@ -18,7 +17,6 @@ import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
-import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
@@ -60,17 +58,6 @@ class ToWaitPhoneActivity : BaseActivity<ActivityToWaitPhoneBinding, ImPhoneView
         )
         chatType = callInfo.chatType
         mBinding.callInfo = callInfo
-        if (AppCacheManager.isWoman()) {
-            ViewUtils.setPaddingBottom(
-                mBinding.tvTips,
-                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_50)
-            )
-        } else {
-            ViewUtils.setPaddingBottom(
-                mBinding.tvTips,
-                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_15)
-            )
-        }
         bgBlur()
     }
 
@@ -181,7 +168,7 @@ class ToWaitPhoneActivity : BaseActivity<ActivityToWaitPhoneBinding, ImPhoneView
         }
     }
 
-    private fun refuseCall() {
+     fun refuseCall() {
         requestCall()
         EmMsgManager.sendCmdMessagePeople(
             callInfo.user.id.toString(),

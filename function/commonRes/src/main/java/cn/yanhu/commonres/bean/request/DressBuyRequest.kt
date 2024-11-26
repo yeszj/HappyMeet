@@ -7,7 +7,6 @@ package cn.yanhu.commonres.bean.request
  */
 data class DressBuyRequest(
     val commodityId: Int,
-    val commodityType: Int,
     val priceId: Int,
     val friendUserId: String? = ""
 )

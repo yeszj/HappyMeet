@@ -33,8 +33,9 @@ import com.smart.adapter.interf.OnLoadMoreListener
             .canScroll(false)
             .setOffscreenPageLimit(1)
             .setPreLoadLimit(3)
-            .addFragment(RoomListBean.TYPE_THREE_ROOM, ThreeLiveRoomFrg::class.java)
-           // .addFragment(RoomListBean.TYPE_SEVEN_ROOM, SevenLiveRoomFrg::class.java)
+            .addFragment(RoomListBean.FRG_THREE_ROOM, ThreeLiveRoomFrg::class.java)
+            .addFragment(RoomListBean.FRG_SEVEN_ROOM, SevenLiveRoomFrg::class.java)
+            .addFragment(RoomListBean.FRG_NINE_ROOM, NineLiveRoomFrg::class.java)
             .addDefaultFragment(NeedUpgradeTipFrg::class.java)
             .build(mBinding.viewPager)
     }

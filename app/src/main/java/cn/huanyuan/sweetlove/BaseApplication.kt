@@ -3,15 +3,23 @@ package cn.huanyuan.sweetlove
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.http.HttpResponseCache
 import android.os.Build
 import android.os.Looper
 import android.text.TextUtils
 import android.view.Gravity
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.func.ApplicationRouterImpl
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
@@ -21,11 +29,15 @@ import cn.huanyuan.sweetlove.net.HttpHeadInterceptor
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.LiveRoomManager
+import cn.yanhu.agora.pop.ReceiveImCallInBgPop
+import cn.yanhu.agora.pop.ReceiveImCallPop
+import cn.yanhu.agora.ui.imphone.VideoPhoneActivity
 import cn.yanhu.baselib.crash.CrashUtils
 import cn.yanhu.baselib.crash.ExceptionHandler
 import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.refresh.SmartRefreshProcessor
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
@@ -60,6 +72,11 @@ import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.ThreadUtils.runOnUiThread
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.hjq.toast.style.BlackToastStyle
 import com.hyphenate.EMMessageListener
@@ -67,6 +84,8 @@ import com.hyphenate.EMValueCallBack
 import com.hyphenate.chat.EMClient
 import com.hyphenate.chat.EMMessage
 import com.hyphenate.chat.EMUserInfo
+import com.hyphenate.easeui.constants.EaseConstant
+import com.hyphenate.util.VersionUtils
 import com.opensource.svgaplayer.SVGAParser
 import com.pcl.sdklib.manager.SdkParamsManager
 import com.umeng.commonsdk.UMConfigure
@@ -301,19 +320,113 @@ class BaseApplication : Application() {
                         if (AppCacheManager.userId != message.to || message.chatType != EMMessage.ChatType.Chat) {
                             continue
                         }
-                        val currentTimeMillis = System.currentTimeMillis()
-                        val differTime = currentTimeMillis - addImMsgTime
-                        val msgTime = message.msgTime
-                        if (message.isOnlineState && differTime > 5 * 1000 && msgTime > currentTimeMillis - 5 * 1000) {
-                            //5s弹一次 且消息时间是5s以内收到的(防止离线时收到的消息上线后逐一推送过来)
-                            addImMsgTask(message, value)
+                        if (AppUtils.isAppForeground()) {
+                            val currentTimeMillis = System.currentTimeMillis()
+                            val differTime = currentTimeMillis - addImMsgTime
+                            val msgTime = message.msgTime
+                            if (message.isOnlineState && differTime > 5 * 1000 && msgTime > currentTimeMillis - 5 * 1000) {
+                                //5s弹一次 且消息时间是5s以内收到的(防止离线时收到的消息上线后逐一推送过来)
+                                addImMsgTask(message, value)
+                            }
+                        } else {
+                            val emUserInfo = value[message.from]
+                            sendChannelNotify(message, emUserInfo)
                         }
+
                     }
                 }
 
                 override fun onError(error: Int, errorMsg: String) {
                 }
             })
+    }
+
+    private var mNotificationManager: NotificationManager? = null
+
+    private var notifyId = 0
+
+    // 发送指定渠道的通知消息（包括消息标题和消息内容）
+    private fun sendChannelNotify(message: EMMessage, emUserInfo: EMUserInfo?) {
+        val topActivity = ActivityUtils.getTopActivity() ?: return
+        if (mNotificationManager == null) {
+            mNotificationManager =
+                topActivity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+        }
+        val nickName: String = if (emUserInfo != null) {
+            emUserInfo.nickname
+        } else {
+            "收到一条新消息"
+        }
+        // 创建一个跳转到活动页面的意图
+        ApplicationProxy.instance.getLiveRoomActivity()
+        val clickIntent = Intent()
+        clickIntent.putExtra(EaseConstant.EXTRA_CONVERSATION_ID, message.conversationId())
+        clickIntent.putExtra(EaseConstant.EXTRA_CHAT_TYPE, 1)
+        clickIntent.putExtra("title", nickName)
+        clickIntent.setClassName(
+            applicationContext.packageName,
+            "cn.yanhu.imchat.ui.chat.ImChatActivity"
+        )
+        logcom("对方ID：" + message.conversationId())
+        logcom("对方名称：$nickName")
+        // 创建一个用于页面跳转的延迟意图
+        val contentIntent = PendingIntent.getActivity(
+            topActivity, message.conversationId().toInt(), clickIntent, PendingIntent.FLAG_IMMUTABLE
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val imMsgChannel = NotificationChannel(
+                "highIMMsgId", "聊天消息通知", NotificationManager.IMPORTANCE_HIGH
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                imMsgChannel.setAllowBubbles(true)
+                logcom("是否可浮动" + imMsgChannel.canBubble())
+            }
+            mNotificationManager!!.createNotificationChannel(imMsgChannel)
+            val highIMMsgId: NotificationCompat.Builder =
+                NotificationCompat.Builder(topActivity, "highIMMsgId")
+
+            var avatarUrl: String? = ""
+            if (emUserInfo != null) {
+                avatarUrl = emUserInfo.avatarUrl
+            }
+            Glide.with(topActivity).asBitmap().load(
+                if (TextUtils.isEmpty(avatarUrl)) ContextCompat.getDrawable(
+                    topActivity, cn.yanhu.commonres.R.drawable.avatar_woman_normal
+                ) else avatarUrl
+            ).apply(RequestOptions.bitmapTransform(RoundedCorners(300)))
+                .into(object : CustomTarget<Bitmap?>() {
+                    override fun onResourceReady(
+                        resource: Bitmap, transition: Transition<in Bitmap?>?
+                    ) {
+                        highIMMsgId.setContentIntent(contentIntent) // 设置内容的点击意图
+                            .setAutoCancel(true) // 点击通知栏后是否自动清除该通知
+                            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                            .setSmallIcon(R.mipmap.ic_logo) // 设置应用名称左边的小图标
+                            .setLargeIcon(resource).setContentTitle(nickName) // 设置通知栏里面的标题文本
+                            .setContentText(
+                                EaseCommonUtils.getMessageDigest(
+                                    message, topActivity
+                                )
+                            ).priority = NotificationCompat.PRIORITY_MAX
+                        mNotificationManager!!.notify(notifyId++, highIMMsgId.build())
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                })
+        } else {
+            val notification: NotificationCompat.Builder =
+                NotificationCompat.Builder(topActivity).setContentIntent(contentIntent) // 设置内容的点击意图
+                    .setAutoCancel(true) // 点击通知栏后是否自动清除该通知
+                    .setSmallIcon(R.mipmap.ic_logo) // 设置应用名称左边的小图标
+                    .setContentTitle(nickName) // 设置通知栏里面的标题文本
+                    .setContentText(
+                        EaseCommonUtils.getMessageDigest(
+                            message, topActivity
+                        )
+                    ) // 设置通知栏里面的内容文本
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+            mNotificationManager!!.notify(notifyId++, notification.build())
+        }
     }
 
     private fun addImMsgTask(
@@ -367,8 +480,38 @@ class BaseApplication : Application() {
             }
 
         } else if (source == ChatConstant.ACTION_PHONE_CALL_VIDEO) {
+            //收到一对一视频
             val callInfo = message.getStringAttribute("callInfo")
-            RouteIntent.toToWaitPhoneActivity(callInfo)
+            var appStatus = ""
+            if (VersionUtils.isTargetQ(ActivityUtils.getTopActivity())) {
+                if (CommonUtils.isScreenOff()) {
+                    appStatus = "熄屏"
+                    showReceiveNewCallInBg(callInfo)
+                } else {
+                    if (AppUtils.isAppForeground()) {
+                        appStatus = "app前台显示"
+                        showNewCallWhenForeground(callInfo)
+                    } else {
+                        appStatus = "app后台显示"
+                        showReceiveNewCallInBg(callInfo)
+                    }
+                }
+            } else {
+                if (CommonUtils.isScreenOff()) {
+                    appStatus = "熄屏"
+                    RouteIntent.toToWaitPhoneActivity(callInfo)
+                } else {
+                    if (AppUtils.isAppForeground()) {
+                        appStatus = "app前台显示"
+                        showNewCallWhenForeground(callInfo)
+                    } else {
+                        appStatus = "app后台显示"
+                        RouteIntent.toToWaitPhoneActivity(callInfo)
+                    }
+                }
+            }
+            logcom(appStatus)
+
         } else if (source == ChatConstant.ACTION_MSG_APPLY_SET_UP_SUCCESS) {
             if (!AgoraManager.isLiveRoom) {
                 //申请上麦成功
@@ -377,6 +520,61 @@ class BaseApplication : Application() {
                 val ownerNickname = message.getStringAttribute("ownerNickname")
                 runOnUiThread { showApplySuccessDialog(roomId, seatId, ownerNickname) }
             }
+        } else if (source == ChatConstant.ACTION_PHONE_CALL_REFUSE) {
+            val stringAttribute =
+                message.getStringAttribute(ChatConstant.CUSTOM_DATA, "")
+            if (!TextUtils.isEmpty(stringAttribute)) {
+                if (CommonUtils.isPopShow(receiveImCallPop)) {
+                    receiveImCallPop?.dismiss()
+                    return
+                }
+                if (CommonUtils.isPopShow(receiveImCallBgPop)) {
+                    receiveImCallBgPop?.dismiss()
+                    return
+                }
+                val topActivity = ActivityUtils.getTopActivity()
+                if ((topActivity is VideoPhoneActivity && stringAttribute.equals(
+                        topActivity.chatUserId.toString()
+                    ))
+                ) {
+                    topActivity.finish()
+                }
+            }
+        }
+    }
+
+    private fun showNewCallWhenForeground(callInfo: String) {
+        val calling = ApplicationProxy.instance.isCalling()
+        if (calling) {
+            showWaitPhonePop(callInfo)
+        } else {
+            RouteIntent.toToWaitPhoneActivity(callInfo)
+        }
+    }
+
+    private var receiveImCallBgPop: ReceiveImCallInBgPop? = null
+
+    /**
+     *
+     * app后台显示时 收到来电
+     * 实现方案1 采用悬浮窗
+     */
+    private fun showReceiveNewCallInBg(callInfo: String) {
+        if (CommonUtils.isPopShow(receiveImCallBgPop)) {
+            return
+        }
+        receiveImCallBgPop =
+            ReceiveImCallInBgPop.showDialog(ActivityUtils.getTopActivity(), callInfo)
+    }
+
+    private var receiveImCallPop: ReceiveImCallPop? = null
+    private fun showWaitPhonePop(callInfo: String) {
+        if (CommonUtils.isPopShow(receiveImCallPop)) {
+            return
+        }
+        val topActivity = ActivityUtils.getTopActivity()
+        if (topActivity is FragmentActivity) {
+            receiveImCallPop = ReceiveImCallPop.showDialog(topActivity, callInfo)
         }
     }
 

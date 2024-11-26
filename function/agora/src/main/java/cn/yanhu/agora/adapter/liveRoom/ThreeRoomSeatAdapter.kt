@@ -17,7 +17,7 @@ import cn.yanhu.agora.databinding.AdapterThreeRoomAnchorSeatItemBinding
 import cn.yanhu.agora.databinding.AdapterThreeRoomUserSeatItemBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.pop.LiveRoomUserListPop
-import cn.yanhu.agora.pop.LiveRoomUserRoseDetailPop
+import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -101,7 +101,7 @@ class ThreeRoomSeatAdapter :
 
         })
 
-    private var liveRoomUserRoseDetailPop: LiveRoomUserRoseDetailPop? = null
+    private var liveRoomUserRoseDetailPop: LiveRoomUserRoseRankPop? = null
     private fun showUserReceiveRoseDetailPop(item: RoomSeatInfo?) {
         request({
             agoraRxApi.getRoomUserRoseList(
@@ -114,7 +114,7 @@ class ThreeRoomSeatAdapter :
                     return
                 }
                 liveRoomUserRoseDetailPop =
-                    LiveRoomUserRoseDetailPop.showDialog(context, data.data!!)
+                    LiveRoomUserRoseRankPop.showDialog(context, data.data!!)
             }
         })
     }

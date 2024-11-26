@@ -1,5 +1,6 @@
 package cn.yanhu.agora.manager
 
+import android.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.EnterCheckResponse
@@ -45,11 +46,6 @@ object LiveRoomManager {
         applyRoomId: String,
         onRoomNoExitListener: OnRoomNoExitListener? = null
     ) {
-//        request({agoraRxApi.getAgoraToken(applyRoomId)},object : OnRequestResultListener<String>{
-//            override fun onSuccess(data: BaseBean<String>) {
-//                AgoraManager.getInstence().preloadChannel(context,applyRoomId,data.data)
-//            }
-//        })
         if (AgoraSdkCacheManager.hasLoadAgoraSdk()) {
             if (AgoraManager.isLiveRoom && AgoraManager.getInstence().currentRoomID == applyRoomId) {
                 val liveRoomActivity = ApplicationProxy.instance.getLiveRoomActivity()
@@ -84,17 +80,17 @@ object LiveRoomManager {
         applyRoomId: String,
         onRoomNoExitListener: OnRoomNoExitListener?
     ) {
-        //DialogUtils.showLoading()
         if (isRequestCheck){
             return
         }
+        DialogUtils.showLoading(hasShadow = false)
         isRequestCheck = true
         request(
             { agoraRxApi.enterCheck(applyRoomId) },
             object : OnRequestResultListener<EnterCheckResponse> {
                 override fun onSuccess(data: BaseBean<EnterCheckResponse>) {
-                    //DialogUtils.dismissLoading()
                     isRequestCheck = false
+                    DialogUtils.dismissLoading()
                     val enterCheckResponse = data.data ?: return
                     if (enterCheckResponse.pass) {
                         if (AgoraManager.isLiveRoom && ApplicationProxy.instance.getLiveRoomActivity() != null) {
@@ -105,7 +101,6 @@ object LiveRoomManager {
                             })
                         } else {
                             val roomInfo = enterCheckResponse.roomInfo
-                            //roomInfo.roomType = RoomListBean.TYPE_THREE_ROOM
                             RouteIntent.lunchToLiveRoom(context, roomInfo)
                         }
                     } else {
@@ -121,11 +116,12 @@ object LiveRoomManager {
                         } else {
                             showEnterRoomDialog(context, enterCheckResponse, applyRoomId, onRoomNoExitListener)
                         }
+                        DialogUtils.dismissLoading()
                     }
                 }
 
                 override fun onFail(code: Int?, msg: String?) {
-                   // DialogUtils.dismissLoading()
+                    DialogUtils.dismissLoading()
                     isRequestCheck = false
                     if ("房间不存在" == msg) {
                         onRoomNoExitListener?.onNoExit()
@@ -149,8 +145,8 @@ object LiveRoomManager {
         onRoomNoExitListener: OnRoomNoExitListener?
     ) {
 
-        val content = Spans.builder().text("申请后可进入专属交友房间免费交友")
-            .text(if (data.info.seatNum == 2) "\n\n专属房间需消耗" + data.info.price + "🌹/分钟，是否申请?" else "")
+        val content = Spans.builder().text("申请通过后可进入专属房间交友").color(Color.parseColor("#666666"))
+            .text(if (data.info.seatNum == 2) "\n\n专属房间需消耗" + data.info.price + "玫瑰/分钟，是否申请?" else "")
             .color(
                 CommonUtils.getColor(
                     cn.yanhu.baselib.R.color.colorMain

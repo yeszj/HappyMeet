@@ -32,12 +32,16 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
             finish()
             return
         }
-        if (roomSourceBean.getFragmentType() == RoomListBean.TYPE_THREE_ROOM) {
+        if (roomSourceBean.getFragmentType() == RoomListBean.FRG_THREE_ROOM) {
             liveRoomFrg = ThreeLiveRoomFrg()
             liveRoomFrg?.arguments = intent.extras
             addFragment(liveRoomFrg)
-        }else if (roomSourceBean.getFragmentType() == RoomListBean.TYPE_SEVEN_ROOM){
+        }else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_SEVEN_ROOM){
             liveRoomFrg = SevenLiveRoomFrg()
+            liveRoomFrg?.arguments = intent.extras
+            addFragment(liveRoomFrg)
+        }else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_NINE_ROOM){
+            liveRoomFrg = NineLiveRoomFrg()
             liveRoomFrg?.arguments = intent.extras
             addFragment(liveRoomFrg)
         } else {

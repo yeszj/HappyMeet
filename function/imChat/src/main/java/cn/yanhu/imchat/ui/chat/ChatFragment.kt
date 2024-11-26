@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import cn.yanhu.baselib.anim.AnimManager.removeAnimSet
 import cn.yanhu.baselib.utils.CommonUtils.isPopShow
-import cn.yanhu.baselib.utils.DateUtils.getYestodyStr
 import cn.yanhu.baselib.utils.DialogUtils.showConfirmDialog
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.showToast
@@ -35,7 +34,6 @@ import cn.yanhu.imchat.custom.chat.CustomEaseChatLayout.SendMsgListener
 import cn.yanhu.imchat.custom.chat.CustomEaseChatPrimaryMenu
 import cn.yanhu.imchat.custom.chat.CustomEaseChatPrimaryMenu.OnChatTypeClickListener
 import cn.yanhu.imchat.custom.chat.CustomEaseHandleMessagePresenterImpl
-import cn.yanhu.imchat.custom.chat.ImConversationMsgFilterManager
 import cn.yanhu.imchat.listener.CallBackListener
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.yanhu.imchat.manager.EmMsgManager.isFateMessage
@@ -53,7 +51,6 @@ import cn.zj.netrequest.status.ErrorCode
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
-import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.UriUtils
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -90,6 +87,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     @SuppressLint("NotifyDataSetChanged")
     fun setUserInfo(userInfo: UserDetailInfo?) {
         userDetailInfo = userInfo
+        customEaseChatPrimaryMenu?.setUserInfo(userInfo)
     }
 
     override fun initView() {
@@ -294,23 +292,23 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         } else { //发送文本
             val content = map["content"] as String?
             if (!TextUtils.isEmpty(content)) {
-                val conversation =
-                    EMClient.getInstance().chatManager().getConversation(conversationId)
-                val lastMessage = conversation.lastMessage
-                val startTime = getYestodyStr(-7, "yyyy-MM-dd")
-                val timeMillis =
-                    TimeUtils.date2Millis(TimeUtils.string2Date(startTime, "yyyy-MM-dd"))
-                val firstSend = isFirstSend
-                if (isWoman() && content!!.length < 5 && (firstSend || lastMessage == null || lastMessage.msgTime < timeMillis || ImConversationMsgFilterManager.isLoveQianXianMsg(
-                        lastMessage
-                    ))
-                ) {
-                    //女性用户 首次发送/或者7天内没有聊天/或者回复的消息是缘分牵线不能少于5个字
-                    ToastUtils.show("不能少于5个字")
-                    customEaseChatPrimaryMenu!!.editText.setText(content)
-                    customEaseChatPrimaryMenu!!.editText.setSelection(content.length)
-                    return
-                }
+//                val conversation =
+//                    EMClient.getInstance().chatManager().getConversation(conversationId)
+//                val lastMessage = conversation.lastMessage
+//                val startTime = getYestodyStr(-7, "yyyy-MM-dd")
+ //               val timeMillis =
+  //                  TimeUtils.date2Millis(TimeUtils.string2Date(startTime, "yyyy-MM-dd"))
+ //               val firstSend = isFirstSend
+//                if (isWoman() && content!!.length < 5 && (firstSend || lastMessage == null || lastMessage.msgTime < timeMillis || ImConversationMsgFilterManager.isLoveQianXianMsg(
+//                        lastMessage
+//                    ))
+//                ) {
+//                    //女性用户 首次发送/或者7天内没有聊天/或者回复的消息是缘分牵线不能少于5个字
+//                    ToastUtils.show("不能少于5个字")
+//                    customEaseChatPrimaryMenu!!.editText.setText(content)
+//                    customEaseChatPrimaryMenu!!.editText.setSelection(content.length)
+//                    return
+//                }
                 sendTxtMessage(content)
             }
         }
@@ -487,10 +485,21 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
             })
     }
 
-    override fun onRecharge() { //充值
+    override fun onAddFriend() {
+        onAddFriendTipsListener?.onAddFriend()
+    }
+
+    override fun onRecharge() {
         showRechargeListDialog()
     }
 
+    private var onAddFriendTipsListener:OnAddFriendTipsListener?=null
+     fun setAddFriendListener(onAddFriendTipsListener: OnAddFriendTipsListener){
+        this.onAddFriendTipsListener = onAddFriendTipsListener
+    }
+     interface OnAddFriendTipsListener{
+        fun onAddFriend()
+    }
 
     override fun clickVoice() { //语音
         if (userDetailInfo == null) {
@@ -516,7 +525,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     }
 
     override fun clickPhone() { //语音、视频通话
-        if (ApplicationProxy.instance.isCalling()) {
+        if (ApplicationProxy.instance.isShowFloatCalling()) {
             ToastUtils.show("正在通话中，请结束当前通话后再试")
             return
         }
@@ -681,14 +690,14 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
      */
     private fun smCheckBeforeSend(message: EMMessage, source: Int, content: String?) {
         //消息先保存到本地 聊天列表中则可暂时显示发送中的样式
-        if (isWoman()) {
-            val replyQianXianCount = chatLayout.chatMessageListLayout.replyQianXianCount
-            if (replyQianXianCount == 0 && source == SmSdkUtils.SOURCE_TXT && content!!.length < 5 && message.type == EMMessage.Type.TXT) {
-                ToastUtils.show("不能少于5个字")
-                return
-            }
-            if (waitReplyTips()) return
-        }
+//        if (isWoman()) {
+//            val replyQianXianCount = chatLayout.chatMessageListLayout.replyQianXianCount
+//            if (replyQianXianCount == 0 && source == SmSdkUtils.SOURCE_TXT && content!!.length < 5 && message.type == EMMessage.Type.TXT) {
+//                ToastUtils.show("不能少于5个字")
+//                return
+//            }
+//            if (waitReplyTips()) return
+//        }
         saveMsgToLocal(message)
         startSendCheck(message, source, content!!)
     }

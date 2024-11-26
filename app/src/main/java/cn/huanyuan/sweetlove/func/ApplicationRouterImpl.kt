@@ -14,6 +14,9 @@ import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
 import cn.yanhu.agora.miniwindow.EaseCallFloatWindow
 import cn.yanhu.agora.miniwindow.MiniWindowManager
+import cn.yanhu.agora.ui.imphone.FromWaitPhoneActivity
+import cn.yanhu.agora.ui.imphone.ToWaitPhoneActivity
+import cn.yanhu.agora.ui.imphone.VideoPhoneActivity
 import cn.yanhu.agora.ui.liveRoom.live.LiveRoomActivity
 import cn.yanhu.baselib.cache.UserPref
 import cn.yanhu.commonres.manager.AppCacheManager
@@ -24,6 +27,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.Utils
 import com.hyphenate.EMCallBack
 import com.hyphenate.chat.EMClient
+import com.pcl.sdklib.sdk.jverrify.JiGuangSDKUtils
 import com.pcl.sdklib.sdk.location.LocationCacheManager
 import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
 
@@ -35,6 +39,7 @@ import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
 class ApplicationRouterImpl : IApplication {
 
     override fun loginInvalid() {
+        JiGuangSDKUtils.getInstance().initJVerificationSDk()
         EMClient.getInstance().logout(true, object : EMCallBack {
             override fun onSuccess() {
                 logoutSuccess()
@@ -99,11 +104,26 @@ class ApplicationRouterImpl : IApplication {
         return null
     }
 
+
+    override fun isCalling(): Boolean {
+        if (isMiniLiveRoomShow()) {
+            return true
+        }
+        if (isShowFloatCalling()) {
+            return true
+        }
+        val it = ActivityUtils.getTopActivity()
+        if (it is VideoPhoneActivity || it is FromWaitPhoneActivity || it is ToWaitPhoneActivity || it is LiveRoomActivity) {
+            return true
+        }
+        return false
+    }
+
     override fun isMiniLiveRoomShow(): Boolean {
         return LiveRoomVideoMiniManager.getInstance().isShowing
     }
 
-    override fun isCalling(): Boolean {
+    override fun isShowFloatCalling(): Boolean {
         return EaseCallFloatWindow.getInstance().isShowing
     }
 

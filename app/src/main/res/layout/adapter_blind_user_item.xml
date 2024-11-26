@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_12"
+        android:paddingBottom="@dimen/dp_12"
         android:layout_marginEnd="@dimen/dp_8">
 
         <com.makeramen.roundedimageview.RoundedImageView
@@ -38,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_22"
             android:layout_marginTop="@dimen/dp_10"
-            android:background="@{roomBean.roomType==0?@drawable/shape_oline_tag:roomBean.roomType==2?@drawable/shape_exclusive_blinddate_tag: roomBean.roomType==3? @drawable/shape_seven_blinddate_tag:@drawable/shape_video_blinddate_tag}"
+            android:background="@{roomBean.roomType==0?@drawable/shape_oline_tag:roomBean.privateRoom?@drawable/shape_exclusive_blinddate_tag: roomBean.sevenRoom|| roomBean.nineRoom? @drawable/shape_seven_blinddate_tag:@drawable/shape_video_blinddate_tag}"
             app:layout_constraintEnd_toEndOf="@+id/tv_status"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_cover"

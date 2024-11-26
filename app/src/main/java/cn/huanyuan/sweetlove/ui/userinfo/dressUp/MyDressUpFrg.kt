@@ -39,15 +39,28 @@ class MyDressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
         mViewModel.getMyDressUpInfo(type)
     }
 
-    override fun lazyLoad() {
-
-    }
 
     override fun initListener() {
         super.initListener()
         dressUpItemAdapter.setOnItemClickListener { _, _, position ->
             DressUpOperatePop.showDialog(
-                mContext, dressUpItemAdapter.getItem(position)!!, type, roseBalance
+                mContext, dressUpItemAdapter.getItem(position)!!, type, roseBalance,object : DressUpOperatePop.OnDressUpListener{
+                    override fun onDressUpSuccess(id: Int) {
+                        val upIndex = dressUpItemAdapter.items.indexOfFirst {
+                            it.isWear && it.id != id
+                        }
+                        if(upIndex>=0){
+                            dressUpItemAdapter.items[upIndex].isWear = false
+                            dressUpItemAdapter.notifyItemChanged(upIndex, true)
+                        }
+
+                        val indexOf = dressUpItemAdapter.items.indexOfFirst {
+                            it.id == id
+                        }
+                        dressUpItemAdapter.notifyItemChanged(indexOf, true)
+                    }
+
+                }
             )
         }
     }
@@ -69,16 +82,9 @@ class MyDressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
         mViewModel.myDressInfoObservable.observe(this) { it ->
             parseState(it, {
                 roseBalance = it.roseBalance
-                dressUpItemAdapter.isStateViewEnable = it.list.size <= 0
-                dressUpItemAdapter.submitList(it.list)
+                dressUpItemAdapter.isStateViewEnable = it.getGoodsList().size <= 0
+                dressUpItemAdapter.submitList(it.getGoodsList())
             })
-        }
-        LiveEventBus.get<Int>(LiveDataEventManager.DRESS_UP_SUCCESS).observe(this) { buyId: Int ->
-            val item = dressUpItemAdapter.items.firstOrNull {
-                it.id == buyId
-            }
-            val indexOf = dressUpItemAdapter.items.indexOf(item)
-            dressUpItemAdapter.notifyItemChanged(indexOf, true)
         }
         LiveEventBus.get<Int>(LiveDataEventManager.DRESS_BUY_SUCCESS).observe(this) {
             if (isRealVisible()) {
@@ -92,6 +98,7 @@ class MyDressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
         const val TYPE_CAR = 2
         const val TYPE_CHAT_POP = 3
         const val TYPE_BEAUTIFUL_ACCOUNT = 4
+        const val TYPE_USER_FLOAT = 5
         fun newInstance(type: Int): MyDressUpFrg {
             val dressUpFrg = MyDressUpFrg()
             val bundle = Bundle()

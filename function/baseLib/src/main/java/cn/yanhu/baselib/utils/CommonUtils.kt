@@ -1,6 +1,7 @@
 package cn.yanhu.baselib.utils
 
 import android.app.ActivityManager
+import android.app.KeyguardManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -24,6 +25,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
 import com.lxj.xpopup.core.BasePopupView
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.Calendar
 import java.util.Date
 import java.util.regex.Pattern
@@ -34,6 +36,24 @@ import java.util.regex.Pattern
  * desc:
  */
 object CommonUtils {
+    @JvmStatic
+    fun isScreenOff(): Boolean {
+        val topActivity = ActivityUtils.getTopActivity() ?: return false
+        val flag = topActivity
+            .getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+        return flag.isKeyguardLocked
+    }
+
+    fun formatRoseNum(roseNum:String):String{
+        return if (compareString(roseNum,"1000")){
+            val toString = divideString(roseNum, "1000").toString()
+            val format = BigDecimal(toString).setScale(1,RoundingMode.DOWN).toPlainString()
+            subZeroAndDot(format) +"k"
+        }else{
+            roseNum
+        }
+    }
+
     fun subZeroAndDot(s: String): String {
 //        KLog.i("进入" + s);
         var s = s

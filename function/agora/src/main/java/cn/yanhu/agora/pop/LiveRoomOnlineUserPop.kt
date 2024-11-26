@@ -21,6 +21,7 @@ import cn.zj.netrequest.status.BaseBean
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.BottomPopupView
+import com.scwang.smart.refresh.footer.BallPulseFooter
 
 /**
  * @author: zhengjun
@@ -76,6 +77,7 @@ class LiveRoomOnlineUserPop(
 
             })
         mBiding.ivClose.setOnSingleClickListener { dismiss() }
+        mBiding.refresh.setRefreshFooter(BallPulseFooter(context))
         mBiding.refresh.setOnRefreshListener {
             page = 1
             getOnlineUserList()
@@ -86,9 +88,9 @@ class LiveRoomOnlineUserPop(
         }
     }
 
-    private var page = 1;
+    private var page = 1
     private fun getOnlineUserList() {
-        request({ agoraRxApi.getOnlineUserList(roomDetailInfo.roomId, 1) },
+        request({ agoraRxApi.getOnlineUserList(roomDetailInfo.roomId, page) },
             object : OnRequestResultListener<RoomOnlineResponse> {
                 override fun onSuccess(data: BaseBean<RoomOnlineResponse>) {
                     val onlineResponse = data.data ?: return
@@ -98,9 +100,9 @@ class LiveRoomOnlineUserPop(
                         mBiding.refresh.finishRefresh()
                     } else {
                         userAdapter.addAll(onlineUsers)
-                        if (onlineUsers.size <= 0) {
+                        if (onlineUsers.size<10){
                             mBiding.refresh.finishLoadMoreWithNoMoreData()
-                        } else {
+                        }else{
                             mBiding.refresh.finishLoadMore()
                         }
                     }

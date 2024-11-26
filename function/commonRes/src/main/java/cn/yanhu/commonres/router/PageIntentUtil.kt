@@ -17,10 +17,11 @@ import org.json.JSONObject
 object PageIntentUtil {
 
     private const val TYPE_CONTACT_UNION = "happyMeet/?page=1"
-     const val PAGE_BLACK_LIST = "{clsPath:cn.huanyuan.sweetlove.ui.system.UserBlackListActivity}"
+    const val PAGE_BLACK_LIST = "{clsPath:cn.huanyuan.sweetlove.ui.system.UserBlackListActivity}"
     const val PAGE_BEAUTY_SET = "{clsPath:cn.yanhu.agora.ui.beautifyFace.BeautyFaceSetActivity}"
     const val PAGE_PRICE_SET = "{clsPath:cn.huanyuan.sweetlove.ui.setting.ChatPriceSetActivity}"
-    const val PAGE_SECURITY_CENTER = "{clsPath:cn.huanyuan.sweetlove.ui.system.SecurityCenterActivity}"
+    const val PAGE_SECURITY_CENTER =
+        "{clsPath:cn.huanyuan.sweetlove.ui.system.SecurityCenterActivity}"
     const val PAGE_ABOUT_US = "{clsPath:cn.huanyuan.sweetlove.ui.system.AboutUsActivity}"
 
     @JvmStatic
@@ -30,11 +31,11 @@ object PageIntentUtil {
         }
         if (url!!.startsWith("http") || url.startsWith("https")) {
             RouteIntent.lunchToWebView(url)
-        }else if(url.startsWith("happyMeet/?page")){
+        } else if (url.startsWith("happyMeet/?page")) {
             if (url == TYPE_CONTACT_UNION) {
                 ApplicationProxy.instance.askCustomer()
             }
-        }else {
+        } else {
             // "{clsPath:cn.gxgre.forlove.ui.activity.noble.NobleCenterActivity}"
             try {
                 val jo = JSONObject(url)
@@ -60,7 +61,7 @@ object PageIntentUtil {
                     )
                 }
                 intent.putExtras(bundle)
-                ApplicationProxy.instance.jumpToPage(className,intent)
+                ApplicationProxy.instance.jumpToPage(className, intent)
             } catch (e: Exception) {
                 ToastUtils.show("请更新版本")
                 e.printStackTrace()

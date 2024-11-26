@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="isAngle"
+            type="java.lang.Boolean" />
+        <import type="android.view.View"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_rank"
+        android:layout_width="match_parent"
+        android:paddingVertical="@dimen/dp_10"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_28"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dp_10"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:itemCount="5"
+            tools:listitem="@layout/adapter_live_room_rose_rank_item" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_onlineNum"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_28"
+            android:background="@drawable/circle_dot_white"
+            android:backgroundTint="@color/whiteColorAlpha50"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toStartOf="@+id/iv_exit"
+            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_exit"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:padding="@dimen/dp_8"
+            android:src="@drawable/icon_room_exit"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_onlineNum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_onlineNum" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_rule"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginTop="@dimen/dp_10"
+            android:visibility="@{isAngle?View.VISIBLE:View.GONE}"
+            android:layout_marginStart="@dimen/dp_10"
+            android:src="@drawable/svg_room_rule"
+            app:layout_constraintTop_toBottomOf="@+id/tv_onlineNum"
+            app:layout_constraintStart_toStartOf="parent" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_rank"
+            android:layout_width="@dimen/dp_72"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginStart="@dimen/dp_8"
+            android:visibility="@{isAngle?View.VISIBLE:View.GONE}"
+            android:src="@drawable/svg_angle_rank"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_rule"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

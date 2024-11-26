@@ -2,6 +2,8 @@ package cn.yanhu.agora.ui.liveRoom
 
 import androidx.lifecycle.MutableLiveData
 import cn.yanhu.agora.api.agoraRxApi
+import cn.yanhu.agora.bean.AngleRankInfo
+import cn.yanhu.agora.bean.AngleRoomResultInfo
 import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomLeaveResponse
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
@@ -114,5 +116,15 @@ class LiveRoomViewModel : BaseViewModel() {
     val roseRankListObservable = MutableLiveData<ResultState<UserReceiveRoseInfo>>()
     fun getRoomRoseList(roomId: String) {
         request({ agoraRxApi.getRoomRoseList(roomId) }, roseRankListObservable, false)
+    }
+
+    fun getRoomAngleRank(roomId: String,onRequestResultListener: OnRequestResultListener<List<AngleRankInfo>>) {
+        request({ agoraRxApi.getRoomAngleRank(roomId) }, onRequestResultListener
+        )
+    }
+
+    fun getAngelWinner(roomId: String,onRequestResultListener: OnRequestResultListener<AngleRoomResultInfo>) {
+        request({ agoraRxApi.getAngelWinner(roomId) }, onRequestResultListener
+        )
     }
 }

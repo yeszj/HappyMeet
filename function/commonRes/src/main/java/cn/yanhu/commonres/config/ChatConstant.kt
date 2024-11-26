@@ -88,6 +88,8 @@ object ChatConstant {
     const val ACTION_MSG_ADMIN_SIT_DOWN = 10021 //管理员强制下麦
     const val ACTION_MSG_ADMIN_ALERT = 10022 //管理员警告主持人
     const val ACTION_REFUSE_SWITCH_PRIVATE = 10023 //男嘉宾拒绝转为专属房间
+    const val ACTION_ANGLE_ROOM_RESULT = 10024 //天使房间结束显示天使结果
+
 
 
 }

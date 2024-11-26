@@ -6,24 +6,22 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/prl_gift_animation_item"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
+        android:layout_height="@dimen/dp_72"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:gravity="center_vertical">
-
 
         <FrameLayout
             android:id="@+id/vg_parent"
             style="@style/constraintVerticalCenter"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_28"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/dp_m_30"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:clipChildren="false"
             android:clipToPadding="false"
-            tools:background="@drawable/level_bg_enter7"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="@dimen/dp_20"
@@ -31,7 +29,23 @@
             app:layout_constraintStart_toEndOf="@+id/avatarView"
             tools:ignore="MissingConstraints,RtlSymmetry">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivBg"
+                android:layout_width="@dimen/dp_234"
+                tools:src="@drawable/level_bg_enter7"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/dp_m_20"
+                android:layout_height="@dimen/dp_28"/>
+            <com.opensource.svgaplayer.SVGAImageView
+                android:id="@+id/svgaBg"
+                android:layout_width="@dimen/dp_245"
+                tools:src="@drawable/enter1"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/dp_m_20"
+                android:layout_height="@dimen/dp_72"/>
+
             <LinearLayout
+                android:id="@+id/vg_content"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_28"
                 android:layout_gravity="center_vertical"

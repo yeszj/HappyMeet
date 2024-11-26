@@ -15,6 +15,7 @@
         <!--头像大小-->
         <attr name="avatarSize" format="dimension" />
         <attr name="avatarBorderSize" format="dimension" />
+        <attr name="avatarMarginLeft" format="dimension" />
         <attr name="avatarBorderColor" format="color" />
         <!--头像框大小-->
         <attr name="svgAvatarSize" format="dimension" />

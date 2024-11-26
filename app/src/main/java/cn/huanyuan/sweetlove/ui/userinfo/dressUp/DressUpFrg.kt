@@ -29,6 +29,9 @@ class DressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
     private var roseBalance:String = "0"
     override fun initData() {
         type = requireArguments().getInt(IntentKeyConfig.TYPE, TYPE_AVATAR_FRAME)
+        val emptyView = getEmptyView()
+        emptyView.setFootText("暂未上架")
+        dressUpItemAdapter.stateView = emptyView
         mBinding.recyclerView.adapter = dressUpItemAdapter
         requestData()
     }
@@ -70,7 +73,8 @@ class DressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
         mViewModel.dressInfoObservable.observe(this) { it ->
             parseState(it, {
                 roseBalance = it.roseBalance
-                dressUpItemAdapter.submitList(it.list)
+                dressUpItemAdapter.isStateViewEnable = it.getGoodsList().size <= 0
+                dressUpItemAdapter.submitList(it.getGoodsList())
             })
         }
         LiveEventBus.get<String>(LiveDataEventManager.ROSE_BALANCE_CHANGE).observe(this){
@@ -79,12 +83,14 @@ class DressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
         }
         LiveEventBus.get<Int>(LiveDataEventManager.DRESS_BUY_SUCCESS).observe(this){ buyId: Int ->
             //购买成功 更新列表中数据为已购买
-            val item = dressUpItemAdapter.items.firstOrNull {
+            val position = dressUpItemAdapter.items.indexOfFirst {
                 it.id == buyId
             }
-            val indexOf = dressUpItemAdapter.items.indexOf(item)
-            item?.isHave = true
-            dressUpItemAdapter.notifyItemChanged(indexOf)
+            if (position>=0){
+                val changeItem = dressUpItemAdapter.items[position]
+                changeItem.isHave = true
+                dressUpItemAdapter.notifyItemChanged(position)
+            }
         }
         PayManager.registerPayResult(mContext, object : OnPayResultListener {
             override fun onPaySuccess() {
@@ -98,6 +104,7 @@ class DressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
         const val TYPE_CAR = 2
         const val TYPE_CHAT_POP = 3
         const val TYPE_BEAUTIFUL_ACCOUNT = 4
+        const val TYPE_USER_FLOAT = 5
         fun newInstance(type: Int): DressUpFrg {
             val dressUpFrg = DressUpFrg()
             val bundle = Bundle()

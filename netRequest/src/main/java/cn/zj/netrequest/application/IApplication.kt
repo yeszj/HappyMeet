@@ -21,9 +21,10 @@ interface IApplication {
     fun showRechargePop(mContext: FragmentActivity, isDismissWhenPaySuccess: Boolean)
     fun showRechargePop(mContext: FragmentActivity,hasShadow:Boolean, isDismissWhenPaySuccess: Boolean)
     fun getLiveRoomActivity():Activity?
+    fun isCalling():Boolean
 
     fun isMiniLiveRoomShow():Boolean
-    fun isCalling():Boolean
+    fun isShowFloatCalling():Boolean
     fun hasLoadAgoraSdk():Boolean
 
     fun jumpToPage(className:String,intent: Intent)

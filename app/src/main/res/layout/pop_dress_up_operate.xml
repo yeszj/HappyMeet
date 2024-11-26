@@ -15,85 +15,125 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_outline"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_buy_top_corner_20"
-        android:backgroundTint="#161727">
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/vg_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_buy_top_corner_20"
+            android:backgroundTint="#161727"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <RelativeLayout
+                android:id="@+id/vg_pic"
+                android:layout_width="@dimen/dp_150"
+                android:layout_height="@dimen/dp_150"
+                android:layout_marginTop="@dimen/dp_10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.opensource.svgaplayer.SVGAImageView
+                    android:id="@+id/iv_goods"
+                    android:layout_width="@dimen/dp_108"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:adjustViewBounds="true"
+                    app:loopCount="-1" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_19"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginStart="@dimen/dp_5"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_marginEnd="@dimen/dp_5"
+                    android:layout_marginBottom="@dimen/dp_5"
+                    android:background="@drawable/white_corner_5"
+                    android:backgroundTint="@color/fontGrayAlpha50"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/dp_5"
+                    android:text="预览"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_13" />
+
+            </RelativeLayout>
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_name"
+                style="@style/constraintHorizonCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:text="@{itemInfo.name}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                app:layout_constraintTop_toBottomOf="@+id/vg_pic"
+                tools:ignore="MissingConstraints"
+                tools:text="贵族王冠" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_source"
+                style="@style/constraintHorizonCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:text="@{itemInfo.sourceDesc}"
+                android:textColor="@color/colorMain"
+                android:textSize="@dimen/sp_12"
+                android:visibility="@{TextUtils.isEmpty(itemInfo.sourceDesc)?View.GONE:View.VISIBLE}"
+                app:layout_constraintTop_toBottomOf="@+id/tv_name"
+                tools:ignore="MissingConstraints"
+                tools:text="来源：女神节活动" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_restTime"
+                style="@style/constraintHorizonCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:text="@{itemInfo.restTime}"
+                android:textColor="@color/whiteColorAlpha60"
+                android:textSize="@dimen/sp_12"
+                app:layout_constraintTop_toBottomOf="@+id/tv_source"
+                tools:ignore="MissingConstraints"
+                tools:text="剩余有效期：6天" />
+
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_buy"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginHorizontal="@dimen/dp_12"
+                android:layout_marginVertical="@dimen/dp_30"
+                android:background="@drawable/white_corner_30"
+                android:backgroundTint="@{(!itemInfo.wear || itemInfo.timeOut)?@color/colorMain:@color/whiteColorAlpha70}"
+                android:gravity="center"
+                android:text='@{itemInfo.timeOut?"续购":itemInfo.wear?"佩戴中":"佩戴"}'
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_17"
+                app:fontType="@string/fontBold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_restTime"
+                tools:backgroundTint="@color/colorMain"
+                tools:text="佩戴" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.opensource.svgaplayer.SVGAImageView
-            android:id="@+id/iv_cover"
-            style="@style/constraintHorizonCenter"
-            android:layout_width="@dimen/dp_108"
-            android:layout_height="@dimen/dp_108"
-            android:layout_marginTop="@dimen/dp_10"
-            android:adjustViewBounds="true"
+            android:id="@+id/svgaImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
             app:autoPlay="true"
-            app:clearsAfterDetached="true"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_name"
-            style="@style/constraintHorizonCenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_4"
-            android:text="@{itemInfo.name}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_13"
-            app:layout_constraintTop_toBottomOf="@+id/iv_cover"
-            tools:ignore="MissingConstraints"
-            tools:text="贵族王冠" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_source"
-            style="@style/constraintHorizonCenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_4"
-            android:text="@{itemInfo.sourceDesc}"
-            android:visibility="@{TextUtils.isEmpty(itemInfo.sourceDesc)?View.GONE:View.VISIBLE}"
-            android:textColor="@color/colorMain"
-            android:textSize="@dimen/sp_12"
-            app:layout_constraintTop_toBottomOf="@+id/tv_name"
-            tools:ignore="MissingConstraints"
-            tools:text="来源：女神节活动" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_restTime"
-            style="@style/constraintHorizonCenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_4"
-            android:text="@{itemInfo.restTime}"
-            android:textColor="@color/whiteColorAlpha60"
-            android:textSize="@dimen/sp_12"
-            app:layout_constraintTop_toBottomOf="@+id/tv_source"
-            tools:ignore="MissingConstraints"
-            tools:text="剩余有效期：6天" />
-
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_buy"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_50"
-            android:layout_marginHorizontal="@dimen/dp_12"
-            android:layout_marginVertical="@dimen/dp_30"
-            android:background="@drawable/white_corner_30"
-            android:backgroundTint="@{(!itemInfo.wear || itemInfo.timeOut)?@color/colorMain:@color/whiteColorAlpha70}"
-            android:gravity="center"
-            android:text='@{itemInfo.timeOut?"续购":itemInfo.wear?"佩戴中":"佩戴"}'
-            tools:text  ="佩戴"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_17"
-            app:fontType="@string/fontBold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_restTime"
-            tools:backgroundTint="@color/colorMain" />
-
+            app:clearsAfterStop="true"
+            app:fillMode="Backward"
+            app:loopCount="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

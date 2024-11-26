@@ -22,9 +22,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:isShowSvgAvatar="true"
+            avatarFrameUrl="@{userInfo.avatarFrame}"
             avatarUrl="@{userInfo.portrait}"
             avatarUserId="@{userInfo.userId}"
-            app:svgAvatarSize="@dimen/dp_40"
+            app:svgAvatarSize="@dimen/dp_45"
             app:avatarSize="@dimen/dp_32"
             android:layout_height="wrap_content"/>
 
@@ -33,6 +34,7 @@
             android:layout_width="wrap_content"
             tools:textColor="@color/femaleColor"
             tools:text="女性昵称"
+            android:layout_marginTop="@dimen/dp_5"
             android:text="@{userInfo.nickName}"
             android:textColor="@{userInfo.gender==1?@color/manColor:@color/femaleColor}"
             android:textSize="@dimen/sp_14"
