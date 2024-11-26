@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="inviteInfo"
             type="cn.huanyuan.sweetlove.bean.InviteInfo" />
@@ -11,179 +12,152 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#FCD8A6">
+
 
         <cn.yanhu.baselib.view.TitleBar
             android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
+            app:titleBgColor="@color/white"
             app:titleLeftName="邀请好友" />
 
-        <com.lihang.ShadowLayout
-            android:id="@+id/vg_content"
-            style="@style/constraintHorizonCenter"
-            android:layout_width="@dimen/dp_320"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
-            app:hl_cornerRadius="@dimen/dp_16"
-            app:layout_constraintTop_toBottomOf="@+id/titleBar"
-            tools:ignore="MissingConstraints">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar">
 
-            <LinearLayout
-                android:id="@+id/contentBg"
-                android:background="@drawable/invite_bg_corner_16"
-                style="@style/constraintHorizonCenter"
-                android:layout_width="@dimen/dp_320"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@+id/titleBar"
-                tools:ignore="MissingConstraints">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/iv_avatar"
-                    android:layout_width="@dimen/dp_72"
-                    android:layout_height="@dimen/dp_72"
-                    android:layout_marginTop="@dimen/dp_41"
-                    tools:src="@drawable/icon_portrait"
-                    app:riv_oval="true"
-                    imageUrl="@{inviteInfo.portrait}"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_bg"
+                    android:layout_width="@dimen/dp_360"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@mipmap/bg_invite"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <cn.yanhu.baselib.view.CustomFontTextView
-                    android:id="@+id/tv_nickName"
-                    style="@style/constraintHorizonCenter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/dp_8"
-                    tools:text="之中"
-                    android:text="@{inviteInfo.nickName}"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_16"
-                    app:fontType="@string/fontMedium"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_avatar" />
+                <View
+                    android:id="@+id/viewBg"
+                    android:layout_width="@dimen/dp_330"
+                    android:layout_height="@dimen/dp_217"
+                    android:layout_marginBottom="@dimen/dp_m_10"
+                    android:background="@drawable/bg_gradient_invite_info"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <cn.yanhu.baselib.view.CustomFontTextView
-                    android:id="@+id/tv_desc"
-                    style="@style/constraintHorizonCenter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="邀请你加入暖遇交友"
-                    android:textColor="@color/whiteColorAlpha60"
+                    android:paddingStart="@dimen/dp_16"
+                    android:text="邀请码"
+                    android:textColor="@color/color_666666"
                     android:textSize="@dimen/sp_14"
                     app:fontType="@string/fontMedium"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
-
-                <cn.yanhu.baselib.view.CustomFontTextView
-                    android:id="@+id/tv_codeDesc"
-                    style="@style/constraintHorizonCenter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/dp_30"
-                    android:text="邀请码"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_16"
-                    app:fontType="@string/fontMedium"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_inviteCode"
+                    app:layout_constraintStart_toStartOf="@+id/viewBg"
+                    app:layout_constraintTop_toTopOf="@+id/tv_inviteCode" />
 
                 <cn.yanhu.baselib.view.CustomFontTextView
                     android:id="@+id/tv_inviteCode"
-                    style="@style/constraintHorizonCenter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_38"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:background="@drawable/white_stroke_corner_20"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/dp_20"
-                    tools:text="123456"
-                    android:text="@{inviteInfo.userId}"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_24"
-                    app:fontType="@string/fontMedium"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_codeDesc" />
-
-                <cn.yanhu.baselib.view.CustomFontTextView
-                    style="@style/constraintHorizonCenter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/dp_30"
-                    android:paddingBottom="@dimen/dp_10"
-                    android:text="邀请二维码"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_16"
-                    app:fontType="@string/fontMedium"
-                    app:layout_constraintBottom_toTopOf="@+id/iv_qrCode" />
+                    android:layout_marginTop="@dimen/dp_18"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:text="@{inviteInfo.userId}"
+                    android:textColor="@color/colorMain"
+                    android:textSize="@dimen/sp_18"
+                    app:fontType="@string/fontBold"
+                    app:layout_constraintEnd_toEndOf="@+id/viewBg"
+                    app:layout_constraintTop_toTopOf="@+id/viewBg"
+                    tools:text="1122333" />
 
-                <com.makeramen.roundedimageview.RoundedImageView
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="@dimen/dp_298"
+                    android:layout_height="@dimen/dp_1"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:background="@drawable/dot_line"
+                    app:layout_constraintEnd_toEndOf="@id/viewBg"
+                    app:layout_constraintStart_toStartOf="@id/viewBg"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_inviteCode" />
+
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_qrCode"
-                    style="@style/constraintHorizonCenter"
                     android:layout_width="@dimen/dp_128"
                     android:layout_height="@dimen/dp_128"
-                    android:layout_marginBottom="@dimen/dp_41"
-                    android:src="@drawable/ease_default_avatar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:riv_corner_radius="@dimen/dp_6" />
-            </LinearLayout>
+                    android:layout_marginEnd="@dimen/dp_8"
+                    app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+                    app:layout_constraintEnd_toEndOf="@+id/viewBg"
+                    app:layout_constraintTop_toBottomOf="@+id/line" />
 
-        </com.lihang.ShadowLayout>
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_inviteCotent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_16"
+                    android:paddingEnd="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_10"
+                    android:textColor="@color/cl_common"
+                    android:textSize="@dimen/sp_14"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_qrCode"
+                    app:layout_constraintStart_toStartOf="@id/viewBg"
+                    app:layout_constraintTop_toTopOf="@+id/iv_qrCode"
+                    tools:text="给你介绍一个对象，快来脱单吧！" />
 
-        <View
-            android:id="@+id/vg_save"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_50"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_20"
-            android:layout_marginEnd="@dimen/dp_6"
-            android:background="@drawable/white_corner_30"
-            android:backgroundTint="@color/colorMain"
-            app:layout_constraintEnd_toStartOf="@+id/vg_share"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vg_content" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:src="@drawable/svg_switch"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_qrCode"
+                    app:layout_constraintStart_toStartOf="@+id/viewBg" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/icon_save_invite"
-            android:drawablePadding="@dimen/dp_4"
-            android:gravity="center_vertical"
-            android:text="保存图片"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_17"
-            app:fontType="@string/fontBold"
-            app:layout_constraintBottom_toBottomOf="@+id/vg_save"
-            app:layout_constraintEnd_toEndOf="@+id/vg_save"
-            app:layout_constraintStart_toStartOf="@+id/vg_save"
-            app:layout_constraintTop_toTopOf="@+id/vg_save" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_copy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_23"
+                    android:src="@drawable/svg_copy_invite"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_switch"
+                    app:layout_constraintStart_toEndOf="@+id/iv_switch"
+                    app:layout_constraintTop_toTopOf="@+id/iv_switch" />
 
-        <View
-            android:id="@+id/vg_share"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_50"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_20"
-            android:layout_marginEnd="@dimen/dp_16"
-            android:background="@drawable/white_corner_30"
-            android:backgroundTint="@color/colorMain"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/vg_save"
-            app:layout_constraintTop_toBottomOf="@+id/vg_content" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/vg_save"
+                    android:layout_width="@dimen/dp_160"
+                    android:layout_height="@dimen/dp_64"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginTop="@dimen/dp_30"
+                    android:src="@mipmap/icon_invite_save"
+                    app:layout_constraintEnd_toStartOf="@+id/vg_share"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_bg" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/icon_share_invite"
-            android:drawablePadding="@dimen/dp_4"
-            android:gravity="center_vertical"
-            android:text="分享给好友"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_17"
-            app:fontType="@string/fontBold"
-            app:layout_constraintBottom_toBottomOf="@+id/vg_share"
-            app:layout_constraintEnd_toEndOf="@+id/vg_share"
-            app:layout_constraintStart_toStartOf="@+id/vg_share"
-            app:layout_constraintTop_toTopOf="@+id/vg_share" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/vg_share"
+                    android:layout_width="@dimen/dp_160"
+                    android:layout_height="@dimen/dp_64"
+                    android:layout_marginTop="@dimen/dp_30"
+                    android:layout_marginEnd="@dimen/dp_15"
+                    android:src="@mipmap/icon_invite_share"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/vg_save"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_bg" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

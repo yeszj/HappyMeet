@@ -72,7 +72,7 @@ class MyDressUpActivity : BaseActivity<ActivityDressUpBinding, DressUpViewModel>
         val list = mutableListOf<String>()
         tabList.forEach {
             list.add(it.name)
-            frgList.add(DressUpFrg.newInstance(it.id))
+            frgList.add(MyDressUpFrg.newInstance(it.id))
         }
         val magicIndicator = mBinding.tabLayout
         val commonNavigator = CommonNavigator(mContext)

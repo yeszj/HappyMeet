@@ -242,6 +242,8 @@ interface ApiService {
     @POST("app/v1/commodity/dressUpCommodity")
     suspend fun dressUpCommodity(@Body request: DressUpRequest): BaseBean<Boolean>
 
+    @GET("app/v1/config/invite_slogans")
+    suspend fun getInviteContents(): BaseBean<String>
 
     //文件上传
     @POST("file/uploadImg")

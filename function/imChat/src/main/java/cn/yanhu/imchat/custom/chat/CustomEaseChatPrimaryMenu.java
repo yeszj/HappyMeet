@@ -180,9 +180,12 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
 
     @SuppressLint("ClickableViewAccessibility")
     private void initListener() {
-        buttonSend.setOnClickListener(this);
         ViewExtKt.setOnSingleClickListener(buttonSend, 1, view -> {
             //发送消息
+            if (isNotFriend) {
+                onChatTypeClickListener.onAddFriend();
+                return view;
+            }
             if (listener != null) {
                 String s = editText.getText().toString();
                 editText.setText("");
@@ -208,7 +211,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
             }
             return false;
         });
-        vgRechargeTips.setOnClickListener(v -> onChatTypeClickListener.onAddFriend());
+        vgRechargeTips.setOnClickListener(v -> onChatTypeClickListener.onRecharge());
     }
 
 
@@ -259,10 +262,6 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
 
     @Override
     public void showTextStatus() {
-        if (vgRechargeTips.getVisibility() == View.VISIBLE) {
-            onChatTypeClickListener.onAddFriend();
-            return;
-        }
         buttonSetModeVoice.setVisibility(VISIBLE);
         buttonSetModeKeyboard.setVisibility(GONE);
         edittext_layout.setVisibility(VISIBLE);
@@ -278,7 +277,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
 
     @Override
     public void showVoiceStatus() {
-        if (vgRechargeTips.getVisibility() == View.VISIBLE) {
+        if (isNotFriend) {
             onChatTypeClickListener.onAddFriend();
             return;
         }
@@ -377,7 +376,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
             onChatTypeClickListener.clickVoice();
 
         } else if (id == R.id.im_extend_emoji) {//表情
-            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
+            if (isNotFriend) {
                 onChatTypeClickListener.onAddFriend();
                 return;
             }
@@ -385,7 +384,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
             onChatTypeClickListener.onShowEmojiInput(isShowEmoji);
 
         } else if (id == R.id.im_extend_photo) {//相册
-            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
+            if (isNotFriend) {
                 onChatTypeClickListener.onAddFriend();
                 return;
             }
@@ -395,14 +394,14 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
             onChatTypeClickListener.onRecharge();
 
         } else if (id == R.id.im_extend_phone) {//通话
-            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
+            if (isNotFriend) {
                 onChatTypeClickListener.onAddFriend();
                 return;
             }
             onChatTypeClickListener.clickPhone();
 
         } else if (id == R.id.im_extend_gift) {//礼物
-            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
+            if (isNotFriend) {
                 onChatTypeClickListener.onAddFriend();
                 return;
             }
@@ -534,20 +533,22 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
         this.onChatTypeClickListener = onChatTypeClickListener;
     }
 
+    private boolean isNotFriend;
+
     public void setUserInfo(UserDetailInfo userInfo) {
-        if (userInfo.isFriend()) {
-            if (vgRechargeTips.getVisibility() == View.VISIBLE) {
-                vgRechargeTips.setVisibility(View.GONE);
-                edittext_layout.setVisibility(View.VISIBLE);
-                editText.setHint("输入聊天内容");
-                showNormalStatus();
-            }
-        } else {
-            vgRechargeTips.setVisibility(View.VISIBLE);
-            buttonPressToSpeak.setVisibility(View.GONE);
-            edittext_layout.setVisibility(View.GONE);
-        }
+        isNotFriend = !userInfo.isFriend();
+//        if (userInfo.isFriend()) {
+//            vgRechargeTips.setVisibility(View.GONE);
+//            edittext_layout.setVisibility(View.VISIBLE);
+//            editText.setHint("输入聊天内容");
+//            showNormalStatus();
+//        } else {
+//            vgRechargeTips.setVisibility(View.VISIBLE);
+//            buttonPressToSpeak.setVisibility(View.GONE);
+//            edittext_layout.setVisibility(View.GONE);
+//        }
     }
+
 
     public interface OnChatTypeClickListener {
         void clickVoice();
