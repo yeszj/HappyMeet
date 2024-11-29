@@ -28,7 +28,7 @@
             android:id="@+id/viewBg"
             android:layout_width="@dimen/dp_330"
             android:layout_height="@dimen/dp_217"
-            android:layout_marginBottom="@dimen/dp_m_10"
+            android:layout_marginBottom="@dimen/dp_20"
             android:background="@drawable/bg_gradient_invite_info"
             app:layout_constraintBottom_toBottomOf="@+id/iv_bg"
             app:layout_constraintEnd_toEndOf="parent"

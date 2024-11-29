@@ -301,4 +301,8 @@ interface ApiService {
      */
     @GET("/app/v1/home/search")
     suspend fun searchUserList(@Query("content") content: String?): BaseBean<MutableList<UserDetailInfo>>
+
+    @GET("/app/v1/user/getImToken")
+    suspend  fun getImToken(): BaseBean<String>
+
 }

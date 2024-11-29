@@ -19,8 +19,6 @@ import cn.huanyuan.sweetlove.ui.main.MainActivity
 import cn.yanhu.baselib.utils.StatusBarUtil
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.router.RouteIntent
-import cn.yanhu.imchat.config.ChatUiConfig
-import cn.yanhu.imchat.config.ConversationKitConfig
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
@@ -123,39 +121,40 @@ class SplashActivity : FragmentActivity(
     }
 
     private fun redirectTo() {
-        ChatUiConfig.initConfig()
-        ConversationKitConfig.initConfig()
         if (ApplicationProxy.instance.isLogin()) {
             if (!TextUtils.isEmpty(AppCacheManager.userId)) {
                 LoginResultManager.loginIM(object : EMCallBack {
                     override fun onSuccess() {
                         showMainPage()
                     }
-
                     override fun onError(p0: Int, p1: String?) {
+                        ApplicationProxy.instance.loginInvalid()
                     }
                 })
             }
-
         } else {
             initJverify()
         }
     }
 
     private fun showMainPage() {
-        request({ rxApi.appStart() }, object : OnRequestResultListener<AppStartResponse> {
-            override fun onSuccess(data: BaseBean<AppStartResponse>) {
-                val appStartResponse = data.data
-                if (appStartResponse == null || appStartResponse.baseInfoFinish) {
-                    MainActivity.lunch(this@SplashActivity, intent.extras)
-                } else {
-                    CompleteProfileActivity.lunch(this@SplashActivity)
+        if (AppCacheManager.hasComplete){
+            MainActivity.lunch(this@SplashActivity, intent.extras)
+        }else{
+            request({ rxApi.appStart() }, object : OnRequestResultListener<AppStartResponse> {
+                override fun onSuccess(data: BaseBean<AppStartResponse>) {
+                    val appStartResponse = data.data
+                    if (appStartResponse == null || appStartResponse.baseInfoFinish) {
+                        AppCacheManager.hasComplete = true
+                        MainActivity.lunch(this@SplashActivity, intent.extras)
+                    } else {
+                        CompleteProfileActivity.lunch(this@SplashActivity)
+                    }
+                    finish()
                 }
-                finish()
-            }
 
-        }, false, activity = this@SplashActivity)
-
+            }, false, activity = this@SplashActivity)
+        }
     }
 
 
