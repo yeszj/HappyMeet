@@ -22,4 +22,9 @@ object BeautyCacheManager {
     fun saveBeautySdkInfo(beautyFileCacheInfo: BeautyFileCacheInfo){
         AppCacheManager.beautySdkInfo = GsonUtils.toJson(beautyFileCacheInfo)
     }
+
+    fun hasLoadBeautySdk():Boolean{
+        return getBeautyCache()!=null
+    }
+
 }

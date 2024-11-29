@@ -10,8 +10,10 @@ import cn.yanhu.agora.adapter.BeautyFaceSetAdapter
 import cn.yanhu.agora.bean.BeautyBean
 import cn.yanhu.agora.databinding.ActivityBeautyFaceSetBinding
 import cn.yanhu.agora.manager.AgoraManager
-import cn.yanhu.agora.manager.dbCache.BeautyFaceParamCacheManager
 import cn.yanhu.agora.manager.BeautySetManager
+import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
+import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
+import cn.yanhu.agora.manager.dbCache.BeautyFaceParamCacheManager
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
@@ -47,12 +49,16 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
     private var type: Int = 1
     override fun initData() {
         setFullScreenStatusBar()
+        if (!AgoraSdkCacheManager.hasLoadAgoraSdk() || !BeautyCacheManager.hasLoadBeautySdk()) {
+            showToast("请等待插件加载完成")
+            finish()
+            return
+        }
         mBinding.alertkey = ""
         checkPermission()
         mBinding.rvBeauty.adapter = beautyFaceSetAdapter
         getSkinCareList()
         getSkinTypeList()
-        getSkinFilterList()
     }
 
     private fun getSkinCareList() {
@@ -90,9 +96,12 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
             override fun onSuccess(result: Boolean?) {
                 if (!TextUtils.isEmpty(AppCacheManager.selectBeautyFilter)) {
                     val beautyBean =
-                        GsonUtils.fromJson(AppCacheManager.selectBeautyFilter, BeautyBean::class.java)
+                        GsonUtils.fromJson(
+                            AppCacheManager.selectBeautyFilter,
+                            BeautyBean::class.java
+                        )
                     selectFilterPosition = beautyFilterList.indexOfFirst {
-                        if (it.filterName == beautyBean.filterName){
+                        if (it.filterName == beautyBean.filterName) {
                             it.value = beautyBean.value
                         }
                         it.filterName == beautyBean.filterName
@@ -219,23 +228,29 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
             }
             BeautySetManager.getInstance().setBeautyProperty(beautyBean.key, beautyBean.value)
         }
+        setDefaultFilter()
 
-        val beautyBean = beautyFilterList[0]
-        AppCacheManager.selectBeautyFilter = ""
-        BeautySetManager.getInstance().setBeautyFilter(beautyBean.value, beautyBean.filterName)
         when (type) {
             1 -> {
                 beautyFaceSetAdapter.submitList(beautySkinList)
             }
+
             2 -> {
                 beautyFaceSetAdapter.submitList(beautyTypeList)
             }
+
             else -> {
-                selectFilterPosition = 0
+                selectFilterPosition = 2
                 switchToBeautyFilter()
             }
         }
     }, cancel = "取消")
+
+    private fun setDefaultFilter() {
+        val beautyBean = beautyFilterList[2]
+        AppCacheManager.selectBeautyFilter = GsonUtils.toJson(beautyBean)
+        BeautySetManager.getInstance().setBeautyFilter(beautyBean.value, beautyBean.filterName)
+    }
 
     private fun addOnSeekBarListener() {
         mBinding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -298,9 +313,9 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
 
     private fun setSeekProgress(item: BeautyBean) {
         selectItem = item
-        if (item.filterName == "origin"){
+        if (item.filterName == "origin") {
             mBinding.alertkey = ""
-        }else{
+        } else {
             mBinding.alertkey = item.key
         }
         mBinding.seekBar.progress = item.value
@@ -319,6 +334,7 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
                 override fun onSuccess() {
                     AgoraManager.getInstence().init(mContext, 1, mBinding.beautySetSf)
                     AgoraManager.getInstence().setVideoEncoderConfiguration(360, 800)
+                    getSkinFilterList()
                 }
 
                 override fun onFail() {

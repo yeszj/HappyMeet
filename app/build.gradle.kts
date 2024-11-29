@@ -88,6 +88,24 @@ android {
         create("360") {
             dimension = "meetDefault"
         }
+        create("huawei") {
+            dimension = "meetDefault"
+        }
+        create("oppo") {
+            dimension = "meetDefault"
+        }
+        create("vivo") {
+            dimension = "meetDefault"
+        }
+        create("xiaomi") {
+            dimension = "meetDefault"
+        }
+        create("yyb") {
+            dimension = "meetDefault"
+        }
+        create("honor") {
+            dimension = "meetDefault"
+        }
     }
 }
 
