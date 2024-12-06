@@ -25,6 +25,7 @@ import cn.yanhu.imchat.ui.chatSetting.UserChatSettingActivity
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.status.ErrorCode
+import com.blankj.utilcode.util.ThreadUtils
 import com.hyphenate.chat.EMClient
 import com.hyphenate.chat.EMConversation
 import com.hyphenate.chat.EMCustomMessageBody
@@ -153,11 +154,23 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
             val source = it.getIntAttribute("source", -1)
             if (source == CmdMsgTypeConfig.ADD_FRIEND) {
                 mBinding.vgAddFriendTips.visibility = View.GONE
+            }else if (source == ChatConstant.ACTION_MSG_MAN_CONSUME_ALERT){
+                val data = it.getJSONObjectAttribute("data")
+                ThreadUtils.getMainHandler().postDelayed({
+                    EmMsgManager.saveAlert(
+                        " 温馨提示：每条消息需消耗${data.getInt("useRose")}玫瑰".trimIndent(),
+                        "",
+                        "", conversationId = chatFragment.conversationId, event = ChatConstant.MSG_ALERT
+                    )
+                },500)
             }
         }
         LiveEventBus.get("sendGift", String::class.java).observe(this) { svga ->
             logcom("礼盒：$svga")
             playSvga(svga.toString())
+        }
+        LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_CHAT_LIST).observe(this) {
+            refreshMessages()
         }
         LiveEventBus.get<MutableList<EMMessage>>(EventBusKeyConfig.RECEIVE_CHAT_MSG).observe(this) {
             for (message in it) {
@@ -178,11 +191,20 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
                     } else if ((message.body as EMCustomMessageBody).event() == ChatConstant.MSG_ADD_FRIEND) { //是否同意好友
                         val params = (message.body as EMCustomMessageBody).params
                         if (params["isApplySuccess"] == "1") {
+                            ChatUserInfoManager.updateIsFriend(chatFragment.conversationId,true)
                             userInfo?.isFriend = true
                             chatFragment.setUserInfo(userInfo)
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun refreshMessages() {
+        chatFragment.chatLayout.chatMessageListLayout?.apply {
+            if (currentConversation != null) {
+                this.refreshToLatest()
             }
         }
     }
@@ -253,12 +275,12 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         userInfo = it
 
         chatFragment.setUserInfo(userInfo)
-        if (it.isFriend) {
-            mBinding.vgAddFriendTips.visibility = View.GONE
-        } else {
-            mBinding.vgAddFriendTips.visibility = View.VISIBLE
-            mBinding.tvAddFriend.text = "加好友丨${it.needRoseNum}玫瑰"
-        }
+//        if (it.isFriend) {
+//            mBinding.vgAddFriendTips.visibility = View.GONE
+//        } else {
+//            mBinding.vgAddFriendTips.visibility = View.VISIBLE
+//            mBinding.tvAddFriend.text = "加好友丨${it.needRoseNum}玫瑰"
+//        }
     }
 
 

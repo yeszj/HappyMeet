@@ -48,8 +48,8 @@ class CommonPermissionPop(
         ): CommonPermissionPop {
             val matchPop = CommonPermissionPop(mContext,tips)
             val builder = XPopup.Builder(mContext)
-            builder.dismissOnTouchOutside(false)
-                .dismissOnBackPressed(false)
+            builder.dismissOnTouchOutside(true)
+                .dismissOnBackPressed(true)
                 .enableDrag(false)
                 .hasShadowBg(false)
                 .isViewMode(true)

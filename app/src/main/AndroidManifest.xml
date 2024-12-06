@@ -178,5 +178,10 @@
             android:name=".ui.userinfo.UserSearchActivity"
             android:configChanges="orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.main.tab_msg.friend.FriendRequestRecordActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait" />
+
     </application>
 </manifest>

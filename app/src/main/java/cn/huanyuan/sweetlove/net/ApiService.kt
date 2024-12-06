@@ -305,4 +305,6 @@ interface ApiService {
     @GET("/app/v1/user/getImToken")
     suspend  fun getImToken(): BaseBean<String>
 
+    @GET("app/v1/friend/getRequestList")
+    suspend fun getRequestList(@Query("page") page: Int): BaseBean<FriendsResponse>
 }

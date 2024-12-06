@@ -54,6 +54,11 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
             finish()
             return
         }
+        if (AgoraManager.isLiveRoom){
+            showToast("正在通话中,无法进行美颜设置")
+            finish()
+            return
+        }
         mBinding.alertkey = ""
         checkPermission()
         mBinding.rvBeauty.adapter = beautyFaceSetAdapter

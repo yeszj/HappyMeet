@@ -131,11 +131,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
 
     private val clickResendRecord: MutableMap<String, Boolean> = HashMap()
     override fun onUserAvatarClick(username: String) {
-//        Bundle bundle = new Bundle();
-//        bundle.putString("userId", username);
-//        Intent intent = new Intent(getContext(), PersonalPageActivity.class);
-//        intent.putExtras(bundle);
-//        startActivity(intent);
+        RouteIntent.lunchPersonHomePage(username)
     }
 
     override fun onOtherTyping(action: String) {
@@ -249,7 +245,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
 
     private fun sendChatMessage(message: EMMessage, isNeedRose: Boolean) {
         addMessageRewardNum(message)
-        if (chatLayout == null) {
+        if (mContext.isFinishing) {
             EMClient.getInstance().chatManager().sendMessage(message)
         } else {
             chatLayout.sendMessage(message)

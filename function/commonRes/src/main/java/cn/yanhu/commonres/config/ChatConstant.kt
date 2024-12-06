@@ -90,6 +90,12 @@ object ChatConstant {
     const val ACTION_REFUSE_SWITCH_PRIVATE = 10023 //男嘉宾拒绝转为专属房间
     const val ACTION_ANGLE_ROOM_RESULT = 10024 //天使房间结束显示天使结果
 
+    const val ACTION_NEW_FRIEND_REQUEST = 70 //新的好友请求
+
+    const  val ACTION_MSG_MAN_CONSUME_ALERT = 16 //男嘉宾聊天回复消费提示
+
+
+    const val GLOBAL_GIFT_ALERT = 18 //礼物飘屏
 
 
 }

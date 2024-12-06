@@ -92,6 +92,7 @@
                 android:layout_height="@dimen/dp_47"
                 android:layout_marginHorizontal="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_10"
+                android:visibility="gone"
                 android:background="@drawable/white_corner_10"
                 android:backgroundTint="@color/blackAlpha96"
                 android:gravity="center_vertical"

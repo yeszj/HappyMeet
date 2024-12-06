@@ -17,55 +17,52 @@ public class EaseDateUtils {
 	private static final long INTERVAL_IN_MILLISECONDS = 30 * 1000;
 
 	public static String getTimestampString(Context context, Date messageDate) {
-	    String format = null;
-        String language = Locale.getDefault().getLanguage();
-        boolean isZh = language.startsWith("zh");
-        long messageTime = messageDate.getTime();
-        if (isSameDay(messageTime)) {
-        	if(is24HourFormat(context)) {
-				format = "HH:mm";
-        	}else {
-				if(isZh) {
-					format = "aa hh:mm";
-				} else {
-					format = "hh:mm aa";
-				}
+		String format = null;
+		String language = Locale.getDefault().getLanguage();
+		boolean isZh = language.startsWith("zh");
+		long messageTime = messageDate.getTime();
+		if (isSameDay(messageTime)) {
+			return formatTimeAgo(messageTime);
+			//format = "HH:mm";
+		} else if (isYesterday(messageTime)) {
+			if (isZh) {
+				format = "昨天";
+			} else {
+				return "Yesterday ";
 			}
-        } else if (isYesterday(messageTime)) {
-            if(isZh){
-            	if(is24HourFormat(context)) {
-					format = "昨天 HH:mm";
-            	}else {
-					format = "昨天aa hh:mm";
-				}
-            }else{
-            	if(is24HourFormat(context)) {
-					return "Yesterday " + new SimpleDateFormat("HH:mm",Locale.ENGLISH).format(messageDate);
-            	}else {
-					return "Yesterday " + new SimpleDateFormat("hh:mm aa",Locale.ENGLISH).format(messageDate);
-				}
-            }
-        } else {
-            if(isZh){
-            	if(is24HourFormat(context)) {
-					format = "M月d日 HH:mm";
-            	}else {
-					format = "M月d日aa hh:mm";
-				}
-            }
-            else{
-            	if(is24HourFormat(context)) {
-					format = "MMM dd HH:mm";
-            	}else {
-					format = "MMM dd hh:mm aa";
-				}
-            }
-        }
-        if(isZh){
-            return new SimpleDateFormat(format,Locale.CHINESE).format(messageDate);
-        }else{
-            return new SimpleDateFormat(format,Locale.ENGLISH).format(messageDate);
-        }
+		} else {
+			if (isZh) {
+				format = "MM-dd";
+			} else {
+				format = "MMM dd";
+			}
+		}
+		if (isZh) {
+			return new SimpleDateFormat(format, Locale.CHINESE).format(messageDate);
+		} else {
+			return new SimpleDateFormat(format, Locale.ENGLISH).format(messageDate);
+		}
+	}
+
+	public static String formatTimeAgo(long timestamp) {
+		long currentTime = System.currentTimeMillis();
+		long timeDelta = currentTime - timestamp;
+
+		if (timeDelta < 1000) {
+			return "刚刚";
+		}
+		long minutes = timeDelta / (60 * 1000);
+		long hours = timeDelta / (60 * 60 * 1000);
+		long days = timeDelta / (24 * 60 * 60 * 1000);
+		if (days > 0) {
+			return String.format(Locale.getDefault(), "%d天前", days);
+		} else if (hours > 0) {
+			return String.format(Locale.getDefault(), "%d小时前", hours);
+		} else if (minutes > 0) {
+			return String.format(Locale.getDefault(), "%d分钟前", minutes);
+		} else {
+			return "刚刚";
+		}
 	}
 
 	public static boolean isCloseEnough(long time1, long time2) {

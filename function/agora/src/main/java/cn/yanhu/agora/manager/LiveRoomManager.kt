@@ -10,6 +10,7 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.Spans
+import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
@@ -74,13 +75,13 @@ object LiveRoomManager {
     /**
      * 判断是否可以直接进入房间
      */
-     var isRequestCheck = false
+    var isRequestCheck = false
     private fun enterCheck(
         context: FragmentActivity,
         applyRoomId: String,
         onRoomNoExitListener: OnRoomNoExitListener?
     ) {
-        if (isRequestCheck){
+        if (isRequestCheck) {
             return
         }
         DialogUtils.showLoading(hasShadow = false)
@@ -94,9 +95,13 @@ object LiveRoomManager {
                     val enterCheckResponse = data.data ?: return
                     if (enterCheckResponse.pass) {
                         if (AgoraManager.isLiveRoom && ApplicationProxy.instance.getLiveRoomActivity() != null) {
-                            CutLiveRoomUtils.showChangeAlert(object : CutLiveRoomUtils.ChangeListener {
+                            CutLiveRoomUtils.showChangeAlert(object :
+                                CutLiveRoomUtils.ChangeListener {
                                 override fun sure() {
-                                    RouteIntent.lunchToLiveRoom(context, enterCheckResponse.roomInfo)
+                                    RouteIntent.lunchToLiveRoom(
+                                        context,
+                                        enterCheckResponse.roomInfo
+                                    )
                                 }
                             })
                         } else {
@@ -109,12 +114,20 @@ object LiveRoomManager {
                                 CutLiveRoomUtils.ChangeListener {
                                 override fun sure() {
                                     showEnterRoomDialog(
-                                        context, enterCheckResponse, applyRoomId, onRoomNoExitListener
+                                        context,
+                                        enterCheckResponse,
+                                        applyRoomId,
+                                        onRoomNoExitListener
                                     )
                                 }
                             })
                         } else {
-                            showEnterRoomDialog(context, enterCheckResponse, applyRoomId, onRoomNoExitListener)
+                            showEnterRoomDialog(
+                                context,
+                                enterCheckResponse,
+                                applyRoomId,
+                                onRoomNoExitListener
+                            )
                         }
                         DialogUtils.dismissLoading()
                     }
@@ -145,13 +158,14 @@ object LiveRoomManager {
         onRoomNoExitListener: OnRoomNoExitListener?
     ) {
 
-        val content = Spans.builder().text("申请通过后可进入专属房间交友").color(Color.parseColor("#666666"))
-            .text(if (data.info.seatNum == 2) "\n\n专属房间需消耗" + data.info.price + "玫瑰/分钟，是否申请?" else "")
-            .color(
-                CommonUtils.getColor(
-                    cn.yanhu.baselib.R.color.colorMain
-                )
-            ).build()
+        val content =
+            Spans.builder().text("申请通过后可进入专属房间交友").color(Color.parseColor("#666666"))
+                .text(if (data.info.seatNum == 2) "\n\n专属房间需消耗" + data.info.price + "玫瑰/分钟，是否申请?" else "")
+                .color(
+                    CommonUtils.getColor(
+                        cn.yanhu.baselib.R.color.colorMain
+                    )
+                ).build()
         DialogUtils.showConfirmDialog(
             "申请专属私密约会",
             {
@@ -160,12 +174,17 @@ object LiveRoomManager {
                     showRechargeListDialog(context, applyRoomId, onRoomNoExitListener)
                     return@showConfirmDialog
                 }
+                if (data.roomInfo.roomType == RoomListBean.TYPE_ROBOT_ROOM) {
+                    showToast("已发送申请")
+                    return@showConfirmDialog
+                }
                 val selfUserInfo = ImUserManager.getSelfUserInfo()
                 val map: MutableMap<String, Any> = HashMap()
                 map["fromUid"] = AppCacheManager.userId
                 map["seatId"] = data.info.seatNum
                 map["fromNickName"] = data.info.nickName
                 map["portrait"] = selfUserInfo.portrait
+                showToast("已发送申请")
                 EmMsgManager.sendCmdMessagePeople(
                     data.info.roomUserId,
                     ChatConstant.ACTION_MSG_APPLY_SET_UP,
@@ -189,10 +208,10 @@ object LiveRoomManager {
         applyRoomId: String,
         onRoomNoExitListener: OnRoomNoExitListener?
     ) {
-        ApplicationProxy.instance.showRechargePop(context,true)
+        ApplicationProxy.instance.showRechargePop(context, true)
         PayManager.registerPayResult(context, object : OnPayResultListener {
             override fun onPaySuccess() {
-                enterCheck(context,applyRoomId,onRoomNoExitListener)
+                enterCheck(context, applyRoomId, onRoomNoExitListener)
             }
         })
     }

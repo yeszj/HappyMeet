@@ -182,10 +182,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
     private void initListener() {
         ViewExtKt.setOnSingleClickListener(buttonSend, 1, view -> {
             //发送消息
-            if (isNotFriend) {
-                onChatTypeClickListener.onAddFriend();
-                return view;
-            }
+            if (checkIsFriend()) return view;
             if (listener != null) {
                 String s = editText.getText().toString();
                 editText.setText("");
@@ -277,10 +274,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
 
     @Override
     public void showVoiceStatus() {
-        if (isNotFriend) {
-            onChatTypeClickListener.onAddFriend();
-            return;
-        }
+        if (checkIsFriend()) return;
         hideSoftKeyboard();
         buttonSetModeVoice.setVisibility(GONE);
         buttonSetModeKeyboard.setVisibility(VISIBLE);
@@ -376,37 +370,33 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
             onChatTypeClickListener.clickVoice();
 
         } else if (id == R.id.im_extend_emoji) {//表情
-            if (isNotFriend) {
-                onChatTypeClickListener.onAddFriend();
-                return;
-            }
+            if (checkIsFriend()) return;
             isShowEmoji = !isShowEmoji;
             onChatTypeClickListener.onShowEmojiInput(isShowEmoji);
 
         } else if (id == R.id.im_extend_photo) {//相册
-            if (isNotFriend) {
-                onChatTypeClickListener.onAddFriend();
-                return;
-            }
+            if (checkIsFriend()) return;
             onChatTypeClickListener.clickPhoto();
 
         } else if (id == R.id.im_extend_recharge) {
             onChatTypeClickListener.onRecharge();
 
         } else if (id == R.id.im_extend_phone) {//通话
-            if (isNotFriend) {
-                onChatTypeClickListener.onAddFriend();
-                return;
-            }
+            if (checkIsFriend()) return;
             onChatTypeClickListener.clickPhone();
 
         } else if (id == R.id.im_extend_gift) {//礼物
-            if (isNotFriend) {
-                onChatTypeClickListener.onAddFriend();
-                return;
-            }
+            if (checkIsFriend()) return;
             onChatTypeClickListener.onSendGift();
         }
+    }
+
+    private boolean checkIsFriend() {
+//        if (isNotFriend) {
+//            onChatTypeClickListener.onAddFriend();
+//            return true;
+//        }
+        return false;
     }
 
     @Override

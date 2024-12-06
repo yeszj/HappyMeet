@@ -1,7 +1,9 @@
 package cn.huanyuan.sweetlove.ui.login
 
 import android.graphics.Typeface.BOLD
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import cn.huanyuan.sweetlove.R
@@ -88,6 +90,22 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
 
     override fun initListener() {
         super.initListener()
+        mBinding.etPhone.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(s: Editable?) {
+                if (RegexUtils.isMobileExact(s.toString())) {
+                    mBinding.bgCode.alpha = 1.0f
+                    mBinding.bgCode.isEnabled = true
+                } else if (mBinding.bgCode.isEnabled) {
+                    mBinding.bgCode.alpha = 0.5f
+                    mBinding.bgCode.isEnabled = false
+                }
+            }
+
+        })
         mBinding.ivCheck.setOnClickListener {
             if (isPrivacyCheck) {
                 mBinding.ivCheck.setImageResource(cn.yanhu.commonres.R.drawable.svg_unselected_r20)

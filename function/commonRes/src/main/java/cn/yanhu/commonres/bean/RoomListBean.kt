@@ -36,8 +36,8 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
             0 -> {
                 "对方在线"
             }
-            TYPE_PRIVATE -> {
-                "专属交友"
+            TYPE_PRIVATE,TYPE_ROBOT_ROOM -> {
+                "专属相亲"
             }
             TYPE_SEVEN_FRIEND -> {
                 "七人交友"
@@ -67,7 +67,7 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
 
     override fun getFragmentType(): Int {
         return when (roomType) {
-            TYPE_PUBLIC, TYPE_PRIVATE -> {
+            TYPE_PUBLIC, TYPE_PRIVATE,TYPE_ROBOT_ROOM -> {
                 FRG_THREE_ROOM
             }
 
@@ -96,7 +96,7 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
     }
 
     fun isPrivateRoom(): Boolean {
-        return roomType == TYPE_PRIVATE
+        return roomType == TYPE_PRIVATE || roomType == TYPE_ROBOT_ROOM
     }
 
 
@@ -112,6 +112,9 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
         const val TYPE_SEVEN_ANGLE = 4
         const val TYPE_NINE_FRIEND = 5
         const val TYPE_NINE_ANGLE = 6
+        const val TYPE_ROBOT_ROOM= 50
+
+
     }
 
     @Transient

@@ -87,36 +87,38 @@
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"
             app:layout_constraintStart_toEndOf="@+id/userAge" />
 
-
-        <LinearLayout
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_refuse"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_26"
-            android:background="@{userinfo.publicRoom?@drawable/bg_blinding_tag:(userinfo.privateRoom?@drawable/bg_private_tag:  @drawable/bg_friends_tag)}"
             android:gravity="center"
-            android:paddingHorizontal="@dimen/dp_7"
-            android:visibility="@{userinfo.roomId == 0? View.GONE : View.VISIBLE}"
+            android:background="@drawable/white_corner_20"
+            android:backgroundTint="@color/blackAlpha96"
+            android:text="拒绝"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/color_888888"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:paddingHorizontal="@dimen/dp_12"
+            app:layout_constraintEnd_toStartOf="@+id/tv_pass"
+            app:layout_constraintBottom_toBottomOf="@id/avatarView"
+            app:layout_constraintTop_toTopOf="@+id/avatarView"
+            tools:background="@drawable/bg_blinding_tag"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_26"
+            android:gravity="center"
+            android:background="@drawable/white_corner_20"
+            android:backgroundTint="@color/colorMain"
+            android:text="通过"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/white"
+            android:paddingHorizontal="@dimen/dp_12"
             app:layout_constraintBottom_toBottomOf="@id/avatarView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/avatarView"
-            tools:background="@drawable/bg_private_tag">
-
-            <com.opensource.svgaplayer.SVGAImageView
-                android:id="@+id/svgPlay"
-                android:layout_width="@dimen/dp_14"
-                android:layout_height="@dimen/dp_14"
-                app:autoPlay="true"
-                app:loopCount="-1"
-                app:source="play_white.svga" />
-
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{userinfo.roomDesc}"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_12"
-                app:fontType="@string/fontMedium"
-                tools:text="相亲中" />
-        </LinearLayout>
+            tools:background="@drawable/bg_blinding_tag"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -114,15 +114,12 @@ class UserAvatarView : LinearLayout {
 
     @SuppressLint("CheckResult")
     private fun setAvatar(item: BaseUserInfo, parseCompletion: SVGAParser.ParseCompletion?) {
-        val tag = ivAvatar.tag
-        if (tag == null || !item.portrait.equals(tag)) {
-            ivAvatar.tag = item.portrait
-            val requestOptions = RequestOptions().diskCacheStrategy(
-                DiskCacheStrategy.ALL
-            )
-            requestOptions.placeholder(ivAvatar.drawable)
-            Glide.with(context).load(item.portrait).apply(requestOptions).into(ivAvatar)
-        }
+        ivAvatar.setImageResource(R.drawable.ease_default_avatar)
+        val requestOptions = RequestOptions().diskCacheStrategy(
+            DiskCacheStrategy.ALL
+        )
+        requestOptions.placeholder(R.drawable.ease_default_avatar)
+        Glide.with(context).load(item.portrait).apply(requestOptions).into(ivAvatar)
 
         if (isShowSvga){
             if (!TextUtils.isEmpty(item.avatarFrame)) {

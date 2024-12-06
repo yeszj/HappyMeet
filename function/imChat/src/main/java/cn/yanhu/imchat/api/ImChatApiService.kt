@@ -183,7 +183,19 @@ interface ImChatApiService {
     ): BaseBean<String>
 
     @FormUrlEncoded
-    @POST("/app/v1/chat/call")
+    @POST("app/v1/friend/cancelFriends")
+    suspend fun cancelFriends(
+        @Field("cancelUserId") addUserId: String
+    ): BaseBean<String>
+
+    @FormUrlEncoded
+    @POST("app/v1/friend/operate")
+    suspend fun operateRequest(
+        @Field("recordId") recordId: String,@Field("status") status: Int
+    ): BaseBean<String>
+
+    @FormUrlEncoded
+    @POST("app/v1/chat/call")
     suspend fun call(@FieldMap map: Map<String, String>): BaseBean<ChatCallResponseInfo>
 
 }

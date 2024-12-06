@@ -137,7 +137,6 @@
                     android:id="@+id/voiceLottie"
                     android:layout_width="@dimen/dp_16"
                     android:layout_height="@dimen/dp_12"
-                    app:lottie_fileName="voice_animation.json"
                     android:visibility="@{introduction.contains(`.mp4`) ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@+id/introduce_portrait"
                     app:layout_constraintEnd_toEndOf="@+id/introduce_portrait"

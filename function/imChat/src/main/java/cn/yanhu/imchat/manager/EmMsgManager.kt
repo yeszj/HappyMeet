@@ -245,7 +245,7 @@ object EmMsgManager {
     }
 
     @JvmStatic
-    fun sendAlert(
+    fun saveAlert(
         content: String,
         msgType: String,
         iconUrl: String,
@@ -265,6 +265,7 @@ object EmMsgManager {
         message.to = conversationId
         message.setStatus(EMMessage.Status.SUCCESS)
         EMClient.getInstance().chatManager().saveMessage(message)
+        LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_CHAT_LIST).post(true)
     }
 
     fun sendRightIconAlert(

@@ -128,7 +128,6 @@ class SplashActivity : FragmentActivity(
                         showMainPage()
                     }
                     override fun onError(p0: Int, p1: String?) {
-                        ApplicationProxy.instance.loginInvalid()
                     }
                 })
             }

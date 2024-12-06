@@ -526,7 +526,7 @@ public class CustomEaseChatMessageListLayout extends RelativeLayout implements I
         if (isSingleChat()) {
             checkMessage(data);
         }
-        boolean isReverse = data.size() > 5;
+        boolean isReverse = data.size() > 7;
         layoutManager.setReverseLayout(isReverse);
         if (isReverse) {
             CommonUtils.reverseList(data);

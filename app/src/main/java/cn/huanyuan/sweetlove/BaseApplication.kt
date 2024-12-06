@@ -469,9 +469,9 @@ class BaseApplication : Application() {
         imMsgNotifyTaskManager.addTask(ImChatMsgNotifyTask(appMsgNotifyInfo))
     }
 
-
     private fun dealCommonCmdMsg(message: EMMessage) {
         val source = message.getIntAttribute("source", -1)
+        logcom("收到透传消息source=$source")
         if (source == CmdMsgTypeConfig.ADD_FRIEND) {
             val userInfo = ChatUserInfoManager.getUserInfo(message.conversationId())
             userInfo?.apply {
@@ -540,6 +540,13 @@ class BaseApplication : Application() {
                     topActivity.finish()
                 }
             }
+        }else if (source == ChatConstant.GLOBAL_GIFT_ALERT){
+            if (CommonUtils.isScreenOff() || !AppUtils.isAppForeground()) {
+                return
+            }
+            val data = message.getJSONObjectAttribute("data")
+            addPopTask(ChatConstant.GLOBAL_GIFT_ALERT,
+                data.toString())
         }
     }
 

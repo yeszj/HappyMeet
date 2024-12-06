@@ -31,9 +31,9 @@ class BlindDateUserRoomListFrg : BaseFragment<FrgBlindDateUserListBinding, MainV
         }
         titles.clear()
         titles.add("推荐")
-        titles.add("专属")
+       // titles.add("专属")
         frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_RECOMMEND))
-        frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_EXCLUSIVE))
+        //frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_EXCLUSIVE))
         mBinding.apply {
             viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
             viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL

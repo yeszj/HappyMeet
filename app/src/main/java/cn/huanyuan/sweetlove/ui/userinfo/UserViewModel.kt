@@ -10,6 +10,7 @@ import cn.yanhu.commonres.bean.MineMenuBean
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.dynamic.api.momentRxApi
 import cn.yanhu.dynamic.bean.DynamicInfo
+import cn.yanhu.imchat.api.imChatRxApi
 import cn.zj.netrequest.BaseViewModel
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
@@ -40,7 +41,15 @@ class UserViewModel : BaseViewModel() {
 
     val myServiceObservable = MutableLiveData<ResultState<MutableList<MineMenuBean>>>()
     val searchUserObservable = MutableLiveData<ResultState<MutableList<UserDetailInfo>>>()
+    val addFriendObservable = MutableLiveData<ResultState<String>>()
+    fun addFriend(chatUserId: String) {
+        request({ imChatRxApi.addFriend(chatUserId) }, addFriendObservable, false)
+    }
 
+    val cancelFriendObservable = MutableLiveData<ResultState<String>>()
+    fun cancelFriends(chatUserId: String) {
+        request({ imChatRxApi.cancelFriends(chatUserId) }, cancelFriendObservable, false)
+    }
     fun searchUserList(content: String) {
         request({ rxApi.searchUserList(content) }, searchUserObservable, true,
             loadingHasContent = true

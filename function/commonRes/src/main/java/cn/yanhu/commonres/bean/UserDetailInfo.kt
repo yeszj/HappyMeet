@@ -37,8 +37,20 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
             notifyPropertyChanged(BR.roseNum)
         }
 
-    fun isBlinding(): Boolean {
-        return RoomTypeManager.isBlinding(roomType)
+    fun getRoomDesc():String{
+        return if (isPublicRoom() || isPrivateRoom()){
+            "相亲中"
+        }else{
+            "交友中"
+        }
+    }
+
+    fun isPublicRoom(): Boolean {
+        return RoomTypeManager.isPublicRoom(roomType)
+    }
+
+    fun isPrivateRoom(): Boolean {
+        return RoomTypeManager.isPrivateRoom(roomType)
     }
 
     @Bindable

@@ -52,23 +52,23 @@ object ImUserManager {
                     showToast("用户已被拉黑")
                 }
             })
-//            EMClient.getInstance().contactManager().asyncAddUserToBlackList(userId,true,object : EMCallBack{
-//                override fun onSuccess() {
-//                }
-//                override fun onError(p0: Int, p1: String?) {
-//                }
-//            })
+            EMClient.getInstance().contactManager().asyncAddUserToBlackList(userId,true,object : EMCallBack{
+                override fun onSuccess() {
+                }
+                override fun onError(p0: Int, p1: String?) {
+                }
+            })
         } else {
             request({ imChatRxApi.cancelBlock(userId)},object : OnRequestResultListener<String>{
                 override fun onSuccess(data: BaseBean<String>) {
                 }
             })
-//            EMClient.getInstance().contactManager().asyncRemoveUserFromBlackList(userId,object : EMCallBack{
-//                override fun onSuccess() {
-//                }
-//                override fun onError(p0: Int, p1: String?) {
-//                }
-//            })
+            EMClient.getInstance().contactManager().asyncRemoveUserFromBlackList(userId,object : EMCallBack{
+                override fun onSuccess() {
+                }
+                override fun onError(p0: Int, p1: String?) {
+                }
+            })
         }
     }
 

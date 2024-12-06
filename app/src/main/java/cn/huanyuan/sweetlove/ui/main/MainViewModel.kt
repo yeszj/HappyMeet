@@ -8,7 +8,9 @@ import cn.huanyuan.sweetlove.net.rxApi
 import cn.yanhu.commonres.bean.response.FriendsResponse
 import cn.yanhu.commonres.bean.response.RoomListResponse
 import cn.yanhu.commonres.bean.response.SameCityUserResponse
+import cn.yanhu.imchat.api.imChatRxApi
 import cn.zj.netrequest.BaseViewModel
+import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.ResultState
 
@@ -40,7 +42,9 @@ class MainViewModel : BaseViewModel() {
     }
 
 
-
+    fun operateRequest(recordId: String,status:Int,onRequestResultListener: OnRequestResultListener<String>) {
+        request({ imChatRxApi.operateRequest(recordId,status) }, onRequestResultListener)
+    }
     fun getRoomList(type:Int,page:Int) {
         request({ rxApi.getRoomList(type,page) }, roomListObservable, true)
     }
@@ -56,4 +60,8 @@ class MainViewModel : BaseViewModel() {
         request({ rxApi.getWalletInfo() }, walletObservable, true)
     }
 
+     val requestFriendObservable = MutableLiveData<ResultState<FriendsResponse>>()
+    fun getRequestList(page:Int) {
+        request({ rxApi.getRequestList(page) }, requestFriendObservable, false)
+    }
 }

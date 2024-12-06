@@ -1,6 +1,7 @@
 package cn.huanyuan.sweetlove.ui.main.tab_samecity
 
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgSameCityUserListBinding
 import cn.huanyuan.sweetlove.ui.main.MainViewModel
@@ -37,6 +38,10 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
     override fun initData() {
         adapter.stateView = getEmptyView()
         mBinding.recyclerView.itemAnimator?.changeDuration = 0
+        val linearLayoutManager = LinearLayoutManager(context)
+        mBinding.recyclerView.layoutManager = linearLayoutManager
+        linearLayoutManager.isItemPrefetchEnabled = true
+        linearLayoutManager.initialPrefetchItemCount = 10
         adapter.setHasStableIds(true)
         mBinding.recyclerView.adapter = adapter
     }

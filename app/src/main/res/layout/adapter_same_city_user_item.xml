@@ -10,6 +10,8 @@
             type="cn.yanhu.commonres.bean.SameCityUserInfo" />
 
         <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,14 +21,14 @@
 
         <cn.yanhu.commonres.view.UserAvatarView
             android:id="@+id/avatarView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:avatarSize="@dimen/dp_60"
-            app:avatarMarginLeft="@dimen/dp_m_5"
+            avatarFrameUrl="@{userinfo.avatarFrame}"
             avatarUrl="@{userinfo.portrait}"
             avatarUserId="@{userinfo.userId}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:avatarMarginLeft="@dimen/dp_m_5"
+            app:avatarSize="@dimen/dp_60"
             app:isCanClick="false"
-            avatarFrameUrl="@{userinfo.avatarFrame}"
             app:isShowSvgAvatar="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -35,24 +37,25 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_22"
             android:layout_marginEnd="@dimen/dp_22"
-            android:visibility="@{userinfo.online?View.VISIBLE:View.INVISIBLE}"
+            android:layout_marginBottom="@dimen/dp_22"
             android:src="@drawable/svg_online_stoke_white"
+            android:visibility="@{userinfo.online?View.VISIBLE:View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"
             app:layout_constraintEnd_toEndOf="@+id/avatarView" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vg_info"
             android:layout_width="0dp"
-            android:orientation="vertical"
-            android:layout_marginEnd="@dimen/dp_60"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_m_5"
-            app:layout_constraintStart_toEndOf="@+id/avatarView"
-            app:layout_constraintTop_toTopOf="@+id/avatarView"
+            android:layout_marginEnd="@dimen/dp_60"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/avatarView"
-            android:layout_height="wrap_content">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/avatarView"
+            app:layout_constraintTop_toTopOf="@+id/avatarView">
+
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:id="@+id/tv_nickName"
                 android:layout_width="wrap_content"
@@ -61,21 +64,21 @@
                 android:drawablePadding="@dimen/dp_2"
                 android:ellipsize="end"
                 android:maxLines="1"
-                app:layout_constraintStart_toStartOf="parent"
                 android:text="@{userinfo.nickName}"
-                tools:text="佊岸、花开"
                 android:textColor="@color/fontTextColor"
                 android:textSize="@dimen/sp_15"
                 app:fontType="@string/fontMedium"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="佊岸、花开" />
 
             <cn.yanhu.commonres.view.UserTagView
                 android:id="@+id/userAge"
                 userAge="@{userinfo.age}"
-                android:layout_marginTop="@dimen/dp_6"
                 userGender="@{userinfo.gender}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@+id/tv_nickName"
                 app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
 
@@ -92,16 +95,17 @@
                 android:id="@+id/tv_intro"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
                 android:layout_marginTop="@dimen/dp_8"
+                android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{userinfo.description}"
-                tools:text="你认真的样子，就像天桥上贴膜就像天桥上贴膜"
                 android:textColor="@color/fontGrayColor"
                 android:textSize="@dimen/sp_13"
-                app:layout_constraintTop_toBottomOf="@+id/userAge"
+                android:visibility="@{TextUtils.isEmpty(userinfo.description)?View.GONE:View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/userAge"
+                tools:text="你认真的样子，就像天桥上贴膜就像天桥上贴膜" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -109,24 +113,24 @@
             android:id="@+id/iv_accost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:visibility="gone"
             android:src="@drawable/icon_accost"
             android:visibility="@{userinfo.roomId == 0? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/avatarView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/avatarView" />
+            app:layout_constraintTop_toTopOf="@+id/avatarView"
+            tools:visibility="gone" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_26"
-            android:background="@{userinfo.blinding ?@drawable/bg_blinding_tag:@drawable/bg_friends_tag}"
-            tools:background="@drawable/bg_blinding_tag"
+            android:background="@{userinfo.publicRoom?@drawable/bg_blinding_tag:(userinfo.privateRoom?@drawable/bg_private_tag:  @drawable/bg_friends_tag)}"
             android:gravity="center"
             android:paddingHorizontal="@dimen/dp_7"
             android:visibility="@{userinfo.roomId == 0? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/avatarView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/avatarView">
+            app:layout_constraintTop_toTopOf="@+id/avatarView"
+            tools:background="@drawable/bg_blinding_tag">
 
             <com.opensource.svgaplayer.SVGAImageView
                 android:id="@+id/svgPlay"
@@ -139,7 +143,7 @@
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{userinfo.blinding ? `相亲中` : `交友中`}"
+                android:text="@{userinfo.roomDesc}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium"
@@ -151,8 +155,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_8"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="@dimen/dp_6"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/vg_info"
             app:layout_constraintTop_toBottomOf="@+id/vg_info"
             app:spacing="@dimen/dp_6" />

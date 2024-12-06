@@ -12,8 +12,10 @@ import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
+import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.OperateInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.EventBusKeyConfig
@@ -23,6 +25,7 @@ import cn.yanhu.commonres.pop.CommonOperatePop
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.dynamic.adapter.DynamicAdapter
+import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.ImChatManager
 import cn.yanhu.imchat.manager.ImUserManager
 import cn.zj.netrequest.ext.parseState
@@ -117,6 +120,11 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
 
     private fun showOperatePop(): CommonOperatePop {
         val list = mutableListOf<OperateInfo>()
+        if (userInfo?.isFriend == true){
+            list.add(OperateInfo("解除好友", cn.yanhu.commonres.R.color.cl_common, -1))
+        }else{
+            list.add(OperateInfo("添加好友", cn.yanhu.commonres.R.color.cl_common, 0))
+        }
         list.add(OperateInfo("拉黑", cn.yanhu.commonres.R.color.cl_common, 1))
         list.add(OperateInfo("举报", cn.yanhu.commonres.R.color.colorTextRed, 2))
         return CommonOperatePop.showDialog(
@@ -124,14 +132,36 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
             list,
             object : CommonOperatePop.OnClickItemListener {
                 override fun onClickItem(operateInfo: OperateInfo) {
-                    if (operateInfo.type == 1) {
-                        ImUserManager.setUserBlack(true, userId)
-                    } else {
-                        RouteIntent.lunchReportPage(userId)
+                    when (operateInfo.type) {
+                        1 -> {
+                            ImUserManager.setUserBlack(true, userId)
+                        }
+                        0 -> {
+                            //添加好友
+                            mViewModel.addFriend(userId)
+
+                        }
+                        -1 -> {
+                            //解除好友
+                            showCancelFriendTip()
+                        }
+                        else -> {
+                            RouteIntent.lunchReportPage(userId)
+                        }
                     }
                 }
             })
     }
+
+    private fun showCancelFriendTip() {
+        DialogUtils.showConfirmDialog("温馨提示", {
+            mViewModel.cancelFriends(userId)
+        }, {
+
+        }, "解除好友后文字聊天不再免费，确认解除吗？")
+    }
+
+
 
     private fun addOnScrollListener() {
         mBinding.recyclerView.addOnScrollListener(object : OnScrollListener() {
@@ -172,6 +202,22 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
 
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
+        mViewModel.cancelFriendObservable.observe(this){
+            parseState(it,{
+                ChatUserInfoManager.updateIsFriend(userId,false)
+                LiveEventBus.get<Boolean>(EventBusKeyConfig.ADD_FRIEND_STATE).post(true)
+                userInfo?.isFriend = false
+
+                showToast("已取消")
+            })
+        }
+        mViewModel.addFriendObservable.observe(this){ it ->
+            parseState(it,{
+                showToast("好友请求已发送～")
+            },{
+                showToast(it.msg)
+            })
+        }
         mViewModel.dynamicObservable.observe(this) { it ->
             parseState(it, {
                 if (page == 1) {

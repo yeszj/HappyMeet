@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="bean"
+            type="cn.huanyuan.sweetlove.bean.GlobalGiftBean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_100">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_100"
+            android:adjustViewBounds="true"
+            android:src="@mipmap/img_global_gift_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fromFrame"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_28"
+            android:src="@mipmap/bg_gift_avatar_frame"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/from_portrait"
+            imageUrl="@{bean.fromUserPortrait}"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_28"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ease_default_avatar"
+            app:layout_constraintBottom_toBottomOf="@+id/fromFrame"
+            app:layout_constraintEnd_toEndOf="@+id/fromFrame"
+            app:layout_constraintStart_toStartOf="@+id/fromFrame"
+            app:layout_constraintTop_toTopOf="@+id/fromFrame"
+            app:riv_oval="true" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/toFrame"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_m_20"
+            android:src="@mipmap/bg_gift_avatar_frame"
+            app:layout_constraintBottom_toBottomOf="@+id/from_portrait"
+            app:layout_constraintStart_toEndOf="@+id/fromFrame"
+            app:layout_constraintTop_toTopOf="@+id/from_portrait" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/to_portrait"
+            imageUrl="@{bean.toUserPortrait}"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_28"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ease_default_avatar"
+            app:layout_constraintBottom_toBottomOf="@+id/toFrame"
+            app:layout_constraintEnd_toEndOf="@+id/toFrame"
+            app:layout_constraintStart_toStartOf="@+id/toFrame"
+            app:layout_constraintTop_toTopOf="@+id/toFrame"
+            app:riv_border_color="@color/white"
+            app:riv_border_width="@dimen/dp_1"
+            app:riv_oval="true" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_fromNickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLength="4"
+            android:maxLines="1"
+            android:paddingStart="@dimen/dp_10"
+            android:shadowColor="#80440020"
+            android:shadowDy="5"
+            android:shadowRadius="3.0"
+            android:text='@{bean.fromUserNickName}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/from_portrait"
+            app:layout_constraintStart_toEndOf="@+id/to_portrait"
+            app:layout_constraintTop_toTopOf="@+id/from_portrait"
+            tools:text="恰同学少年恰同学少年" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#80440020"
+            android:shadowDy="5"
+            android:shadowRadius="3.0"
+            android:text=" 送给 "
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/from_portrait"
+            app:layout_constraintStart_toEndOf="@+id/tv_fromNickName"
+            app:layout_constraintTop_toTopOf="@+id/from_portrait" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_toNickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLength="4"
+            android:maxLines="1"
+            android:shadowColor="#80440020"
+            android:shadowDy="5"
+            android:shadowRadius="3.0"
+            android:text='@{bean.toUserNickName}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/from_portrait"
+            app:layout_constraintStart_toEndOf="@+id/tv_tag"
+            app:layout_constraintTop_toTopOf="@+id/from_portrait"
+            tools:text="恰同学恰同学" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_giftIcon"
+            imageUrl="@{bean.giftIcon}"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#80440020"
+            android:shadowDy="5"
+            android:shadowRadius="3.0"
+            android:text="@{bean.giftName+`x1`}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/to_portrait"
+            app:layout_constraintEnd_toStartOf="@+id/iv_giftIcon"
+            app:layout_constraintTop_toTopOf="@+id/to_portrait"
+            tools:text="恋恋风尘x1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

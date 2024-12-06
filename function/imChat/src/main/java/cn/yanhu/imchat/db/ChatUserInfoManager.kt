@@ -22,6 +22,20 @@ object ChatUserInfoManager {
         }
     }
 
+    fun updateIsFriend(userId: String, isFiend: Boolean) {
+        val dataBean =
+            getUserInfo(userId)
+        dataBean?.apply {
+            this.isFriend = isFiend
+            if (isFiend) {
+                saveUserInfo(this)
+            } else {
+                this.setToDefault("isFriend")
+                saveUserInfo(this)
+            }
+        }
+    }
+
     @JvmStatic
     fun getUserInfo(userId: String): UserDetailInfo? {
         return try {
@@ -40,13 +54,19 @@ object ChatUserInfoManager {
 
     @JvmStatic
     fun saveUserInfo(userInfo: UserDetailInfo?) {
-        if (userInfo==null){
+        if (userInfo == null) {
             return
         }
         val currentCacheInfo = getUserInfo(userInfo.userId)
         if (currentCacheInfo == null) {
             userInfo.save()
         } else {
+            if (!userInfo.isFriend) {
+                userInfo.setToDefault("isFriend")
+            }
+            if (!userInfo.isAuth) {
+                userInfo.setToDefault("isAuth")
+            }
             userInfo.update(currentCacheInfo.id)
         }
     }

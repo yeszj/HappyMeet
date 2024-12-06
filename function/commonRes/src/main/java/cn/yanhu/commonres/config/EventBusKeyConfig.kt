@@ -25,4 +25,7 @@ object EventBusKeyConfig {
     const val REFRESH_IM_CONVERSATION = "refresh_im_conversation"
     const val CLOSECHATDIALOG = "closechatdialog"
     const val CHECK_NET = "check_net"
+    const val ADD_FRIEND_STATE = "add_friend_state"
+    const val FRIEND_REQUEST_COUNT = "friend_request_count"
+
 }

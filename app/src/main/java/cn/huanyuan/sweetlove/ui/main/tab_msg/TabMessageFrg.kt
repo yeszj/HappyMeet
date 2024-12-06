@@ -6,14 +6,17 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgTabMessageBinding
 import cn.huanyuan.sweetlove.ui.main.MainViewModel
+import cn.huanyuan.sweetlove.ui.main.tab_msg.friend.FriendsFrg
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewPager2Helper
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.widget.indicator.CommonIndicatorAdapter
+import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.imchat.ui.conversation.ConversationFrg
 import cn.yanhu.imchat.pop.CreateGroupPop
+import com.jeremyliao.liveeventbus.LiveEventBus
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
 /**
@@ -34,6 +37,18 @@ class TabMessageFrg : BaseFragment<FrgTabMessageBinding, MainViewModel>(
         super.initListener()
         mBinding.ivCreate.setOnSingleClickListener {
             CreateGroupPop.showDialog(mContext)
+        }
+        LiveEventBus.get<Int>(EventBusKeyConfig.FRIEND_REQUEST_COUNT).observe(this){
+            if (it>0){
+                mBinding.tvFriendRequestCount.visibility = View.VISIBLE
+                if (it>99){
+                    mBinding.tvFriendRequestCount.text = "99+"
+                }else{
+                    mBinding.tvFriendRequestCount.text = it.toString()
+                }
+            }else{
+                mBinding.tvFriendRequestCount.visibility = View.INVISIBLE
+            }
         }
     }
 

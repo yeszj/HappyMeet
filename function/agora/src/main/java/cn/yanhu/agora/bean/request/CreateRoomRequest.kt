@@ -3,7 +3,7 @@ package cn.yanhu.agora.bean.request
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import cn.yanhu.agora.BR
-import cn.yanhu.commonres.manager.RoomTypeManager
+import cn.yanhu.commonres.bean.RoomListBean
 
 /**
  * @author: zhengjun
@@ -12,7 +12,7 @@ import cn.yanhu.commonres.manager.RoomTypeManager
  */
 class CreateRoomRequest : BaseObservable() {
     @Bindable
-    var roomType: Int = RoomTypeManager.TYPE_PUBLIC_BLIND
+    var roomType: Int = RoomListBean.TYPE_PUBLIC
         set(value) {
             field = value
             notifyPropertyChanged(BR.roomType)

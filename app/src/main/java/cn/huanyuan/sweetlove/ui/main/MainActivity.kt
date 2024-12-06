@@ -27,6 +27,7 @@ import cn.yanhu.agora.manager.AgoraSdkDownloadManager
 import cn.yanhu.agora.manager.BeautySDKManager
 import cn.yanhu.agora.manager.RtcEngineInit
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
+import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.base.BaseTabAdapter
 import cn.yanhu.baselib.utils.CommonUtils
@@ -90,7 +91,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun initRtcEngine() {
-        if (AgoraSdkCacheManager.hasLoadAgoraSdk()) {
+        if (AgoraSdkCacheManager.hasLoadAgoraSdk() && BeautyCacheManager.hasLoadBeautySdk()) {
             ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
                 override fun doInBackground(): Boolean {
                     RtcEngineInit.initRtcEngine(mContext)
