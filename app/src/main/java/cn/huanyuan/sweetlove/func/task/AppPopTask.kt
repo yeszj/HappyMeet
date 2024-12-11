@@ -6,7 +6,7 @@ import cn.huanyuan.sweetlove.func.dialog.GlobalGiftPop
 import cn.yanhu.baselib.queue.BaseQueueTask
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.config.ChatConstant
-import cn.yanhu.commonres.pop.TeenTipPop
+import cn.huanyuan.sweetlove.func.dialog.TeenTipPop
 import cn.yanhu.commonres.task.AppPopTypeManager
 import com.blankj.utilcode.util.ActivityUtils
 import com.google.gson.Gson

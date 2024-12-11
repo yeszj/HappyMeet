@@ -299,12 +299,23 @@ interface ApiService {
     /**
      * 搜索页面 搜索用户列表
      */
-    @GET("/app/v1/home/search")
+    @GET("app/v1/home/search")
     suspend fun searchUserList(@Query("content") content: String?): BaseBean<MutableList<UserDetailInfo>>
 
-    @GET("/app/v1/user/getImToken")
-    suspend  fun getImToken(): BaseBean<String>
+    @GET("app/v1/user/getImToken")
+    suspend fun getImToken(): BaseBean<String>
 
     @GET("app/v1/friend/getRequestList")
     suspend fun getRequestList(@Query("page") page: Int): BaseBean<FriendsResponse>
+
+    @GET("app/v1/juvenileModel/checkIsOpenJuvenileMode")
+    suspend fun checkIsOpenJuvenileMode(): BaseBean<Boolean>
+
+    @FormUrlEncoded
+    @POST("app/v1/juvenileModel/openJuvenileMode")
+    suspend fun openJuvenileMode(@Field("password") password: String): BaseBean<Boolean>
+
+    @FormUrlEncoded
+    @POST("app/v1/juvenileModel/closeJuvenileMode")
+    suspend fun closeJuvenileMode(@Field("password") password: String): BaseBean<Boolean>
 }

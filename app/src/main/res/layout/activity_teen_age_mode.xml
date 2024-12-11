@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="isOpen"
+            type="java.lang.Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@drawable/shape_bg_main"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_50"
+            android:text='@{isOpen?"青少年模式已开启":"青少年模式未开启"}'
+            android:textColor="@color/color_222222"
+            android:textSize="@dimen/sp_24"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar"
+            tools:text="青少年模式未开启" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_40"
+            android:paddingHorizontal="@dimen/dp_30"
+            android:text="青少年模式中，暖遇将不会为您提供服务，需输入密码关闭青少年模式，才能继续使用暖遇。\n\n\n暖遇是交友脱单平台，禁止未满18周岁的未成年人注册使用，若您是未成年人，请退出应用，感谢您的配合！"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_operate"
+            android:layout_width="@dimen/dp_328"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginBottom="@dimen/dp_50"
+            android:background="@drawable/shape_common_btn_r30"
+            android:gravity="center"
+            android:text='@{isOpen?"关闭青少年模式":"开启青少年模式"}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontType="@string/fontBold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="开启青少年模式" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

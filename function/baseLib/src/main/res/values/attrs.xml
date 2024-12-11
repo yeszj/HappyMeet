@@ -79,5 +79,11 @@
         <attr name="mhv_HeightRatio" format="reference|float" />
         <attr name="mhv_HeightDimen" format="reference|dimension" />
     </declare-styleable>
-
+    <declare-styleable name="Verificationcode">
+        <attr format="color" name="code_text_color"/>
+        <attr format="dimension" name="code_text_size"/>
+        <attr format="integer" name="code_number"/>
+        <attr format="color" name="line_color_default"/>
+        <attr format="color" name="line_color_focus"/>
+    </declare-styleable>
 </resources>

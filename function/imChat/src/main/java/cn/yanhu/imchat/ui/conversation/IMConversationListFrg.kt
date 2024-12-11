@@ -216,7 +216,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                         }
                         val lastMessage = conversation.lastMessage ?: continue
                         // if (deleteHistoryConversation(conversation, lastMessage)) continue
-                        if (filterSystemSendMsg(conversation, lastMessage)) continue
+                        //if (filterSystemSendMsg(conversation, lastMessage)) continue
                         val info = EaseConversationInfo()
                         info.info = conversation
                         info.isTop = conversation.isPinned

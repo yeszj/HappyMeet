@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.login.CaptchaActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <cn.yanhu.baselib.view.TitleBar
+                android:id="@+id/titleBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:titleName=" " />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_55"
+                android:paddingStart="@dimen/dp_20"
+                android:text="请设置密码"
+                android:textColor="@color/color_222222"
+                android:textSize="@dimen/sp_24"
+                app:fontType="@string/fontMedium" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:paddingStart="@dimen/dp_20"
+                android:text="请监护人设置密码"
+                android:textColor="@color/color_888888"
+                android:textSize="@dimen/sp_14"
+                app:fontType="@string/fontMedium" />
+
+            <cn.yanhu.baselib.view.captchalsyout.VerifyCodeNumberLayout
+                android:id="@+id/pwd_edit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_68"
+                android:layout_marginHorizontal="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_40"
+                app:code_text_size = "@dimen/sp_30"
+                app:code_text_color = "@color/color_222222"
+                app:code_number="4" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_sure"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginHorizontal="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_40"
+                android:background="@drawable/shape_common_btn_r30"
+                android:gravity="center"
+                android:text="确定"
+                android:enabled="false"
+                android:alpha="0.5"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

@@ -34,6 +34,7 @@ object LoginResultManager {
         AppCacheManager.mToken = loginSuccessInfo.token
         AppCacheManager.imToken = loginSuccessInfo.imToken
         AppCacheManager.province = loginSuccessInfo.province
+        AppCacheManager.hasShowTeenApp = false
         loginIM(object : EMCallBack {
             override fun onSuccess() {
                 if (loginSuccessInfo.isRegister) {

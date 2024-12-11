@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dp_0"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/dp_6"
+    android:layout_weight="1"
+    tools:ignore="MissingDefaultResource">
+
+    <cn.yanhu.baselib.view.captchalsyout.MyEditText
+        android:id="@+id/tv_code"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_68"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textSize="@dimen/sp_25"
+        android:inputType="number"
+        android:background="@drawable/bg_text_complete"/>
+</RelativeLayout>

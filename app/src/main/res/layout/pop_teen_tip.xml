@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:background="@color/black_alpha60">
+
+        <View
+            android:id="@+id/viewBg"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/viewBottom"
+            android:background="@drawable/white_corner_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/dp_40"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon_teen"
+            android:layout_width="@dimen/dp_96"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="@dimen/dp_100"
+            android:src="@drawable/icon_teen_tip" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:textColor="@color/color_222222"
+            app:layout_constraintTop_toBottomOf="@+id/icon_teen"
+            android:layout_marginTop="@dimen/dp_20"
+            app:layout_constraintStart_toStartOf="parent"
+            app:fontType="@string/fontBold"
+            android:text="青少年模式"
+            android:textSize="@dimen/sp_18"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_content"
+            android:layout_width="0dp"
+            android:textColor="@color/color_666666"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            android:layout_marginTop="@dimen/dp_20"
+            android:paddingHorizontal="@dimen/dp_20"
+            app:layout_constraintStart_toStartOf="@+id/viewBg"
+            android:text="为呵护未成年人健康成长，暖遇交友特别推出青少年模式，该模式下平台功能无法正常使用。请监护人主动选择，并设置监护密码。"
+            android:textSize="@dimen/sp_14"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/viewBg"
+            android:layout_height="wrap_content" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_open"
+            android:layout_width="0dp"
+            android:textColor="@color/adminTagColor"
+            app:layout_constraintTop_toBottomOf="@+id/tv_content"
+            android:paddingHorizontal="@dimen/dp_20"
+            android:paddingVertical="@dimen/dp_20"
+            android:text="开启青少年模式 >"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toStartOf="@+id/viewBg"
+            android:textSize="@dimen/sp_14"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/viewBg"
+            android:layout_height="wrap_content" />
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_close"
+            android:layout_width="@dimen/dp_240"
+            android:layout_height="@dimen/dp_42"
+            android:background="@drawable/shape_common_btn_r30"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontBold"
+            app:layout_constraintTop_toBottomOf="@+id/tv_open"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="我知道了" />
+        <View
+            android:id="@+id/viewBottom"
+            app:layout_constraintTop_toBottomOf="@+id/tv_close"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_30"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

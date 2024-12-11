@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.R
@@ -22,6 +23,7 @@ import cn.huanyuan.sweetlove.ui.main.tab_msg.TabMessageFrg
 import cn.huanyuan.sweetlove.ui.main.tab_my.TabMineFrg
 import cn.huanyuan.sweetlove.ui.main.tab_samecity.TabSameCityFrg
 import cn.huanyuan.sweetlove.ui.main.tab_wallet.TabWalletFrg
+import cn.huanyuan.sweetlove.ui.teenage.TeenAgeModeActivity
 import cn.yanhu.agora.listener.OnDownloadProgressListener
 import cn.yanhu.agora.manager.AgoraSdkDownloadManager
 import cn.yanhu.agora.manager.BeautySDKManager
@@ -59,6 +61,10 @@ import com.chaychan.library.BottomBarItem
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -77,17 +83,43 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     override fun initData() {
         setFullScreenStatusBar(true)
         setStatusBarStyle(false)
-        ThreadUtils.getMainHandler().post {
-            // showLoading(false)
-        }
         BeautySDKManager.sharedInstance().downloadBundle()
         downloadAgoraSdk()
-        mViewModel.getMainTabInfo()
         getRechargeInfo()
         getGiftInfo()
-        checkVersion()
+        mViewModel.getMainTabInfo()
         initRtcEngine()
+        checkInit()
+    }
 
+    private fun checkInit() {
+        mContext.lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val one = async {
+                    rxApi.checkVersion()
+                }
+                val two = async { rxApi.checkIsOpenJuvenileMode() }
+                val await = one.await()
+                val await1 = two.await()
+                ThreadUtils.getMainHandler().post {
+                    val appVersionInfo = await.data
+                    if (appVersionInfo == null) {
+                        val isOpen = await1.data
+                        if (isOpen == true){
+                            //跳转到青少年模式页面
+                            TeenAgeModeActivity.lunch(mContext,true)
+                        }else{
+                            if (!AppCacheManager.hasShowTeenApp){
+                                BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP,"")
+                                AppCacheManager.hasShowTeenApp = true
+                            }
+                        }
+                    }else{
+                        showVersionPop(appVersionInfo)
+                    }
+                }
+            }
+        }
     }
 
     private fun initRtcEngine() {
@@ -164,9 +196,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         }
     }
 
-    private fun checkVersion() {
-        mViewModel.checkVersion()
-    }
 
     private var appVersionUpdatePop: AppVersionUpdatePop? = null
     private fun showVersionPop(it: AppVersionInfo) {
@@ -223,23 +252,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     override fun registerNecessaryObserver() {
         onGetTabSuccess()
-        mViewModel.checkVersionObservable.observe(this) { it ->
-            parseState(it, {
-                if (it == null) {
-                    return@parseState
-                }
-                showVersionPop(it)
-            })
-        }
     }
+
 
     private fun onGetTabSuccess() {
         mViewModel.tabInfoObservable.observe(this) { it ->
             parseState(it, {
-                if (!AppCacheManager.hasShowTeenApp){
-                    BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP,"")
-                    AppCacheManager.hasShowTeenApp = true
-                }
                 tabList = it
                 if (mFragmentList.size <= 0) {
                     initFrg()

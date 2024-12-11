@@ -1,10 +1,11 @@
-package cn.yanhu.commonres.pop
+package cn.huanyuan.sweetlove.func.dialog
 
 import android.content.Context
 import com.lxj.xpopup.core.CenterPopupView
-import cn.yanhu.commonres.R
+import cn.huanyuan.sweetlove.R
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
-import cn.yanhu.commonres.databinding.PopTeenTipBinding
+import cn.huanyuan.sweetlove.databinding.PopTeenTipBinding
+import cn.huanyuan.sweetlove.ui.teenage.TeenAgeModeActivity
 import com.blankj.utilcode.util.ScreenUtils
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.interfaces.SimpleCallback
@@ -24,7 +25,11 @@ class TeenTipPop(context: Context) : CenterPopupView(context) {
     override fun onCreate() {
         super.onCreate()
         mBiding = PopTeenTipBinding.bind(popupImplView)
-        mBiding.ivClose.setOnSingleClickListener { dismiss() }
+        mBiding.tvClose.setOnSingleClickListener { dismiss() }
+        mBiding.tvOpen.setOnSingleClickListener {
+            TeenAgeModeActivity.lunch(context,false)
+            dismiss()
+        }
     }
 
     companion object {

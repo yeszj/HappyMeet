@@ -157,14 +157,18 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
 
         list.add(
             SettingItemInfo(
+                name = "安全中心", showDivider = false, pageUrl = PageIntentUtil.PAGE_SECURITY_CENTER
+            )
+        )
+        list.add(
+            SettingItemInfo(
                 ContextCompat.getDrawable(
                     mContext,
                     cn.yanhu.commonres.R.drawable.white_bottom_corner_10
                 ),
-                name = "安全中心", showDivider = true, pageUrl = PageIntentUtil.PAGE_SECURITY_CENTER
+                name = "青少年模式", showDivider = true, pageUrl = PageIntentUtil.PAGE_TEENAGE_MODE
             )
         )
-
         list.add(
             SettingItemInfo(
                 ContextCompat.getDrawable(

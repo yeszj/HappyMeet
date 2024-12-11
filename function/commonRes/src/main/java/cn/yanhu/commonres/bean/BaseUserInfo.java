@@ -74,6 +74,9 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
     }
 
     public boolean isOnline() {
+        if (onlineStatus==null){
+            onlineStatus = 1;
+        }
         return onlineStatus == 0;
     }
 

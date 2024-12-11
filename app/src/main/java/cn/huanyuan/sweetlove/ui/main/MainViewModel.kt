@@ -37,6 +37,8 @@ class MainViewModel : BaseViewModel() {
         request({ rxApi.checkVersion() }, checkVersionObservable, false)
     }
 
+
+
     fun getMainTabInfo() {
         request({ rxApi.getMainTabInfo() }, tabInfoObservable, true)
     }

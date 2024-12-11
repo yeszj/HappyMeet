@@ -23,7 +23,8 @@ object PageIntentUtil {
     const val PAGE_SECURITY_CENTER =
         "{clsPath:cn.huanyuan.sweetlove.ui.system.SecurityCenterActivity}"
     const val PAGE_ABOUT_US = "{clsPath:cn.huanyuan.sweetlove.ui.system.AboutUsActivity}"
-
+    const val PAGE_TEENAGE_MODE=
+        "{clsPath:cn.huanyuan.sweetlove.ui.teenage.TeenAgeModeActivity}"
     @JvmStatic
     fun url2Page(mContext: Context, url: String?) {
         if (TextUtils.isEmpty(url)) {
