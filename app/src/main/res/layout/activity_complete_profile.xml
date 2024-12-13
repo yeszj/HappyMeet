@@ -68,12 +68,12 @@
                     android:src="@{step==2?@drawable/circle_dot_red:@drawable/circle_dot_light_red}"
                     tools:src="@drawable/circle_dot_light_red" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_10"
-                    android:src="@{step==3?@drawable/circle_dot_red:@drawable/circle_dot_light_red}"
-                    tools:src="@drawable/circle_dot_light_red" />
+<!--                <androidx.appcompat.widget.AppCompatImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="@dimen/dp_10"-->
+<!--                    android:src="@{step==3?@drawable/circle_dot_red:@drawable/circle_dot_light_red}"-->
+<!--                    tools:src="@drawable/circle_dot_light_red" />-->
             </LinearLayout>
 
             <androidx.fragment.app.FragmentContainerView
@@ -91,7 +91,7 @@
                 android:background="@drawable/white_corner_30"
                 android:backgroundTint="@color/colorMain"
                 android:gravity="center"
-                android:text='@{step==3?"保存":"下一步"}'
+                android:text='@{step==2?"保存":"下一步"}'
                 tools:text="下一步"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"

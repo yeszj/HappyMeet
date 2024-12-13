@@ -130,12 +130,19 @@
             app:layout_constraintTop_toTopOf="@+id/viewBg" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_bind"
             style="@style/constraintHorizonCenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="您已绑定邀请人"
-            android:textColor="@color/fontGrayColor"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text='@{userinfo.ifEdit?"修改邀请人":"您已绑定邀请人"}'
+            android:textColor="@{userinfo.ifEdit?@color/colorMain:@color/fontGrayColor}"
             android:textSize="@dimen/sp_14"
+            tools:textColor="@color/colorMain"
+            tools:text="修改邀请人"
+            android:enabled="@{userinfo.ifEdit}"
+            app:layout_constraintStart_toStartOf="@+id/viewBg"
+            app:layout_constraintEnd_toEndOf="@+id/viewBg"
             app:layout_constraintBottom_toBottomOf="@id/viewBg"
             app:layout_constraintTop_toBottomOf="@+id/divider"
             tools:ignore="MissingConstraints" />

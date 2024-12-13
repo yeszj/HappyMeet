@@ -9,7 +9,6 @@ import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager.widget.ViewPager
 import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.AppVersionInfo
@@ -41,7 +40,6 @@ import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.loading.MainLoadingCallBack
 import cn.yanhu.commonres.manager.AppCacheManager
-import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.task.AppPopTypeManager
 import cn.yanhu.imchat.api.imChatRxApi
@@ -77,6 +75,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     R.layout.activity_main,
     MainViewModel::class.java
 ) {
+    private var appVersionInfo: AppVersionInfo? =null
+    private var isOpen:Boolean = false
     private var titleList = mutableListOf<String>()
     private var mFragmentList = mutableListOf<Fragment>()
     private var tabList: MutableList<TabEntity> = mutableListOf()
@@ -94,31 +94,35 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     private fun checkInit() {
         mContext.lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                val one = async {
-                    rxApi.checkVersion()
-                }
-                val two = async { rxApi.checkIsOpenJuvenileMode() }
-                val await = one.await()
-                val await1 = two.await()
-                ThreadUtils.getMainHandler().post {
-                    val appVersionInfo = await.data
-                    if (appVersionInfo == null) {
-                        val isOpen = await1.data
-                        if (isOpen == true){
-                            //跳转到青少年模式页面
-                            TeenAgeModeActivity.lunch(mContext,true)
-                        }else{
-                            if (!AppCacheManager.hasShowTeenApp){
-                                BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP,"")
-                                AppCacheManager.hasShowTeenApp = true
-                            }
-                        }
-                    }else{
-                        showVersionPop(appVersionInfo)
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    val one = async {
+                        rxApi.checkVersion()
                     }
+                    val two = async { rxApi.checkIsOpenJuvenileMode() }
+                    val await = one.await()
+                    val await1 = two.await()
+                    appVersionInfo = await.data
+                    isOpen = await1.data == true
+                }
+            }.onFailure {
+            }.onSuccess {
+                if (appVersionInfo == null) {
+                    if (isOpen){
+                        //跳转到青少年模式页面
+                        TeenAgeModeActivity.lunch(mContext,true)
+                    }else{
+                        if (!AppCacheManager.hasShowTeenApp){
+                            BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP,"")
+                            AppCacheManager.hasShowTeenApp = true
+                        }
+                    }
+                }else{
+                    showVersionPop(appVersionInfo!!)
                 }
             }
+
+
         }
     }
 
@@ -365,17 +369,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 mContext
             )
         }
-        mBinding.viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                if (position == getTabSameCityPosition()) {
-                    LiveDataEventManager.sendLiveDataMessage(
-                        LiveDataEventManager.SWITCH_TO_SAME_CITY,
-                        position
-                    )
-                }
-            }
-        })
+//        mBinding.viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+//                if (position == getTabSameCityPosition()) {
+//                    LiveDataEventManager.sendLiveDataMessage(
+//                        LiveDataEventManager.SWITCH_TO_SAME_CITY,
+//                        position
+//                    )
+//                }
+//            }
+//        })
         // mBinding.viewPager.currentItem = 2
     }
 

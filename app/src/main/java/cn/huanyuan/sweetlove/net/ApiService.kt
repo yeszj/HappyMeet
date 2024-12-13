@@ -122,6 +122,11 @@ interface ApiService {
         @Field("inviteCode") inviteCode: String,
     ): BaseBean<Boolean>
 
+    @FormUrlEncoded
+    @POST("/app/v1/user/editInvite")
+    suspend fun editInvite(
+        @Field("inviteCode") inviteCode: String,
+    ): BaseBean<Boolean>
 
     /**
      * 登录Api =====================================================================================================================
@@ -141,7 +146,8 @@ interface ApiService {
         @Field("gender") gender: Int,
         @Field("age") age: Int,
         @Field("province") province: String?,
-        @Field("city") city: String?
+        @Field("city") city: String?,
+        @Field("inviteCode") inviteCode:String?
     ): BaseBean<Boolean>
 
     @GET("app/v1/user/getHistoryViewPageInfo")

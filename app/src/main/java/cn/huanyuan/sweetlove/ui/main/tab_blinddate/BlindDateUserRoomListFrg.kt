@@ -30,7 +30,7 @@ class BlindDateUserRoomListFrg : BaseFragment<FrgBlindDateUserListBinding, MainV
             clearAllFrgManager()
         }
         titles.clear()
-        titles.add("推荐")
+        titles.add("热门")
        // titles.add("专属")
         frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_RECOMMEND))
         //frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_EXCLUSIVE))

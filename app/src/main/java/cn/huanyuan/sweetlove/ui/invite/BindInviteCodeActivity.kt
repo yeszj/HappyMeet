@@ -34,7 +34,7 @@ class BindInviteCodeActivity : BaseActivity<ActivityBindInviteCodeBinding, Login
         setStatusBarStyle(false)
         if (loginSuccessInfo == null) {
             mBinding.tvLogin.visibility = View.GONE
-            mBinding.btnNext.text = "确认绑定"
+            mBinding.btnNext.text = "确认"
         } else {
             mBinding.tvLogin.visibility = View.VISIBLE
             mBinding.btnNext.text = "下一步"
@@ -59,7 +59,7 @@ class BindInviteCodeActivity : BaseActivity<ActivityBindInviteCodeBinding, Login
                 toCompleteInfoPage()
             }
         } else {
-            mViewModel.bindInviteCode(inviteCode)
+            mViewModel.bindInviteCode(inviteCode,loginSuccessInfo==null)
         }
     }
 
@@ -68,7 +68,7 @@ class BindInviteCodeActivity : BaseActivity<ActivityBindInviteCodeBinding, Login
         mViewModel.inviteCodeLivedata.observe(this) {
             parseState(it, {
                 if (loginSuccessInfo == null) {
-                    showToast("绑定成功")
+                    showToast("修改成功")
                     LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.BIND_CODE_SUCCESS)
                     finish()
                 } else {

@@ -22,7 +22,7 @@
             android:layout_width="@dimen/dp_72"
             android:layout_height="@dimen/dp_72"
             android:layout_marginTop="@dimen/dp_50"
-            android:src="@mipmap/ic_logo" />
+            android:src="@mipmap/icon_splash_logo" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="wrap_content"

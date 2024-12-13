@@ -77,7 +77,21 @@
                 android:background="@drawable/common_shape_input_bg"
                 app:layout_constraintTop_toBottomOf="@+id/iv_avatar" />
 
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_nickName"
+                android:layout_width="wrap_content"
+                android:text="昵称"
+                android:textSize="@dimen/sp_15"
+                app:fontType="@string/fontMedium"
+                android:textColor="@color/fontTextColor"
+                android:paddingStart="@dimen/dp_16"
+                app:layout_constraintTop_toTopOf="@+id/bgName"
+                app:layout_constraintBottom_toBottomOf="@+id/bgName"
+                app:layout_constraintStart_toStartOf="@+id/bgName"
+                android:layout_height="wrap_content"/>
+
             <cn.yanhu.baselib.view.CustomFontEditText
+                android:id="@+id/et_nickName"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@color/transparent"
@@ -87,12 +101,50 @@
                 android:textSize="@dimen/sp_15"
                 app:fontType="@string/fontMedium"
                 android:maxLength="8"
+                app:layout_constraintStart_toEndOf="@+id/tv_nickName"
                 app:layout_constraintBottom_toBottomOf="@+id/bgName"
                 app:layout_constraintEnd_toEndOf="@+id/bgName"
-                app:layout_constraintStart_toStartOf="@+id/bgName"
                 app:layout_constraintTop_toTopOf="@+id/bgName"
                 tools:text="是谁善昭光" />
 
+            <View
+                android:id="@+id/bg_invite"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginHorizontal="@dimen/dp_16"
+                app:layout_constraintTop_toBottomOf="@+id/bgName"
+                android:layout_marginTop="@dimen/dp_20"
+                android:background="@drawable/common_shape_input_bg"/>
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_inviteCode"
+                android:layout_width="wrap_content"
+                android:text="邀请码"
+                android:textSize="@dimen/sp_15"
+                app:fontType="@string/fontMedium"
+                android:textColor="@color/fontTextColor"
+                android:paddingStart="@dimen/dp_16"
+                app:layout_constraintTop_toTopOf="@+id/bg_invite"
+                app:layout_constraintBottom_toBottomOf="@+id/bg_invite"
+                app:layout_constraintStart_toStartOf="@+id/bg_invite"
+                android:layout_height="wrap_content"/>
+
+            <cn.yanhu.baselib.view.CustomFontEditText
+                android:id="@+id/et_inviteCode"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/transparent"
+                android:paddingStart="@dimen/dp_15"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_15"
+                android:text="@={viewModel.inviteCode}"
+                app:fontType="@string/fontMedium"
+                android:inputType="number"
+                android:textColorHint="@color/blackAlpha80"
+                app:layout_constraintStart_toEndOf="@+id/tv_inviteCode"
+                app:layout_constraintBottom_toBottomOf="@+id/bg_invite"
+                app:layout_constraintEnd_toEndOf="@+id/bg_invite"
+                app:layout_constraintTop_toTopOf="@+id/bg_invite"
+                android:hint="请填写邀请码（选填）" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.login
 
+import android.text.TextUtils
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import cn.huanyuan.sweetlove.net.rxApi
@@ -17,6 +18,7 @@ import cn.zj.netrequest.status.ResultState
 class LoginViewModel : BaseViewModel() {
     var phoneExt = ObservableField<String>()
     var codeExt = ObservableField<String>()
+    var inviteCode = ObservableField<String>()
 
     var personInfo: MutableLiveData<BaseUserInfo> = MutableLiveData()
     var loginSuccessInfo: MutableLiveData<LoginSuccessInfo> = MutableLiveData()
@@ -51,8 +53,12 @@ class LoginViewModel : BaseViewModel() {
     }
 
     val getPhoneLivedata = MutableLiveData<ResultState<String>>()
-    fun bindInviteCode(inviteCode: String) {
-        request({ rxApi.bindInviteCode(inviteCode) }, inviteCodeLivedata, false)
+    fun bindInviteCode(inviteCode: String,isEdit:Boolean = false) {
+        if (isEdit){
+            request({ rxApi.editInvite(inviteCode) }, inviteCodeLivedata, false)
+        }else{
+            request({ rxApi.bindInviteCode(inviteCode) }, inviteCodeLivedata, false)
+        }
     }
 
     fun getPhone(loginToken: String) {
@@ -70,7 +76,8 @@ class LoginViewModel : BaseViewModel() {
                     value!!.gender,
                     value.age,
                     value.province,
-                    value.city
+                    value.city,
+                    if(TextUtils.isEmpty(inviteCode.get()))"" else inviteCode.get().toString()
                 )
             },
             saveBasicInfoLivedata,

@@ -39,6 +39,10 @@ import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
 class ApplicationRouterImpl : IApplication {
 
     override fun loginInvalid() {
+        val topActivity = ActivityUtils.getTopActivity()
+        if (topActivity!=null && topActivity is LoginActivity){
+            return
+        }
         JiGuangSDKUtils.getInstance().initJVerificationSDk()
         EMClient.getInstance().logout(true, object : EMCallBack {
             override fun onSuccess() {

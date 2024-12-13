@@ -114,7 +114,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                     val nextCursor = result.cursor
                     // 获取到的会话列表
                     val conversations = result.data
-                    loadServerMsgToDb(conversations)
+                   // loadServerMsgToDb(conversations)
                     serverConversationList.addAll(conversations)
                     if (conversations.size > 0) {
                         val finalConversation = conversations[conversations.size - 1]
@@ -330,9 +330,17 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
 
     private var userIdList = mutableListOf<String>()
 
+    private var updateList: MutableList<MutableList<EaseConversationInfo>> = mutableListOf()
+    private var updateFinish = false
+    private val TAG_CONVERSATION_LIST = "loadConversationStep"
     @Synchronized
     private fun getUserInfoList(list: MutableList<EaseConversationInfo>) {
-        // 获取一个或多个用户的所有属性，一次调用用户 ID 数量不超过 100。
+        if (updateFinish) {
+            updateList.add(list)
+            return
+        }
+        EMLog.e(TAG_CONVERSATION_LIST, "getUserInfoList")
+        updateFinish = true
         val userArrays = ArrayList<String>()
         for (i in list.indices) {
             val emConversation = list[i].info as EMConversation
@@ -372,8 +380,8 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
             object : OnRequestResultListener<MutableList<UserDetailInfo>> {
                 override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
                     val userList = data.data
-                    ConfigParamsManager.HAS_LOAD_CHAT = true
                     if (userList.isNullOrEmpty()) {
+                        updateFinalConversationList(listOf(), list)
                         return
                     }
                     updateFinalConversationList(userList, list)
@@ -395,6 +403,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
     private fun updateFinalConversationList(
         data: List<UserDetailInfo>, list: List<EaseConversationInfo>
     ) {
+        ConfigParamsManager.HAS_LOAD_CHAT = true
         if (finalConversationListTask != null) {
             ThreadUtils.cancel(finalConversationListTask)
         }
@@ -409,10 +418,22 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                         conversationList.distinctBy { (it.info as EMConversation).conversationId() }
                     conversationListLayout.setData(distinctBy)
                     ConfigParamsManager.HAS_LOAD_CHAT = true
+                    getUserInfoListAgain()
                 }
             }
         ThreadUtils.executeByIo(finalConversationListTask)
     }
+
+    private fun getUserInfoListAgain() {
+        if (updateList.size > 0) {
+            EMLog.e(TAG_CONVERSATION_LIST, "getUserInfoListAgain")
+            val get = updateList[updateList.size - 1]
+            updateList.clear()
+            getUserInfoList(get)
+        }
+        updateFinish = false
+    }
+
 
 
     private fun getFinalConversationList(

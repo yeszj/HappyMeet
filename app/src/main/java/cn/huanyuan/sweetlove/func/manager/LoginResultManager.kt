@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.text.TextUtils
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.net.rxApi
-import cn.huanyuan.sweetlove.ui.invite.BindInviteCodeActivity
 import cn.huanyuan.sweetlove.ui.login.LoginActivity
 import cn.huanyuan.sweetlove.ui.login.profile.CompleteProfileActivity
 import cn.huanyuan.sweetlove.ui.main.MainActivity
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import cn.yanhu.commonres.bean.LoginSuccessInfo
+import cn.yanhu.commonres.config.ConfigParamsManager
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.imchat.custom.message.push.huawei.HMSPushHelper
 import cn.zj.netrequest.application.ApplicationProxy
@@ -30,22 +30,19 @@ object LoginResultManager {
         if (!TextUtils.isEmpty(loginSuccessInfo.phoneEndNum)) {
             AppCacheManager.phoneEndNum = loginSuccessInfo.phoneEndNum
         }
+        ConfigParamsManager.HAS_LOAD_CHAT = false
         AppCacheManager.userId = loginSuccessInfo.userId
         AppCacheManager.mToken = loginSuccessInfo.token
         AppCacheManager.imToken = loginSuccessInfo.imToken
         AppCacheManager.province = loginSuccessInfo.province
         AppCacheManager.hasShowTeenApp = false
-        loginIM(object : EMCallBack {
+        loginIM(true,object : EMCallBack {
             override fun onSuccess() {
-                if (loginSuccessInfo.isRegister) {
-                    BindInviteCodeActivity.lunch(mContext, loginSuccessInfo)
+                if (loginSuccessInfo.baseInfoFinish) {
+                    ActivityUtils.finishActivity(LoginActivity::class.java)
+                    MainActivity.lunch(mContext)
                 } else {
-                    if (loginSuccessInfo.baseInfoFinish) {
-                        ActivityUtils.finishActivity(LoginActivity::class.java)
-                        MainActivity.lunch(mContext)
-                    } else {
-                        CompleteProfileActivity.lunch(mContext)
-                    }
+                    CompleteProfileActivity.lunch(mContext)
                 }
                 HMSPushHelper.getInstance().getHMSToken(mContext)
                 HMSPushHelper.getInstance().getHonorToken(mContext)
@@ -62,9 +59,9 @@ object LoginResultManager {
     }
 
     private var isReset: Boolean = false
-    fun loginIM(callBack: EMCallBack?) {
+    fun loginIM(isLogin:Boolean = false,callBack: EMCallBack?) {
         if (TextUtils.isEmpty(AppCacheManager.imToken)) {
-            getImToken(callBack)
+            getImToken(isLogin,callBack)
         } else {
             EMClient.getInstance()
                 .loginWithToken(
@@ -72,10 +69,19 @@ object LoginResultManager {
                     AppCacheManager.imToken,
                     object : EMCallBack {
                         override fun onSuccess() {
-                            EMClient.getInstance().chatManager().loadAllConversations()
-                            EMClient.getInstance().groupManager().loadAllGroups()
-                            callBack?.onSuccess()
-                            isReset = false
+                            if (isLogin){
+                                EMClient.getInstance().chatManager()
+                                    .asyncDeleteAllMsgsAndConversations(false, object : EMCallBack {
+                                        override fun onSuccess() {
+                                            onLoginSuccess(callBack)
+                                        }
+                                        override fun onError(code: Int, error: String) {
+                                            onLoginSuccess(callBack)
+                                        }
+                                    })
+                            }else{
+                                onLoginSuccess(callBack)
+                            }
                         }
 
                         override fun onError(code: Int, p1: String?) {
@@ -96,12 +102,19 @@ object LoginResultManager {
 
     }
 
+    private fun onLoginSuccess(callBack: EMCallBack?) {
+        EMClient.getInstance().chatManager().loadAllConversations()
+        EMClient.getInstance().groupManager().loadAllGroups()
+        callBack?.onSuccess()
+        isReset = false
+    }
+
     @SuppressLint("CheckResult")
-    private fun getImToken(callBack: EMCallBack?) {
+    private fun getImToken(isLogin:Boolean = false,callBack: EMCallBack?) {
         request({ rxApi.getImToken() }, object : OnRequestResultListener<String> {
             override fun onSuccess(data: BaseBean<String>) {
                 AppCacheManager.imToken = data.data.toString()
-                loginIM(callBack)
+                loginIM(isLogin,callBack)
             }
 
             override fun onFail(code: Int?, msg: String?) {
@@ -115,7 +128,7 @@ object LoginResultManager {
     private fun imLogout(callBack: EMCallBack?) {
         EMClient.getInstance().logout(true, object : EMCallBack {
             override fun onSuccess() {
-                loginIM(callBack)
+                loginIM(true,callBack)
             }
 
             override fun onError(code: Int, message: String) {

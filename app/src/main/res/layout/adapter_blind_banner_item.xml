@@ -8,7 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:paddingBottom="@dimen/dp_12"
+        android:paddingTop="@dimen/dp_12"
         android:layout_height="wrap_content">
 
         <com.youth.banner.Banner

@@ -17,7 +17,6 @@ import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.task.GiftPopAnimTask
 import cn.yanhu.imchat.ImChatViewModel
 import cn.yanhu.imchat.R
-import cn.yanhu.imchat.config.ChatUiConfig
 import cn.yanhu.imchat.databinding.FrgImChatBinding
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EmMsgManager
@@ -55,7 +54,6 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         }
         isPop = requireArguments().getBoolean("isPop", false)
         chatFragment = ChatFragment()
-        ChatUiConfig.initConfig()
         chatFragment.arguments = arguments
         addFragment(chatFragment)
         userInfo = ChatUserInfoManager.getUserInfo(userId)

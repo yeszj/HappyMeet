@@ -1,6 +1,7 @@
 package cn.huanyuan.sweetlove.ui.main.tab_blinddate
 
 import android.os.Bundle
+import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgBlindUserListItemBinding
 import cn.huanyuan.sweetlove.ui.main.MainViewModel
@@ -32,6 +33,10 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
     private val adapter by lazy { RoomListAdapter(mContext) }
     override fun initData() {
         type = requireArguments().getInt(IntentKeyConfig.TYPE)
+        val itemAnimator: RecyclerView.ItemAnimator? = mBinding.recyclerView.itemAnimator
+        if (itemAnimator != null) {
+            itemAnimator.changeDuration = 0
+        }
         mBinding.recyclerView.adapter = adapter
         val emptyView = getEmptyView()
         emptyView.setFootText("暂无房间")

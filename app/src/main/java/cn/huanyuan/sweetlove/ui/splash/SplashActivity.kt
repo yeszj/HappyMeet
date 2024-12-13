@@ -123,7 +123,7 @@ class SplashActivity : FragmentActivity(
     private fun redirectTo() {
         if (ApplicationProxy.instance.isLogin()) {
             if (!TextUtils.isEmpty(AppCacheManager.userId)) {
-                LoginResultManager.loginIM(object : EMCallBack {
+                LoginResultManager.loginIM(false,object : EMCallBack {
                     override fun onSuccess() {
                         showMainPage()
                     }

@@ -254,7 +254,7 @@ class BaseApplication : Application() {
             initImConfig()
         }
         if (!EMClient.getInstance().isLoggedIn) {
-            LoginResultManager.loginIM(null)
+            LoginResultManager.loginIM(false,null)
         }
     }
 
@@ -401,7 +401,7 @@ class BaseApplication : Application() {
                         highIMMsgId.setContentIntent(contentIntent) // 设置内容的点击意图
                             .setAutoCancel(true) // 点击通知栏后是否自动清除该通知
                             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                            .setSmallIcon(R.mipmap.ic_logo) // 设置应用名称左边的小图标
+                            .setSmallIcon(R.mipmap.icon_splash_logo) // 设置应用名称左边的小图标
                             .setLargeIcon(resource).setContentTitle(nickName) // 设置通知栏里面的标题文本
                             .setContentText(
                                 EaseCommonUtils.getMessageDigest(
@@ -417,7 +417,7 @@ class BaseApplication : Application() {
             val notification: NotificationCompat.Builder =
                 NotificationCompat.Builder(topActivity).setContentIntent(contentIntent) // 设置内容的点击意图
                     .setAutoCancel(true) // 点击通知栏后是否自动清除该通知
-                    .setSmallIcon(R.mipmap.ic_logo) // 设置应用名称左边的小图标
+                    .setSmallIcon(R.mipmap.icon_splash_logo) // 设置应用名称左边的小图标
                     .setContentTitle(nickName) // 设置通知栏里面的标题文本
                     .setContentText(
                         EaseCommonUtils.getMessageDigest(

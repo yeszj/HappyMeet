@@ -46,6 +46,16 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
     private String carUrl;
     private String  enterAnimUrl;
 
+    private boolean ifEdit;
+
+    public boolean isIfEdit() {
+        return ifEdit;
+    }
+
+    public void setIfEdit(boolean ifEdit) {
+        this.ifEdit = ifEdit;
+    }
+
     public String getCarUrl() {
         return carUrl;
     }

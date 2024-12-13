@@ -112,7 +112,8 @@ class TabBlindDateFrg : BaseFragment<FrgTabBlinddateBinding, MainViewModel>(
 
     private var frgList: ArrayList<Fragment> = arrayListOf()
     private fun initVpData() {
-        frgList.add(BlindDateUserRoomListFrg())
+        frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_RECOMMEND))
+        //frgList.add(BlindDateUserRoomListFrg())
 
         // frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_FRIENDS))
 

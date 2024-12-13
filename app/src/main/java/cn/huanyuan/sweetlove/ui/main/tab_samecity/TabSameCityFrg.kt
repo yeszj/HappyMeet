@@ -37,7 +37,7 @@ class TabSameCityFrg : BaseFragment<FrgTabSameCityBinding, MainViewModel>(
     override fun initData() {
         initTabLayout()
         initVpData()
-        getLocation()
+       // getLocation()
     }
 
     override fun initListener() {
@@ -121,9 +121,9 @@ class TabSameCityFrg : BaseFragment<FrgTabSameCityBinding, MainViewModel>(
 
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
-        LiveEventBus.get<Int>(LiveDataEventManager.SWITCH_TO_SAME_CITY).observe(this) {
-            getLocation()
-        }
+//        LiveEventBus.get<Int>(LiveDataEventManager.SWITCH_TO_SAME_CITY).observe(this) {
+//            getLocation()
+//        }
         LiveEventBus.get<String>(LiveDataEventManager.REFRESH_SAMECITY_TAB).observe(this) {
             refreshLocationTab(it)
         }

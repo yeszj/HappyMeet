@@ -66,11 +66,7 @@ class CompleteProfileActivity : BaseActivity<ActivityCompleteProfileBinding, Log
         if (avatarAndNameFrg == null) {
             avatarAndNameFrg = EditAvatarAndNameFrg.newsInstance()
         }
-        if (mBinding.step == 1) {
-            replaceFragment(sexAndAgeFrg, avatarAndNameFrg!!, false)
-        } else {
-            replaceFragment(editLocationFrg, avatarAndNameFrg!!, true)
-        }
+        replaceFragment(sexAndAgeFrg, avatarAndNameFrg!!, false)
         mBinding.step = 2
 
     }
@@ -85,12 +81,8 @@ class CompleteProfileActivity : BaseActivity<ActivityCompleteProfileBinding, Log
                 }
             }
 
-            2 -> {
-                showSexAndAgeFrg()
-            }
-
             else -> {
-                showAvatarAndNameFrg()
+                showSexAndAgeFrg()
             }
         }
     }
@@ -107,14 +99,14 @@ class CompleteProfileActivity : BaseActivity<ActivityCompleteProfileBinding, Log
                 }
             }
 
-            2 -> {
-                showLocationFrg()
-//                if (TextUtils.isEmpty(mViewModel.personInfo.value?.portrait)) {
-//                    showToast("请上传头像")
-//                } else {
-//                    showLocationFrg()
-//                }
-            }
+//            2 -> {
+// //               showLocationFrg()
+////                if (TextUtils.isEmpty(mViewModel.personInfo.value?.portrait)) {
+////                    showToast("请上传头像")
+////                } else {
+////                    showLocationFrg()
+////                }
+//            }
 
             else -> {
                 commitProfileInfo()
