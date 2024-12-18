@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.databinding.AdapterAppCheckHeadItemBinding
 import cn.yanhu.baselib.utils.SystemUtils
+import com.blankj.utilcode.util.DeviceUtils
 import com.chad.library.adapter4.BaseSingleItemAdapter
 
 /**
@@ -30,9 +31,7 @@ class AppCheckHeadAdapter : BaseSingleItemAdapter<Int, AppCheckHeadAdapter.VH>()
         }
         holder.binding.apply {
             tvDeviceName.text = "当前设备 ${SystemUtils.getSystemModel()} ${
-                SystemUtils.encodeHeadInfo(
-                    SystemUtils.getDeviceName(context)
-                )
+                DeviceUtils.getModel()
             }"
             tvScore.setNumberString(oldScore.toString(),item.toString())
             oldScore = item

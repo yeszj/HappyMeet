@@ -1,11 +1,13 @@
 package cn.huanyuan.sweetlove.net
 
 import android.text.TextUtils
-import cn.yanhu.baselib.utils.SystemUtils
 import cn.huanyuan.sweetlove.BuildConfig
-import cn.zj.netrequest.application.ApplicationProxy
+import cn.yanhu.baselib.utils.ImeiUtils
 import cn.yanhu.baselib.utils.IpAddressUtils
+import cn.yanhu.baselib.utils.SystemUtils
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.zj.netrequest.application.ApplicationProxy
+import com.blankj.utilcode.util.DeviceUtils
 import com.github.gzuliyujiang.oaid.DeviceID
 import com.github.gzuliyujiang.oaid.DeviceIdentifier
 
@@ -26,11 +28,12 @@ object HttpHeadConfig {
             }
             map["ip"] = IpAddressUtils.ip
             map["user_id"] = AppCacheManager.userId
-            val systemModel = SystemUtils.getDeviceName(ApplicationProxy.instance.getApplication())
+            val systemModel = DeviceUtils.getModel()
             if (!TextUtils.isEmpty(systemModel)) {
-                map["phonemodel"] = SystemUtils.encodeHeadInfo(systemModel!!)
+                map["phonemodel"] = systemModel
             }
-
+            map["imei"] = ImeiUtils.getIMEIDeviceId(ApplicationProxy.instance.getApplication())
+            map["androidId"] = ImeiUtils.getAndroidId()
             var clientId = AppCacheManager.oaid
             if (TextUtils.isEmpty(clientId)){
                 try {

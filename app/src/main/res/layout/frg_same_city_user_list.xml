@@ -20,8 +20,6 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fadingEdgeLength="@dimen/dp_15"
-                android:requiresFadingEdge="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/adapter_same_city_user_item" />
         </cn.yanhu.baselib.refresh.MyRefreshLayout>

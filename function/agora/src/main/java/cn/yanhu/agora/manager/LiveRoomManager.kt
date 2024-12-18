@@ -157,7 +157,11 @@ object LiveRoomManager {
         applyRoomId: String,
         onRoomNoExitListener: OnRoomNoExitListener?
     ) {
-
+        if (!data.info.roseEnough) {
+            showToast("玫瑰不足，需要充值")
+            showRechargeListDialog(context, applyRoomId, onRoomNoExitListener)
+            return
+        }
         val content =
             Spans.builder().text("申请通过后可进入专属房间交友").color(Color.parseColor("#666666"))
                 .text(if (data.info.seatNum == 2) "\n\n专属房间需消耗" + data.info.price + "玫瑰/分钟，是否申请?" else "")
@@ -169,11 +173,7 @@ object LiveRoomManager {
         DialogUtils.showConfirmDialog(
             "申请专属私密约会",
             {
-                if (!data.info.roseEnough) {
-                    showToast("玫瑰不足，需要充值")
-                    showRechargeListDialog(context, applyRoomId, onRoomNoExitListener)
-                    return@showConfirmDialog
-                }
+
                 if (data.roomInfo.roomType == RoomListBean.TYPE_ROBOT_ROOM) {
                     showToast("已发送申请")
                     return@showConfirmDialog
