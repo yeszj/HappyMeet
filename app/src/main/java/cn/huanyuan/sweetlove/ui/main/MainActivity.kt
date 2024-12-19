@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.R
@@ -272,29 +271,32 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun initFrg() {
-        if (mFragmentList.size > 0) {
-            clearAllFrgManager()
+        val fragments = supportFragmentManager.fragments
+        if (fragments.size>0){
+            mFragmentList = fragments
         }
         tabList.forEach {
-            when (it.id) {
-                1 -> {
-                    mFragmentList.add(TabSameCityFrg())
-                }
+            if (fragments.size<=0){
+                when (it.id) {
+                    1 -> {
+                        mFragmentList.add(TabSameCityFrg())
+                    }
 
-                2 -> {
-                    mFragmentList.add(TabMessageFrg())
-                }
+                    2 -> {
+                        mFragmentList.add(TabMessageFrg())
+                    }
 
-                3 -> {
-                    mFragmentList.add(TabBlindDateFrg())
-                }
+                    3 -> {
+                        mFragmentList.add(TabBlindDateFrg())
+                    }
 
-                4 -> {
-                    mFragmentList.add(TabWalletFrg())
-                }
+                    4 -> {
+                        mFragmentList.add(TabWalletFrg())
+                    }
 
-                5 -> {
-                    mFragmentList.add(TabMineFrg())
+                    5 -> {
+                        mFragmentList.add(TabMineFrg())
+                    }
                 }
             }
             mBinding.tabLayout.addItem(createBottomBarItem(it))
@@ -347,17 +349,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         return bottomBarItem
     }
 
-    private fun clearAllFrgManager() {
-        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-        if (mFragmentList.size > 0) {
-            for (fragment in mFragmentList) {
-                ft.remove(fragment)
-            }
-            ft.commitNow()
-            mFragmentList.clear()
-            mBinding.tabLayout.removeAllViews()
-        }
-    }
 
     private fun bindTabToVp() {
         val tabAdapter = BaseTabAdapter(supportFragmentManager, titleList, mFragmentList)

@@ -7,7 +7,7 @@ import android.view.View
 import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
+import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.callBack.OnSingleClickListener
 import cn.yanhu.baselib.utils.CommonUtils
@@ -69,7 +69,7 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
 
        // frgList.add(ImConversationFragment.newsInstance(ImConversationFragment.TYPE_SINGLE_INTIMATE))
 
-        mBinding.viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
+        mBinding.viewPager.adapter = MyFrgFragmentStateAdapter(this@ConversationFrg, frgList)
         mBinding.viewPager.offscreenPageLimit = frgList.size
     }
 
