@@ -8,7 +8,7 @@ import cn.huanyuan.sweetlove.ui.main.MainViewModel
 import cn.huanyuan.sweetlove.ui.userinfo.UserSearchActivity
 import cn.huanyuan.sweetlove.ui.userinfo.auth.RealNameActivity
 import cn.yanhu.agora.manager.LiveRoomManager
-import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
+import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
@@ -110,14 +110,17 @@ class TabBlindDateFrg : BaseFragment<FrgTabBlinddateBinding, MainViewModel>(
         ViewPager2Helper.bind(magicIndicator, mBinding.viewPager)
     }
 
-    private var frgList: ArrayList<Fragment> = arrayListOf()
+    private var frgList: MutableList<Fragment> = mutableListOf()
     private fun initVpData() {
-        frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_RECOMMEND))
-        //frgList.add(BlindDateUserRoomListFrg())
-
-        // frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_FRIENDS))
-
-        mBinding.viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
+        val fragments = childFragmentManager.fragments
+        if (fragments.size>0){
+            frgList = fragments
+        }else{
+            frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_RECOMMEND))
+            //frgList.add(BlindDateUserRoomListFrg())
+            // frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_FRIENDS))
+        }
+        mBinding.viewPager.adapter = MyFrgFragmentStateAdapter(this@TabBlindDateFrg, frgList)
         mBinding.viewPager.offscreenPageLimit = frgList.size
     }
 

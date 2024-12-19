@@ -7,7 +7,7 @@ import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgTabSameCityBinding
 import cn.huanyuan.sweetlove.func.dialog.UserFilterPop
 import cn.huanyuan.sweetlove.ui.main.MainViewModel
-import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
+import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewPager2Helper
@@ -98,13 +98,18 @@ class TabSameCityFrg : BaseFragment<FrgTabSameCityBinding, MainViewModel>(
 
     }
 
-    private var frgList: ArrayList<Fragment> = arrayListOf()
+    private var frgList: MutableList<Fragment> = mutableListOf()
     private fun initVpData() {
-        frgList.add(UserListFrg())
+        val fragments = childFragmentManager.fragments
+        if (fragments.size>0){
+            frgList = fragments
+        }else{
+            frgList.add(UserListFrg())
+        }
 
         //   frgList.add(DynamicListFrg())
 
-        mBinding.viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
+        mBinding.viewPager.adapter = MyFrgFragmentStateAdapter(this@TabSameCityFrg, frgList)
         mBinding.viewPager.offscreenPageLimit = frgList.size
         mBinding.viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

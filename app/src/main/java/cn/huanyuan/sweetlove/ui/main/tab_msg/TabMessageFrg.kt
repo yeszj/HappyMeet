@@ -7,7 +7,7 @@ import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgTabMessageBinding
 import cn.huanyuan.sweetlove.ui.main.MainViewModel
 import cn.huanyuan.sweetlove.ui.main.tab_msg.friend.FriendsFrg
-import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
+import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewPager2Helper
@@ -67,14 +67,17 @@ class TabMessageFrg : BaseFragment<FrgTabMessageBinding, MainViewModel>(
         ViewPager2Helper.bind(magicIndicator, mBinding.viewPager)
     }
 
-    private var frgList: ArrayList<Fragment> = arrayListOf()
+    private var frgList: MutableList<Fragment> = mutableListOf()
     private fun initVpData() {
-        frgList.add(ConversationFrg())
-
-        frgList.add(FriendsFrg())
-
-       // frgList.add(GroupConversationFrg())
-        mBinding.viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
+        val fragments = childFragmentManager.fragments
+        if (fragments.size>0){
+            frgList = fragments
+        }else{
+            frgList.add(ConversationFrg())
+            frgList.add(FriendsFrg())
+            // frgList.add(GroupConversationFrg())
+        }
+        mBinding.viewPager.adapter = MyFrgFragmentStateAdapter(this, frgList)
         mBinding.viewPager.offscreenPageLimit = frgList.size
         mBinding.viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

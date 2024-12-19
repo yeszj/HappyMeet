@@ -6,7 +6,7 @@ import androidx.viewpager2.widget.ViewPager2
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgBlindDateUserListBinding
 import cn.huanyuan.sweetlove.ui.main.MainViewModel
-import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
+import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseFragment
 
 /**
@@ -19,23 +19,26 @@ class BlindDateUserRoomListFrg : BaseFragment<FrgBlindDateUserListBinding, MainV
     MainViewModel::class.java
 ) {
     private val titles = mutableListOf<String>()
-    private val frgList: MutableList<Fragment> = ArrayList()
+    private var frgList: MutableList<Fragment> = mutableListOf()
 
     override fun initData() {
         initVpData()
     }
 
     private fun initVpData() {
-        if (frgList.size > 0) {
-            clearAllFrgManager()
-        }
         titles.clear()
         titles.add("热门")
-       // titles.add("专属")
-        frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_RECOMMEND))
-        //frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_EXCLUSIVE))
+        // titles.add("专属")
+
+        val fragments = childFragmentManager.fragments
+        if (fragments.size > 0) {
+            frgList = fragments
+        } else {
+            frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_RECOMMEND))
+            //frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_EXCLUSIVE))
+        }
         mBinding.apply {
-            viewPager.adapter = MyFragmentStateAdapter(mContext, frgList)
+            viewPager.adapter = MyFrgFragmentStateAdapter(this@BlindDateUserRoomListFrg, frgList)
             viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
             viewPager.isSaveEnabled = false
             tabLayout.initViewPager(viewPager, titles.toMutableList(), -1)
