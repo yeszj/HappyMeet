@@ -7,75 +7,68 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/dp_94"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_10"
+        android:background="@drawable/bg_invite_total"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_totalIncome"
-            android:layout_width="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="544.25"
-            android:layout_marginStart="@dimen/dp_20"
-            android:layout_marginTop="@dimen/dp_9"
-            android:textSize="@dimen/sp_30"
-            app:fontType="@string/fontBold"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/spacer"
-            android:layout_height="wrap_content" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:layout_width="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/tv_totalIncome"
-            android:text="累计邀请收益(元)"
-            android:layout_marginTop="@dimen/dp_10"
-            android:textSize="@dimen/sp_14"
-            app:fontType="@string/fontBold"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="@+id/tv_totalIncome"
-            app:layout_constraintStart_toStartOf="@+id/tv_totalIncome"
-            android:layout_height="wrap_content" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_totalCount"
-            android:layout_width="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="7"
-            android:layout_marginEnd="@dimen/dp_20"
-            android:layout_marginTop="@dimen/dp_9"
-            android:textSize="@dimen/sp_30"
-            app:fontType="@string/fontBold"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/spacer"
-            android:layout_height="wrap_content" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_totalDesc"
-            android:layout_width="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/tv_totalCount"
-            android:text="累计邀请人数"
-            android:layout_marginTop="@dimen/dp_10"
-            android:textSize="@dimen/sp_14"
-            app:fontType="@string/fontBold"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="@+id/tv_totalCount"
-            app:layout_constraintStart_toStartOf="@+id/tv_totalCount"
-            android:layout_height="wrap_content" />
-
-        <Space
-            android:id="@+id/spacer"
-            style="@style/constraintHorizonCenter"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-           <View
-               android:layout_width="match_parent"
-               android:background="@drawable/white_top_corner_15"
-               app:layout_constraintTop_toBottomOf="@+id/tv_totalDesc"
-               android:layout_marginTop="@dimen/dp_24"
-               android:layout_height="@dimen/dp_42"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_totalCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_30"
+                app:fontType="@string/fontBold" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_totalDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="累计邀请人数"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                app:fontType="@string/fontBold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_totalIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="544.25"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_30"
+                app:fontType="@string/fontBold" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="累计邀请收益(元)"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                app:fontType="@string/fontBold" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 </layout>

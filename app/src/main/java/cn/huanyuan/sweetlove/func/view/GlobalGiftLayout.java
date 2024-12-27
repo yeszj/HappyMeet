@@ -37,6 +37,7 @@ public class GlobalGiftLayout extends FrameLayout {
         initView();
     }
 
+
     private void initView() {
         this.addView(binding.getRoot());
     }
@@ -50,7 +51,7 @@ public class GlobalGiftLayout extends FrameLayout {
     }
 
     public AnimatorSet startAnimation() {
-        ObjectAnimator flyFromLtoR = AnimationUtil.createFlyFromLtoR(binding.getRoot(), +getWidth(), 0, 1000, new LinearInterpolator());
+        ObjectAnimator flyFromLtoR = AnimationUtil.createFlyFromLtoR(binding.getRoot(), +getWidth(), 0, 5000, new LinearInterpolator());
         flyFromLtoR.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -61,10 +62,9 @@ public class GlobalGiftLayout extends FrameLayout {
             }
         });
 
-        ObjectAnimator flyFromLtoR2 = AnimationUtil.createFlyFromLtoR(binding.getRoot(), 0, 0, 3000, new LinearInterpolator());
 
-        ObjectAnimator flyFromLtoR3 = AnimationUtil.createFlyFromLtoR(binding.getRoot(), 0, -getWidth(), 500, new LinearInterpolator());
-        flyFromLtoR3.addListener(new AnimatorListenerAdapter() {
+        ObjectAnimator flyFromLtoR2 = AnimationUtil.createFlyFromLtoR(binding.getRoot(), 0, -getWidth(), 5000, new LinearInterpolator());
+        flyFromLtoR2.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
@@ -73,8 +73,9 @@ public class GlobalGiftLayout extends FrameLayout {
             }
         });
 
-        AnimatorSet animatorSet = null;
-        animatorSet = AnimationUtil.startAnimation(flyFromLtoR, flyFromLtoR2, flyFromLtoR3);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(flyFromLtoR).before(flyFromLtoR2);
+        animatorSet.start();
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

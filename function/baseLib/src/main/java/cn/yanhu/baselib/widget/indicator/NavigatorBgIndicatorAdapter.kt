@@ -1,4 +1,4 @@
-package com.contract.commonlib.indicator
+package cn.yanhu.baselib.widget.indicator
 
 import android.content.Context
 import android.view.animation.DecelerateInterpolator
@@ -6,7 +6,6 @@ import androidx.viewpager.widget.ViewPager
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
-import cn.yanhu.baselib.widget.indicator.BgPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView

@@ -36,6 +36,7 @@ class ChatPriceSetAdapter : BaseQuickAdapter<ChatPriceItemInfo, ChatPriceSetAdap
                 val get = list[indexOfLast]
                 tvPrice.text = get.desc
             }
+
             when (item.type) {
                 "txt" -> {
                     tvValue.text = "文字价格"

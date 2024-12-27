@@ -6,6 +6,7 @@ import android.content.Intent
 import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.ActivityCallPhoneEndBinding
 import cn.yanhu.agora.manager.LiveRoomManager
+import cn.yanhu.agora.miniwindow.MiniWindowManager
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.commonres.config.IntentKeyConfig
 
@@ -21,13 +22,18 @@ class CallPhoneEndActivity : BaseActivity<ActivityCallPhoneEndBinding, ImPhoneVi
     @SuppressLint("SetTextI18n")
     override fun initData() {
         setFullScreenStatusBar(true)
+        val upActivity = MiniWindowManager.getUpActivity()
+        if (upActivity!=null && upActivity is CallPhoneEndActivity){
+            finish()
+        }
         val type = intent.getIntExtra(IntentKeyConfig.TYPE, 0)
         if (type == LiveRoomManager.HOUSE_CALL_OFF) {
             mBinding.liveRoomEndTxtTwo.text = "对方已挂断，通话结束"
         } else if (type == LiveRoomManager.HOUSE_CALL_PRICE_OFF) {
             mBinding.liveRoomEndTxtTwo.text = "通话所需玫瑰余额不足\n" + "已结束"
         }
-        mBinding.liveRoomEndOff.setOnClickListener { v -> finish() }
+        mBinding.liveRoomEndOff.setOnClickListener { finish() }
+
     }
 
     companion object {

@@ -218,12 +218,12 @@ class MoreSeatRoomAdapter(val roomType: Int) :
     }
 
     private fun addVideoSf(surfaceView: View, dto: RoomSeatInfo) {
-        AgoraManager.getInstence().setupVideo(
+        AgoraManager.getInstance().setupVideo(
             dto.roomUserSeatInfo!!.userId.toInt(),
             dto.roomUserSeatInfo!!.userId == AppCacheManager.userId, surfaceView
         )
         if (dto.roomUserSeatInfo!!.userId == AppCacheManager.userId) {
-            AgoraManager.getInstence().muteLocalAudioStream(!dto.mikeUser)
+            AgoraManager.getInstance().muteLocalAudioStream(!dto.mikeUser)
         }
     }
 

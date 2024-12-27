@@ -42,6 +42,8 @@
     <color name="colorRed">#FF8F8F</color>
     <color name="common_bg_color_gray">#33CDCCDB</color>
     <color name="fontOrangeColor">#FFA114</color>
+    <color name="bgOrangeColor">#FF8C00</color>
+    <color name="bg_tag_blue">#66A3FF</color>
     <color name="fontOrangeColorAlpha10">#1AFFA114</color>
     <color name="fontOrangeColor_alpha80">#33FFA114</color>
     <color name="bg_splash_color">#26162a</color>

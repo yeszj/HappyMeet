@@ -85,15 +85,30 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
         getConversationFromDb()
     }
 
+    private var isUpdateConversation = false
+    private var hasNewConversation = false
     private fun getConversationFromDb() {
+        if (isUpdateConversation) {
+            EMLog.e(TAG_CONVERSATION_LIST, "正在更新会话，更新完成后，再次更新")
+            hasNewConversation = true
+            return
+        }
         ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<List<EMConversation>>() {
             override fun doInBackground(): List<EMConversation> {
+                if (AppCacheManager.GET_CONVERSATION_FROM_SERVER) {
+                    EMLog.e(TAG_CONVERSATION_LIST, "切换设备或者重新登录从服务端加载会话")
+                    return ArrayList()
+                }
+                EMLog.e(TAG_CONVERSATION_LIST, "开始获取会话列表isUpdateConversation设置为true")
+                isUpdateConversation = true
                 val allConversations = EMClient.getInstance().chatManager().allConversations
                 return ArrayList(allConversations.values)
             }
 
             override fun onSuccess(result: List<EMConversation>) {
+                EMLog.e(TAG_CONVERSATION_LIST, "获取会话列表成功：size=${result.size}")
                 if (result.isEmpty()) {
+                    EMLog.e(TAG_CONVERSATION_LIST, "开始服务端加载会话")
                     getConversationFromServer()
                 } else {
                     upDataList(result)
@@ -101,7 +116,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
             }
         })
     }
-
+    private var isFinalServerData: Boolean = false
     private var serverConversationList = mutableListOf<EMConversation>()
     private fun getConversationFromServer(cursor: String = "") {
         if (TextUtils.isEmpty(cursor)) {
@@ -114,21 +129,25 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                     val nextCursor = result.cursor
                     // 获取到的会话列表
                     val conversations = result.data
-                   // loadServerMsgToDb(conversations)
                     serverConversationList.addAll(conversations)
                     if (conversations.size > 0) {
                         val finalConversation = conversations[conversations.size - 1]
                         val lastMessage = finalConversation.lastMessage
-                        if (lastMessage != null && DateUtils.isToday(lastMessage.msgTime)) {
+                        val timeMillions = DateUtils.getTimeMillions(-3)
+                        if (lastMessage != null && lastMessage.msgTime >= timeMillions) {
                             if (TextUtils.isEmpty(nextCursor)) {
+                                isFinalServerData = true
                                 runOnUiThread { upDataList(serverConversationList) }
                             } else {
+                                upDataList(serverConversationList)
                                 getConversationFromServer(nextCursor)
                             }
                         } else {
+                            isFinalServerData = true
                             runOnUiThread { upDataList(serverConversationList) }
                         }
                     } else {
+                        isFinalServerData = true
                         runOnUiThread { upDataList(serverConversationList) }
                     }
                 }
@@ -191,20 +210,15 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
      * 更新会话列表
      * */
 
-    private var conversationListTask: ThreadUtils.SimpleTask<MutableList<EaseConversationInfo>>? =
-        null
-
     @Synchronized
     private fun upDataList(conversations: List<EMConversation>) {
-        if (conversationListTask != null) {
-            ThreadUtils.cancel(conversationListTask)
-        }
-        conversationListTask =
+        val conversationListTask =
             object : ThreadUtils.SimpleTask<MutableList<EaseConversationInfo>>() {
                 override fun doInBackground(): MutableList<EaseConversationInfo> {
                     if (conversations.isEmpty()) {
                         return mutableListOf()
                     }
+                    EMLog.e(TAG_CONVERSATION_LIST, "更新会话列表，列表长度：" + conversations.size)
                     val conversationList: MutableList<EaseConversationInfo> = ArrayList()
 
                     for (conversation in conversations) {
@@ -230,7 +244,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                 override fun onSuccess(conversationList: MutableList<EaseConversationInfo>) {
                     if (conversationList.isEmpty()) {
                         ConfigParamsManager.HAS_LOAD_CHAT = true
-                        conversationListLayout.setData(listOf())
+                        updateFinalConversationList(listOf(), listOf())
                     } else {
                         //conversationListLayout.setData(conversationList)
                         getUserInfoList(conversationList)
@@ -330,17 +344,10 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
 
     private var userIdList = mutableListOf<String>()
 
-    private var updateList: MutableList<MutableList<EaseConversationInfo>> = mutableListOf()
-    private var updateFinish = false
     private val TAG_CONVERSATION_LIST = "loadConversationStep"
     @Synchronized
     private fun getUserInfoList(list: MutableList<EaseConversationInfo>) {
-        if (updateFinish) {
-            updateList.add(list)
-            return
-        }
         EMLog.e(TAG_CONVERSATION_LIST, "getUserInfoList")
-        updateFinish = true
         val userArrays = ArrayList<String>()
         for (i in list.indices) {
             val emConversation = list[i].info as EMConversation
@@ -351,6 +358,10 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
             }
         }
         if (userArrays.size <= 0) {
+            EMLog.e(
+                TAG_CONVERSATION_LIST,
+                "updateFinalConversationList-没有新的会话列表用,无需获取用户信息"
+            )
             updateFinalConversationList(mutableListOf(), list)
         } else {
             val users = StringBuilder()
@@ -363,6 +374,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                     users.append(",")
                 }
             }
+            EMLog.e(TAG_CONVERSATION_LIST, "updateConversationUserInfo获取会话userId=$users")
             updateConversationUserInfo(users, list)
         }
 
@@ -381,14 +393,17 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                 override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
                     val userList = data.data
                     if (userList.isNullOrEmpty()) {
+                        EMLog.e(TAG_CONVERSATION_LIST, "getUserList返回为null")
                         updateFinalConversationList(listOf(), list)
                         return
                     }
                     updateFinalConversationList(userList, list)
+                    EMLog.e(TAG_CONVERSATION_LIST, "getUserList成功")
                 }
 
                 override fun onFail(code: Int?, msg: String?) {
                     super.onFail(code, msg)
+                    EMLog.e(TAG_CONVERSATION_LIST, "getUserList失败")
                     updateFinalConversationList(listOf(), list)
                 }
             },
@@ -396,43 +411,56 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
         )
     }
 
-    private var finalConversationListTask: ThreadUtils.SimpleTask<MutableList<EaseConversationInfo>>? =
-        null
 
     @Synchronized
     private fun updateFinalConversationList(
         data: List<UserDetailInfo>, list: List<EaseConversationInfo>
     ) {
-        ConfigParamsManager.HAS_LOAD_CHAT = true
-        if (finalConversationListTask != null) {
-            ThreadUtils.cancel(finalConversationListTask)
-        }
-        finalConversationListTask =
+        val finalConversationListTask =
             object : ThreadUtils.SimpleTask<MutableList<EaseConversationInfo>>() {
                 override fun doInBackground(): MutableList<EaseConversationInfo> {
+                    EMLog.e(TAG_CONVERSATION_LIST, "updateFinalConversationList")
                     return getFinalConversationList(data, list)
                 }
-
                 override fun onSuccess(conversationList: MutableList<EaseConversationInfo>) {
+                    EMLog.e(
+                        TAG_CONVERSATION_LIST,
+                        "显示会话列表size=" + conversationList.size + "type=" + type
+                    )
                     val distinctBy =
                         conversationList.distinctBy { (it.info as EMConversation).conversationId() }
                     conversationListLayout.setData(distinctBy)
                     ConfigParamsManager.HAS_LOAD_CHAT = true
-                    getUserInfoListAgain()
+                    AppCacheManager.GET_CONVERSATION_FROM_SERVER = false
+                    if (isFinalServerData) {
+                        isFinalServerData = false
+                        EMLog.e(TAG_CONVERSATION_LIST, "服务端加载会话完成hasNewMsg=$hasNewMsg")
+                        AppCacheManager.GET_CONVERSATION_FROM_SERVER = false
+                        if (hasNewMsg) {
+                            EMLog.e(TAG_CONVERSATION_LIST, "重新加载本地会话")
+                            refreshAllList()
+                            hasNewMsg = false
+                        }
+                    }
+                    if (isUpdateConversation) {
+                        isUpdateConversation = false
+                        EMLog.e(
+                            TAG_CONVERSATION_LIST,
+                            "上次更新完成后，再次更新hasNewConversation=${hasNewConversation}，isUpdateConversation设置为false"
+                        )
+                        if (hasNewConversation) {
+                            EMLog.e(
+                                TAG_CONVERSATION_LIST, "有新的会话未更新，调用refreshAllList刷新"
+                            )
+                            refreshAllList()
+                            hasNewConversation = false
+                        }
+                    }
                 }
             }
         ThreadUtils.executeByIo(finalConversationListTask)
     }
 
-    private fun getUserInfoListAgain() {
-        if (updateList.size > 0) {
-            EMLog.e(TAG_CONVERSATION_LIST, "getUserInfoListAgain")
-            val get = updateList[updateList.size - 1]
-            updateList.clear()
-            getUserInfoList(get)
-        }
-        updateFinish = false
-    }
 
 
 
@@ -587,6 +615,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
         EMClient.getInstance().chatManager().removeMessageListener(msgListener)
     }
 
+    private var hasNewMsg: Boolean = false
     //接受消息监听
     private val msgListener: EMMessageListener = object : EMMessageListener {
         // 收到消息，遍历消息队列，解析和显示。
@@ -606,8 +635,14 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
      */
     private fun refreshConversationList() {
         runOnUiThread {
-            if (ActivityUtils.getTopActivity().localClassName.contains("MainActivity")) {
-                refreshAllList()
+            if (AppCacheManager.GET_CONVERSATION_FROM_SERVER) {
+                //当前正在获取服务端历史会话 暂不从本地加载最新会话 等服务端历史会话加载完成后 再加载本地会话
+                hasNewMsg = true
+                EMLog.e(TAG_CONVERSATION_LIST, "hasNewMsg=$hasNewMsg")
+            } else {
+                if (ActivityUtils.getTopActivity().localClassName.contains("MainActivity")) {
+                    refreshAllList()
+                }
             }
         }
     }

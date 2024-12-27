@@ -10,4 +10,7 @@ import cn.yanhu.commonres.bean.BaseUserInfo
 class InviteRecordInfo : BaseUserInfo() {
     var isAuth: Boolean = false
     var totalIncome: String = ""
+    var isRealNameAuth:Boolean = false
+    var inviteTime:String = ""
+    var contributionIncome:String = ""
 }

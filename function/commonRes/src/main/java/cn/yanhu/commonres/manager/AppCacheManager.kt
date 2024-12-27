@@ -27,7 +27,8 @@ object AppCacheManager {
     var oaid by ConfigPref(Constants.OAID,"")
     var hasShowTeenApp by ConfigPref(Constants.IS_SHOW_TEEN, false)
     var selectBeautyFilter by ConfigPref(Constants.SELECTBEAUTYFILTER,"")
-
+    @JvmStatic
+    var GET_CONVERSATION_FROM_SERVER by ConfigPref("getConversationFromServer", true)
     @JvmStatic
     fun isWoman():Boolean{
         return gender == 2

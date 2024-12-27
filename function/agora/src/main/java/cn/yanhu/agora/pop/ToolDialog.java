@@ -19,6 +19,7 @@ import cn.yanhu.baselib.base.BaseSheetDialog;
 import cn.yanhu.commonres.bean.RoomDetailInfo;
 import cn.yanhu.commonres.config.EventBusKeyConfig;
 import cn.yanhu.commonres.manager.LiveDataEventManager;
+import cn.yanhu.commonres.router.RouteIntent;
 
 public class ToolDialog extends BaseSheetDialog<DialogToolBinding> {
 
@@ -30,6 +31,8 @@ public class ToolDialog extends BaseSheetDialog<DialogToolBinding> {
         void onClickWarning();
 
         void onClickClose();
+
+        void onStickyRoom();
     }
 
     private OnClickListener onClickListener;
@@ -55,38 +58,39 @@ public class ToolDialog extends BaseSheetDialog<DialogToolBinding> {
 
         initData();
 
-        binding.dgCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        binding.dgCancel.setOnClickListener(v -> dismiss());
     }
 
     private void initData() {
         List<ToolBean> toolBeanList = new ArrayList<>();
-       // toolBeanList.add(new ToolBean(R.drawable.ic_exception_upload, "异常反馈"));
-        toolBeanList.add(new ToolBean(R.drawable.svg_network, "网络状态"));
-        if (liveRoomInfo.getAdmin() == 1) {
-           // toolBeanList.add(new ToolBean(R.drawable.svg_report, "巡查记录"));
-//            toolBeanList.add(new ToolBean(R.drawable.svg_report, "警告"));
-            toolBeanList.add(new ToolBean(R.drawable.svg_report, "关房"));
+        toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_network, "网络状态"));
+        toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_room_report, "投诉举报"));
+        if (liveRoomInfo.isAdmin()) {
+            toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_room_top, "置顶房间"));
+            toolBeanList.add(new ToolBean(R.drawable.svg_report, "发送警告"));
+            toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_room_close, "强制关房"));
         }
         ToolsAdapter toolAdapter = new ToolsAdapter();
         binding.dgToolRv.setAdapter(toolAdapter);
         toolAdapter.submitList(toolBeanList);
         toolAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
             ToolBean toolBean = toolAdapter.getItem(i);
+            if (toolBean==null){
+                return;
+            }
             String name = toolBean.getName();
             if ("网络状态" .equals(name)) {
                 LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.CHECK_NET,true);
-            } else if ("警告" .equals(name)) {
+            } else if ("发送警告" .equals(name)) {
                 onClickListener.onClickWarning();
-            } else if ("关房" .equals(name)) {
+            } else if ("强制关房" .equals(name)) {
                 onClickListener.onClickClose();
+            }else if ("置顶房间" .equals(name)) {
+                onClickListener.onStickyRoom();
+            }else if ("投诉举报" .equals(name)) {
+                RouteIntent.INSTANCE.lunchReportPage("");
             }
         });
     }
-
 
 }

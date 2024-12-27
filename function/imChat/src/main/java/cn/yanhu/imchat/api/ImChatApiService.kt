@@ -1,5 +1,6 @@
 package cn.yanhu.imchat.api
 
+import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.ChatPriceItemInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
@@ -31,7 +32,7 @@ import retrofit2.http.Query
  * created: 2022/5/20
  * desc:
  */
-interface ImChatApiService {
+interface ImChatApiService : CommonApiService {
 
     /**
      * 赠送礼物
@@ -174,13 +175,6 @@ interface ImChatApiService {
     @FormUrlEncoded
     @POST("app/v1/operates/cancelBlock")
     suspend fun cancelBlock(@Field("operatedUserId") operatedUserId:String): BaseBean<String>
-
-
-    @FormUrlEncoded
-    @POST("app/v1/friend/becomeFriend")
-    suspend fun addFriend(
-        @Field("addUserId") addUserId: String
-    ): BaseBean<String>
 
     @FormUrlEncoded
     @POST("app/v1/friend/cancelFriends")

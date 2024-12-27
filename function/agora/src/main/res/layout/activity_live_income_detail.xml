@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="incomeInfo"
+            type="cn.yanhu.agora.bean.LiveIncomeDetailInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/base_bg_gray">
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleLeftName="开播详情" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:addStatesFromChildren="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar"
+            app:srlEnableNestedScrolling="true">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                app:elevation="0dp"
+                app:layout_behavior="cn.yanhu.baselib.widget.CustomBehavior">
+
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:id="@+id/collapsing_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:contentScrim="@android:color/transparent"
+                    app:expandedTitleGravity="top"
+                    app:layout_scrollFlags="exitUntilCollapsed|scroll">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ll_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <View
+                            android:id="@+id/bg"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_94"
+                            android:layout_marginHorizontal="@dimen/dp_10"
+                            android:background="@drawable/bg_gradient_income_detail"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_20"
+                            android:layout_marginTop="@dimen/dp_20"
+                            android:text="房间类型"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14"
+                            app:layout_constraintStart_toStartOf="@+id/bg"
+                            app:layout_constraintTop_toTopOf="@+id/bg" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/dp_10"
+                            tools:text="大厅"
+                            android:text="@{incomeInfo.typeDesc}"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14"
+                            app:fontType="@string/fontBold"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_type"
+                            app:layout_constraintStart_toEndOf="@+id/tv_type"
+                            app:layout_constraintTop_toTopOf="@+id/tv_type" />
+
+                        <cn.yanhu.commonres.view.UserTagView
+                            tagColorId="@{@color/blackAlpha90}"
+                            tagTextColorId="@{@color/white}"
+                            tagValue="@{incomeInfo.time}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp_18"
+                            app:layout_constraintBottom_toBottomOf="@+id/bg"
+                            app:layout_constraintStart_toStartOf="@+id/tv_type" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_totalRose"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_20"
+                            tools:text="1240"
+                            android:text="@{incomeInfo.roseNum}"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_24"
+                            app:fontType="@string/fontBold"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_type"
+                            app:layout_constraintEnd_toEndOf="@+id/bg"
+                            app:layout_constraintTop_toTopOf="@+id/tv_type" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp_20"
+                            android:text="本场收到玫瑰"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14"
+                            app:layout_constraintBottom_toBottomOf="@+id/bg"
+                            app:layout_constraintEnd_toEndOf="@+id/tv_totalRose" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tabLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_16"
+                        android:paddingVertical="@dimen/dp_14"
+                        android:text="玫瑰明细"
+                        android:textColor="@color/fontTextColor"
+                        app:fontType="@string/fontMedium"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="RtlSymmetry" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_income"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:listitem="@layout/adapter_live_income_detail_item" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

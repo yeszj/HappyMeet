@@ -9,11 +9,11 @@ import cn.yanhu.commonres.bean.BaseUserInfo
  */
 data class ChatRoomMsgInfo(val type: Int, val content: String,val sendUserInfo:BaseUserInfo?,val altUser:BaseUserInfo?=null){
     companion object{
+        const val ITEM_NEW_ADD_TYPE = -1 //新增的消息 老版本不支持
+
         const val ITEM_SYSTEM_TYPE = 0 //系统消息
 
         const val ITEM_WELCOME_TYPE = 1 //欢迎消息
-
-        const val ITEM_HOST_WELCOME_TYPE = 2 //房主欢迎语
 
         const val ITEM_DEFAULT_TYPE = 3 //默认消息
 

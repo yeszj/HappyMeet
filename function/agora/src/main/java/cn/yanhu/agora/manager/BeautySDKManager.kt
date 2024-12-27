@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.BeautyFileCacheInfo
 import cn.yanhu.agora.bean.ConfigSdkVersion
+import cn.yanhu.agora.listener.OnDownloadProgressListener
 import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.zj.netrequest.download.DownloadUtil
@@ -24,7 +25,7 @@ import java.net.URL
  * 美颜sdk管理
  */
 class BeautySDKManager {
-    fun downloadBundle() {
+    fun downloadBundle(downloadProgressListener: OnDownloadProgressListener) {
         val beautyCache1 = BeautyCacheManager.getBeautyCache()
         val beautyVersion = beautyCache1?.version ?: 0
         request(
@@ -38,10 +39,10 @@ class BeautySDKManager {
                             val destFile = getAssetsFile()
                             val length = FileUtils.getLength(destFile)
                             if (beautyCache.fileMd5 != length.toString() || hasNewVersion|| length<=0) {
-                                downloadSdkInfo()
+                                downloadSdkInfo(downloadProgressListener)
                             }
                         } else {
-                            downloadSdkInfo()
+                            downloadSdkInfo(downloadProgressListener)
                         }
                     }
                 }
@@ -52,7 +53,7 @@ class BeautySDKManager {
 
     }
 
-    private fun ConfigSdkVersion.downloadSdkInfo() {
+    private fun ConfigSdkVersion.downloadSdkInfo(downloadProgressListener: OnDownloadProgressListener) {
         val url = URL(this.downloadUrl)
         logcom(
             "urlParse",
@@ -73,6 +74,12 @@ class BeautySDKManager {
                     downloadedLength: Long,
                     totalLength: Long,
                 ) {
+                    val realProgress = if (progress == 100) {
+                        99
+                    } else {
+                        progress
+                    }
+                    downloadProgressListener.onProgress(realProgress)
                 }
 
                 override fun onFinish(file: File?) {
@@ -92,17 +99,33 @@ class BeautySDKManager {
                                 beautyCache.version = version
                             }
                             BeautyCacheManager.saveBeautySdkInfo(beautyCache)
+                            downloadProgressListener.onProgress(100)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
+                        reDownLoadWhenFail(downloadProgressListener)
+
                     }
 
                 }
 
                 override fun onFailed(msg: String?) {
+                    reDownLoadWhenFail(downloadProgressListener)
                 }
             })
     }
+
+    private var downloadFailCount = 0
+    private fun ConfigSdkVersion.reDownLoadWhenFail(downloadProgressListener: OnDownloadProgressListener) {
+        if (downloadFailCount < 2) {
+            downloadSdkInfo(downloadProgressListener)
+            downloadFailCount++
+        } else {
+            logcom("agoraSdk", "声网sdk重新下载2次失败")
+            downloadProgressListener.onDownLoadFail()
+        }
+    }
+
 
     private fun getAssetsFile(): File {
         val unZipPath: String =

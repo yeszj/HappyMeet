@@ -12,8 +12,9 @@ import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.NoMoreDataFootView
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.commonres.router.RouteIntent
+import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.ext.parseState
-import cn.zj.netrequest.status.ErrorCode
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter4.QuickAdapterHelper
 
 /**
@@ -21,6 +22,7 @@ import com.chad.library.adapter4.QuickAdapterHelper
  * created: 2024/3/14
  * desc:我的邀请记录
  */
+@Route(path = RouterPath.ROUTER_MY_INVITE_RECORD_PAGE)
 class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, InviteViewModel>(
     R.layout.activity_my_invite_record,
     InviteViewModel::class.java
@@ -30,8 +32,8 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
     private lateinit var helper: QuickAdapterHelper
     private var page = 1
     override fun initData() {
-        ErrorCode
         setFullScreenStatusBar()
+        setStatusBarStyle(false)
         helper = QuickAdapterHelper.Builder(recordAdapter)
             .build()
         mBinding.rvRecord.adapter = helper.adapter

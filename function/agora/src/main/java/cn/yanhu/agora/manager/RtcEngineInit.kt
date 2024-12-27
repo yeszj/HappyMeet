@@ -63,7 +63,6 @@ object RtcEngineInit {
             mRtcEngine = RtcEngineEx.create(config) as RtcEngineEx
             // 启用插件
             mRtcEngine!!.enableExtension("FaceUnity", "Effect", true)
-
             return mRtcEngine
         } catch (e: Exception) {
             // TraceUtils.getInstance().onEventObject("app_agora_fail", e.getMessage());

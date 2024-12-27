@@ -127,7 +127,9 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
     private var isCheck = false
     override fun initListener() {
         super.initListener()
-        mBinding.bgFace.setOnSingleClickListener { RouteIntent.lunchToBeautifulFace() }
+        mBinding.bgFace.setOnSingleClickListener {
+            checkBeautyPermission()
+        }
         mBinding.bgCreate.setOnSingleClickListener { createRoom() }
         mBinding.tvBuyTime.setOnSingleClickListener { showBuyLiveTimePop() }
         mBinding.ivAgreement.setOnSingleClickListener {
@@ -139,6 +141,19 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
                 mBinding.ivAgreement.setImageResource(cn.yanhu.commonres.R.drawable.svg_selected_r20)
             }
         }
+    }
+
+    private fun checkBeautyPermission() {
+
+        PermissionXUtils.checkBeautyPermission(mContext,object : PermissionXUtils.PermissionListener {
+            override fun onSuccess() {
+                RouteIntent.lunchToBeautifulFace()
+            }
+
+            override fun onFail() {
+            }
+
+        })
     }
 
 

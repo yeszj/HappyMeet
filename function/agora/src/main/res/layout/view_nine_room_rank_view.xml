@@ -28,18 +28,24 @@
             tools:itemCount="5"
             tools:listitem="@layout/adapter_live_room_rose_rank_item" />
 
+
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_onlineNum"
-            android:layout_width="@dimen/dp_28"
-            android:layout_height="@dimen/dp_28"
-            android:background="@drawable/circle_dot_white"
-            android:backgroundTint="@color/whiteColorAlpha50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_23"
+            android:background="@drawable/white_corner_12"
+            android:backgroundTint="#1AFFFFFF"
             android:gravity="center"
+            android:drawableStart="@drawable/icon_online_user"
             android:text="0"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:paddingVertical="@dimen/dp_4"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
             app:layout_constraintEnd_toStartOf="@+id/iv_exit"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_exit"
             android:layout_width="@dimen/dp_36"

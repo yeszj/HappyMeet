@@ -3,6 +3,7 @@ package cn.yanhu.agora.manager
 import android.Manifest
 import androidx.fragment.app.FragmentActivity
 import cn.yanhu.commonres.utils.PermissionXUtils
+import com.blankj.utilcode.util.AppUtils
 
 /**
  * @author: zhengjun
@@ -30,7 +31,7 @@ object PermissionManager {
         PermissionXUtils.checkPermission(
             context,
             permissions,
-            "对爱交友想访问您的麦克风权限，用于语音通话",
+            "${AppUtils.getAppName()}想访问您的麦克风权限，用于语音通话",
             "您拒绝授权麦克风权限，无法使用部分功能",
             permissionListener)
     }

@@ -39,5 +39,7 @@ object ImMessageParamsConfig {
 
     const val KEY_DARLING_FREE_COUNT = "darlingFreeCount"
 
+    const val KEY_WARNING_CONTENT = "alert"
+
 
 }

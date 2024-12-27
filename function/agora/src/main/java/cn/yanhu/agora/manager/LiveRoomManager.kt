@@ -48,7 +48,7 @@ object LiveRoomManager {
         onRoomNoExitListener: OnRoomNoExitListener? = null
     ) {
         if (AgoraSdkCacheManager.hasLoadAgoraSdk()) {
-            if (AgoraManager.isLiveRoom && AgoraManager.getInstence().currentRoomID == applyRoomId) {
+            if (AgoraManager.isLiveRoom && AgoraManager.getInstance().currentRoomID == applyRoomId) {
                 val liveRoomActivity = ApplicationProxy.instance.getLiveRoomActivity()
                 if (liveRoomActivity != null) {
                     MiniWindowManager.switchLiveToFront(
@@ -58,10 +58,12 @@ object LiveRoomManager {
                 } else {
                     showToast("房间数据异常")
                 }
+                DialogUtils.dismissLoading()
             } else {
                 enterCheck(context, applyRoomId, onRoomNoExitListener)
             }
         } else {
+            DialogUtils.dismissLoading()
             LiveDataEventManager.sendLiveDataMessage(
                 EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS,
                 true

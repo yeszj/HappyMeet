@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.databinding.AdapterBlindBannerItemBinding
 import cn.huanyuan.sweetlove.databinding.AdapterBlindRoomItemBinding
 import cn.huanyuan.sweetlove.databinding.AdapterBlindUserItemBinding
+import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.adapter.MyBannerImageAdapter
 import cn.yanhu.commonres.bean.BannerBean
@@ -19,6 +20,7 @@ import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.router.PageIntentUtil
 import com.blankj.utilcode.util.ActivityUtils
 import com.chad.library.adapter4.BaseMultiItemAdapter
+import com.chad.library.adapter4.util.setOnDebouncedItemClick
 import com.youth.banner.listener.OnBannerListener
 
 /**
@@ -43,15 +45,18 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
             override fun onBind(holder: VH, position: Int, item: RoomListBean?) {
                 holder.binding.apply {
                     roomBean = item
-                    ivStatus.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
-                        override fun onViewAttachedToWindow(v: View) {
-                            ivStatus.startAnimation()
+                    if ((ivStatus.tag as OnAttachStateChangeListener?)==null){
+                        val attachStateChangeListener =  object : OnAttachStateChangeListener {
+                            override fun onViewAttachedToWindow(v: View) {
+                                ivStatus.startAnimation()
+                            }
+                            override fun onViewDetachedFromWindow(v: View) {
+                                ivStatus.pauseAnimation()
+                            }
                         }
-
-                        override fun onViewDetachedFromWindow(v: View) {
-                            ivStatus.pauseAnimation()
-                        }
-                    })
+                        ivStatus.addOnAttachStateChangeListener(attachStateChangeListener)
+                        ivStatus.tag = attachStateChangeListener
+                    }
                     executePendingBindings()
                 }
             }
@@ -67,6 +72,9 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
             TYPE_FRIENDS,
             object : OnMultiItemAdapterListener<RoomListBean, RoomViewHolder> {
                 override fun onBind(holder: RoomViewHolder, position: Int, item: RoomListBean?) {
+                    if (item==null){
+                        return
+                    }
                     holder.binding.apply {
                         roomBean = item
                         if (rvAvatar.tag == null) {
@@ -76,6 +84,12 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
                             linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
                             linearLayoutManager.stackFromEnd = true//列表再底部开始展示
                             linearLayoutManager.reverseLayout = true//列表翻转
+                            roomAvatarAdapter.setOnDebouncedItemClick { _, _, _ ->
+                                LiveRoomManager.toLiveRoomPage(
+                                    context,
+                                    item.id.toString()
+                                )
+                            }
                             rvAvatar.layoutManager = linearLayoutManager
                             rvAvatar.addItemDecoration(object : RecyclerView.ItemDecoration() {
                                 override fun getItemOffsets(
@@ -92,20 +106,14 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
                                 }
                             })
                             rvAvatar.tag = roomAvatarAdapter
-                            roomAvatarAdapter.submitList(item?.roomPortraitList)
+                            roomAvatarAdapter.submitList(item.roomPortraitList)
                         } else {
-                            rvAvatar.adapter = rvAvatar.tag as RecyclerView.Adapter<*>?
+                            val adapter = rvAvatar.tag as RoomAvatarAdapter?
+                            adapter?.apply {
+                                rvAvatar.adapter = adapter
+                                adapter.submitList(item.roomPortraitList)
+                            }
                         }
-                        ivStatus.addOnAttachStateChangeListener(object :
-                            OnAttachStateChangeListener {
-                            override fun onViewAttachedToWindow(v: View) {
-                                ivStatus.startAnimation()
-                            }
-
-                            override fun onViewDetachedFromWindow(v: View) {
-                                ivStatus.pauseAnimation()
-                            }
-                        })
                         executePendingBindings()
                     }
                 }
@@ -124,13 +132,20 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
         addItemType(TYPE_BANNER, object : OnMultiItemAdapterListener<RoomListBean, VH2> {
             override fun onBind(holder: VH2, position: Int, item: RoomListBean?) {
                 holder.binding.apply {
-                    banner.addBannerLifecycleObserver(context)
-                    banner.setAdapter(MyBannerImageAdapter(banner, item!!.banners))
-                    banner.setOnBannerListener(object : OnBannerListener<BannerBean> {
-                        override fun OnBannerClick(data: BannerBean, position: Int) {
-                            PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)
-                        }
-                    })
+                    val myBannerImageAdapter = MyBannerImageAdapter(banner, item!!.banners)
+                    val tag = banner.tag as MyBannerImageAdapter?
+                    if (tag!=null){
+                        tag.setDatas(item.banners)
+                    }else{
+                        banner.addBannerLifecycleObserver(context)
+                        banner.setAdapter(myBannerImageAdapter)
+                        banner.tag = myBannerImageAdapter
+                        banner.setOnBannerListener(object : OnBannerListener<BannerBean> {
+                            override fun OnBannerClick(data: BannerBean, position: Int) {
+                                PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)
+                            }
+                        })
+                    }
                 }
             }
 
@@ -151,12 +166,12 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
                 return if (banners.isNotEmpty()) {
                     return TYPE_BANNER
                 } else {
-                    TYPE_ROOM
-//                    if (roomListBean.roomType < 3) {
-//                        TYPE_ROOM
-//                    } else {
-//                        TYPE_FRIENDS
-//                    }
+                    //TYPE_ROOM
+                    if (roomListBean.roomType < 3 || roomListBean.roomType == RoomListBean.TYPE_ROBOT_ROOM) {
+                        TYPE_ROOM
+                    } else {
+                        TYPE_FRIENDS
+                    }
                 }
             }
         })

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_corner_20"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/dp_20">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="直播间置顶"
+            android:textColor="@color/color_222222"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontBold" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_20"
+            android:text="请选择置顶时长："
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_15" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_15"
+            android:paddingStart="@dimen/dp_8"
+            tools:itemCount="5"
+            tools:listitem="@layout/adapter_sticky_time_item"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="5" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_15">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="@dimen/dp_130"
+                android:layout_height="@dimen/dp_42"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:background="@drawable/white_corner_30"
+                android:backgroundTint="@color/blackAlpha96"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="@color/color_888888"
+                android:textSize="@dimen/sp_16" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_sure"
+                android:layout_width="@dimen/dp_130"
+                android:layout_height="@dimen/dp_42"
+                android:background="@drawable/shape_common_btn_r30"
+                android:gravity="center"
+                android:text="确认"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                app:fontType="@string/fontBold" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

@@ -98,7 +98,7 @@ class TabBlindDateFrg : BaseFragment<FrgTabBlinddateBinding, MainViewModel>(
     private fun initTabLayout() {
         val magicIndicator = mBinding.tabLayout
         val commonNavigator = CommonNavigator(mContext)
-        val list = mutableListOf("大厅")
+        val list = mutableListOf("大厅","交友","约会")
         commonNavigator.adapter = CommonIndicatorAdapter(
             mBinding.viewPager,
             list.toTypedArray(),
@@ -117,8 +117,8 @@ class TabBlindDateFrg : BaseFragment<FrgTabBlinddateBinding, MainViewModel>(
             frgList = fragments
         }else{
             frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_RECOMMEND))
-            //frgList.add(BlindDateUserRoomListFrg())
-            // frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_FRIENDS))
+            frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_FRIENDS))
+            frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_EXCLUSIVE))
         }
         mBinding.viewPager.adapter = MyFrgFragmentStateAdapter(this@TabBlindDateFrg, frgList)
         mBinding.viewPager.offscreenPageLimit = frgList.size

@@ -29,6 +29,8 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var colseMic: Boolean = false
     var sameSex: Boolean = false
     var seatNum: Int = 0
+    var addFriendWay:Int = 0
+
 
     @Bindable
     var roseNum: String = "0"

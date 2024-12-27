@@ -14,17 +14,21 @@ import cn.zj.netrequest.ext.parseState
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager
 import cn.yanhu.agora.R
+import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.ViewSevenRoomRankViewBinding
+import cn.yanhu.agora.pop.LiveRoomSeatManagerPop
 import cn.yanhu.agora.pop.RoomAngleRankPop
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomListBean
+import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.PageIntentUtil
 import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 
 /**
@@ -136,15 +140,15 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
     override fun initListener() {
         super.initListener()
         seatUserAdapter.addOnItemChildClickListener(
-            cn.yanhu.agora.R.id.anchorSeatInfo,
+            R.id.anchorSeatInfo,
             childItemClickListener
         )
         seatUserAdapter.addOnItemChildClickListener(
-            cn.yanhu.agora.R.id.vg_parent,
+            R.id.vg_parent,
             childItemClickListener
         )
         seatUserAdapter.addOnItemChildClickListener(
-            cn.yanhu.agora.R.id.iv_voiceStatus,
+            R.id.iv_voiceStatus,
             childItemClickListener
         )
     }
@@ -159,20 +163,22 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
                 val item = seatUserAdapter.getItem(position) ?: return
 
                 when (view.id) {
-                    cn.yanhu.agora.R.id.iv_voiceStatus -> {
+                    R.id.iv_voiceStatus -> {
                         //开关麦
                         val roomUserSeatInfo = item.roomUserSeatInfo ?: return
                         if (localUserId.toString() == roomUserSeatInfo.userId) {
                             switchMikeAlert(!item.mikeUser, item.id)
+                        }else if(isOwner){
+                            ownerSwitchMikeAlert(!item.mikeUser, item.id)
                         }
                     }
 
-                    cn.yanhu.agora.R.id.vg_parent, cn.yanhu.agora.R.id.anchorSeatInfo -> {
+                    R.id.vg_parent, R.id.anchorSeatInfo -> {
                         val roomUserSeatInfo = item.roomUserSeatInfo
                         if (roomUserSeatInfo == null) {
                             if (isOwner) {
                                 //邀请上麦弹框
-                                showOnlineUserList()
+                                showSeatUserList()
                             } else {
                                 //上麦
                                 val seatNum = item.id.toString()
@@ -193,5 +199,22 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
             }
 
         }
+
+    private var liveRoomUserListPop: LiveRoomSeatManagerPop? = null
+    fun showSeatUserList() {
+        request({ agoraRxApi.getInviteList(roomId, "0", "0",1) },
+            object : OnRequestResultListener<MutableList<UserDetailInfo>> {
+                override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
+                    val userList = data.data ?: return
+                    if (CommonUtils.isPopShow(liveRoomUserListPop)) {
+                        return
+                    }
+                    liveRoomUserListPop = LiveRoomSeatManagerPop.showDialog(
+                        mContext,
+                        userList,roomSourceBean, onSendSeatInviteListener = inviteSeatListener
+                    )
+                }
+            })
+    }
 
 }

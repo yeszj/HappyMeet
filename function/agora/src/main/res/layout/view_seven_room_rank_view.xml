@@ -31,13 +31,16 @@
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_onlineNum"
-            android:layout_width="@dimen/dp_28"
-            android:layout_height="@dimen/dp_28"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_23"
-            android:background="@drawable/circle_dot_white"
-            android:backgroundTint="@color/whiteColorAlpha50"
+            android:background="@drawable/white_corner_12"
+            android:backgroundTint="#1AFFFFFF"
             android:gravity="center"
+            android:drawableStart="@drawable/icon_online_user"
             android:text="0"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:paddingVertical="@dimen/dp_4"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
             app:layout_constraintEnd_toStartOf="@+id/iv_exit"
@@ -61,7 +64,7 @@
             android:src="@drawable/svg_room_rule"
             android:visibility="@{isAngle?View.VISIBLE:View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/rv_rank" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_rank"

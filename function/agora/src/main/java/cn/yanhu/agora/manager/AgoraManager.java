@@ -23,6 +23,7 @@ import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcConnection;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineEx;
+import io.agora.rtc2.video.CameraCapturerConfiguration;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 
@@ -56,7 +57,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         private static final AgoraManager agoraManager = new AgoraManager();
     }
 
-    public static AgoraManager getInstence() {
+    public static AgoraManager getInstance() {
         return AgoraManagerHolder.agoraManager;
     }
 
@@ -91,6 +92,7 @@ public class AgoraManager implements IMediaExtensionObserver {
 
         // SDK 默认关闭视频。调用 enableVideo 开启视频
         mRtcEngine.enableVideo();
+
         // 在互动直播中，设置频道场景为 BROADCASTING
         mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
         setupLocalAudio(true);
@@ -122,6 +124,8 @@ public class AgoraManager implements IMediaExtensionObserver {
     public void setVideoEncoderConfiguration(int width, int height) {
         VideoEncoderConfiguration videoEncoderConfiguration = new VideoEncoderConfiguration();
         videoEncoderConfiguration.dimensions = new VideoEncoderConfiguration.VideoDimensions(width, height);
+        CameraCapturerConfiguration cameraCapturerConfiguration = new CameraCapturerConfiguration(new CameraCapturerConfiguration.CaptureFormat(width,height,VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15.getValue()));
+        mRtcEngine.setCameraCapturerConfiguration(cameraCapturerConfiguration);
         mRtcEngine.setVideoEncoderConfiguration(videoEncoderConfiguration);
     }
 

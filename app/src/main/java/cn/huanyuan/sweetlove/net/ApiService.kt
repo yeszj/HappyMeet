@@ -14,6 +14,7 @@ import cn.huanyuan.sweetlove.bean.TaskResponse
 import cn.huanyuan.sweetlove.bean.UserLevelResponse
 import cn.huanyuan.sweetlove.bean.WalletInfo
 import cn.huanyuan.sweetlove.bean.WalletRecordResponse
+import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.AuthCenterInfo
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.EditUserInfo
@@ -45,7 +46,7 @@ import retrofit2.http.*
  * created: 2021/9/17
  * desc:
  */
-interface ApiService {
+interface ApiService : CommonApiService {
     @GET("app/v1/home/getNavigationBar")
     suspend fun getMainTabInfo(): BaseBean<MutableList<TabEntity>>
 
@@ -248,8 +249,6 @@ interface ApiService {
     @POST("app/v1/commodity/dressUpCommodity")
     suspend fun dressUpCommodity(@Body request: DressUpRequest): BaseBean<Boolean>
 
-    @GET("app/v1/config/invite_slogans")
-    suspend fun getInviteContents(): BaseBean<String>
 
     //文件上传
     @POST("file/uploadImg")
@@ -324,4 +323,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("app/v1/juvenileModel/closeJuvenileMode")
     suspend fun closeJuvenileMode(@Field("password") password: String): BaseBean<Boolean>
+
+    @GET("app/v1/account/recharge/remind")
+    suspend fun checkAuthTip(): BaseBean<Int>
 }

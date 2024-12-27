@@ -27,7 +27,6 @@ class BuyLiveTimeAdapter : BaseQuickAdapter<LiveTimePriceInfo, BuyLiveTimeAdapte
     override fun onBindViewHolder(holder: VH, position: Int, item: LiveTimePriceInfo?) {
         holder.binding.apply {
             priceInfo = item
-            changeSelect(position)
             executePendingBindings()
         }
     }
@@ -49,7 +48,8 @@ class BuyLiveTimeAdapter : BaseQuickAdapter<LiveTimePriceInfo, BuyLiveTimeAdapte
         if (selectPosition == position) {
             ivSelect.visibility = View.VISIBLE
             vgParent.setBackgroundResource(R.drawable.bg_common_item_select)
-        } else {
+        } else {            changeSelect(position)
+
             ivSelect.visibility = View.INVISIBLE
             vgParent.setBackgroundResource(R.drawable.bg_pay_normal)
         }

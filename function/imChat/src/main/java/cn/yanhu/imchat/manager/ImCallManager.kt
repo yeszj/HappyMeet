@@ -16,6 +16,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
+import com.blankj.utilcode.util.AppUtils
 import com.google.gson.Gson
 
 /**
@@ -71,7 +72,7 @@ object ImCallManager {
         PermissionXUtils.checkPermission(
             activity,
             permissions,
-            "对爱交友想访问您的麦克风权限，用于语音通话",
+            "${AppUtils.getAppName()}想访问您的麦克风权限，用于语音通话",
             "您拒绝授权麦克风权限，无法使用语音通话功能",
             object : PermissionXUtils.PermissionListener {
                 override fun onSuccess() {
@@ -92,7 +93,7 @@ object ImCallManager {
         PermissionXUtils.checkPermission(
             activity,
             permissions,
-            "对爱交友想访问您的以下权限，用于视频通话",
+            "${AppUtils.getAppName()}想访问您的以下权限，用于视频通话",
             "您拒绝授权相关权限，无法使用视频通话功能",
             object : PermissionXUtils.PermissionListener {
                 override fun onSuccess() {
@@ -138,7 +139,7 @@ object ImCallManager {
         toUserId: String,
     ) {
         if (!ApplicationProxy.instance.hasLoadAgoraSdk()) {
-            LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRES,true)
+            LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS,true)
             return
         }
         if (hasStartCall) {

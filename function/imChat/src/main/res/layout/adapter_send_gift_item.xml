@@ -15,15 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_102">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="@dimen/dp_4"
-            drawableUrl="@{giftInfo.tagIcon}"
-            placeholderId="@{-1}"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_height="@dimen/dp_15"
-            android:adjustViewBounds="true"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_gift"
@@ -36,6 +27,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/svg_gift" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            drawableUrl="@{giftInfo.tagIcon}"
+            placeholderId="@{-1}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_15"
+            android:layout_margin="@dimen/dp_4"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_giftName"

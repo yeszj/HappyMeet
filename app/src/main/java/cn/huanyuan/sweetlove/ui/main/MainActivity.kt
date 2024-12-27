@@ -35,10 +35,12 @@ import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.bean.response.RoseRechargeResponse
+import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.loading.MainLoadingCallBack
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.commonres.manager.AppManager
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.task.AppPopTypeManager
 import cn.yanhu.imchat.api.imChatRxApi
@@ -58,6 +60,7 @@ import com.chaychan.library.BottomBarItem
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
+import com.permissionx.guolindev.PermissionX
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -74,15 +77,19 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     R.layout.activity_main,
     MainViewModel::class.java
 ) {
-    private var appVersionInfo: AppVersionInfo? =null
-    private var isOpen:Boolean = false
+    private var appVersionInfo: AppVersionInfo? = null
+    private var isOpen: Boolean = false
     private var titleList = mutableListOf<String>()
     private var mFragmentList = mutableListOf<Fragment>()
     private var tabList: MutableList<TabEntity> = mutableListOf()
     override fun initData() {
         setFullScreenStatusBar(true)
         setStatusBarStyle(false)
-        BeautySDKManager.sharedInstance().downloadBundle()
+        AppManager.setAppState(
+            AppManager.STATE_FOREGROUND,
+            PermissionX.areNotificationsEnabled(mContext)
+        )
+        downloadBeautySdk()
         downloadAgoraSdk()
         getRechargeInfo()
         getGiftInfo()
@@ -91,6 +98,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         checkInit()
     }
 
+
+    private var checkAuthInfo: BaseBean<Int>? = null
     private fun checkInit() {
         mContext.lifecycleScope.launch {
             runCatching {
@@ -99,24 +108,32 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                         rxApi.checkVersion()
                     }
                     val two = async { rxApi.checkIsOpenJuvenileMode() }
+                    val three = async { rxApi.checkAuthTip() }
                     val await = one.await()
                     val await1 = two.await()
+                    checkAuthInfo = three.await()
                     appVersionInfo = await.data
                     isOpen = await1.data == true
                 }
             }.onFailure {
             }.onSuccess {
                 if (appVersionInfo == null) {
-                    if (isOpen){
+                    if (isOpen) {
                         //跳转到青少年模式页面
-                        TeenAgeModeActivity.lunch(mContext,true)
-                    }else{
-                        if (!AppCacheManager.hasShowTeenApp){
-                            BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP,"")
+                        TeenAgeModeActivity.lunch(mContext, true)
+                    } else {
+                        if (checkAuthInfo != null && checkAuthInfo?.code == 200 && checkAuthInfo?.data != 0) {
+                            BaseApplication.addPopTask(
+                                ChatConstant.ACTION_FORCE_AUTH,
+                                checkAuthInfo!!.data.toString()
+                            )
+                        }
+                        if (!AppCacheManager.hasShowTeenApp) {
+                            BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP, "")
                             AppCacheManager.hasShowTeenApp = true
                         }
                     }
-                }else{
+                } else {
                     showVersionPop(appVersionInfo!!)
                 }
             }
@@ -147,6 +164,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     sdkDownloadProgress
                 )
             }
+        LiveEventBus.get<Boolean>(EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS)
+            .observe(this) {
+                showDownloadBeautySdkProgressPop(beautySdkDownloadProgress)
+            }
         LiveEventBus.get<Int>(EventBusKeyConfig.UNREAD_COUNT).observe(this) {
             val tabMsgPosition = getTabMsgPosition()
             val bottomItem = mBinding.tabLayout.getBottomItem(tabMsgPosition)
@@ -154,6 +175,29 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         }
 
     }
+
+    private var beautySdkDownloadProgress = 0
+    private fun downloadBeautySdk() {
+        BeautySDKManager.sharedInstance().downloadBundle(object : OnDownloadProgressListener {
+            override fun onProgress(progress: Int) {
+                if (progress >= beautySdkDownloadProgress) {
+                    beautySdkDownloadProgress = progress
+                    logcom("downloadBeautySdk", "progress=\$progress")
+                    if (CommonUtils.isPopShow(beautyDownloadProgressPop)) {
+                        beautyDownloadProgressPop?.setProgress(beautySdkDownloadProgress)
+                    }
+                }
+            }
+
+            override fun onDownLoadFail() {
+                beautySdkDownloadProgress = 0
+                beautyDownLoadFail = true
+                beautyDownloadProgressPop?.dismiss()
+            }
+
+        })
+    }
+
 
     private var sdkDownloadProgress = 0
     private fun downloadAgoraSdk() {
@@ -169,6 +213,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             }
 
             override fun onDownLoadFail() {
+                sdkDownloadProgress = 0
                 downLoadFail = true
                 if (downloadProgressPop != null) {
                     downloadProgressPop?.dismiss()
@@ -178,6 +223,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private var downLoadFail = false
+    private var beautyDownLoadFail = false
 
     private var downloadProgressPop: DownloadProgressPop? = null
 
@@ -199,6 +245,26 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         }
     }
 
+
+    private var beautyDownloadProgressPop: DownloadProgressPop? = null
+
+    private fun showDownloadBeautySdkProgressPop(progress: Int) {
+        if (!CommonUtils.isPopShow(beautyDownloadProgressPop)) {
+            if (beautyDownLoadFail) {
+                downloadBeautySdk()
+            }
+            beautyDownloadProgressPop = DownloadProgressPop.showDialog(
+                ActivityUtils.getTopActivity(),
+                progress,
+                object : SimpleCallback() {
+                    override fun onDismiss(popupView: BasePopupView) {
+                        beautyDownloadProgressPop = null
+                    }
+                })
+        } else {
+            beautyDownloadProgressPop?.setProgress(progress)
+        }
+    }
 
     private var appVersionUpdatePop: AppVersionUpdatePop? = null
     private fun showVersionPop(it: AppVersionInfo) {
@@ -272,11 +338,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     private fun initFrg() {
         val fragments = supportFragmentManager.fragments
-        if (fragments.size>0){
+        if (fragments.size > 0) {
             mFragmentList = fragments
         }
         tabList.forEach {
-            if (fragments.size<=0){
+            if (fragments.size <= 0) {
                 when (it.id) {
                     1 -> {
                         mFragmentList.add(TabSameCityFrg())
@@ -305,13 +371,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun createBottomBarItem(tabEntity: TabEntity): BottomBarItem {
-        val bottomBarItem = BottomBarItem.Builder(this).titleTextSize(12).titleSelectedColor(
+        val bottomBarItem = BottomBarItem.Builder(this)
+            .titleTextSize(12)
+            .iconHeight(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_32))
+            .iconWidth(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_32))
+            .titleSelectedColor(
             cn.yanhu.baselib.R.color.colorMain
-        ).titleNormalColor(cn.yanhu.baselib.R.color.fontTextColor)
+        ).titleNormalColor(cn.yanhu.baselib.R.color.color6)
             .unreadNumThreshold(99)
             .unreadTextColor(R.color.white)
-            .iconHeight(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20))
-            .iconWidth(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20))
             //还有很多属性，详情请查看Builder里面的方法
             .create(
                 cn.yanhu.commonres.R.drawable.tab_default_bg,
@@ -360,6 +428,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 mContext
             )
         }
+        mBinding.viewPager.setCurrentItem(2, false)
 //        mBinding.viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
 //            override fun onPageSelected(position: Int) {
 //                super.onPageSelected(position)

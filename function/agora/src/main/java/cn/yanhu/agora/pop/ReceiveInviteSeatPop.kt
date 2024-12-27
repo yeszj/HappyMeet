@@ -2,10 +2,15 @@ package cn.yanhu.agora.pop
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.TextUtils
+import android.view.View
 import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.PopReceiveInviteSeatBinding
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
+import cn.yanhu.commonres.bean.RoomDetailInfo
+import cn.yanhu.commonres.manager.AppCacheManager
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.hyphenate.chat.EMMessage
 import com.lxj.xpopup.XPopup
@@ -28,6 +33,23 @@ class ReceiveInviteSeatPop(context: Context, val it: EMMessage, private val onCl
         mBiding = PopReceiveInviteSeatBinding.bind(popupImplView)
         val fromNickName: String = it.getStringAttribute("fromNickName")
         val portrait: String = it.getStringAttribute("portrait")
+
+        if (AppCacheManager.isMan()){
+            val roomInfo = it.getStringAttribute("roomInfo", "")
+            if (!TextUtils.isEmpty(roomInfo)){
+                val fromJson = GsonUtils.fromJson(roomInfo, RoomDetailInfo::class.java)
+                var tips ="上麦需消耗${fromJson.seatRoseNum}玫瑰"
+                if (fromJson.isPrivateRoom()){
+                    tips =  "${tips}/分钟"
+                }
+                mBiding.tvRoseNum.text = tips
+            }else{
+                mBiding.tvRoseNum.visibility = View.GONE
+            }
+        }else{
+            mBiding.tvRoseNum.visibility = View.GONE
+        }
+
         VibrateUtils.vibrate(1000L)
         GlideUtils.load(context, portrait, mBiding.ivAvatar)
         mBiding.tvNickName.text = fromNickName

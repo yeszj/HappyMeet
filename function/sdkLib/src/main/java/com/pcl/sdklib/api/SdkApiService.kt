@@ -18,6 +18,10 @@ import retrofit2.http.Query
  * desc:
  */
 interface SdkApiService {
+
+    @GET("/app/v1/pay/payCheck")
+    suspend fun payCheck(@Query("rechargeId") rechargeId: String?): BaseBean<String>
+
     //获取支付宝支付参数
     @POST("app/v1/pay/alipay")
     suspend fun alipay(

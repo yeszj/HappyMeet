@@ -27,7 +27,7 @@ fun setUserAvatar(
 }
 
 @BindingAdapter(value = ["tagValue", "tagColorId","tagTextColorId"], requireAll = false)
-fun setTagValue(userAgeView: UserTagView, tagValue: String, tagColorId: Int,tagTextColorId:Int) {
+fun setTagValue(userAgeView: UserTagView, tagValue: String?, tagColorId: Int,tagTextColorId:Int) {
     userAgeView.setTagValue(tagValue, tagColorId,tagTextColorId)
 }
 

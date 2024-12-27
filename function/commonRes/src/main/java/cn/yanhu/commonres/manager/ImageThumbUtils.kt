@@ -1,5 +1,7 @@
 package cn.yanhu.commonres.manager
 
+import android.text.TextUtils
+
 /**
  * @author: zhengjun
  * created: 2024/1/18
@@ -11,8 +13,11 @@ object ImageThumbUtils {
      * 根据原图地址 获取缩略图地址
      */
     @JvmStatic
-    fun getThumbUrl(url: String): String {
-        if (url.contains("_thumb")){
+    fun getThumbUrl(url: String?): String {
+        if(TextUtils.isEmpty(url)){
+            return ""
+        }
+        if (url!!.contains("_thumb")){
             return url
         }
         return if (url.endsWith(".mp4")){

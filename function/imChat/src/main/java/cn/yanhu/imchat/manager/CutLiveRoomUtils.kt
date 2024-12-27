@@ -25,14 +25,14 @@ object CutLiveRoomUtils {
         if ( topActivity==null || isShow()){
             return
         }
-        msgDialog =  DialogUtils.showConfirmDialog("",{
+        msgDialog =  DialogUtils.showConfirmDialog(msg,{
             ApplicationProxy.instance.finishLiveRoomActivity(object : OnRoomLeaveListener{
                 override fun onLeaveSuccess() {
                     changeListener.sure()
                 }
             })
         },{
-        },msg,cancel = "取消",confirm = "确定离开")
+        },"",cancel = "取消",confirm = "确定离开")
         msgDialog?.show()
     }
 

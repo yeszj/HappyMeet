@@ -109,7 +109,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/im_system_msg_icon"
                 app:layout_constraintEnd_toStartOf="@+id/tv_unReadSystemMsg"
                 app:layout_constraintStart_toStartOf="@+id/im_system_msg_title"
-                android:text="严禁红娘以承诺见面、交换微信、做女朋友等理由" />
+                tools:text="严禁红娘以承诺见面、交换微信、做女朋友等理由" />
 
             <TextView
                 android:id="@+id/im_system_msg_time"
@@ -120,7 +120,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/im_system_msg_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/im_system_msg_title"
-                android:text="13:54" />
+                tools:text="13:54" />
 
             <TextView
                 android:id="@+id/tv_unReadSystemMsg"
@@ -134,10 +134,11 @@
                 android:paddingBottom="@dimen/dp_2"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_10"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/im_system_msg_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/im_system_msg_content"
-                android:text="3" />
+                tools:text="3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

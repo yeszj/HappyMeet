@@ -138,7 +138,7 @@ class UserTagView : LinearLayout {
      * 群组在线人数标签
      */
     @SuppressLint("SetTextI18n")
-    fun setTagValue(value: String,colorId:Int,tagTextColorId:Int) {
+    fun setTagValue(value: String?,colorId:Int,tagTextColorId:Int) {
         TextViewDrawableUtils.setDrawableLeft(
             tvTag,
             null

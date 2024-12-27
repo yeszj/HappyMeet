@@ -7,6 +7,9 @@ import cn.yanhu.baselib.queue.BaseQueueTask
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.config.ChatConstant
 import cn.huanyuan.sweetlove.func.dialog.TeenTipPop
+import cn.yanhu.commonres.bean.CommonTipsInfo
+import cn.yanhu.commonres.pop.CommonTipDialog
+import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.task.AppPopTypeManager
 import com.blankj.utilcode.util.ActivityUtils
 import com.google.gson.Gson
@@ -33,7 +36,38 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
                 //礼物飘屏
                 showGiftGlobal(topActivity)
             }
+            ChatConstant.ACTION_FORCE_AUTH ->{
+                showAuthTipPop(info.toInt(),topActivity)
+            }
         }
+    }
+
+    private var forceAuthTipDialog: CommonTipDialog? = null
+    private fun showAuthTipPop(type: Int, topActivity: Activity) {
+        if (CommonUtils.isPopShow(forceAuthTipDialog)) {
+            return
+        }
+        val commonTipsInfo = CommonTipsInfo(
+            "您的账户存在风险",
+            "根据监管要求，需要尽快完善实名信息，避免影响您的后续使用。",
+            "立即完善",
+            type == 2,
+            cn.yanhu.commonres.R.drawable.icon_secure_tip,
+            type == 2
+        )
+        forceAuthTipDialog =
+            CommonTipDialog.showDialog(topActivity, commonTipsInfo, object : CommonTipDialog.OnClickBtnListener {
+                override fun onClickCancel() {}
+                override fun onClickBtn() {
+                    RouteIntent.lunchToRealNamPage()
+                }
+            }, object : SimpleCallback() {
+                override fun onDismiss(popupView: BasePopupView) {
+                    super.onDismiss(popupView)
+                    forceAuthTipDialog = null
+                    doNextTask()
+                }
+            })
     }
 
     private fun showGiftGlobal(topActivity: Activity?) {

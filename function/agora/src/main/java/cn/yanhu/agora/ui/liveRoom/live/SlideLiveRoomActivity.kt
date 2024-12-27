@@ -49,8 +49,8 @@ import com.smart.adapter.interf.OnLoadMoreListener
 
     private fun sdkInit(){
         //声网初始化
-        AgoraManager.getInstence().init(mContext, 0, null)
-        AgoraManager.getInstence().setVideoEncoderConfiguration(250, 280)
+        AgoraManager.getInstance().init(mContext, 0, null)
+        AgoraManager.getInstance().setVideoEncoderConfiguration(250, 280)
     }
 
 

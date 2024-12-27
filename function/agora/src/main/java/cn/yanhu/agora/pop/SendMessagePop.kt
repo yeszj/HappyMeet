@@ -3,6 +3,7 @@ package cn.yanhu.agora.pop
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
+import android.view.KeyEvent
 import android.view.View
 import cn.yanhu.agora.R
 import cn.yanhu.agora.api.agoraRxApi
@@ -43,23 +44,42 @@ class SendMessagePop(
 
     private var mBinding: PopSendChatRoomMessageBinding? = null
 
+    private var altInfo = ""
+
     @SuppressLint("SetTextI18n")
     override fun onCreate() {
         super.onCreate()
         mBinding = PopSendChatRoomMessageBinding.bind(popupImplView)
+
         setMentionInfo(user)
         initEmojiAdapter()
         initListener()
         getExpression()
         setOperateImg()
+        mBinding!!.etMessage.setOnKeyListener(object : OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_DEL && event?.action == KeyEvent.ACTION_DOWN) {
+                    val toString = mBinding!!.etMessage.text.toString()
+                    if (toString == altInfo) {
+                        mBinding!!.etMessage.setText("")
+                        return true
+                    }
+                    return false
+                }
+                return false
+            }
+        })
     }
 
     @SuppressLint("SetTextI18n")
     private fun setMentionInfo(user: BaseUserInfo?) {
+        if (user != null) {
+            altInfo = "@${user.nickName} "
+        }
         if (isShow) {
             mBinding?.apply {
                 if (user != null) {
-                    this.etMessage.setText("@${user.nickName} ")
+                    this.etMessage.setText(altInfo)
                     this.etMessage.setSelection(this.etMessage.text.toString().length)
                 } else {
                     this.etMessage.setText("")
@@ -91,12 +111,12 @@ class SendMessagePop(
             }
             this.ivSend.setOnSingleClickListener {
                 var content = this.etMessage.text.toString().trim()
-                if (user != null) {
-                    content = content.replace("@${user?.nickName}", "")
-                    messageSendListener.onSendMessage(content)
+                if (user != null && content.contains(altInfo)) {
+                    content = content.replace(altInfo, "")
+                    messageSendListener.onSendMessage(content,true)
                 } else {
                     if (!TextUtils.isEmpty(content)) {
-                        messageSendListener.onSendMessage(content)
+                        messageSendListener.onSendMessage(content,false)
                     }
                 }
                 this.etMessage.setText("")
@@ -167,9 +187,9 @@ class SendMessagePop(
     override fun beforeShow() {
         super.beforeShow()
         mBinding?.apply {
-            if(isKeyBoard){
+            if (isKeyBoard) {
                 rvExpression.visibility = View.GONE
-            }else{
+            } else {
                 rvExpression.visibility = View.VISIBLE
             }
         }
@@ -182,7 +202,7 @@ class SendMessagePop(
 
 
     interface OnMessageSendListener {
-        fun onSendMessage(content: String)
+        fun onSendMessage(content: String,hasAlt:Boolean)
         fun onSendEmoji(url: String)
         fun onShowEmoji(height: Int)
     }

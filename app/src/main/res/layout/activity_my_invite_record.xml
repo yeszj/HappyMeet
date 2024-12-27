@@ -9,23 +9,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@color/base_bg_gray"
         android:layout_height="match_parent">
-
-        <com.lihang.ShadowLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_200"
-            app:hl_endColor="#B19EFF"
-            app:hl_startColor="#6385FF"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <cn.yanhu.baselib.view.TitleBar
             android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:titleColor="@color/white"
-            app:titleLeftIco="@drawable/svg_white_back"
-            app:titleLeftName="我的邀请"
+            app:titleColor="@color/fontTextColor"
+            app:titleLeftIco="@drawable/svg_black_back"
+            app:titleLeftName="邀请收益排行"
             tools:layout_marginTop="@dimen/dp_40" />
 
         <cn.yanhu.baselib.refresh.MyRefreshLayout

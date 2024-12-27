@@ -14,6 +14,7 @@ import com.baidu.idl.face.platform.FaceEnvironment
 import com.baidu.idl.facelive.api.FaceLiveManager
 import com.baidu.idl.facelive.api.entity.FaceLiveConfig
 import com.baidu.idl.facelive.api.entity.LivenessValueModel
+import com.blankj.utilcode.util.AppUtils
 import com.pcl.sdklib.bean.BaiduPackBean
 import com.pcl.sdklib.bean.LivenessVsIdcardResult
 import com.pcl.sdklib.sdk.baiduFace.config.AuthConfigManager
@@ -41,7 +42,7 @@ class BaiduFaceAuthUtils {
         PermissionXUtils.checkPermission(
             activity,
             permissions,
-            "对爱交友想访问您的以下权限，用于实名认证",
+            "${AppUtils.getAppName()}想访问您的以下权限，用于实名认证",
             "您拒绝授权权限，无法开始实名认证服务",
             object : PermissionXUtils.PermissionListener {
                 override fun onSuccess() {

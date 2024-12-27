@@ -14,7 +14,9 @@ import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.RequestCodeManager
 import cn.yanhu.commonres.router.RouterPath
+import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
+import cn.zj.netrequest.status.ErrorCode
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.RegexUtils
@@ -97,10 +99,18 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
     private fun checkIsCanBaiduFace() {
         DialogUtils.showLoading()
         mViewModel.ifCanBaiduFace()
-        mViewModel.canBaidFaceObservable.observe(this) {
+        mViewModel.canBaidFaceObservable.observe(this) { it ->
             parseState(it, {
                 startBaiduFaceAuth()
             }, {
+                if (it.code == ErrorCode.CODE_CANT_FACE_AUTH){
+                    DialogUtils.showConfirmDialog("温馨提示",{
+                        ApplicationProxy.instance.askCustomer()
+                    },{
+                    },it.msg!!,cancel = "稍后再试",confirm = "联系客服")
+                }else{
+                    showToast(it.msg)
+                }
                 DialogUtils.dismissLoading()
             })
         }

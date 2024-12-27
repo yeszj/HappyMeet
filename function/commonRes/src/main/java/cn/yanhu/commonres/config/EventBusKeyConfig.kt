@@ -18,9 +18,11 @@ object EventBusKeyConfig {
     const val RECEIVE_CMD_MSG = "receive_cmd_msg"
     const val RECALLED_MSG = "recalled_msg"
     const val SHOW_SEND_GIFT = "show_send_gift"
-    const val SHOW_AGORA_SDK_DOWNLOAD_PROGRES = "show_agora_sdk_download_progres"
     const val DOWNLOAD_AGORA_SDK_SUCCESS = "download_agora_sdk_success"
     const val SHOW_AGORA_SDK_DOWNLOAD_PROGRESS = "show_agora_sdk_download_progress"
+
+    const val SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS = "show_beauty_sdk_download_progress"
+
     const val UNREAD_COUNT = "unreadCount"
     const val REFRESH_IM_CONVERSATION = "refresh_im_conversation"
     const val CLOSECHATDIALOG = "closechatdialog"

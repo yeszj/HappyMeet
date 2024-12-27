@@ -5,11 +5,15 @@ import cn.yanhu.agora.bean.AngleRoomResultInfo
 import cn.yanhu.agora.bean.CheckCallBalanceRes
 import cn.yanhu.agora.bean.ConfigSdkVersion
 import cn.yanhu.agora.bean.EnterCheckResponse
+import cn.yanhu.agora.bean.LiveIncomeDetailInfo
+import cn.yanhu.agora.bean.LiveRecordResponse
+import cn.yanhu.agora.bean.LiveStatisticTotalInfo
 import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomLeaveResponse
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.bean.request.CreateRoomRequest
+import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.ExpressionInfo
 import cn.yanhu.commonres.bean.RoomDetailInfo
@@ -26,7 +30,7 @@ import retrofit2.http.*
  * created: 2022/5/20
  * desc:
  */
-interface AgoraApiService {
+interface AgoraApiService : CommonApiService {
 
     @GET("app/v1/room/list")
     suspend fun getRoomList(
@@ -118,7 +122,7 @@ interface AgoraApiService {
     @POST("/app/v1/room/userSetSeat")
     suspend fun userSetSeat(
         @Query("roomId") roomId: String,
-        @Query("operate") roomType: String,
+        @Query("operate") operate: String,
         @Query("seatNum") seatNum: String,
         @Query("operatedUserId") operatedUserId: String
     ): BaseBean<String>
@@ -151,17 +155,13 @@ interface AgoraApiService {
     @GET("app/v1/user/getUserInfoByUserId")
     suspend fun getUserInfoByUserId(@Query("uId") userId: String): BaseBean<UserDetailInfo>
 
-    @FormUrlEncoded
-    @POST("app/v1/friend/becomeFriend")
-    suspend fun addFriend(
-        @Field("addUserId") addUserId: String
-    ): BaseBean<String>
 
     @GET("app/v1/room/getInviteList")
     suspend fun getInviteList(
         @Query("roomId") roomId: String?,
         @Query("gender") gender: String?,
-        @Query("type") type: String?
+        @Query("type") type: String?,
+        @Query("page") page: Int
     ): BaseBean<MutableList<UserDetailInfo>>
 
     @GET("app/v1/room/onlineUsers")
@@ -193,7 +193,7 @@ interface AgoraApiService {
     /**
      * 管理员关闭房间
      */
-    @POST("/app/v1/room/admin/closeRoom")
+    @POST("app/v1/room/admin/closeRoom")
     suspend fun closeRoom(
         @Query("roomId") roomId: Int, @Query("reason") reason: String?, @Query("uuid") uuid: String?
     ): BaseBean<String>
@@ -201,14 +201,42 @@ interface AgoraApiService {
     /**
      * 切换房间类型
      */
-    @POST("/app/v1/room/switchType")
+    @POST("app/v1/room/switchType")
     suspend fun switchRoomType(
         @Query("roomId") roomId: String, @Query("roomType") roomType: String
     ): BaseBean<Boolean>
 
-    @POST("/app/v1/room/switchTypeConfirm")
+    @POST("app/v1/room/switchTypeConfirm")
     suspend fun switchTypeConfirm(@Query("roomId") roomId: String): BaseBean<Boolean>
 
     @GET("app/v1/user/friendList")
     suspend fun getFriendList(@Query("page") page: Int): BaseBean<FriendsResponse>
+
+    @POST("app/v1/room/saveRoomWarnRecord")
+    suspend fun saveRoomWarnRecord(
+        @Query("warnUserId") warnUserId: String?,
+        @Query("roomId") roomId: String?,
+        @Query("reason") reason: String?,
+        @Query("type") type: Int
+    ): BaseBean<String>
+
+    @FormUrlEncoded
+    @POST("app/v1/room/setTop")
+    suspend fun setTop(@Field("roomId") roomId: String, @Field("id") id: Int): BaseBean<Boolean>
+
+
+    @GET("app/v1/matchmakerManage/getIndex")
+    suspend fun getLiveStatisticInfo(): BaseBean<LiveStatisticTotalInfo>
+
+    @GET("app/v1/matchmakerManage/getKbData")
+    suspend fun getMyLiveRecord(
+        @Query("filterId") filterId: Int,
+        @Query("page") page: Int
+    ): BaseBean<LiveRecordResponse>
+
+
+    @GET("app/v1/matchmakerManage/getKbDetailData")
+    suspend fun getRoomIncomeDetail(
+        @Query("roomId") roomId: String,
+    ): BaseBean<LiveIncomeDetailInfo>
 }

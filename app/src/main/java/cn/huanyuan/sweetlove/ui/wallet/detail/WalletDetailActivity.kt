@@ -6,7 +6,7 @@ import android.view.View
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.WalletRecordInfo
 import cn.huanyuan.sweetlove.databinding.ActivityWalletDetailBinding
-import cn.huanyuan.sweetlove.func.dialog.WalletDetailFilterPop
+import cn.yanhu.commonres.pop.CommonTypeFilterPop
 import cn.huanyuan.sweetlove.ui.wallet.WalletViewModel
 import cn.huanyuan.sweetlove.ui.wallet.adapter.WalletDetailAdapter
 import cn.yanhu.baselib.base.BaseActivity
@@ -71,18 +71,19 @@ class WalletDetailActivity : BaseActivity<ActivityWalletDetailBinding, WalletVie
         })
     }
 
-    private var filterPop: WalletDetailFilterPop? = null
+    private var filterPop: CommonTypeFilterPop? = null
     private fun showFilterPop() {
         if (filterPop != null) {
             filterPop?.show()
         } else {
-            filterPop = WalletDetailFilterPop.showPop(
+            filterPop = CommonTypeFilterPop.showPop(
                 mContext,
                 filterList,
-                object : WalletDetailFilterPop.OnFilterListener {
+                object : CommonTypeFilterPop.OnFilterListener {
                     override fun onSelectFilter(filterInfo: FilterInfo?) {
                         filterId = filterInfo?.id.toString()
                         mBinding.titleBar.setTitleRightText(filterInfo?.name)
+                        page = 1
                         requestData()
                     }
                 })

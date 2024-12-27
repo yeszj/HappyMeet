@@ -26,6 +26,9 @@ object RouterPath {
     //个人中心
     const val ROUTER_USER_HOME_PAGE = "/app/userHomePage"
 
+    const val ROUTER_MY_INVITE_RECORD_PAGE = "/app/myInviteRecordActivity"
+
+
     /*主module下的跳转配置end*/
 
 

@@ -10,6 +10,7 @@ import cn.huanyuan.sweetlove.ui.main.MainViewModel
 import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ViewPager2Helper
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.widget.indicator.CommonIndicatorAdapter
@@ -100,6 +101,7 @@ class TabSameCityFrg : BaseFragment<FrgTabSameCityBinding, MainViewModel>(
 
     private var frgList: MutableList<Fragment> = mutableListOf()
     private fun initVpData() {
+        DialogUtils
         val fragments = childFragmentManager.fragments
         if (fragments.size>0){
             frgList = fragments

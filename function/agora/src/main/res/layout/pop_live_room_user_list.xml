@@ -33,13 +33,63 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_close" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_user"
+        <RadioGroup
+            android:id="@+id/vg_tab"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_310"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/iv_close"
-            tools:listitem="@layout/adapter_live_room_user_list_item" />
+            android:layout_height="@dimen/dp_40"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:background="@drawable/white_corner_20"
+            android:backgroundTint="@color/base_bg_gray"
+            app:layout_constraintTop_toBottomOf="@+id/iv_close">
+
+            <RadioButton
+                android:id="@+id/rb1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:button="@null"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:checked="true"
+                android:textColor="@color/color_room_seat_tab"
+                android:background="@drawable/selector_room_seat_tab"
+                android:text="房间内" />
+
+            <RadioButton
+                android:id="@+id/rb2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:button="@null"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/color_room_seat_tab"
+                android:background="@drawable/selector_room_seat_tab"
+                android:text="最近活跃" />
+
+            <RadioButton
+                android:id="@+id/rb3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:button="@null"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/color_room_seat_tab"
+                android:background="@drawable/selector_room_seat_tab"
+                android:text="好友" />
+        </RadioGroup>
+
+        <cn.yanhu.baselib.refresh.MyRefreshLayout
+            android:id="@+id/refresh"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/vg_tab"
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_user"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_340"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/adapter_live_room_user_list_item" />
+        </cn.yanhu.baselib.refresh.MyRefreshLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

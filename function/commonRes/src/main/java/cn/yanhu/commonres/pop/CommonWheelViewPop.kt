@@ -51,14 +51,14 @@ class CommonWheelViewPop(
             if (arrayList.size>2){
                 2
             }else{
-                1
+                0
             }
         }
         if (indexOf == -1) {
             indexOf = if (arrayList.size>2){
                 2
             }else{
-                1
+                0
             }
         }
         currentSelectValue = arrayList[indexOf]

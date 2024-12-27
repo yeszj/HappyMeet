@@ -8,9 +8,9 @@ import cn.yanhu.agora.adapter.liveRoom.LiveRoomOnlineUserAdapter
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.PopLiveRoomOnlineUserBinding
+import cn.yanhu.agora.listener.OnSendSeatInviteListener
 import cn.yanhu.baselib.refresh.NoMoreDataFootView
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
-import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
@@ -32,7 +32,9 @@ import com.scwang.smart.refresh.footer.BallPulseFooter
 class LiveRoomOnlineUserPop(
     context: Context,
     private val userList: MutableList<UserDetailInfo>,
-    val roomDetailInfo: RoomDetailInfo
+    val roomDetailInfo: RoomDetailInfo,
+    val onSendSeatInviteListener: OnSendSeatInviteListener
+
 
 ) : BottomPopupView(context) {
     private val userAdapter by lazy { LiveRoomOnlineUserAdapter() }
@@ -68,10 +70,8 @@ class LiveRoomOnlineUserPop(
                             item.userId, "", ChatConstant.ACTION_MSG_SIT_DOWN
                         )
                     } else {
-                        EmMsgManager.sendCmdMessagePeople(
-                            item.userId, ChatConstant.ACTION_MSG_SET_UP, map
-                        )
-                        showToast("上麦邀请已发送")
+                        onSendSeatInviteListener.onSendInvite(map,item)
+
                     }
                 }
 
@@ -121,8 +121,9 @@ class LiveRoomOnlineUserPop(
             mContext: Context,
             userList: MutableList<UserDetailInfo>,
             ownerInfo: RoomDetailInfo,
+            onSendSeatInviteListener: OnSendSeatInviteListener
         ): LiveRoomOnlineUserPop {
-            val matchPop = LiveRoomOnlineUserPop(mContext, userList, ownerInfo)
+            val matchPop = LiveRoomOnlineUserPop(mContext, userList, ownerInfo,onSendSeatInviteListener)
             val builder = XPopup.Builder(mContext)
             builder.enableDrag(false).asCustom(matchPop).show()
             return matchPop

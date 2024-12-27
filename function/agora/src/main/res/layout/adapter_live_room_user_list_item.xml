@@ -30,6 +30,14 @@
             app:riv_oval="true"
             tools:src="@drawable/ease_default_avatar" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/svg_online_stoke_white"
+            android:visibility="@{userinfo.online?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+            app:layout_constraintEnd_toEndOf="@+id/avatarView" />
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_nickName"
             android:layout_width="wrap_content"
@@ -68,14 +76,49 @@
             app:layout_constraintTop_toTopOf="@+id/userAge" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_4"
+            android:text='@{userinfo.seatNum>0?"已申请":"未申请"}'
+            android:textColor="@{userinfo.seatNum>0?@color/colorMain:@color/color_888888}"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_invite"
+            app:layout_constraintEnd_toStartOf="@+id/iv_rose"
+            app:layout_constraintTop_toTopOf="@+id/tv_invite"
+            tools:text="未申请" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_rose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_rose_16"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_invite"
+            app:layout_constraintEnd_toStartOf="@+id/tv_roseNum"
+            app:layout_constraintTop_toTopOf="@+id/tv_invite" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_roseNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:text="@{userinfo.roseNum}"
+            android:textColor="@color/colorMain"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_invite"
+            app:layout_constraintEnd_toStartOf="@+id/tv_invite"
+            app:layout_constraintTop_toTopOf="@+id/tv_invite"
+            tools:text="60" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_invite"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_26"
-            android:paddingHorizontal="@dimen/dp_10"
             android:background="@drawable/white_corner_20"
             android:backgroundTint="@color/colorMain"
             android:gravity="center"
-            android:text='@{userinfo.seatNum>0?"允许上麦":"邀请"}'
+            android:paddingHorizontal="@dimen/dp_10"
+            android:text='@{userinfo.seatNum>0?"同意上麦":"邀请"}'
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
             app:fontType="@string/fontMedium"

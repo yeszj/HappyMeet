@@ -22,6 +22,7 @@ import cn.yanhu.baselib.pop.CommonAttachListPopupView
 import cn.yanhu.baselib.utils.ext.showToast
 import com.blankj.utilcode.util.ClipboardUtils
 import com.lxj.xpopup.enums.PopupAnimation
+import com.lxj.xpopup.interfaces.OnInputConfirmListener
 import com.lxj.xpopup.interfaces.XPopupCallback
 
 /**
@@ -150,7 +151,7 @@ object DialogUtils {
         isHideCancel: Boolean = false,
         isAutoDismiss: Boolean = true,
         confirmBg: Int = R.drawable.shape_common_btn_r30,
-        cancelBg: Int = R.drawable.shape_transparent,
+        cancelBg: Int = R.drawable.shape_cancel_btn_r30,
         context: Context = ActivityUtils.getTopActivity()
     ): BasePopupView {
         val asConfirm = XPopup.Builder(context)
@@ -166,11 +167,44 @@ object DialogUtils {
                 onCancelListener, isHideCancel,
                 R.layout.dialog_common_center_confirm
             )
+        if (!TextUtils.isEmpty(content)){
+            TextFontStyleUtils.setTextFontStyle(asConfirm.titleTextView,context.getString(R.string.fontBold))
+        }
         asConfirm.cancelTextView.setBackgroundResource(cancelBg)
         asConfirm.confirmTextView.setBackgroundResource(confirmBg)
         return asConfirm.show()
     }
 
+
+    @JvmStatic
+    fun showAsInputConfirmDialog(
+        title: CharSequence,
+        onConfirmListener: OnInputConfirmListener? = null,
+        onCancelListener: OnCancelListener? = null,
+        inputContent: CharSequence = "",
+        hint:String="",
+        isAutoDismiss: Boolean = true,
+        confirmBg: Int = R.drawable.shape_common_btn_r30,
+        cancelBg: Int = R.drawable.shape_transparent,
+        context: Context = ActivityUtils.getTopActivity()
+    ): BasePopupView {
+        val asConfirm = XPopup.Builder(context)
+            .autoDismiss(isAutoDismiss)
+            .dismissOnTouchOutside(true)
+            .dismissOnBackPressed(true)
+            .asInputConfirm(
+                title,
+                "",
+                inputContent,
+                hint,
+                onConfirmListener,
+                onCancelListener,
+                R.layout.dialog_common_center_confirm
+            )
+        asConfirm.cancelTextView.setBackgroundResource(cancelBg)
+        asConfirm.confirmTextView.setBackgroundResource(confirmBg)
+        return asConfirm.show()
+    }
 
     fun showCenterListDialog(
         title: String,

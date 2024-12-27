@@ -49,6 +49,7 @@ import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.UriUtils
@@ -509,7 +510,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         permissions.add(Manifest.permission.RECORD_AUDIO)
         checkPermission(this,
             permissions,
-            "对爱交友想访问您的麦克风权限，用于提供语音相关的功能或服务",
+            "${AppUtils.getAppName()}想访问您的麦克风权限，用于提供语音相关的功能或服务",
             "您拒绝授权麦克风权限，无法使用语音相关的功能或服务",
             object : PermissionListener {
                 override fun onSuccess() {

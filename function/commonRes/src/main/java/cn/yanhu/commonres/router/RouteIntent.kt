@@ -50,6 +50,10 @@ object RouteIntent {
             .withSerializable(IntentKeyConfig.DATA, userInfo).navigation()
     }
 
+    fun lunchToMyInviteRecord(){
+        ARouter.getInstance().build(RouterPath.ROUTER_MY_INVITE_RECORD_PAGE).navigation()
+    }
+
     //登录页面
     fun lunchLoginPage() {
         ARouter.getInstance().build(RouterPath.ROUTER_LOGIN).navigation()

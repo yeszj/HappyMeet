@@ -40,8 +40,8 @@ import java.math.BigDecimal
 class SendGiftPop(
     val context: FragmentActivity,
     private val sendUserInfo: UserDetailInfo,
-    private val source:Int,
-    private val callId:Int,
+    private val source: Int,
+    private val callId: Int,
     val onSendGiftListener: OnSendGiftListener
 ) : BottomPopupView(context) {
     override fun getImplLayoutId(): Int {
@@ -50,15 +50,16 @@ class SendGiftPop(
 
     private val giftAdapter by lazy { SendGiftItemAdapter() }
     private lateinit var mBinding: PopSendGiftBinding
-    private var giftInfo:GiftResponse?=null
+    private var giftInfo: GiftResponse? = null
     override fun onCreate() {
         super.onCreate()
         mBinding = PopSendGiftBinding.bind(popupImplView)
         mBinding.userInfo = sendUserInfo
         mBinding.executePendingBindings()
         initGiftAdapter()
-        if (!TextUtils.isEmpty(AppCacheManager.giftInfo)){
-            giftInfo = GsonUtils.fromJson(AppCacheManager.giftInfo,GiftResponse::class.java)
+        if (!TextUtils.isEmpty(AppCacheManager.giftInfo)) {
+            giftInfo = GsonUtils.fromJson(AppCacheManager.giftInfo, GiftResponse::class.java)
+            removeRandomBoxGift()
             setGiftInfo()
         }
         mBinding.tvRecharge.setOnSingleClickListener {
@@ -75,10 +76,20 @@ class SendGiftPop(
         getGiftInfo()
     }
 
+    private fun removeRandomBoxGift() {
+        //如果不是直播间 移除随机盲盒礼物
+        if (SendGiftRequest.SOURCE_LIVE_ROOM != source) {
+            giftInfo?.list?.removeIf {
+                it.type == 10
+            }
+        }
+    }
+
     private fun getGiftInfo() {
         request({ imChatRxApi.getGiftList() }, object : OnRequestResultListener<GiftResponse> {
             override fun onSuccess(data: BaseBean<GiftResponse>) {
                 giftInfo = data.data
+                removeRandomBoxGift()
                 setGiftInfo()
             }
         })
@@ -94,16 +105,17 @@ class SendGiftPop(
     private fun initGiftAdapter() {
         mBinding.rvGift.adapter = giftAdapter
         giftAdapter.setOnItemClickListener { _, _, position ->
-            if (position==giftAdapter.getSelectPosition()){
+            if (position == giftAdapter.getSelectPosition()) {
                 startSendGift(position)
-            }else{
+            } else {
                 giftAdapter.setSelectPosition(
                     position
                 )
             }
 
         }
-        giftAdapter.addOnItemChildClickListener(R.id.tv_send
+        giftAdapter.addOnItemChildClickListener(
+            R.id.tv_send
         ) { _, _, position -> startSendGift(position) }
     }
 
@@ -119,39 +131,52 @@ class SendGiftPop(
         sendGift(sendGiftRequest, item)
     }
 
-    private fun sendGift(sendGiftRequest: SendGiftRequest,item: GiftInfo){
-        request2({imChatRxApi.sendGift(sendGiftRequest)},object : OnRequestResultListener<String>{
-            override fun onSuccess(data: BaseBean<String>) {
-                giftInfo?.roseNum = BigDecimal(CommonUtils.subString(giftInfo!!.roseNum.toPlainString(),item.price.toString()))
-                mBinding.tvRoseNum.text = giftInfo!!.roseNum.toPlainString()
-                showToast("赠送礼物成功")
-                VibrateUtils.vibrate(50)
-                val map = HashMap<String, Any>()
-                map["giftName"] = item.name
-                map["giftIcon"] = item.giftIcon
-                map["num"] = sendGiftRequest.num
-                map["svga"] = item.svga
-                EmMsgManager.sendCmdMessagePeople(
-                    sendUserInfo.userId,
-                    ChatConstant.ACTION_PHONE_SEND_GIFT,
-                    map,
-                )
-                onSendGiftListener.onSendGift(item)
-            }
+    private fun sendGift(sendGiftRequest: SendGiftRequest, item: GiftInfo) {
+        request2({ imChatRxApi.sendGift(sendGiftRequest) },
+            object : OnRequestResultListener<String> {
+                override fun onSuccess(data: BaseBean<String>) {
 
-            override fun onFail(code: Int?, msg: String?) {
-                super.onFail(code, msg)
-                if (code==ErrorCode.CODE_NO_BALANCE){
-                    ApplicationProxy.instance.showRechargePop(context,true)
-                    dismiss()
+
+                    giftInfo?.roseNum = BigDecimal(
+                        CommonUtils.subString(
+                            giftInfo!!.roseNum.toPlainString(),
+                            item.price.toString()
+                        )
+                    )
+                    mBinding.tvRoseNum.text = giftInfo!!.roseNum.toPlainString()
+                    showToast("赠送礼物成功")
+                    VibrateUtils.vibrate(50)
+                    val map = HashMap<String, Any>()
+                    map["giftName"] = item.name
+                    map["giftIcon"] = item.giftIcon
+                    map["num"] = sendGiftRequest.num
+                    map["svga"] = item.svga
+                    if (source == SendGiftRequest.SOURCE_CALL) {
+                        EmMsgManager.sendCmdMessagePeople(
+                            sendUserInfo.userId,
+                            ChatConstant.ACTION_PHONE_SEND_GIFT,
+                            map,
+                        )
+                    }
+                    if (item.type == 10) {
+                        item.randomBoxGiftInfo = data.data
+                    }
+                    onSendGiftListener.onSendGift(item)
                 }
-            }
-        })
+
+                override fun onFail(code: Int?, msg: String?) {
+                    super.onFail(code, msg)
+                    if (code == ErrorCode.CODE_NO_BALANCE) {
+                        ApplicationProxy.instance.showRechargePop(context, true)
+                        dismiss()
+                    }
+                }
+            })
     }
 
     interface OnSendGiftListener {
         fun onSendGift(item: GiftInfo)
-        fun onShowUserInfo(userId:String){}
+        fun onShowUserInfo(userId: String) {}
     }
 
     companion object {
@@ -159,11 +184,12 @@ class SendGiftPop(
         fun showDialog(
             context: FragmentActivity,
             sendUserInfo: UserDetailInfo,
-            source:Int,
-            callId:Int,
+            source: Int,
+            callId: Int,
             onSendGiftListener: OnSendGiftListener
         ): SendGiftPop {
-            val createGroupPop = SendGiftPop(context, sendUserInfo,source,callId,onSendGiftListener)
+            val createGroupPop =
+                SendGiftPop(context, sendUserInfo, source, callId, onSendGiftListener)
             val builder = XPopup.Builder(context)
             builder
                 .asCustom(createGroupPop).show()

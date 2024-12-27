@@ -18,6 +18,7 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.OperateInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
+import cn.yanhu.commonres.config.CmdMsgTypeConfig
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
@@ -26,13 +27,16 @@ import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.dynamic.adapter.DynamicAdapter
 import cn.yanhu.imchat.db.ChatUserInfoManager
+import cn.yanhu.imchat.manager.EmMsgManager
 import cn.yanhu.imchat.manager.ImChatManager
 import cn.yanhu.imchat.manager.ImUserManager
+import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.status.ErrorCode
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter4.QuickAdapterHelper
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.lxj.xpopup.core.BasePopupView
 
 /**
  * @author: zhengjun
@@ -138,8 +142,11 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                         }
                         0 -> {
                             //添加好友
-                            mViewModel.addFriend(userId)
-
+                            if (userInfo?.addFriendWay==0){
+                                mViewModel.addFriend(userId)
+                            }else{
+                                showAddFriendPop()
+                            }
                         }
                         -1 -> {
                             //解除好友
@@ -151,6 +158,22 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                     }
                 }
             })
+    }
+
+
+    private fun showAddFriendPop(): BasePopupView {
+        return DialogUtils.showConfirmDialog(
+            "添加好友",
+            {
+                mViewModel.becomeFriendRose(userId)
+            },
+            {
+            },
+            content = "是否同意花费${userInfo?.needRoseNum}玫瑰，添加好友？",
+            cancel = "取消",
+            confirm = "加好友",
+            cancelBg = cn.yanhu.baselib.R.drawable.shape_cancel_btn_r30
+        )
     }
 
     private fun showCancelFriendTip() {
@@ -174,7 +197,7 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                     return
                 }
                 val toolbarHeight = mBinding.vgTitle.bottom * 1.5f
-                if (totalScrollY <= toolbarHeight) {
+                if (totalScrollY.compareTo(toolbarHeight) <= 0) {
                     val scale = totalScrollY / toolbarHeight
                     val alpha = (scale * 255).toInt()
                     mBinding.vgTitle.setBackgroundColor(Color.argb(alpha, 255, 255, 255));
@@ -216,6 +239,20 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                 showToast("好友请求已发送～")
             },{
                 showToast(it.msg)
+            })
+        }
+        mViewModel.addFriendRoseObservable.observe(this) { it ->
+            parseState(it, {
+                userInfo?.isFriend = true
+                showToast("添加好友成功")
+                ChatUserInfoManager.saveUserInfo(userInfo)
+                EmMsgManager.sendCmdMessagePeople(userId, CmdMsgTypeConfig.ADD_FRIEND, null)
+            },{
+                if (it.code == ErrorCode.CODE_NO_BALANCE){
+                    ApplicationProxy.instance.showRechargePop(mContext, true)
+                }else{
+                    showToast(it.msg)
+                }
             })
         }
         mViewModel.dynamicObservable.observe(this) { it ->

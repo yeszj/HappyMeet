@@ -28,6 +28,7 @@ class CommonIndicatorAdapter(
     private var lineRound: Float = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_2).toFloat(),
     private var paddingLeft: Int = 0,
     private var selectTextSize: Float = textSize,
+    private var mSmoothScroll:Boolean = true
 ) : CommonNavigatorAdapter() {
     override fun getCount(): Int {
         return titles.size
@@ -45,7 +46,7 @@ class CommonIndicatorAdapter(
         titleView.setSelectTextSize(selectTextSize)
         titleView.text = titles[index]
         titleView.setOnSingleClickListener {
-            index.also { viewpager.currentItem = it }
+            index.also { viewpager.setCurrentItem(it,mSmoothScroll) }
         }
         return titleView
     }

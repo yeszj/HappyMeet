@@ -14,9 +14,10 @@
         <View
             android:id="@+id/viewBg"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_204"
+            android:layout_height="0dp"
             android:layout_marginTop="@dimen/dp_40"
             android:background="@drawable/white_top_corner_15"
+            app:layout_constraintBottom_toBottomOf="@+id/divider"
             app:layout_constraintTop_toTopOf="parent" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
@@ -32,38 +33,51 @@
             tools:text="忧伤开满来时路" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@string/fontMedium"
             android:paddingTop="@dimen/dp_15"
             android:text="邀请你上麦"
             android:textColor="@color/colorMain"
             android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_roseNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_12"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc"
+            tools:text="上麦需消耗20玫瑰/分钟" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_refuse"
             android:layout_width="@dimen/dp_150"
             android:layout_height="@dimen/dp_50"
             android:layout_marginStart="@dimen/dp_20"
-            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/white_corner_30"
             android:backgroundTint="#F4F4F4"
             android:gravity="center"
             android:text="狠心拒绝"
             android:textColor="@color/color_888888"
             android:textSize="@dimen/sp_17"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_roseNum" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_agree"
             android:layout_width="@dimen/dp_150"
             android:layout_height="@dimen/dp_50"
+            android:layout_marginTop="@dimen/dp_10"
             android:layout_marginEnd="@dimen/dp_20"
-            android:layout_marginBottom="@dimen/dp_20"
             android:background="@drawable/white_corner_30"
             android:backgroundTint="@color/colorMain"
             android:gravity="center"
@@ -71,8 +85,8 @@
             android:textColor="@color/white"
             android:textSize="@dimen/sp_17"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_roseNum" />
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_avatar"
@@ -85,5 +99,11 @@
             app:riv_border_color="@color/white"
             app:riv_border_width="@dimen/dp_1"
             app:riv_oval="true" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_20"
+            app:layout_constraintTop_toBottomOf="@+id/tv_agree" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

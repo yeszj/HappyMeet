@@ -8,6 +8,7 @@ import cn.yanhu.commonres.pop.CommonPermissionPop
 import cn.yanhu.commonres.pop.CommonPermissionPop.Companion.showDialog
 import cn.yanhu.commonres.pop.SystemAlertPermissionDialog
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.AppUtils
 import com.hjq.toast.ToastUtils
 import com.permissionx.guolindev.PermissionMediator
 import com.permissionx.guolindev.PermissionX
@@ -175,6 +176,18 @@ object PermissionXUtils {
                     ToastUtils.show("您拒绝授权权限，将无法体验部分功能")
                 }
             })
+    }
+
+
+    fun checkBeautyPermission(mContext: FragmentActivity,permissionListener: PermissionListener){
+        val permissions = ArrayList<String>()
+        permissions.add(Manifest.permission.CAMERA)
+        permissions.add(Manifest.permission.RECORD_AUDIO)
+        checkPermission(mContext,
+            permissions,
+            "${AppUtils.getAppName()}想访问您的以下权限，用于美颜设置",
+            "您拒绝授权权限，将无法体验部分功能",
+            permissionListener)
     }
 
     interface PermissionListener {

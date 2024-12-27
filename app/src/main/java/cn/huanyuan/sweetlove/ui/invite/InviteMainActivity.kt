@@ -12,6 +12,7 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.manager.ServiceConfigKeyManager
 import cn.yanhu.commonres.utils.ZXingUtils
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.parseState
@@ -41,7 +42,7 @@ class InviteMainActivity : BaseActivity<ActivityInviteMainBinding, InviteViewMod
     override fun requestData() {
         super.requestData()
         mViewModel.getInviteInfo()
-        request({rxApi.getInviteContents() },object : OnRequestResultListener<String>{
+        request({rxApi.getConfigInfo(ServiceConfigKeyManager.KEY_INVITE_SLOGANS) },object : OnRequestResultListener<String>{
             override fun onSuccess(data: BaseBean<String>) {
                 val data1 = data.data
                 contentList = GsonUtils.fromJson(data1,

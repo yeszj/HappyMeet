@@ -130,6 +130,11 @@ class FriendsFrg : BaseFragment<FrgFriendsBinding, MainViewModel>(
         getRequestList()
     }
 
+    override fun onResume() {
+        super.onResume()
+        requestData()
+    }
+
     private fun getFriendList() {
         mViewModel.getFriendList(page)
     }

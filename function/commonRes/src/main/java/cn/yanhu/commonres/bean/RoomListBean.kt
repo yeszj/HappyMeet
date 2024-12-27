@@ -51,6 +51,12 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
             TYPE_NINE_ANGLE -> {
                 "九人天使"
             }
+            TYPE_SEVEN_SONG -> {
+                "七人K歌"
+            }
+            TYPE_NINE_SONG -> {
+                "九人K歌"
+            }
             else -> {
                 "视频相亲"
             }
@@ -83,6 +89,11 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
         }
     }
 
+    fun isSongRoom():Boolean{
+        return roomType == TYPE_SEVEN_SONG || roomType == TYPE_NINE_SONG
+    }
+
+
     fun isSevenRoom():Boolean{
         return roomType == TYPE_SEVEN_FRIEND
     }
@@ -98,6 +109,9 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
     fun isPrivateRoom(): Boolean {
         return roomType == TYPE_PRIVATE || roomType == TYPE_ROBOT_ROOM
     }
+    fun isPublicRoom(): Boolean {
+        return roomType == TYPE_PUBLIC
+    }
 
 
     companion object {
@@ -112,6 +126,10 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
         const val TYPE_SEVEN_ANGLE = 4
         const val TYPE_NINE_FRIEND = 5
         const val TYPE_NINE_ANGLE = 6
+        const val TYPE_SEVEN_SONG = 7
+        const val TYPE_NINE_SONG = 8
+
+
         const val TYPE_ROBOT_ROOM= 50
 
 

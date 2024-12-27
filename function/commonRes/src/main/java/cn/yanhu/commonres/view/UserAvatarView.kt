@@ -162,7 +162,7 @@ class UserAvatarView : LinearLayout {
                 clearAnim()
             }
         }
-        if (isCanClick) {
+        if (isCanClick && !TextUtils.isEmpty(item.userId)) {
             setOnSingleClickListener {
                 RouteIntent.lunchPersonHomePage(item.userId)
             }

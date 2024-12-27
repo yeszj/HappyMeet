@@ -42,8 +42,22 @@ class LiveRoomChatMessageAdapter :
     class VH5(
         val binding: AdapterChatRoomMsgWelcomeItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
-
+    class VH6(
+        val binding: AdapterChatRoomMsgNoticeItemBinding
+    ) : RecyclerView.ViewHolder(binding.root)
     init {
+        addItemType(ChatRoomMsgInfo.ITEM_NEW_ADD_TYPE,object : OnMultiItemAdapterListener<ChatRoomMsgInfo,VH6>{
+            override fun onBind(holder: VH6, position: Int, item: ChatRoomMsgInfo?) {
+                holder.binding.tvNotice.text = "此版本暂不支持此消息"
+            }
+            override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH6 {
+                val binding: AdapterChatRoomMsgNoticeItemBinding =
+                    AdapterChatRoomMsgNoticeItemBinding.inflate(
+                        LayoutInflater.from(context), parent, false
+                    )
+                return VH6(binding)
+            }
+        })
         addItemType(
             ChatRoomMsgInfo.ITEM_WELCOME_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH5> {
@@ -142,8 +156,8 @@ class LiveRoomChatMessageAdapter :
                         val altUser = msgInfo?.altUser
                         if (altUser != null) {
                             val build =
-                                Spans.builder().text("@${altUser.nickName}:")
-                                    .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.manColor))
+                                Spans.builder().text("@${altUser.nickName} ")
+                                    .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontOrangeColor))
                                     .text(msgInfo?.content)
                                     .build()
                             tvContent.text = build
@@ -164,7 +178,11 @@ class LiveRoomChatMessageAdapter :
 
             }).onItemViewType { position, _ ->
             val item = getItem(position)
-            item!!.type
+            if (item!!.type>=0 && item.type<=5){
+                item.type
+            }else{
+                -1
+            }
         }
     }
 }

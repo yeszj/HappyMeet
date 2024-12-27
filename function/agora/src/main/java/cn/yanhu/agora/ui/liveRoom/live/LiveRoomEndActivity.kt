@@ -59,7 +59,7 @@ class LiveRoomEndActivity : BaseActivity<ActivityLiveRoomEndBinding, LiveRoomVie
             val roomId = extras.getString(IntentKeyConfig.ROOM_ID)
             mBinding.liveRoomEndTxtTwo.text = "房间已被管理员强制关闭"
             roomId?.apply {
-              //  bindCloseReason(roomId)
+                bindCloseReason(roomId)
             }
         }
         mBinding.liveRoomEndOff.setOnClickListener { finish() }

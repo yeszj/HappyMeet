@@ -1,6 +1,5 @@
 package cn.yanhu.agora.ui.beautifyFace
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.view.View
@@ -21,7 +20,9 @@ import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.view.TitleBar
+import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.utils.PermissionXUtils
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -49,12 +50,24 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
     private var type: Int = 1
     override fun initData() {
         setFullScreenStatusBar()
-        if (!AgoraSdkCacheManager.hasLoadAgoraSdk() || !BeautyCacheManager.hasLoadBeautySdk()) {
-            showToast("请等待插件加载完成")
+        if (!AgoraSdkCacheManager.hasLoadAgoraSdk()) {
+            //showToast("请等待插件加载完成")
             finish()
+            LiveDataEventManager.sendLiveDataMessage(
+                EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS,
+                true
+            )
+            return
+        } else if (!BeautyCacheManager.hasLoadBeautySdk()) {
+            //showToast("请等待美颜插件加载完成")
+            finish()
+            LiveDataEventManager.sendLiveDataMessage(
+                EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS,
+                true
+            )
             return
         }
-        if (AgoraManager.isLiveRoom){
+        if (AgoraManager.isLiveRoom) {
             showToast("正在通话中,无法进行美颜设置")
             finish()
             return
@@ -245,14 +258,14 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
             }
 
             else -> {
-                selectFilterPosition = 2
+                selectFilterPosition = 25
                 switchToBeautyFilter()
             }
         }
     }, cancel = "取消")
 
     private fun setDefaultFilter() {
-        val beautyBean = beautyFilterList[2]
+        val beautyBean = beautyFilterList[25]
         AppCacheManager.selectBeautyFilter = GsonUtils.toJson(beautyBean)
         BeautySetManager.getInstance().setBeautyFilter(beautyBean.value, beautyBean.filterName)
     }
@@ -328,24 +341,18 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
     }
 
     private fun checkPermission() {
-        val permissions = ArrayList<String>()
-        permissions.add(Manifest.permission.CAMERA)
-        permissions.add(Manifest.permission.RECORD_AUDIO)
-        PermissionXUtils.checkPermission(mContext,
-            permissions,
-            "对爱交友想访问您的以下权限，用于美颜设置",
-            "您拒绝授权权限，将无法体验部分功能",
-            object : PermissionXUtils.PermissionListener {
-                override fun onSuccess() {
-                    AgoraManager.getInstence().init(mContext, 1, mBinding.beautySetSf)
-                    AgoraManager.getInstence().setVideoEncoderConfiguration(1920,1080)
-                    getSkinFilterList()
-                }
 
-                override fun onFail() {
-                }
+        PermissionXUtils.checkBeautyPermission(mContext,object : PermissionXUtils.PermissionListener {
+            override fun onSuccess() {
+                AgoraManager.getInstance().init(mContext, 1, mBinding.beautySetSf)
+                AgoraManager.getInstance().setVideoEncoderConfiguration(3840, 2160)
+                getSkinFilterList()
+            }
 
-            })
+            override fun onFail() {
+            }
+
+        })
     }
 
 
@@ -356,7 +363,7 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
 
     override fun exactDestroy() {
         super.exactDestroy()
-        AgoraManager.getInstence().onDestory()
+        AgoraManager.getInstance().onDestory()
     }
 
 }

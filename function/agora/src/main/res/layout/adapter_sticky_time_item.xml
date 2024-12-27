@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <cn.yanhu.baselib.view.CustomFontTextView
+        android:id="@+id/tv_time"
+        android:layout_width="@dimen/dp_44"
+        android:layout_height="@dimen/dp_30"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:background="@drawable/white_corner_5"
+        android:backgroundTint="@color/blackAlpha96"
+        android:gravity="center"
+        android:text="0.5h"
+        android:textColor="@color/color_222222">
+
+    </cn.yanhu.baselib.view.CustomFontTextView>
+</layout>

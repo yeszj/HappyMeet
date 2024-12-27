@@ -14,7 +14,7 @@ class RoomDetailInfo : RoomListBean(), Serializable, Observable {
     var uuid: String = ""
     var uid: String = ""
     var agoraToken: String = ""
-
+    var closeReasons:MutableList<String> = mutableListOf()
     @Bindable
     var autoSeat: Boolean = false
         set(value) {
@@ -27,6 +27,11 @@ class RoomDetailInfo : RoomListBean(), Serializable, Observable {
     var womanApplyInfo: ApplyUserInfo = ApplyUserInfo()
     var admin: Int = 0
     var roomSeatResList: MutableList<RoomSeatInfo> = mutableListOf()
+    var seatRoseNum:Int = 0
+
+    fun isAdmin():Boolean{
+        return admin == 1
+    }
 
     class ApplyUserInfo : Serializable {
         var applyNum: Int = 0

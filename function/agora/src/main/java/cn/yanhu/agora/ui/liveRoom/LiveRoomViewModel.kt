@@ -15,6 +15,7 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.BaseViewModel
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ResultState
 
 /**
@@ -35,7 +36,18 @@ class LiveRoomViewModel : BaseViewModel() {
     ) {
         request(
             { agoraRxApi.userSetSeat(roomId, operate, seatNum, AppCacheManager.userId) },
-            onRequestResultListener
+            onRequestResultListener,false
+        )
+    }
+    fun saveRoomWarnRecord(
+         userId:String, roomId:String,  reason:String, type:Int
+    ) {
+        request(
+            { agoraRxApi.saveRoomWarnRecord(userId, roomId, reason,type) },
+            object : OnRequestResultListener<String>{
+                override fun onSuccess(data: BaseBean<String>) {
+                }
+            }
         )
     }
 

@@ -15,6 +15,7 @@ import cn.yanhu.baselib.utils.ViewPager2Helper
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.indicator.CommonIndicatorAdapter
+import cn.yanhu.commonres.manager.AppManager
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.utils.PermissionXUtils
 import cn.yanhu.imchat.ImChatViewModel
@@ -40,6 +41,7 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
         initTabLayout()
         initVpData()
         verifyPermission()
+        requestData()
     }
 
     private fun initTabLayout() {
@@ -153,6 +155,10 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
             "您拒绝授权权限，将无法体验部分功能",
             object : PermissionXUtils.PermissionListener {
                 override  fun onSuccess() {
+                    AppManager.setAppState(
+                        AppManager.STATE_FOREGROUND,
+                        PermissionX.areNotificationsEnabled(mContext)
+                    )
                     showToast("已打开通知权限")
                     topBinding.noticeRl.visibility = View.GONE
                     verifyPermission()

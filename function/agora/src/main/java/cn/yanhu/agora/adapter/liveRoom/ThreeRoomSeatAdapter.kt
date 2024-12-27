@@ -16,13 +16,11 @@ import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.agora.databinding.AdapterThreeRoomAnchorSeatItemBinding
 import cn.yanhu.agora.databinding.AdapterThreeRoomUserSeatItemBinding
 import cn.yanhu.agora.manager.AgoraManager
-import cn.yanhu.agora.pop.LiveRoomUserListPop
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.widget.spans.Spans
-import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.SexManager
 import cn.yanhu.imchat.manager.ImUserManager
@@ -221,12 +219,12 @@ class ThreeRoomSeatAdapter :
     }
 
     private fun addVideoSf(surfaceView: View, dto: RoomSeatInfo) {
-        AgoraManager.getInstence().setupVideo(
+        AgoraManager.getInstance().setupVideo(
             dto.roomUserSeatInfo!!.userId.toInt(),
             dto.roomUserSeatInfo!!.userId == AppCacheManager.userId, surfaceView
         )
         if (dto.roomUserSeatInfo!!.userId == AppCacheManager.userId) {
-            AgoraManager.getInstence().muteLocalAudioStream(!dto.mikeUser)
+            AgoraManager.getInstance().muteLocalAudioStream(!dto.mikeUser)
         }
     }
 
@@ -247,12 +245,6 @@ class ThreeRoomSeatAdapter :
                 )
             ).text(" ${womanApplyInfo.onlineNum}在线").build()
             tvWomanApplyCount.text = build2
-            tvManApplyCount.setOnSingleClickListener {
-                showUserList("1")
-            }
-            tvWomanApplyCount.setOnSingleClickListener {
-                showUserList("2")
-            }
             tvWomanApplyCount.visibility = View.VISIBLE
             tvManApplyCount.visibility = View.VISIBLE
         } else {
@@ -261,23 +253,7 @@ class ThreeRoomSeatAdapter :
         }
     }
 
-    private var liveRoomUserListPop: LiveRoomUserListPop? = null
-    fun showUserList(gender: String) {
-        request({ agoraRxApi.getInviteList(roomDetailInfo?.roomId, gender, "0") },
-            object : OnRequestResultListener<MutableList<UserDetailInfo>> {
-                override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
-                    val userList = data.data ?: return
-                    if (CommonUtils.isPopShow(liveRoomUserListPop)) {
-                        return
-                    }
-                    liveRoomUserListPop = LiveRoomUserListPop.showDialog(
-                        context,
-                        userList,
-                        roomDetailInfo!!
-                    )
-                }
-            })
-    }
+
 
 
     private fun AdapterThreeRoomUserSeatItemBinding.setEmptySeatInfo(

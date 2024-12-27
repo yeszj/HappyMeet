@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="recordInfo"
+            type="cn.yanhu.agora.bean.LiveRecordResponse.RecordInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/dp_16"
+        android:paddingTop="@dimen/dp_18">
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            android:text="@{recordInfo.title}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="人生这杯酒" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_6"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_12"
+            android:text="@{recordInfo.time}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            tools:text="01月20日 19:07" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginTop="@dimen/dp_18"
+            android:background="@color/blackAlpha96"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/icon_rose"
+            android:drawablePadding="@dimen/dp_4"
+            android:textColor="#FF3874"
+            android:textSize="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/dp_4"
+            android:gravity="center_vertical"
+            app:fontType="@string/fontMedium"
+            android:text='@{"+"+recordInfo.roseNum}'
+            app:layout_constraintBottom_toBottomOf="@+id/tv_time"
+            app:layout_constraintEnd_toStartOf="@+id/iv_right"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="+10" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_right"
+            android:layout_width="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/svg_arrow_right"
+            android:layout_height="wrap_content"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

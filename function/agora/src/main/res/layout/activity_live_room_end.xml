@@ -199,7 +199,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="@dimen/dp_25"
             android:layout_marginEnd="@dimen/dp_25"
-            android:visibility="@{info.ifOwner ? View.VISIBLE : View.GONE}"
             android:layout_marginBottom="@dimen/dp_50"
             android:background="@drawable/common_shape_btn_gradient_r30"
             android:text="返回大厅"

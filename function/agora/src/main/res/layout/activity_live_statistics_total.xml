@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="userinfo"
+            type="cn.yanhu.commonres.bean.BaseUserInfo" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/base_bg_gray"
+        android:orientation="vertical">
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleLeftName="红娘后台" />
+
+        <cn.yanhu.baselib.refresh.MyRefreshLayout
+            android:id="@+id/refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <View
+                        android:id="@+id/viewTip"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_40"
+                        android:layout_marginHorizontal="@dimen/dp_10"
+                        android:background="@drawable/white_corner_10"
+                        android:backgroundTint="#1AFF8C00"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/svg_gantan_orange"
+                        android:drawablePadding="@dimen/dp_4"
+                        android:gravity="center_vertical"
+                        android:text="红娘后台的数据非实时数据，存在一定时间延迟"
+                        android:textColor="#FF8C00"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintBottom_toBottomOf="@+id/viewTip"
+                        app:layout_constraintEnd_toEndOf="@+id/viewTip"
+                        app:layout_constraintStart_toStartOf="@+id/viewTip"
+                        app:layout_constraintTop_toTopOf="@+id/viewTip" />
+
+                    <View
+                        android:id="@+id/bgUser"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_68"
+                        android:layout_marginHorizontal="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_12"
+                        android:background="@drawable/white_corner_12"
+                        app:layout_constraintTop_toBottomOf="@+id/viewTip" />
+
+                    <cn.yanhu.commonres.view.UserAvatarView
+                        android:id="@+id/avatarView"
+                        avatarUrl="@{userinfo.portrait}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_10"
+                        app:avatarSize="@dimen/dp_48"
+                        app:layout_constraintBottom_toBottomOf="@+id/bgUser"
+                        app:layout_constraintStart_toStartOf="@+id/bgUser"
+                        app:layout_constraintTop_toTopOf="@+id/bgUser"
+                        app:svgAvatarSize="@dimen/dp_48" />
+
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_nickName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:ellipsize="end"
+                        android:maxEms="8"
+                        android:maxLines="1"
+                        android:text="@{userinfo.nickName}"
+                        android:textColor="@color/fontTextColor"
+                        android:textSize="@dimen/sp_14"
+                        app:fontType="@string/fontMedium"
+                        app:layout_constraintStart_toEndOf="@+id/avatarView"
+                        app:layout_constraintTop_toTopOf="@+id/avatarView"
+                        tools:text="佊岸、花开" />
+
+
+                    <cn.yanhu.commonres.view.UserTagView
+                        android:id="@+id/tagId"
+                        tagColorId="@{@color/blackAlpha96}"
+                        tagTextColorId="@{@color/fontGrayColor}"
+                        tagValue='@{"ID:"+userinfo.userId}'
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+                        app:layout_constraintStart_toStartOf="@+id/tv_nickName" />
+
+
+                    <View
+                        android:id="@+id/bgLiveRoom"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginHorizontal="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_12"
+                        android:background="@drawable/white_corner_12"
+                        app:layout_constraintBottom_toBottomOf="@+id/rv_live"
+                        app:layout_constraintTop_toBottomOf="@+id/bgUser" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/icon1"
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_marginStart="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_12"
+                        android:src="@drawable/icon_statistic_live"
+                        app:layout_constraintStart_toStartOf="@+id/bgLiveRoom"
+                        app:layout_constraintTop_toTopOf="@+id/bgLiveRoom" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/dp_8"
+                        android:text="我的开播"
+                        android:textColor="@color/fontTextColor"
+                        android:textSize="@dimen/sp_14"
+                        app:fontType="@string/fontBold"
+                        app:layout_constraintBottom_toBottomOf="@+id/icon1"
+                        app:layout_constraintStart_toEndOf="@+id/icon1"
+                        app:layout_constraintTop_toTopOf="@+id/icon1" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:src="@drawable/svg_arrow_right"
+                        app:layout_constraintBottom_toBottomOf="@+id/icon1"
+                        app:layout_constraintEnd_toEndOf="@+id/bgLiveRoom"
+                        app:layout_constraintTop_toTopOf="@+id/icon1" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_live"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingStart="@dimen/dp_10"
+                        android:paddingTop="@dimen/dp_12"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_constraintEnd_toEndOf="@+id/bgLiveRoom"
+                        app:layout_constraintStart_toStartOf="@+id/bgLiveRoom"
+                        app:layout_constraintTop_toBottomOf="@+id/icon1"
+                        app:spanCount="2"
+                        tools:itemCount="6"
+                        tools:listitem="@layout/adapter_live_statistic_total_item" />
+
+
+                    <View
+                        android:id="@+id/bgMyInvite"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginHorizontal="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_12"
+                        android:background="@drawable/white_corner_12"
+                        app:layout_constraintBottom_toBottomOf="@+id/rv_inviteTotal"
+                        app:layout_constraintTop_toBottomOf="@+id/bgLiveRoom" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/icon2"
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_marginStart="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_12"
+                        android:src="@drawable/icon_statistic_user"
+                        app:layout_constraintStart_toStartOf="@+id/bgMyInvite"
+                        app:layout_constraintTop_toTopOf="@+id/bgMyInvite" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/dp_8"
+                        android:text="我的徒弟"
+                        android:textColor="@color/fontTextColor"
+                        android:textSize="@dimen/sp_14"
+                        app:fontType="@string/fontBold"
+                        app:layout_constraintBottom_toBottomOf="@+id/icon2"
+                        app:layout_constraintStart_toEndOf="@+id/icon2"
+                        app:layout_constraintTop_toTopOf="@+id/icon2" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:src="@drawable/svg_arrow_right"
+                        app:layout_constraintBottom_toBottomOf="@+id/icon2"
+                        app:layout_constraintEnd_toEndOf="@+id/bgMyInvite"
+                        app:layout_constraintTop_toTopOf="@+id/icon2" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_inviteTotal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingStart="@dimen/dp_10"
+                        android:paddingTop="@dimen/dp_12"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_constraintEnd_toEndOf="@+id/bgMyInvite"
+                        app:layout_constraintStart_toStartOf="@+id/bgMyInvite"
+                        app:layout_constraintTop_toBottomOf="@+id/icon2"
+                        app:spanCount="2"
+                        tools:listitem="@layout/adapter_live_statistic_total_item" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+        </cn.yanhu.baselib.refresh.MyRefreshLayout>
+    </LinearLayout>
+</layout>

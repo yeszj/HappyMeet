@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.adapter.liveRoom.ThreeRoomSeatAdapter
+import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.ViewThreeRoomTopViewBinding
+import cn.yanhu.agora.pop.LiveRoomSeatManagerPop
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
@@ -13,10 +15,12 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.bean.RoomSeatInfo
+import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import com.chad.library.adapter4.BaseQuickAdapter
 
@@ -32,17 +36,39 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         addTopTitleView()
         super.initData()
         mBinding.rvSeat.adapter = seatUserAdapter
-        if (isOwner){
+        if (isOwner) {
             topTitleBinding.tvOnlineNum.visibility = View.VISIBLE
-        }else{
+        } else {
             topTitleBinding.tvOnlineNum.visibility = View.INVISIBLE
         }
+
+
+    }
+
+
+    private var liveRoomUserListPop: LiveRoomSeatManagerPop? = null
+    fun showUserList(gender: String) {
+        request({ agoraRxApi.getInviteList(roomId, gender, "0", 1) },
+            object : OnRequestResultListener<MutableList<UserDetailInfo>> {
+                override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
+                    val userList = data.data ?: return
+                    if (CommonUtils.isPopShow(liveRoomUserListPop)) {
+                        return
+                    }
+                    liveRoomUserListPop = LiveRoomSeatManagerPop.showDialog(
+                        mContext,
+                        userList,
+                        roomSourceBean, gender, onSendSeatInviteListener = inviteSeatListener
+                    )
+                }
+            })
     }
 
     private lateinit var topTitleBinding: ViewThreeRoomTopViewBinding
-    private fun addTopTitleView(){
+    private fun addTopTitleView() {
         val rankView =
-            LayoutInflater.from(mContext).inflate(cn.yanhu.agora.R.layout.view_three_room_top_view, null)
+            LayoutInflater.from(mContext)
+                .inflate(cn.yanhu.agora.R.layout.view_three_room_top_view, null)
         topTitleBinding = DataBindingUtil.bind(rankView)!!
         topTitleBinding.tvOnlineNum.setOnSingleClickListener {
             showOnlineUserList()
@@ -82,7 +108,16 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         val roomUserSeatInfo = item.roomUserSeatInfo ?: return
                         if (localUserId.toString() == roomUserSeatInfo.userId) {
                             switchMikeAlert(!item.mikeUser, item.id)
+                        } else if (isOwner) {
+                            ownerSwitchMikeAlert(!item.mikeUser, item.id)
                         }
+                    }
+                    cn.yanhu.agora.R.id.tv_manApplyCount -> {
+                        showUserList("1")
+                    }
+
+                    cn.yanhu.agora.R.id.tv_womanApplyCount -> {
+                        showUserList("2")
                     }
 
                     cn.yanhu.agora.R.id.vg_parent, cn.yanhu.agora.R.id.anchorSeatInfo -> {
@@ -90,7 +125,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         if (roomUserSeatInfo == null) {
                             if (isOwner) {
                                 //邀请上麦弹框
-                                (seatUserAdapter as ThreeRoomSeatAdapter).showUserList(if (item.id == 2) "1" else "2")
+                                showUserList(if (item.id == 2) "1" else "2")
                             } else {
                                 //上麦
                                 if (AppCacheManager.isMan()) {
@@ -108,9 +143,9 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                                 }
                             }
                         } else {
-                            if (roomUserSeatInfo.userId == AppCacheManager.userId){
+                            if (roomUserSeatInfo.userId == AppCacheManager.userId) {
                                 showUserPop(roomUserSeatInfo.userId)
-                            }else{
+                            } else {
                                 showSendGiftPop(roomUserSeatInfo)
                             }
                         }
@@ -134,6 +169,14 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         seatUserAdapter.addOnItemChildClickListener(
             cn.yanhu.agora.R.id.tv_switch, childItemClickListener
         )
+        seatUserAdapter.addOnItemChildClickListener(
+            cn.yanhu.agora.R.id.tv_manApplyCount,
+            childItemClickListener
+        )
+        seatUserAdapter.addOnItemChildClickListener(
+            cn.yanhu.agora.R.id.tv_womanApplyCount,
+            childItemClickListener
+        )
     }
 
     private fun showSwitchRoomTypePop() {
@@ -146,7 +189,8 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                 )
             ).build()
 
-        DialogUtils.showConfirmDialog(if (roomSourceBean.isPrivateRoom()) "转为大厅房间" else "转为专属房间",
+        DialogUtils.showConfirmDialog(
+            if (roomSourceBean.isPrivateRoom()) "转为大厅房间" else "转为专属房间",
             {
                 switchRoomType()
             },

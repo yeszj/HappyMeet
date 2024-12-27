@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#F7F7F7"
         android:background="@drawable/white_top_corner_15">
 
        <TextView
@@ -25,14 +26,13 @@
            android:textStyle="bold"
            android:layout_marginTop="@dimen/dp_20"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/dg_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="关闭"
-            android:textSize="@dimen/sp_13"
+            android:src="@drawable/svg_close"
             android:textColor="@color/cl_common"
             android:layout_marginTop="@dimen/dp_23"
             android:layout_marginEnd="@dimen/dp_15"/>

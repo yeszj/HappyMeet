@@ -2,7 +2,7 @@
 <litepal>
     <dbname value="sweetlove" />
 
-    <version value="27" />
+    <version value="28" />
 
     <!--
     	Define your models in the list with mapping tag, LitePal will

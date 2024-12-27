@@ -10,30 +10,31 @@
             type="cn.huanyuan.sweetlove.bean.InviteRecordInfo" />
 
         <import type="android.view.View" />
+        <import type="cn.yanhu.baselib.utils.CommonUtils"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingHorizontal="@dimen/dp_16"
-        android:paddingBottom="@dimen/dp_22">
+        android:paddingHorizontal="@dimen/dp_10"
+        android:background="@drawable/white_corner_12"
+        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10">
 
         <cn.yanhu.commonres.view.UserAvatarView
             android:id="@+id/avatarView"
             avatarUrl="@{userinfo.portrait}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:avatarSize="@dimen/dp_50"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/dp_10"
+            app:avatarSize="@dimen/dp_40"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:svgAvatarSize="@dimen/dp_50" />
+            app:svgAvatarSize="@dimen/dp_40" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
             android:src="@drawable/svg_online_stoke_white"
             android:visibility="@{userinfo.online?View.VISIBLE:View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"
@@ -44,74 +45,114 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_5"
-            android:drawableEnd="@drawable/svg_identify_tag"
-            android:drawablePadding="@dimen/dp_2"
-            android:ellipsize="end"
-            android:maxEms="8"
-            android:maxLines="1"
             android:text="@{userinfo.nickName}"
             android:textColor="@color/fontTextColor"
-            android:textSize="@dimen/sp_15"
-            app:fontType="@string/fontMedium"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontBold"
             app:layout_constraintStart_toEndOf="@+id/avatarView"
             app:layout_constraintTop_toTopOf="@+id/avatarView"
             tools:text="佊岸、花开" />
 
-        <LinearLayout
-            android:id="@+id/vg_info"
+        <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            android:drawableStart="@{userinfo.realNameAuth?@drawable/svg_identify_tag:@drawable/svg_identify_tag_gray}"
+            android:drawablePadding="@dimen/dp_2"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:textColor="@{userinfo.realNameAuth?@color/color_31cdd7:@color/color_888888}"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            tools:text = "已实名认证"
+            tools:textColor = "@color/color_31cdd7"
+            tools:drawableStart = "@drawable/svg_identify_tag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf = "@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName"
+            android:text='@{userinfo.realNameAuth?"已实名认证":"尚未实名认证"}' />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            android:drawablePadding="@dimen/dp_2"
+            android:ellipsize="end"
+            android:textColor="#888888"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            tools:text = "2024-12-20 16:12:30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf = "@+id/tagId"
+            app:layout_constraintTop_toTopOf="@+id/tagId"
+            android:text="@{userinfo.inviteTime}" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/tagId"
+            tagColorId="@{@color/blackAlpha96}"
+            tagTextColorId="@{@color/fontGrayColor}"
+            tagValue='@{"ID:"+userinfo.userId}'
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_5"
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"
-            app:layout_constraintStart_toEndOf="@+id/avatarView"
-            android:layout_height="wrap_content">
-            <cn.yanhu.commonres.view.UserLevelView
-                android:id="@+id/userLevel"
-                userLevel="@{userinfo.level}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_5"
-                app:layout_constraintBottom_toBottomOf="@+id/avatarView"
-                app:layout_constraintStart_toEndOf="@+id/avatarView" />
+            app:layout_constraintStart_toEndOf="@+id/avatarView" />
 
-            <cn.yanhu.commonres.view.UserTagView
-                android:id="@+id/userAge"
-                userAge="@{userinfo.age}"
-                userGender="@{userinfo.gender}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_5"
-                app:layout_constraintBottom_toBottomOf="@+id/userLevel"
-                app:layout_constraintStart_toEndOf="@+id/userLevel"
-                app:layout_constraintTop_toTopOf="@+id/userLevel" />
-
-            <cn.yanhu.commonres.view.UserTagView
-                userProvince='@{userinfo.province}'
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/userAge"
-                app:layout_constraintStart_toEndOf="@+id/userAge"
-                app:layout_constraintTop_toTopOf="@+id/userAge" />
-        </LinearLayout>
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:background="@drawable/dot_line"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="@+id/avatarView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/avatarView"
+            android:layout_height="@dimen/dp_1"/>
 
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_totalDesc"
             android:layout_width="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="wrap_content"
-            android:text="累计收益"
+            android:text="累计收益(元)："
             android:textColor="@color/fontGrayColor"
-            android:textSize="@dimen/sp_13"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
-            app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            android:paddingVertical="@dimen/dp_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/avatarView" />
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/tv_totalDesc"
+            android:layout_height="wrap_content"
+            tools:text="21.00"
+            android:text='@{userinfo.totalIncome}'
+            android:textColor="@{CommonUtils.INSTANCE.compareZero(userinfo.totalIncome)?@color/colorMain:@color/color_888888}"
+            app:fontType="@string/fontBold"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintTop_toTopOf="@+id/tv_totalDesc"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_totalDesc"   />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="累计贡献收益(元)："
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            android:paddingVertical="@dimen/dp_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_income" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_income"
             android:layout_width="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="wrap_content"
-            tools:text="￥21.00"
-            android:text='@{"￥"+userinfo.totalIncome}'
-            android:textColor="@color/colorMain"
+            tools:text="21.00"
+            android:text='@{userinfo.contributionIncome}'
+            android:textColor="@{CommonUtils.INSTANCE.compareZero(userinfo.contributionIncome)?@color/colorMain:@color/color_888888}"
             app:fontType="@string/fontBold"
-            android:textSize="@dimen/sp_16"
-            app:layout_constraintBottom_toBottomOf="@+id/vg_info"
-            app:layout_constraintTop_toTopOf="@+id/vg_info" />
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintTop_toTopOf="@+id/tv_totalDesc"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_totalDesc"   />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

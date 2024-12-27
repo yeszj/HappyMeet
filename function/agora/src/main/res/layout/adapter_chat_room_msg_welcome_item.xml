@@ -23,19 +23,19 @@
             avatarUrl="@{userInfo.portrait}"
             avatarUserId="@{userInfo.userId}"
             avatarFrameUrl="@{userInfo.avatarFrame}"
+            app:isCanClick="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:avatarSize="@dimen/dp_32"
             app:isShowSvgAvatar="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:svgAvatarSize="@dimen/dp_45" />
+            app:svgAvatarSize="@dimen/dp_45"
+            app:avatarSize="@dimen/dp_32" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_nickName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_4"
             android:text="@{userInfo.nickName}"
             android:textColor="@{userInfo.gender==1?@color/manColor:@color/femaleColor}"
             android:textSize="@dimen/sp_14"

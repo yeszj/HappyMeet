@@ -1,6 +1,10 @@
 package cn.yanhu.commonres.bean;
 
 
+import android.text.TextUtils;
+
+import com.blankj.utilcode.util.GsonUtils;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -17,6 +21,33 @@ public class GiftInfo implements Serializable {
     private int id;
     private int sendNumber;
     private String tagIcon;
+
+    private int type;
+
+    private String randomBoxGiftInfo;
+
+    public String getRandomBoxGiftInfo() {
+        return randomBoxGiftInfo;
+    }
+
+    public GiftInfo getRandomBoxGiftBean(){
+        if(!TextUtils.isEmpty(randomBoxGiftInfo)){
+            return GsonUtils.fromJson(randomBoxGiftInfo,GiftInfo.class);
+        }
+        return null;
+    }
+
+    public void setRandomBoxGiftInfo(String randomBoxGiftInfo) {
+        this.randomBoxGiftInfo = randomBoxGiftInfo;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public String getSvga() {
         return svga;

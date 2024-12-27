@@ -16,10 +16,9 @@ import com.chad.library.adapter4.BaseQuickAdapter
  * created: 2024/2/21
  * desc:
  */
-class FriendsAdapter: BaseQuickAdapter<SameCityUserInfo, FriendsAdapter.VH>() {
+class FriendsAdapter : BaseQuickAdapter<SameCityUserInfo, FriendsAdapter.VH>() {
     class VH(
-        parent: ViewGroup,
-        val binding: AdapterFriendItemBinding = AdapterFriendItemBinding.inflate(
+        parent: ViewGroup, val binding: AdapterFriendItemBinding = AdapterFriendItemBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
     ) : RecyclerView.ViewHolder(binding.root)
@@ -36,11 +35,14 @@ class FriendsAdapter: BaseQuickAdapter<SameCityUserInfo, FriendsAdapter.VH>() {
                     svgPlay.pauseAnimation()
                 }
             })
-            if (item?.isAuth == true){
-                TextViewDrawableUtils.setDrawableRight(tvNickName,ContextCompat.getDrawable(context,
-                    cn.yanhu.commonres.R.drawable.svg_identify_tag))
-            }else{
-                TextViewDrawableUtils.setDrawableRight(tvNickName,null)
+            if (item?.isAuth == true) {
+                TextViewDrawableUtils.setDrawableRight(
+                    tvNickName, ContextCompat.getDrawable(
+                        context, cn.yanhu.commonres.R.drawable.svg_identify_tag
+                    )
+                )
+            } else {
+                TextViewDrawableUtils.setDrawableRight(tvNickName, null)
             }
             executePendingBindings()
         }

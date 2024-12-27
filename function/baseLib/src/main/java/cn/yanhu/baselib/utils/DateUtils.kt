@@ -48,7 +48,23 @@ object DateUtils {
             String.format("%02d:%02d", minute, second)
         }
     }
-
+    /**
+     *  i 负数往前推几天 正数代表往后推几天
+     */
+    fun getTimeMillions(i: Int): Long{
+        var date = Date()
+        val calendar: Calendar = GregorianCalendar()
+        calendar.time = date
+        val dateString = System.currentTimeMillis()
+        try {
+            calendar.add(Calendar.DATE, i) //把日期往后增加一天.整数往后推,负数往前移动
+            date = calendar.time //这个时间就是日期往后推一天的结果
+            return date.time
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return dateString
+    }
     fun secondToHMSTime(time: Long, format: String?): String {
         var finalTime = time
         val day = (finalTime / 24 / 3600).toInt()

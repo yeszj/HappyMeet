@@ -29,9 +29,14 @@ import cn.huanyuan.sweetlove.net.HttpHeadInterceptor
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.LiveRoomManager
+import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
 import cn.yanhu.agora.pop.ReceiveImCallInBgPop
 import cn.yanhu.agora.pop.ReceiveImCallPop
+import cn.yanhu.agora.pop.ReceiveInviteSeat2Pop
+import cn.yanhu.agora.pop.ReceiveInviteSeatPop
 import cn.yanhu.agora.ui.imphone.VideoPhoneActivity
+import cn.yanhu.agora.ui.liveRoom.live.BaseLiveRoomFrg
+import cn.yanhu.agora.ui.liveRoom.live.LiveRoomActivity
 import cn.yanhu.baselib.crash.CrashUtils
 import cn.yanhu.baselib.crash.ExceptionHandler
 import cn.yanhu.baselib.queue.TaskQueueManagerImpl
@@ -41,6 +46,7 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
+import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.router.ARouterWrapper
 import cn.yanhu.commonres.bean.AppMsgNotifyInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
@@ -49,6 +55,7 @@ import cn.yanhu.commonres.config.CmdMsgTypeConfig
 import cn.yanhu.commonres.config.ConfigParamsManager
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.commonres.manager.AppManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.imchat.custom.chat.EaseCommonUtils
@@ -64,6 +71,7 @@ import cn.zj.netrequest.https.CertificateManageHelper
 import cn.zj.netrequest.intercept.HttpCacheInterceptor
 import cn.zj.netrequest.intercept.HttpCommonInterceptor
 import cn.zj.netrequest.status.BaseBean
+import cn.zj.netrequest.status.ErrorCode
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.GsonUtils
@@ -88,6 +96,7 @@ import com.hyphenate.easeui.constants.EaseConstant
 import com.hyphenate.util.VersionUtils
 import com.opensource.svgaplayer.SVGAParser
 import com.pcl.sdklib.manager.SdkParamsManager
+import com.permissionx.guolindev.PermissionX
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
 import okhttp3.Interceptor
@@ -121,9 +130,22 @@ class BaseApplication : Application() {
     private fun registerAppStatusListener() {
         AppUtils.registerAppStatusChangedListener(object : Utils.OnAppStatusChangedListener {
             override fun onForeground(activity: Activity) {
+                if (!TextUtils.isEmpty(AppCacheManager.mToken)) {
+                    AppManager.setAppState(
+                        AppManager.STATE_FOREGROUND,
+                        PermissionX.areNotificationsEnabled(activity)
+                    )
+                    reInitImSdk()
+                }
             }
 
             override fun onBackground(activity: Activity) {
+                if (!TextUtils.isEmpty(AppCacheManager.mToken)) {
+                    AppManager.setAppState(
+                        AppManager.STATE_BACKGROUND,
+                        PermissionX.areNotificationsEnabled(activity)
+                    )
+                }
             }
         })
     }
@@ -482,7 +504,7 @@ class BaseApplication : Application() {
         } else if (source == ChatConstant.ACTION_PHONE_CALL_VIDEO) {
             //收到一对一视频
             val callInfo = message.getStringAttribute("callInfo")
-            var appStatus = ""
+            val appStatus: String
             if (VersionUtils.isTargetQ(ActivityUtils.getTopActivity())) {
                 if (CommonUtils.isScreenOff()) {
                     appStatus = "熄屏"
@@ -547,7 +569,54 @@ class BaseApplication : Application() {
             val data = message.getJSONObjectAttribute("data")
             addPopTask(ChatConstant.GLOBAL_GIFT_ALERT,
                 data.toString())
+        }else if(source == ChatConstant.ACTION_FORCE_AUTH) {
+            addPopTask(ChatConstant.ACTION_FORCE_AUTH,
+                "1")
+        }else if (source == ChatConstant.ACTION_MSG_SET_UP){
+            showReceiveInvitePop(message)
         }
+    }
+
+    private var receiveInviteSeatPop: ReceiveInviteSeatPop? = null
+    private var receiveInviteSeatPop2: ReceiveInviteSeat2Pop? = null
+
+    private fun showReceiveInvitePop(message: EMMessage) {
+        val roomId = message.getStringAttribute("roomId","")
+        if (TextUtils.isEmpty(roomId)){
+            return
+        }
+        val topActivity = ActivityUtils.getTopActivity()
+        if (topActivity == null || topActivity is LiveRoomActivity || LiveRoomVideoMiniManager.getInstance().isShowing){
+            return
+        }
+
+        val roomInfo = message.getStringAttribute("roomInfo","")
+        if (TextUtils.isEmpty(roomInfo)){
+            //为了兼容老版本没有 roomInfo字段，老版本收到邀请上麦跟在直播间内收到邀请用同一个弹框(多迭代几个版本后 可考虑删除此逻辑)
+            if (CommonUtils.isPopShow(receiveInviteSeatPop)) {
+                return
+            }
+            receiveInviteSeatPop = ReceiveInviteSeatPop.showDialog(
+                topActivity,
+                message,
+                object : ReceiveInviteSeatPop.OnClickSeatUpListener {
+                    override fun onClickSeatUp() {
+                        val seatId = message.getStringAttribute("seatId","")
+                        userSetSeat(roomId,seatId)
+                    }
+                })
+        }else{
+            if (CommonUtils.isPopShow(receiveInviteSeatPop2)) {
+                return
+            }
+            receiveInviteSeatPop2 =  ReceiveInviteSeat2Pop.showDialog(topActivity,message,object : ReceiveInviteSeat2Pop.OnClickSeatUpListener {
+                override fun onClickSeatUp() {
+                    val seatId = message.getStringAttribute("seatId","")
+                    userSetSeat(roomId,seatId)
+                }
+            })
+        }
+
     }
 
     private fun showNewCallWhenForeground(callInfo: String) {
@@ -586,7 +655,6 @@ class BaseApplication : Application() {
     }
 
     private fun showApplySuccessDialog(roomId: String, seatId: String, ownerNickname: String) {
-
         DialogUtils.showConfirmDialog("上麦申请成功", {
             userSetSeat(roomId, seatId)
         }, {
@@ -595,7 +663,8 @@ class BaseApplication : Application() {
     }
 
     private fun userSetSeat(roomId: String, seatId: String) {
-        request({ agoraRxApi.userSetSeat(roomId, "2", seatId, AppCacheManager.userId) },
+        DialogUtils.showLoading(hasShadow = false)
+        request({ agoraRxApi.userSetSeat(roomId, BaseLiveRoomFrg.SEAT_TYPE_AUTO, seatId, AppCacheManager.userId) },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     LiveRoomManager.toLiveRoomPage(
@@ -603,7 +672,45 @@ class BaseApplication : Application() {
                         roomId
                     )
                 }
-            })
+
+                override fun onFail(code: Int?, msg: String?) {
+                    super.onFail(code, msg)
+                    DialogUtils.dismissLoading()
+                    when (code) {
+                        ErrorCode.CODE_NO_BALANCE -> {
+                            showRechargePop()
+                        }
+                        ErrorCode.CODE_NEED_REAL_NAME -> {
+                            showRealNameAuthPop()
+                        }
+                        else ->{
+                            showToast(msg)
+                        }
+                    }
+                }
+            },false)
+    }
+
+    private fun showRealNameAuthPop() {
+        DialogUtils.showConfirmDialog(
+            "上麦提醒",
+            {
+                RouteIntent.lunchToRealNamPage()
+            },
+            {
+            },
+            "申请上麦请先完成实名认证",
+            cancel = "取消",
+            confirm = "去认证",
+            cancelBg = cn.yanhu.baselib.R.drawable.shape_cancel_btn_r30
+        )
+    }
+
+    private fun showRechargePop() {
+        val topActivity = ActivityUtils.getTopActivity() as FragmentActivity?
+        topActivity?.apply {
+            ApplicationProxy.instance.showRechargePop(topActivity, true)
+        }
     }
 
 

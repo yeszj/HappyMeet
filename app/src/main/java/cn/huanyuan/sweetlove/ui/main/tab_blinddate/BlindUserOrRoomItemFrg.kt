@@ -10,15 +10,11 @@ import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
-import cn.yanhu.commonres.config.ChatConstant
-import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.loading.RoomLoadingCallBack
 import cn.yanhu.commonres.router.RouteIntent
 import cn.zj.netrequest.ext.parseState
 import com.chad.library.adapter4.util.setOnDebouncedItemClick
-import com.hyphenate.chat.EMMessage
-import com.jeremyliao.liveeventbus.LiveEventBus
 
 /**
  * @author: zhengjun
@@ -51,6 +47,9 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
                 }
             }
         }
+        if (!isRealVisible()){
+            requestData()
+        }
     }
 
     override fun initLoadService() {
@@ -64,8 +63,7 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
         RefreshManager.getInstance()
             .initRefresh(mContext, true, mBinding.refreshLayout, object : IRefreshCallBack {
                 override fun onRefresh() {
-                    page = 1
-                    requestData()
+                    refreshRoomList()
                 }
 
                 override fun onLoadMore() {
@@ -77,24 +75,28 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
 
     override fun initListener() {
         super.initListener()
-        LiveEventBus.get<String>(EventBusKeyConfig.CLOSELIVEROOM).observe(this) {
-            page = 1
-            requestData()
-        }
-        LiveEventBus.get<EMMessage>(EventBusKeyConfig.RECEIVE_CMD_MSG).observe(this){
-            val source = it.getIntAttribute("source", -1)
-            if (source == ChatConstant.ACTION_MSG_SWITCH_TYPE_CONFIRM || source == ChatConstant.ACTION_MSG_SWITCH_TYPE_PLAZA){
-                //有房主将房间切换位专属或者大厅 刷新页面
-                page = 1
-                requestData()
-            }
-        }
+//        LiveEventBus.get<String>(EventBusKeyConfig.CLOSELIVEROOM).observe(this) {
+//            refreshRoomList()
+//        }
+//        LiveEventBus.get<EMMessage>(EventBusKeyConfig.RECEIVE_CMD_MSG).observe(this){
+//            val source = it.getIntAttribute("source", -1)
+//            if (source == ChatConstant.ACTION_MSG_SWITCH_TYPE_CONFIRM || source == ChatConstant.ACTION_MSG_SWITCH_TYPE_PLAZA){
+//                //有房主将房间切换位专属或者大厅 刷新页面
+//                refreshRoomList()
+//            }
+//        }
+    }
+
+     fun refreshRoomList() {
+        page = 1
+        requestData()
     }
 
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
         mViewModel.roomListObservable.observe(this) { it ->
             parseState(it, {
+                isRequest = true
                 val roomList = it.roomList
                 if (page == 1) {
                     adapter.isStateViewEnable = roomList.size <= 0
@@ -109,14 +111,25 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
         }
     }
 
+    override fun lazyLoad() {
+    }
+
+    private var isRequest = false
     override fun requestData() {
         mViewModel.getRoomList(type, page)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (isRequest){
+            requestData()
+        }
+    }
+
     companion object {
         const val TYPE_RECOMMEND = 1
-        const val TYPE_EXCLUSIVE = 2
-        const val TYPE_FRIENDS = 3
+        const val TYPE_FRIENDS = 2
+        const val TYPE_EXCLUSIVE = 3
         fun newsInstance(type: Int): BlindUserOrRoomItemFrg {
             val fragment = BlindUserOrRoomItemFrg()
             val bundle = Bundle()

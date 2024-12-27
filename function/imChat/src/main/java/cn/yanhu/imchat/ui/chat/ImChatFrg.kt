@@ -9,6 +9,7 @@ import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
+import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.CmdMsgTypeConfig
@@ -133,8 +134,10 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         if (TextUtils.isEmpty(url)) {
             return
         }
+        val giftInfo = GiftInfo()
+        giftInfo.svga = url
         //显示礼物特效svg动画
-        giftAnimTaskManager.addTask(GiftPopAnimTask(url!!,mBinding.svgGiftAnim))
+        giftAnimTaskManager.addTask(GiftPopAnimTask(giftInfo,mBinding.svgGiftAnim))
     }
 
     override fun initListener() {

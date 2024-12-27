@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="roomBean"
+            type="cn.yanhu.commonres.bean.RoomDetailInfo" />
+
+        <import type="android.view.View" />
+        <import type="cn.yanhu.commonres.manager.ImageThumbUtils"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_invite_seat"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_corner_radius="@dimen/dp_16" />
+
+        <View
+            android:id="@+id/statuBg"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginTop="@dimen/dp_30"
+            android:background="@{roomBean.privateRoom?@drawable/shape_exclusive_blinddate_tag: roomBean.sevenRoom|| roomBean.nineRoom? @drawable/shape_seven_blinddate_tag: roomBean.angleRoom?@drawable/shape_angle_blinddate_tag:roomBean.songRoom?@drawable/shape_song_blinddate_tag:@drawable/shape_video_blinddate_tag}"
+            app:layout_constraintEnd_toEndOf="@+id/tv_status"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/shape_seven_blinddate_tag" />
+
+        <com.opensource.svgaplayer.SVGAImageView
+            android:id="@+id/iv_status"
+            android:layout_width="@dimen/dp_14"
+            android:layout_height="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_4"
+            app:autoPlay="true"
+            android:visibility="@{roomBean.privateRoom||roomBean.publicRoom?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/statuBg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/statuBg"
+            app:source="play_white.svga" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_status2"
+            android:layout_width="@dimen/dp_14"
+            android:layout_height="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_4"
+            android:visibility="@{roomBean.privateRoom||roomBean.publicRoom?View.GONE:View.VISIBLE}"
+            android:src="@{roomBean.angleRoom?@drawable/svg_tag_angle:roomBean.songRoom?@drawable/svg_tag_song:@drawable/svg_tag_friend}"
+            app:layout_constraintBottom_toBottomOf="@+id/statuBg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/statuBg"
+            tools:src="@drawable/svg_tag_angle" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_status"
+            style="@style/common_white_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/dp_6"
+            android:text='@{roomBean.roomTypeName}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/statuBg"
+            app:layout_constraintStart_toEndOf="@+id/iv_status"
+            app:layout_constraintTop_toTopOf="@+id/statuBg"
+            tools:text="专属相亲" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_20"
+            android:src="@mipmap/pop_icon_close_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:layout_marginTop="@dimen/dp_30"
+            imageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.ownerInfo.portrait)}"
+            tools:src="@drawable/ease_default_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_border_color="@color/white"
+            app:riv_border_width="@dimen/dp_1"
+            app:riv_oval="true" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_10"
+            android:textColor="@color/color_222222"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium"
+            android:text="@{roomBean.ownerInfo.nickName}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_avatar"
+            tools:text="忧伤开满来时路" />
+
+        <LinearLayout
+            android:id="@+id/vg_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nickName">
+
+            <cn.yanhu.commonres.view.UserTagView
+                android:layout_width="wrap_content"
+                userGender="@{roomBean.ownerInfo.gender}"
+                userAge="@{roomBean.ownerInfo.age}"
+                android:layout_height="wrap_content" />
+
+            <cn.yanhu.commonres.view.UserTagView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                userProvince="@{roomBean.ownerInfo.province}"
+                android:layout_marginStart="@dimen/dp_5" />
+        </LinearLayout>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_35"
+            tools:text="邀请你进入七人交友"
+            android:text='@{"邀请你进入"+roomBean.roomTypeName}'
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_20"
+            app:fontType="@string/fontBold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vg_tag" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_roseNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_12"
+            android:text='@{"上麦需消耗"+roomBean.seatRoseNum+"玫瑰"+(roomBean.privateRoom?"/分钟":"")}'
+            tools:text="上麦需消耗20玫瑰/分钟"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tips" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_refuse"
+            android:layout_width="@dimen/dp_139"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginTop="@dimen/dp_30"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/white_corner_30"
+            android:backgroundTint="@color/blackAlpha96"
+            android:gravity="center"
+            app:layout_constraintEnd_toStartOf="@+id/divider"
+            android:text="狠心拒绝"
+            android:textColor="@color/color_888888"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintTop_toBottomOf="@+id/tv_roseNum" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="@dimen/dp_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="@dimen/dp_70"/>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_agree"
+            app:layout_constraintStart_toEndOf="@+id/divider"
+            android:layout_width="@dimen/dp_139"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginTop="@dimen/dp_30"
+            app:layout_constraintBottom_toBottomOf="@+id/divider"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/white_corner_30"
+            android:backgroundTint="@color/colorMain"
+            android:gravity="center"
+            android:text="去看看"
+            app:fontType="@string/fontBold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintTop_toBottomOf="@+id/tv_roseNum" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

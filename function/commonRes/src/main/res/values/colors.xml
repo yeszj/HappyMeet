@@ -4,6 +4,7 @@
     <color name="color_222222">#222222</color>
     <color name="color_888888">#888888</color>
     <color name="onlineColor">#00CB76</color>
+    <color name="color_31cdd7">#31CDD7</color>
     <color name="cl_common">#333333</color><!--字体普通颜色-->
     <color name="colorTextRed">#FF2A68</color><!--字体普通颜色-->
     <color name="cl_common_opacity_80">#CC333333</color><!--字体普通颜色-->

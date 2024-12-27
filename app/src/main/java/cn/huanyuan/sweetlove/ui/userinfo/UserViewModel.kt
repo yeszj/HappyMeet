@@ -42,10 +42,14 @@ class UserViewModel : BaseViewModel() {
     val myServiceObservable = MutableLiveData<ResultState<MutableList<MineMenuBean>>>()
     val searchUserObservable = MutableLiveData<ResultState<MutableList<UserDetailInfo>>>()
     val addFriendObservable = MutableLiveData<ResultState<String>>()
+    val addFriendRoseObservable = MutableLiveData<ResultState<String>>()
+
     fun addFriend(chatUserId: String) {
         request({ imChatRxApi.addFriend(chatUserId) }, addFriendObservable, false)
     }
-
+    fun becomeFriendRose(chatUserId: String) {
+        request({ imChatRxApi.becomeFriendRose(chatUserId) }, addFriendRoseObservable, false, isShowToast = false)
+    }
     val cancelFriendObservable = MutableLiveData<ResultState<String>>()
     fun cancelFriends(chatUserId: String) {
         request({ imChatRxApi.cancelFriends(chatUserId) }, cancelFriendObservable, false)
@@ -114,7 +118,7 @@ class UserViewModel : BaseViewModel() {
     val canBaidFaceObservable = MutableLiveData<ResultState<Boolean>>()
     fun ifCanBaiduFace() {
         request({ rxApi.ifCanBaiduFace() }, canBaidFaceObservable,
-            isShowDialog = false
+            isShowDialog = false, isShowToast = false
         )
     }
 

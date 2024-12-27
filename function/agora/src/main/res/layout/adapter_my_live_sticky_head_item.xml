@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="recordInfo"
+            type="cn.yanhu.agora.bean.LiveRecordResponse.RecordInfo" />
+
+        <import type="android.text.TextUtils" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/vg_head"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_39"
+        android:background="@color/base_bg_gray"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/dp_12">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@{recordInfo.date}"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_13"
+            tools:text="2024年01月" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{"共"+recordInfo.kbCount+"次  收到"+(TextUtils.isEmpty(recordInfo.roseNum)?"0" : recordInfo.roseNum)+"玫瑰"}'
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_13"
+            tools:text="开播3次  收入1542玫瑰" />
+    </LinearLayout>
+</layout>

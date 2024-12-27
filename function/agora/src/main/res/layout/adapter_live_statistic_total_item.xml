@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="position"
+            type="java.lang.Integer" />
+
+        <variable
+            name="statisticInfo"
+            type="cn.yanhu.agora.bean.StatisticInfo" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_68"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/white_corner_10"
+        android:backgroundTint="@color/blackAlpha96"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{statisticInfo.title}"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_12"
+            tools:text="本月直播收益(元)" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_10"
+            android:text="@{statisticInfo.value}"
+            tools:textColor="@color/fontTextColor"
+            android:textColor="@{position==0?@color/colorMain:@color/fontTextColor}"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium"
+            tools:text="0.00" />
+
+    </LinearLayout>
+</layout>
