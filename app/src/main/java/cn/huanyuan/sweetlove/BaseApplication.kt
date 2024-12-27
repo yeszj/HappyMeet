@@ -64,6 +64,7 @@ import cn.yanhu.imchat.manager.EMInitUtils
 import cn.yanhu.imchat.manager.EaseHelper.initEaseUI
 import cn.zj.netrequest.RetrofitUtil
 import cn.zj.netrequest.application.ApplicationProxy
+import cn.zj.netrequest.application.OnImLoginListener
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.factory.CustomizeGsonConverterFactory
@@ -87,6 +88,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.hjq.toast.style.BlackToastStyle
+import com.hyphenate.EMCallBack
 import com.hyphenate.EMMessageListener
 import com.hyphenate.EMValueCallBack
 import com.hyphenate.chat.EMClient
@@ -271,12 +273,21 @@ class BaseApplication : Application() {
         registerImMsgEvent()
     }
 
-    fun reInitImSdk() {
+    fun reInitImSdk(onImLoginListener:OnImLoginListener?=null) {
         if (!EMClient.getInstance().isSdkInited) {
             initImConfig()
         }
         if (!EMClient.getInstance().isLoggedIn) {
-            LoginResultManager.loginIM(false,null)
+            LoginResultManager.loginIM(false,object : EMCallBack{
+                override fun onSuccess() {
+                    onImLoginListener?.onSuccess()
+                }
+                override fun onError(code: Int, error: String?) {
+                    onImLoginListener?.onError(code,error)
+                }
+            })
+        }else{
+            onImLoginListener?.onSuccess()
         }
     }
 

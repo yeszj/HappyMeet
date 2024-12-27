@@ -83,6 +83,7 @@ import cn.yanhu.imchat.pop.ChatListDialog
 import cn.yanhu.imchat.pop.SendGiftPop
 import cn.zj.netrequest.OnRoomLeaveListener
 import cn.zj.netrequest.application.ApplicationProxy
+import cn.zj.netrequest.application.OnImLoginListener
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.ext.request
@@ -1504,11 +1505,27 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
                 override fun onError(error: Int, errorMsg: String?) {
                     logcom("加入聊天室失败，$error————msg$errorMsg")
-                    showToast("直播间异常，请重新尝试进入直播间")
-                    leaveRoomFinish()
+                    if (error==201 && !hasReLogin){
+                        reLoginIm()
+                    }else{
+                        showToast("直播间异常，请重新尝试进入直播间")
+                        leaveRoomFinish()
+                    }
                 }
-
             })
+    }
+
+    private var hasReLogin = false
+    private fun reLoginIm() {
+        hasReLogin = true
+        ApplicationProxy.instance.reLoginImSdk(object : OnImLoginListener {
+            override fun onSuccess() {
+                joinChatRoom()
+            }
+            override fun onError(code: Int, error: String?) {
+                leaveRoomFinish()
+            }
+        })
     }
 
     private var isFinish = false

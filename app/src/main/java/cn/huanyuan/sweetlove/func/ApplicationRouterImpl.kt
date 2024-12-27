@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Intent
 import android.text.TextUtils
 import androidx.fragment.app.FragmentActivity
+import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.BuildConfig
 import cn.huanyuan.sweetlove.func.dialog.RoseRechargePop
 import cn.huanyuan.sweetlove.net.HttpHeadConfig
@@ -23,6 +24,7 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.router.RouteIntent
 import cn.zj.netrequest.OnRoomLeaveListener
 import cn.zj.netrequest.application.IApplication
+import cn.zj.netrequest.application.OnImLoginListener
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.Utils
 import com.hyphenate.EMCallBack
@@ -147,6 +149,10 @@ class ApplicationRouterImpl : IApplication {
     override fun finishLiveRoomActivity(onRoomLeaveListener: OnRoomLeaveListener) {
         val liveRoomActivity = getLiveRoomActivity() as LiveRoomActivity?
         liveRoomActivity?.roomLeave(onRoomLeaveListener)
+    }
+
+    override fun reLoginImSdk(onImLoginListener: OnImLoginListener) {
+        (getApplication() as BaseApplication).reInitImSdk(onImLoginListener)
     }
 
 

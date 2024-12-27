@@ -29,4 +29,6 @@ interface IApplication {
 
     fun jumpToPage(className:String,intent: Intent)
     fun finishLiveRoomActivity(onRoomLeaveListener: OnRoomLeaveListener)
+
+    fun reLoginImSdk(onImLoginListener: OnImLoginListener)
 }
