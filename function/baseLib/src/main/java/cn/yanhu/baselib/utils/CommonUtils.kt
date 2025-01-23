@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.core.content.ContextCompat
 import cn.yanhu.baselib.R
+import cn.zj.netrequest.application.ApplicationProxy
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -100,7 +101,12 @@ object CommonUtils {
     }
     @JvmStatic
     fun getColor(colorId: Int): Int {
-        return ContextCompat.getColor(ActivityUtils.getTopActivity(), colorId)
+        val topActivity = ActivityUtils.getTopActivity()
+        return if (topActivity!=null){
+            ContextCompat.getColor(topActivity, colorId)
+        }else{
+            ContextCompat.getColor(ApplicationProxy.instance.getApplication(), colorId)
+        }
     }
 
 
