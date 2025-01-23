@@ -11,4 +11,8 @@ object ServiceConfigKeyManager {
 
     //管理员直播间置顶时长
     const val KEY_ROOM_TOP_TIMES = "room_top_times"
+
+    //新年活动配置
+    const val KEY_NEW_YEAR_EVENT = "new_year_event"
+
 }

@@ -15,7 +15,11 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ui.TestActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.splash.SplashActivity"
             android:configChanges="orientation|screenSize|screenLayout"
@@ -26,6 +30,22 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="um.6709deac667bfe33f3be884e" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="n.huanyuan.cn"
+                    android:pathPrefix="/YGXJH" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
@@ -188,6 +208,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.teenage.TeenAgePwdSetActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.event.newYear.NewYearEventActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.event.common.AppCommonEventActivity"
             android:configChanges="orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
     </application>

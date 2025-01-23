@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="songInfo"
+            type="cn.yanhu.agora.bean.SongInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/bg_song_item"
+        android:layout_height="@dimen/dp_106">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_index"
+            android:layout_width="@dimen/dp_25"
+            android:textColor="@color/white"
+            tools:text="11"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontBold"
+            android:layout_height="@dimen/dp_20"/>
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp_44"
+            android:layout_marginTop="@dimen/dp_10"
+            app:riv_oval="true"
+            imageUrl="@{songInfo.portrait}"
+            android:layout_marginStart="@dimen/dp_10"
+            tools:src="@drawable/ease_default_avatar"
+            app:layout_constraintStart_toEndOf="@+id/tv_index"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="@dimen/dp_44"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            android:paddingStart="@dimen/dp_10"
+            app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+            android:layout_height="wrap_content">
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:textColor="@color/white"
+                tools:text="TaPo Int"
+                android:text="@{songInfo.nickName}"
+                android:textSize="@dimen/sp_14"
+                app:fontType="@string/fontMedium"
+                android:layout_height="wrap_content"/>
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:textColor="@color/fontGrayColor"
+                tools:text="已点：随机歌曲"
+                android:text='@{"已点："+songInfo.songName}'
+                android:paddingTop="@dimen/dp_6"
+                android:textSize="@dimen/sp_11"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            app:layout_constraintTop_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintStart_toStartOf="@+id/iv_avatar"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="#33000000"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:gravity="center_vertical"
+            android:layout_height="@dimen/dp_32">
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                app:riv_oval="true"
+                imageUrl="@{songInfo.clickInfo.portrait}"
+                tools:src="@drawable/ease_default_avatar"/>
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:textColor="@color/fontGrayColor"
+                tools:text="点歌老板：喵斯拉"
+                android:paddingStart="@dimen/dp_4"
+                android:text='@{"点歌老板："+songInfo.clickInfo.nickName}'
+                android:textSize="@dimen/sp_12"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

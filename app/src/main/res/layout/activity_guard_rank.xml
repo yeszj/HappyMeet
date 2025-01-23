@@ -36,7 +36,7 @@
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/vg_myInfo"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.core.widget.NestedScrollView
@@ -52,7 +52,7 @@
                         android:id="@+id/vg_top"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_gradient_task"
+                        android:background="@drawable/bg_gradient_guard"
                         app:layout_constraintTop_toTopOf="parent">
 
 
@@ -78,7 +78,6 @@
                             <com.makeramen.roundedimageview.RoundedImageView
                                 android:id="@+id/iv_avatar1"
                                 imageUrl="@{rankInfo1.portrait}"
-                                app:riv_oval="true"
                                 placeholderId="@{-1}"
                                 android:layout_width="@dimen/dp_60"
                                 android:layout_height="@dimen/dp_60"
@@ -87,6 +86,7 @@
                                 app:layout_constraintEnd_toEndOf="@+id/iv_svg"
                                 app:layout_constraintStart_toStartOf="@+id/iv_svg"
                                 app:layout_constraintTop_toTopOf="@+id/iv_svg"
+                                app:riv_oval="true"
                                 tools:src="@drawable/icon_portrait" />
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -95,6 +95,7 @@
                                 placeholderId="@{-1}"
                                 android:layout_width="@dimen/dp_112"
                                 android:layout_height="@dimen/dp_112"
+                                android:src="@drawable/avatar_frame_guard"
                                 android:visibility="@{rankInfo1!=null ?View.VISIBLE:View.INVISIBLE}"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +116,7 @@
                                 app:layout_constraintEnd_toEndOf="@+id/iv_svg"
                                 app:layout_constraintStart_toStartOf="@+id/iv_svg"
                                 app:layout_constraintTop_toBottomOf="@+id/iv_svg"
-                                tools:text="赠送礼物达999玫瑰且排名第1即可成为守护"
+                                tools:text="近7天赠送礼物超过1000玫瑰且排名第1即可成为守护"
                                 tools:visibility="gone" />
 
                             <cn.yanhu.baselib.view.CustomFontTextView
@@ -141,7 +142,7 @@
                                 android:layout_height="wrap_content"
                                 android:drawableEnd="@drawable/icon_rose"
                                 android:gravity="center_vertical"
-                                android:text="@{rankInfo1.userGiftValue}"
+                                android:text="@{rankInfo1.roseNum}"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_12"
                                 android:visibility="@{TextUtils.isEmpty(rankInfo1.nickName)?View.INVISIBLE:View.VISIBLE}"
@@ -166,7 +167,6 @@
                                 android:id="@+id/iv_avatar2"
                                 imageUrl="@{rankInfo2.portrait}"
                                 placeholderId="@{-1}"
-                                app:riv_oval="true"
                                 android:layout_width="@dimen/dp_60"
                                 android:layout_height="@dimen/dp_60"
                                 android:scaleType="centerCrop"
@@ -174,6 +174,7 @@
                                 app:layout_constraintEnd_toEndOf="@+id/iv_svg2"
                                 app:layout_constraintStart_toStartOf="@+id/iv_svg2"
                                 app:layout_constraintTop_toTopOf="@+id/iv_svg2"
+                                app:riv_oval="true"
                                 tools:src="@drawable/icon_portrait" />
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -210,7 +211,7 @@
                                 android:layout_height="wrap_content"
                                 android:drawableEnd="@drawable/icon_rose"
                                 android:gravity="center_vertical"
-                                android:text="@{rankInfo2.userGiftValue}"
+                                android:text="@{rankInfo2.roseNum}"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_12"
                                 android:visibility="@{rankInfo2!=null?View.VISIBLE:View.INVISIBLE}"
@@ -234,7 +235,6 @@
                                 android:id="@+id/iv_avatar3"
                                 imageUrl="@{rankInfo3.portrait}"
                                 placeholderId="@{-1}"
-                                app:riv_oval="true"
                                 android:layout_width="@dimen/dp_60"
                                 android:layout_height="@dimen/dp_60"
                                 android:scaleType="centerCrop"
@@ -242,6 +242,7 @@
                                 app:layout_constraintEnd_toEndOf="@+id/iv_svg3"
                                 app:layout_constraintStart_toStartOf="@+id/iv_svg3"
                                 app:layout_constraintTop_toTopOf="@+id/iv_svg3"
+                                app:riv_oval="true"
                                 tools:src="@drawable/icon_portrait" />
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -278,7 +279,7 @@
                                 android:layout_height="wrap_content"
                                 android:drawableEnd="@drawable/icon_rose"
                                 android:gravity="center_vertical"
-                                android:text="@{rankInfo3.userGiftValue}"
+                                android:text="@{rankInfo3.roseNum}"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_12"
                                 android:visibility="@{rankInfo3!=null?View.VISIBLE:View.INVISIBLE}"
@@ -295,11 +296,10 @@
                         android:id="@+id/rv_rank"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginEnd="@dimen/dp_5"
                         android:nestedScrollingEnabled="false"
                         android:paddingBottom="@dimen/dp_10"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/vg_top"
                         tools:listitem="@layout/adapter_rank_list_item" />
 
@@ -308,6 +308,14 @@
 
             </androidx.core.widget.NestedScrollView>
         </cn.yanhu.baselib.refresh.MyRefreshLayout>
+
+        <include
+            android:id="@+id/vg_myInfo"
+            layout="@layout/adapter_rank_list_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_68"
+            android:background="#0A000000"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <cn.yanhu.baselib.view.TitleBar
             android:id="@+id/titleBar"

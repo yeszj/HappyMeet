@@ -89,4 +89,22 @@ public class SVGAUtils {
             e.printStackTrace();
         }
     }
+
+    public static void loadCustomAssetsSVGAAnim(String svgaName,SVGAParser.ParseCompletion parseCompletion) {
+        try {
+            SVGAParser.Companion.shareParser().decodeFromAssets(svgaName, new SVGAParser.ParseCompletion() {
+                @Override
+                public void onComplete(@NonNull SVGAVideoEntity svgaVideoEntity) {
+                    parseCompletion.onComplete(svgaVideoEntity);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            }, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

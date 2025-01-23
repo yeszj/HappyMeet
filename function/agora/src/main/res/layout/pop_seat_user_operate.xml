@@ -14,6 +14,7 @@
         <variable
             name="isSelf"
             type="java.lang.Boolean" />
+        <import type="android.text.TextUtils"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,6 +69,33 @@
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/vg_guard"
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/vg_tag"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:background="@drawable/bg_gradient_guard_btn"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_height="@dimen/dp_32">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_32"
+                android:src="@drawable/icon_tag_guard"
+                android:layout_height="@dimen/dp_32"/>
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                android:paddingStart="@dimen/dp_4"
+                tools:text="暂无守护"
+                android:text='@{TextUtils.isEmpty(userInfo.guardNickName)?"暂无守护":userInfo.guardNickName}'
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
@@ -80,7 +108,7 @@
             android:textSize="@dimen/sp_14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vg_tag"
+            app:layout_constraintTop_toBottomOf="@+id/vg_guard"
             tools:text="有个姑娘问我借钱去整容，整的挺成功，我再没认出是谁问我借的钱。" />
 
         <View

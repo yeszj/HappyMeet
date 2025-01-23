@@ -9,13 +9,16 @@ import cn.yanhu.agora.bean.LiveIncomeDetailInfo
 import cn.yanhu.agora.bean.LiveRecordResponse
 import cn.yanhu.agora.bean.LiveStatisticTotalInfo
 import cn.yanhu.agora.bean.RoomConfigInfo
+import cn.yanhu.agora.bean.RoomExtraInfo
 import cn.yanhu.agora.bean.RoomLeaveResponse
 import cn.yanhu.agora.bean.RoomOnlineResponse
+import cn.yanhu.agora.bean.SongListResponse
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.bean.request.CreateRoomRequest
 import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.ExpressionInfo
+import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
@@ -239,4 +242,44 @@ interface AgoraApiService : CommonApiService {
     suspend fun getRoomIncomeDetail(
         @Query("roomId") roomId: String,
     ): BaseBean<LiveIncomeDetailInfo>
+
+    @POST("app/v1/room/setExpand")
+    suspend fun setExpand(
+        @Query("roomId") roomId: String,
+        @Query("seatNum") seatNum: Int
+    ): BaseBean<String>
+
+    @GET("app/v1/room/song/getInfo")
+    suspend fun getSongGiftInfo(
+        @Query("roomId") roomId: String,
+    ): BaseBean<GiftInfo>
+
+    @POST("app/v1/room/song/click")
+    suspend fun clickSong(
+        @Query("roomId") roomId: String,
+        @Query("seatUserId") seatUserId: String,
+        @Query("giftId") giftId: String?
+    ): BaseBean<String>
+
+    @GET("app/v1/room/song/getUserList")
+    suspend fun getSongList(
+        @Query("roomId") roomId: String,
+    ): BaseBean<SongListResponse>
+
+    @GET("app/v1/room/getFitAngelRankList")
+    suspend fun getFitAngelRankList(
+        @Query("roomId") roomId: String,
+    ): BaseBean<MutableList<AngleRankInfo>>
+
+    @POST("app/v1/room/operateCrowned")
+    suspend fun operateCrowned(
+        @Query("roomId") roomId: String,
+        @Query("operatedUserId") operatedUserId: String
+    ): BaseBean<AngleRoomResultInfo>
+
+    @GET("app/v1/room/getExtraInfo")
+    suspend fun getExtraInfo(
+        @Query("roomId") roomId: String,
+    ): BaseBean<RoomExtraInfo>
+
 }

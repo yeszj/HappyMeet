@@ -195,6 +195,10 @@ class SendMessagePop(
         }
     }
 
+    fun isShowExpression():Boolean{
+        return mBinding?.rvExpression?.visibility == View.VISIBLE
+    }
+
     override fun onShow() {
         super.onShow()
         showKeyboard()

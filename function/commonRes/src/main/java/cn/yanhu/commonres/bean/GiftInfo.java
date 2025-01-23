@@ -13,6 +13,8 @@ import java.util.Objects;
  * @date 2021/10/9
  */
 public class GiftInfo implements Serializable {
+    public static final int TYPE_SONG = 11;//点歌礼物
+    public static final int TYPE_RANDOM_BOX= 10;//随机礼物
     private String name;
     private int price;
     private boolean allBroadcast;
@@ -25,6 +27,16 @@ public class GiftInfo implements Serializable {
     private int type;
 
     private String randomBoxGiftInfo;
+
+    private int clickedCount;
+
+    public int getClickedCount() {
+        return clickedCount;
+    }
+
+    public void setClickedCount(int clickedCount) {
+        this.clickedCount = clickedCount;
+    }
 
     public String getRandomBoxGiftInfo() {
         return randomBoxGiftInfo;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="seatUserInfo"
+            type="cn.yanhu.commonres.bean.SeatUserInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_marginEnd="@dimen/dp_12"
+        android:layout_height="wrap_content">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            imageUrl="@{seatUserInfo.portrait}"
+            app:riv_border_width="@dimen/dp_2"
+            app:riv_oval="true"
+            android:src="@drawable/ease_default_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_seatNum"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_14"
+            android:layout_marginBottom="@dimen/dp_m_5"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="@color/color_888888"
+            android:gravity="center"
+            tools:text="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintEnd_toEndOf="@+id/iv_avatar"
+            app:layout_constraintStart_toStartOf="@+id/iv_avatar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

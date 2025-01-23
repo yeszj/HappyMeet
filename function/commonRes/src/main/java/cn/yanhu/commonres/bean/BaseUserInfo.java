@@ -48,6 +48,16 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
 
     private boolean ifEdit;
 
+    private BaseUserInfo myGuardedInfo;
+
+    public BaseUserInfo getMyGuardedInfo() {
+        return myGuardedInfo;
+    }
+
+    public void setMyGuardedInfo(BaseUserInfo myGuardedInfo) {
+        this.myGuardedInfo = myGuardedInfo;
+    }
+
     public boolean isIfEdit() {
         return ifEdit;
     }

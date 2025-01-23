@@ -42,6 +42,15 @@ object RouteIntent {
             .withString(IntentKeyConfig.ID, userId).navigation()
     }
 
+    fun lunchGuardRankPage(userId: String?) {
+        if (TextUtils.isEmpty(userId)) {
+            return
+        }
+        ARouter.getInstance().build(RouterPath.ROUTER_GUARD_RANK)
+            .withString(IntentKeyConfig.ID, userId).navigation()
+    }
+
+
     fun lunchPersonHomePage(userInfo: SameCityUserInfo?) {
         if (userInfo == null) {
             return

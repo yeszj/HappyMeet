@@ -17,4 +17,5 @@ object IntentKeyConfig {
     const val USERINFO = "userInfo"
     const val IS_SHOW = "isShow"
     const val POSITION = "position"
+    const val ACTIVITY_ID = "activityId"
 }

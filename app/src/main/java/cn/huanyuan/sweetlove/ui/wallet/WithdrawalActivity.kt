@@ -271,7 +271,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                 }
             }
         } else {
-            mBinding.tvAccountTag.text = "支付宝账号"
+            mBinding.tvAccountTag.text = "授权账号"
             ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20))
             mBinding.bgAccountInfo.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_ali_no_bind)
             mBinding.bgAccountInfo.visibility = View.VISIBLE

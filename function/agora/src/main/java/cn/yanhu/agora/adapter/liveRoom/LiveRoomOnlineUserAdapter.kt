@@ -23,6 +23,7 @@ class LiveRoomOnlineUserAdapter : BaseQuickAdapter<UserDetailInfo, LiveRoomOnlin
 
     override fun onBindViewHolder(holder: VH, position: Int, item: UserDetailInfo?) {
         holder.binding.apply {
+            this.isOwner = isRoomOwner
             userinfo = item
             executePendingBindings()
         }
@@ -30,6 +31,11 @@ class LiveRoomOnlineUserAdapter : BaseQuickAdapter<UserDetailInfo, LiveRoomOnlin
 
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
         return VH(parent)
+    }
+
+    private var isRoomOwner = false
+    fun setIsOwner(isOwner: Boolean) {
+        isRoomOwner = isOwner
     }
 
 }

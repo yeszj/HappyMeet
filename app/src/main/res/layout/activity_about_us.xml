@@ -52,6 +52,20 @@
             android:textColor="@color/black"
             android:textSize="@dimen/sp_14" />
 
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_update"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_50"
+            android:text="当前版本有问题？去更新"
+            android:drawableEnd="@drawable/svg_arrow_right"
+            android:layout_marginTop="@dimen/dp_50"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_20"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontBold"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"

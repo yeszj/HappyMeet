@@ -6,8 +6,10 @@ import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.R
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.ViewNineRoomRankViewBinding
+import cn.yanhu.agora.pop.CrownedUserListPop
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.RoomListBean
+import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.PageIntentUtil
 
@@ -24,30 +26,60 @@ class NineLiveRoomFrg : SevenLiveRoomFrg() {
         val rankView =
             LayoutInflater.from(mContext).inflate(R.layout.view_nine_room_rank_view, null)
         rankViewBinding = DataBindingUtil.bind(rankView)!!
-        val rvRank = rankViewBinding.rvRank
-        rankViewBinding.isAngle = roomType == RoomListBean.TYPE_NINE_ANGLE
+        rankViewBinding.apply {
+            bindNineRankView(rankView)
+        }
+
+    }
+
+    private fun ViewNineRoomRankViewBinding.bindNineRankView(rankView: View?) {
+        toggleAutoSeat.setOnSingleClickListener {
+            showSetAutoSeat()
+        }
+        if (AppCacheManager.isOpenGiftAudio) {
+            ivAudio.setImageResource(R.drawable.svg_voice_on)
+        } else {
+            ivAudio.setImageResource(R.drawable.svg_voice_off)
+        }
+        roomInfo = roomSourceBean
+        isAngle = roomType == RoomListBean.TYPE_NINE_ANGLE
+        isSong = roomType == RoomListBean.TYPE_NINE_SONG
+        this.isRoomOwner = isOwner
         rvRank.adapter = rankAdapter
         rankAdapter.setOnItemClickListener { _, _, _ ->
             userReceiveRoseInfo?.apply {
                 showRankListPop()
             }
         }
-        rankViewBinding.ivExit.setOnSingleClickListener {
+        ivExit.setOnSingleClickListener {
             showFloatWindow(1)
         }
-        rankViewBinding.tvOnlineNum.setOnSingleClickListener {
+        tvOnlineNum.setOnSingleClickListener {
             showOnlineUserList()
         }
-        rankViewBinding.ivRank.setOnSingleClickListener {
+        ivRank.setOnSingleClickListener {
             showAngleRankPop()
         }
-        rankViewBinding.ivRule.setOnSingleClickListener {
+        ivRule.setOnSingleClickListener {
             PageIntentUtil.url2Page(mContext, WebUrlManager.ANGLE_ROOM_RULE)
         }
-        mBinding.flTopView.addView(rankView)
-        if (!isOwner) {
-            rankViewBinding.tvOnlineNum.visibility = View.INVISIBLE
+        ivCrowned.setOnSingleClickListener {
+            showCrownedListPop(CrownedUserListPop.TYPE_ANGLE)
         }
+        vgGiftAudio.setOnSingleClickListener {
+            if (AppCacheManager.isOpenGiftAudio) {
+                ivAudio.setImageResource(R.drawable.svg_voice_off)
+                AppCacheManager.isOpenGiftAudio = false
+            } else {
+                ivAudio.setImageResource(R.drawable.svg_voice_on)
+                AppCacheManager.isOpenGiftAudio = true
+            }
+        }
+        mBinding.flTopView.addView(rankView)
+    }
+
+    override fun refreshAutoSeat() {
+        rankViewBinding.roomInfo = roomSourceBean
     }
 
     override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {

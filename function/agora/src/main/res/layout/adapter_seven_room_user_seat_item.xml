@@ -9,7 +9,22 @@
             name="seatInfo"
             type="cn.yanhu.commonres.bean.RoomSeatInfo" />
 
+        <variable
+            name="currentRoomType"
+            type="java.lang.Integer" />
+
+        <variable
+            name="isOwner"
+            type="java.lang.Boolean" />
+
+        <variable
+            name="isSelf"
+            type="java.lang.Boolean" />
+
         <import type="android.view.View" />
+
+        <import type="cn.yanhu.commonres.bean.RoomListBean" />
+        <import type="cn.yanhu.commonres.manager.AppCacheManager"/>
     </data>
 
 
@@ -154,6 +169,28 @@
                 tools:text="122" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_expand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_4"
+                android:src="@drawable/svg_expand_live_room"
+                android:visibility="@{seatInfo.id!=1 &amp;&amp;isOwner &amp;&amp; (currentRoomType == RoomListBean.TYPE_SEVEN_SONG || currentRoomType == RoomListBean.TYPE_NINE_SONG)?View.VISIBLE:View.INVISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_sendRose"
+                app:layout_constraintEnd_toStartOf="@+id/iv_chooseSong"
+                app:layout_constraintTop_toTopOf="@+id/iv_sendRose" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_chooseSong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_4"
+                android:src="@drawable/svg_choose_song"
+                android:visibility="@{(currentRoomType == RoomListBean.TYPE_SEVEN_SONG || currentRoomType == RoomListBean.TYPE_NINE_SONG) &amp;&amp; (isOwner || !isSelf)?View.VISIBLE:View.INVISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_sendRose"
+                app:layout_constraintEnd_toStartOf="@+id/iv_sendRose"
+                app:layout_constraintTop_toTopOf="@+id/iv_sendRose" />
+
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_sendRose"
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
@@ -225,11 +262,11 @@
                 android:layout_width="@dimen/dp_16"
                 android:layout_height="@dimen/dp_16"
                 android:layout_marginEnd="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
                 android:scaleType="centerCrop"
                 android:visibility="@{(seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.roomUserSeatInfo.userList.size()>0)?View.VISIBLE:View.INVISIBLE,default = invisible}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginBottom="@dimen/dp_5"
                 app:riv_border_color="@color/white"
                 app:riv_border_width="@dimen/dp_0_5"
                 app:riv_oval="true"
@@ -246,19 +283,20 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_seatIndex"
             android:layout_width="@dimen/dp_16"
             android:layout_height="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_7"
             android:background="@drawable/white_right_corner_10"
             android:backgroundTint="@color/blackAlpha80"
             android:gravity="center"
-            android:text="@{String.valueOf(seatInfo.id-1)}"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_10"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="4"
             tools:visibility="visible" />
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_owner"
             android:layout_width="@dimen/dp_26"
@@ -267,12 +305,13 @@
             android:background="@drawable/white_right_corner_10"
             android:backgroundTint="@color/colorMain"
             android:gravity="center"
-            android:textSize="@dimen/sp_10"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:text="主持"
-            android:visibility="invisible" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </FrameLayout>
 
 

@@ -4,6 +4,8 @@
 * 项目原型地址：https://www.figma.com/file/EZ3KVafM8YZiuQerLQ5qKN/%E8%B6%A3%E7%9B%B8%E4%BA%B2?type=design&node-id=1-80&mode=design&t=pwwyfQtOvusBgiRv-0
 
 
+http://dev-qxq.hanyonjoy.com/app/v1/test/testTc?userId=100394 测试新年红包弹框
+
 ## 简介
 
 本项目是基于声网开发的一款语音直播聊天项目。
@@ -31,7 +33,9 @@ SHA-256: 98:05:D1:31:DB:1D:3C:76:F4:AC:88:D9:5E:62:0C:3F:73:FA:6E:E6:75:DE:9F:E7
 "{clsPath:cn.qw.invite.ui.InviteMainActivity}"
 "{roomId:33}"
 
-"{clsPath:cn.qw.invite.ui.InviteMainActivity}"
+"{clsPath:cn.huanyuan.sweetlove.ui.userinfo.GuardRankActivity,id:100013}"
+"{clsPath:cn.huanyuan.sweetlove.ui.userinfo.GuardRankActivity,id:100013}"
+{clsPath:cn.huanyuan.sweetlove.ui.event.common.AppCommonEventActivity,activityId:1}
 
 
 

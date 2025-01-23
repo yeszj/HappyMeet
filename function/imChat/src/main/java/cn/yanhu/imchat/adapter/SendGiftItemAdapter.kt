@@ -69,9 +69,9 @@ class SendGiftItemAdapter : BaseQuickAdapter<GiftInfo, SendGiftItemAdapter.VH>()
         if (selectPosition != position) {
             val oldPosition = selectPosition
             selectPosition = position
-            notifyDataSetChanged()
-//            notifyItemChanged(oldPosition, true)
-//            notifyItemChanged(selectPosition, true)
+            //notifyDataSetChanged()
+            notifyItemChanged(oldPosition, true)
+            notifyItemChanged(selectPosition, true)
         }
     }
 

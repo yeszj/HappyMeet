@@ -41,6 +41,8 @@
                 android:layout_weight="1"
                 android:background="@color/transparent"
                 android:hint="请输入ID或昵称"
+                android:maxLines="1"
+                android:inputType="text|textMultiLine|textFilter"
                 android:paddingStart="@dimen/dp_4"
                 android:textColor="@color/cl_common"
                 android:textColorHint="@color/blackAlpha80"

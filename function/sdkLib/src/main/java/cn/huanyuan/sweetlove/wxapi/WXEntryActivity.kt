@@ -15,6 +15,7 @@ class WXEntryActivity : WXCallbackActivity() {
                     logcom("微信sdk回调授权成功")
                     LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.WX_AUTH_SUCCESS,resp.code)
                 } else if (resp is SendMessageToWX.Resp) {
+                    LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.WX_SHARE_SUCCESS,true)
                     logcom("微信sdk回调分享成功")
                 }
             }

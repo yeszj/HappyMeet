@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/vg_parent"
@@ -18,8 +19,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/color_black_white"
-            android:paddingTop="@dimen/dp_12"
-            android:paddingBottom="@dimen/dp_12" />
+            app:barBackground="@color/color_black_white"
+            app:iconHeight="@dimen/dp_32"
+            app:barHeight="@dimen/dp_60"
+            app:iconWidth="@dimen/dp_32"
+            app:itemTextSize="@dimen/sp_12"
+            app:unreadTextColor="@color/white"
+            app:textColorSelected="@color/colorMain"
+            app:textColorNormal="@color/color_666666" />
     </RelativeLayout>
 </layout>

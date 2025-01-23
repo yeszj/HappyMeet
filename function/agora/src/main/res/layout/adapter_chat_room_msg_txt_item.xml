@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="msgInfo"
             type="cn.yanhu.agora.bean.ChatRoomMsgInfo" />
@@ -17,55 +18,104 @@
 
         <cn.yanhu.commonres.view.UserAvatarView
             android:id="@+id/userAvatar"
-            android:layout_width="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:isShowSvgAvatar="true"
+            avatarFrameUrl="@{msgInfo.sendUserInfo.avatarFrame}"
             avatarUrl="@{msgInfo.sendUserInfo.portrait}"
             avatarUserId="@{msgInfo.sendUserInfo.userId}"
-            avatarFrameUrl="@{msgInfo.sendUserInfo.avatarFrame}"
-            app:svgAvatarSize="@dimen/dp_45"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:avatarSize="@dimen/dp_32"
-            android:layout_height="wrap_content"/>
+            app:isShowSvgAvatar="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:svgAvatarSize="@dimen/dp_45" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_nickName"
             android:layout_width="wrap_content"
-            tools:textColor="@color/femaleColor"
-            tools:text="女性昵称"
-            android:textColor="@{msgInfo.sendUserInfo.gender==1?@color/manColor:@color/femaleColor}"
-            android:text="@{msgInfo.sendUserInfo.nickName}"
-            android:textSize="@dimen/sp_14"
-            android:layout_marginTop="@dimen/dp_5"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_4"
+            android:layout_marginTop="@dimen/dp_5"
+            android:text="@{msgInfo.sendUserInfo.nickName}"
+            android:textColor="@{msgInfo.sendUserInfo.gender==1?@color/manColor:@color/femaleColor}"
+            android:textSize="@dimen/sp_14"
             app:fontType="@string/fontMedium"
-            app:layout_constraintTop_toTopOf="@+id/userAvatar"
             app:layout_constraintStart_toEndOf="@+id/userAvatar"
-            android:layout_height="wrap_content"/>
-        <cn.yanhu.commonres.view.UserLevelView
-            android:id="@+id/userLevel"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/dp_4"
+            app:layout_constraintTop_toTopOf="@+id/userAvatar"
+            tools:text="女性昵称"
+            tools:textColor="@color/femaleColor" />
+
+        <LinearLayout
+            android:id="@+id/vg_info"
             android:layout_width="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nickName"
-            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            app:layout_constraintStart_toEndOf="@+id/userAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nickName">
+
+            <cn.yanhu.commonres.view.UserLevelView
+                android:id="@+id/userLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_4"
+                android:visibility="gone" />
+
+            <cn.yanhu.commonres.view.UserTagView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_4"
+                app:userAge="@{msgInfo.sendUserInfo.age}"
+                app:userGender="@{msgInfo.sendUserInfo.gender}" />
+
+            <cn.yanhu.commonres.view.UserTagView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_4"
+                app:userProvince="@{msgInfo.sendUserInfo.province}" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_4"
+                android:background="@drawable/bg_gradient_guard_msg"
+                android:gravity="center"
+                android:visibility="@{msgInfo.sendUserInfo.myGuardedInfo==null?View.GONE:View.VISIBLE}"
+                android:paddingHorizontal="@dimen/dp_5">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dp_10"
+                    android:layout_height="@dimen/dp_10"
+                    android:src="@drawable/icon_guard_hand" />
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    tools:text="用户昵称的守护"
+                    android:text='@{msgInfo.sendUserInfo.myGuardedInfo.nickName+"的守护"}'
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_11"
+                    app:fontType="@string/fontMedium"
+                    android:layout_height="wrap_content"/>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dp_10"
+                    android:layout_height="@dimen/dp_10"
+                    android:src="@drawable/icon_guard_hand2" />
+            </LinearLayout>
+        </LinearLayout>
+
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_content"
-            android:layout_marginTop="@dimen/dp_4"
-            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
             android:background="@drawable/white_corner_10"
             android:backgroundTint="@color/blackAlpha80"
-            android:padding="@dimen/dp_10"
             android:maxWidth="@dimen/dp_220"
-            android:layout_height="wrap_content"
-            tools:text="欢迎家人们，祝你们能在这个祝"
+            android:padding="@dimen/dp_10"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_13"
             app:fontType="@string/fontMedium"
-            app:layout_constraintTop_toBottomOf="@+id/userLevel"/>
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/vg_info"
+            tools:text="欢迎家人们，祝你们能在这个祝" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

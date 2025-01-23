@@ -41,6 +41,9 @@ object LiveDataEventManager {
     const val DRESS_BUY_SUCCESS = "dress_buy_success"
 
     const val DRESS_UP_SUCCESS = "dress_up_success"
+
+    const val WX_SHARE_SUCCESS = "wx_share_success"
+
     @JvmStatic
     fun sendLiveDataMessage(key: String, value: Any = key) {
         LiveEventBus.get<Any>(key).post(value)

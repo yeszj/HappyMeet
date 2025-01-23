@@ -63,6 +63,15 @@ object ViewUtils {
         }
     }
 
+    fun setMarginVertical(view: View, topMargin: Int,bottomMargin: Int) {
+        val layoutParams = view.layoutParams
+        if (layoutParams is ViewGroup.MarginLayoutParams) {
+            layoutParams.topMargin = topMargin
+            layoutParams.bottomMargin = bottomMargin
+            view.layoutParams = layoutParams
+        }
+    }
+
     fun setViewWidth(view: View, width: Int) {
         val layoutParams = view.layoutParams
         if (layoutParams is ViewGroup.MarginLayoutParams) {

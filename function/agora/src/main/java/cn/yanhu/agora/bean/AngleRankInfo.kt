@@ -11,4 +11,5 @@ class AngleRankInfo : BaseUserInfo() {
     var roseNum: String = ""
     var diffRoseNum:String = ""
     var angelUnlockDesc:String = ""
+    var crowned:Boolean = false
 }

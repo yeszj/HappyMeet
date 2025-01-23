@@ -50,6 +50,9 @@ class SeatUserOperatePop(
         mBinding.tvReport.setOnSingleClickListener {
             RouteIntent.lunchReportPage(userInfo.userId)
         }
+        mBinding.vgGuard.setOnSingleClickListener {
+            RouteIntent.lunchGuardRankPage(userInfo.userId)
+        }
     }
 
     companion object {

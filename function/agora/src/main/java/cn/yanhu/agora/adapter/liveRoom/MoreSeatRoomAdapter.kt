@@ -1,11 +1,12 @@
 package cn.yanhu.agora.adapter.liveRoom
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import cn.yanhu.agora.R
 import cn.yanhu.agora.api.agoraRxApi
@@ -33,7 +34,7 @@ import com.chad.library.adapter4.BaseMultiItemAdapter
  * desc:多人房 座位
  * 7人和9人
  */
-class MoreSeatRoomAdapter(val roomType: Int) :
+class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
     BaseMultiItemAdapter<RoomSeatInfo>() {
     class VH(
         val binding: AdapterSevenRoomAnchorSeatItemBinding
@@ -45,10 +46,27 @@ class MoreSeatRoomAdapter(val roomType: Int) :
 
     var roomDetailInfo: RoomDetailInfo? = null
 
+    class EntityDiffCallback : DiffUtil.ItemCallback<RoomSeatInfo>() {
+        override fun areItemsTheSame(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Boolean {
+            // 判断是否是同一个 item（通常使用id字段判断）
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Boolean {
+            // 如果是同一个item，则判断item内的数据内容是否有变化
+            return oldItem.roomUserSeatInfo?.userId == newItem.roomUserSeatInfo?.userId
+        }
+
+        override fun getChangePayload(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Any? {
+            // 可选实现
+            return false
+        }
+    }
+
     init {
         bindAnchorSeatItem()
         bindUserSeatItem().onItemViewType { position, _ ->
-            if (roomType == RoomListBean.FRG_SEVEN_ROOM) {
+            if (frgType == RoomListBean.FRG_SEVEN_ROOM) {
                 if (position == 0) {
                     TYPE_ANCHOR_SEAT
                 } else {
@@ -65,42 +83,11 @@ class MoreSeatRoomAdapter(val roomType: Int) :
             override fun onBind(holder: VH2, position: Int, item: RoomSeatInfo?) {
                 //绑定男女嘉宾位置信息
                 holder.binding.apply {
-                    if (position == 0) {
-                        tvOwner.visibility = View.VISIBLE
-                    } else {
-                        tvOwner.visibility = View.INVISIBLE
-                    }
-                    val isShowNoTopBg: Boolean
-                    if (roomType == RoomListBean.FRG_NINE_ROOM) {
-                        isShowNoTopBg = position == 1 || position == 4 || position == 7
-                        ViewUtils.setViewHeight(
-                            vgParent,
-                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
-                        )
-                    } else {
-                        isShowNoTopBg = position == 2 || position == 5
-                    }
-                    if (isShowNoTopBg) {
-                        vgParent.setBackgroundResource(R.drawable.bg_seat_no_top_stroke)
-                    } else {
-                        vgParent.setBackgroundResource(R.drawable.bg_seat_bottom_stroke)
-                    }
-                    upDataSeats(position)
-                    item?.apply {
-                        if (roomDetailInfo == null) {
-                            return
-                        }
-                        seatInfo = item
-                        if (item.roomUserSeatInfo == null) {
-                            setEmptySeatInfo(item)
-                        }
-                    }
-                    viewRank.setOnSingleClickListener {
-                        showUserReceiveRoseDetailPop(item)
-                    }
+                    bindItemInfo(item, position)
                     executePendingBindings()
                 }
             }
+
 
             override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH2 {
                 val binding: AdapterSevenRoomUserSeatItemBinding =
@@ -112,27 +99,89 @@ class MoreSeatRoomAdapter(val roomType: Int) :
 
         })
 
+    private fun AdapterSevenRoomUserSeatItemBinding.bindItemInfo(
+        item: RoomSeatInfo?,
+        position: Int
+    ) {
+        tvSeatIndex.text = position.toString()
+        this.currentRoomType = roomType
+        this.isOwner = isRoomOwner
+        if (item!!.id == 1) {
+            tvOwner.visibility = View.VISIBLE
+        } else {
+            tvOwner.visibility = View.INVISIBLE
+        }
+        val isShowNoTopBg: Boolean
+        if (frgType == RoomListBean.FRG_NINE_ROOM) {
+            isShowNoTopBg = position == 1 || position == 4 || position == 7
+            if (isExpandStyle) {
+                ViewUtils.setViewHeight(
+                    vgParent,
+                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_80)
+                )
+            } else {
+                ViewUtils.setViewHeight(
+                    vgParent,
+                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
+                )
+            }
+        } else {
+            if (isExpandStyle) {
+                ViewUtils.setViewHeight(
+                    vgParent,
+                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
+                )
+            } else {
+                ViewUtils.setViewHeight(
+                    vgParent,
+                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_142)
+                )
+            }
+            isShowNoTopBg = position == 2 || position == 5
+        }
+        if (item.id == 1 && frgType == RoomListBean.FRG_SEVEN_ROOM) {
+            vgParent.setBackgroundResource(R.drawable.bg_seat_no_stroke)
+        } else {
+            if (isShowNoTopBg) {
+                vgParent.setBackgroundResource(R.drawable.bg_seat_no_top_stroke)
+            } else {
+                vgParent.setBackgroundResource(R.drawable.bg_seat_bottom_stroke)
+            }
+        }
+
+        upDataSeats(position)
+        item?.apply {
+            if (roomDetailInfo == null) {
+                return
+            }
+            seatInfo = item
+            if (item.roomUserSeatInfo == null) {
+                setEmptySeatInfo(item)
+            }
+        }
+        viewRank.setOnSingleClickListener {
+            showUserReceiveRoseDetailPop(item)
+        }
+    }
+
     private fun bindAnchorSeatItem() {
         addItemType(TYPE_ANCHOR_SEAT, object : OnMultiItemAdapterListener<RoomSeatInfo, VH> {
             override fun onBind(holder: VH, position: Int, item: RoomSeatInfo?) {
+
                 holder.binding.apply {
-                    anchorSeatInfo.tvOwner.visibility = View.VISIBLE
-                    anchorSeatInfo.seatInfo = item
-                    anchorSeatInfo.vgParent.setBackgroundResource(R.drawable.bg_seat_no_stroke)
-                    val tag = anchorSeatInfo.itemVideoSf.tag
-                    if (tag == null || tag !is SurfaceView) {
-                        val surfaceView = TextureView(context)
-                        anchorSeatInfo.itemVideoSf.tag = surfaceView
-                        anchorSeatInfo.itemVideoSf.addView(surfaceView)
-                        addVideoSf(surfaceView, item!!)
+                    if (isExpandStyle) {
+                        ViewUtils.setViewHeight(
+                            vgAnchorParent,
+                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
+                        )
                     } else {
-                        ViewUtils.removeViewFormParent(tag)
-                        anchorSeatInfo.itemVideoSf.removeView(tag)
-                        anchorSeatInfo.itemVideoSf.addView(tag)
-                        addVideoSf(tag, item!!)
+                        ViewUtils.setViewHeight(
+                            vgAnchorParent,
+                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_142)
+                        )
                     }
-                    anchorSeatInfo.viewRank.setOnSingleClickListener {
-                        showUserReceiveRoseDetailPop(item)
+                    anchorSeatInfo.apply {
+                        bindItemInfo(item, position)
                     }
                     executePendingBindings()
                 }
@@ -171,25 +220,26 @@ class MoreSeatRoomAdapter(val roomType: Int) :
     }
 
 
-    private var surfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = mutableMapOf()
+     var surfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = mutableMapOf()
 
     //更新座位状态
     private fun AdapterSevenRoomUserSeatItemBinding.upDataSeats(position: Int) {
         val dto: RoomSeatInfo = getItem(position) ?: return
 
         if (dto.roomUserSeatInfo != null) {
+            this.isSelf = dto.roomUserSeatInfo!!.userId == AppCacheManager.userId
+
             val currentSurfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = surfaceViewMap
             val liveRoomSeatBean: LiveRoomSeatBean? =
                 currentSurfaceViewMap[position]
             var surfaceView: View?
             if (liveRoomSeatBean == null) {
                 surfaceView = TextureView(context)
-                currentSurfaceViewMap[position] =
-                    LiveRoomSeatBean(dto.roomUserSeatInfo!!.userId.toInt(), surfaceView)
+
 
                 this.itemVideoSf.addView(surfaceView)
 
-                addVideoSf(surfaceView, dto)
+                addVideoSf(surfaceView, dto, position)
 
             } else if (dto.roomUserSeatInfo!!.userId.toInt() != liveRoomSeatBean.uid) {
                 surfaceView = liveRoomSeatBean.surfaceView
@@ -199,7 +249,7 @@ class MoreSeatRoomAdapter(val roomType: Int) :
                 ViewUtils.removeViewFormParent(surfaceView)
                 this.itemVideoSf.removeAllViews()
                 this.itemVideoSf.addView(surfaceView)
-                addVideoSf(surfaceView, dto)
+                addVideoSf(surfaceView, dto, position)
 
             } else {
                 surfaceView = liveRoomSeatBean.surfaceView
@@ -209,15 +259,18 @@ class MoreSeatRoomAdapter(val roomType: Int) :
                 ViewUtils.removeViewFormParent(surfaceView)
                 this.itemVideoSf.removeAllViews()
                 this.itemVideoSf.addView(surfaceView)
-                addVideoSf(surfaceView, dto)
+                addVideoSf(surfaceView, dto, position)
             }
             itemVideoSf.tag = surfaceView
         } else {
+            this.isSelf = false
             this.itemVideoSf.removeAllViews()
         }
     }
 
-    private fun addVideoSf(surfaceView: View, dto: RoomSeatInfo) {
+    private fun addVideoSf(surfaceView: View, dto: RoomSeatInfo, position: Int) {
+        surfaceViewMap[position] =
+            LiveRoomSeatBean(dto.roomUserSeatInfo!!.userId.toInt(), surfaceView)
         AgoraManager.getInstance().setupVideo(
             dto.roomUserSeatInfo!!.userId.toInt(),
             dto.roomUserSeatInfo!!.userId == AppCacheManager.userId, surfaceView
@@ -238,6 +291,19 @@ class MoreSeatRoomAdapter(val roomType: Int) :
             tvJoinSeat.setBackgroundResource(R.drawable.bg_seat_invite)
         }
 
+    }
+
+    private var isRoomOwner = false
+    fun setIsOwner(owner: Boolean) {
+        this.isRoomOwner = owner
+    }
+
+    private var isExpandStyle = false
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setIsExpandStyle(isExpand: Boolean) {
+        isExpandStyle = isExpand
+        notifyDataSetChanged()
     }
 
 

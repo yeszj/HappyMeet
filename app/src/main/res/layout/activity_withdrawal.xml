@@ -178,7 +178,7 @@
 
                         <cn.yanhu.baselib.view.CustomFontTextView
                             android:id="@+id/tv_nameTag"
-                            android:layout_width="@dimen/dp_80"
+                            android:layout_width="@dimen/dp_70"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_16"
                             android:paddingTop="@dimen/dp_20"
@@ -202,10 +202,10 @@
 
                         <cn.yanhu.baselib.view.CustomFontTextView
                             android:id="@+id/tv_accountTag"
-                            android:layout_width="@dimen/dp_80"
+                            android:layout_width="@dimen/dp_70"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/dp_20"
-                            android:text="支付宝账号"
+                            android:text="授权账号"
                             android:textColor="@color/fontTextColor"
                             android:textSize="@dimen/sp_14"
                             app:layout_constraintBottom_toBottomOf="@+id/bgAccountInfo"

@@ -9,4 +9,5 @@ import cn.yanhu.commonres.bean.UserDetailInfo
  */
 interface OnSendSeatInviteListener {
     fun onSendInvite(map:MutableMap<String,Any>,userInfo: UserDetailInfo)
+    fun onClickUser(userId:String)
 }

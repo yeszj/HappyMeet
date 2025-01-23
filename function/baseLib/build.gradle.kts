@@ -73,8 +73,9 @@ dependencies {
 
     //https://github.com/hackware1993/MagicIndicator/tree/1.7.0
     api("com.github.hackware1993:MagicIndicator:1.7.0")
-    //https://github.com/xiaoxiaAndroid/BottomBarLayout?tab=readme-ov-file
-    api("com.github.chaychan:BottomBarLayout:2.0.2")
+
+    //https://github.com/chaychan/BottomBarLayout
+    api("com.github.chaychan:BottomBarLayout:3.0.0")
 
     api("com.guolindev.permissionx:permissionx:1.7.1")
 
@@ -108,4 +109,8 @@ dependencies {
     api("com.github.getActivity:EasyWindow:10.6")
     // https://github.com/yhaolpz/FloatWindow
     api("com.github.yhaolpz:FloatWindow:1.0.9")
+
+    api ("io.github.tencent:vap:2.0.28")
+
+//    api ("com.tencent.qcloud:VAPSDK:2.0.28")
 }

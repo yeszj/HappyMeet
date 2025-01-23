@@ -30,7 +30,9 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var sameSex: Boolean = false
     var seatNum: Int = 0
     var addFriendWay:Int = 0
-
+    var seatId:Int = 0
+    var guardNickName:String = ""
+    var beautifulIdImg:String = ""
 
     @Bindable
     var roseNum: String = "0"

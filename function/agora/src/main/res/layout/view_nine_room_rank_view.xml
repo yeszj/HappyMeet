@@ -4,17 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <variable
+            name="isRoomOwner"
+            type="java.lang.Boolean" />
         <variable
             name="isAngle"
             type="java.lang.Boolean" />
-        <import type="android.view.View"/>
+
+        <variable
+            name="isSong"
+            type="java.lang.Boolean" />
+
+        <variable
+            name="roomInfo"
+            type="cn.yanhu.commonres.bean.RoomDetailInfo" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/vg_rank"
         android:layout_width="match_parent"
-        android:paddingVertical="@dimen/dp_10"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/dp_10">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_rank"
@@ -29,23 +42,23 @@
             tools:listitem="@layout/adapter_live_room_rose_rank_item" />
 
 
-
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_onlineNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_23"
             android:background="@drawable/white_corner_12"
             android:backgroundTint="#1AFFFFFF"
-            android:gravity="center"
             android:drawableStart="@drawable/icon_online_user"
-            android:text="0"
+            android:gravity="center"
             android:paddingHorizontal="@dimen/dp_8"
             android:paddingVertical="@dimen/dp_4"
+            android:text="0"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_rank"
             app:layout_constraintEnd_toStartOf="@+id/iv_exit"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="@+id/rv_rank" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_exit"
             android:layout_width="@dimen/dp_36"
@@ -55,24 +68,101 @@
             app:layout_constraintBottom_toBottomOf="@+id/tv_onlineNum"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_onlineNum" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_rule"
-            android:layout_width="@dimen/dp_48"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_22"
-            android:layout_marginTop="@dimen/dp_10"
-            android:visibility="@{isAngle?View.VISIBLE:View.GONE}"
             android:layout_marginStart="@dimen/dp_10"
-            android:src="@drawable/svg_room_rule"
+            android:layout_marginTop="@dimen/dp_10"
+            android:adjustViewBounds="true"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_onlineNum"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:src="@{isAngle?@drawable/svg_room_rule:@drawable/svg_song_rule}"
+            android:visibility="@{isAngle || isSong?View.VISIBLE:View.GONE}"
+            tools:src="@drawable/svg_song_rule" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_rank"
-            android:layout_width="@dimen/dp_72"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_22"
-            android:layout_marginStart="@dimen/dp_8"
-            android:visibility="@{isAngle?View.VISIBLE:View.GONE}"
-            android:src="@drawable/svg_angle_rank"
+            android:layout_marginStart="@dimen/dp_4"
+            android:adjustViewBounds="true"
+            android:src="@{isAngle?@drawable/svg_angle_rank:@drawable/svg_song_rank}"
+            android:visibility="@{isAngle || isSong?View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_rule"/>
+            app:layout_constraintStart_toEndOf="@+id/iv_rule"
+            tools:src="@drawable/svg_song_rank" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_crowned"
+            android:layout_width="@dimen/dp_52"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginStart="@dimen/dp_4"
+            android:src="@drawable/svg_angle_btn"
+            android:visibility="@{(isAngle || isSong) &amp;&amp; isRoomOwner?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_rule"
+            app:layout_constraintStart_toEndOf="@+id/iv_rank" />
+
+        <LinearLayout
+            android:id="@+id/vg_giftAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginStart="@dimen/dp_4"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@color/blackAlpha80"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintTop_toBottomOf="@+id/tv_onlineNum"
+            android:paddingHorizontal="@dimen/dp_4"
+            app:layout_constraintStart_toEndOf="@+id/iv_crowned"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="礼物音效"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_audio"
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_4"
+                android:adjustViewBounds="true"
+                android:src="@drawable/svg_voice_on" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vg_autoSeat"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginStart="@dimen/dp_4"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@color/blackAlpha80"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_4"
+            android:visibility="@{isRoomOwner?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/vg_giftAudio"
+            app:layout_constraintStart_toEndOf="@+id/vg_giftAudio"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自动上麦"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/toggle_autoSeat"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_4"
+                android:adjustViewBounds="true"
+                android:src="@{roomInfo.autoSeat?@drawable/svg_toggle_on:@drawable/svg_toggle_off}"
+                tools:src="@drawable/svg_toggle_on" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

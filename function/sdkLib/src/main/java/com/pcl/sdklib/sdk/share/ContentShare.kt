@@ -44,7 +44,7 @@ class ContentShare(private val context: Context) {
         content = ShareContent()
         val web = UMWeb(Url)
         web.title = shareTitle //标题
-        val thumb = UMImage(context, "https://happymeet-new.oss-cn-hangzhou.aliyuncs.com/image/share_logo.png")
+        val thumb = UMImage(context, "https://video.chanyinet.com/happyMeet/shre_logo2.png")
         web.setThumb(thumb) //缩略图
         web.description = shareContent //描述
         content!!.mMedia = web

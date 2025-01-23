@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter
  */
 open class BaseTabAdapter(
     private val fragmentManager: FragmentManager,
-    private val titleList: MutableList<String>,
     private val fragmentList: MutableList<Fragment>
 ) : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT ) {
 
@@ -25,9 +24,6 @@ open class BaseTabAdapter(
         return fragmentList[position]
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        return titleList[position]
-    }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val fragment = super.instantiateItem(container, position) as Fragment

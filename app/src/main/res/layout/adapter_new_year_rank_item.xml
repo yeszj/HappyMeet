@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="rankInfo"
+            type="cn.huanyuan.sweetlove.bean.NewYearRankInfo" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/vg_parent"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:paddingEnd="@dimen/dp_12"
+        android:layout_height="@dimen/dp_55">
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_num"
+            android:layout_width="@dimen/dp_55"
+            android:layout_height="wrap_content"
+            android:textColor="#974D4D"
+            android:gravity="center"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontBold"
+            tools:text="1" />
+        <FrameLayout
+            android:id="@+id/vg_rank"
+            android:layout_width="@dimen/dp_55"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_rank"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:textColor="@color/fontGrayColor"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:src="@drawable/icon_new_year_rank1"
+                android:textSize="@dimen/sp_16"
+                app:fontType="@string/fontBold"
+                tools:text="1" />
+        </FrameLayout>
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/userAvatar"
+            imageUrl="@{rankInfo.portrait}"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
+            app:riv_oval="true"
+            tools:src="@drawable/icon_portrait" />
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textColor="#722B2B"
+            android:text="@{rankInfo.nickName}"
+            tools:text="宠爱佳哥一个人"
+            android:paddingStart="@dimen/dp_5"
+            android:textSize="@dimen/sp_16"
+            android:layout_height="wrap_content"/>
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:textColor="#FA5151"
+            tools:text="99+"
+            android:text="@{rankInfo.value}"
+            app:fontType="@string/fontMedium"
+            android:paddingStart="@dimen/dp_5"
+            android:textSize="@dimen/sp_17"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_20"
+            android:src="@mipmap/icon_fuqi"
+            android:layout_height="@dimen/dp_20"/>
+
+    </LinearLayout>
+</layout>

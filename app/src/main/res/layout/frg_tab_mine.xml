@@ -10,6 +10,7 @@
             type="cn.yanhu.commonres.bean.UserDetailInfo" />
 
         <import type="android.view.View" />
+        <import type="android.text.TextUtils"/>
     </data>
 
     <cn.yanhu.baselib.refresh.MyRefreshLayout
@@ -36,15 +37,15 @@
 
                 <cn.yanhu.commonres.view.UserAvatarView
                     android:id="@+id/avatarView"
-                    avatarUrl="@{userinfo.portrait}"
                     avatarFrameUrl="@{userinfo.avatarFrame}"
+                    avatarUrl="@{userinfo.portrait}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_30"
-                    app:avatarSize="@dimen/dp_80"
                     android:layout_marginStart="@dimen/dp_m_10"
-                    app:isCanClick="false"
+                    android:layout_marginTop="@dimen/dp_30"
                     app:avatarMarginLeft="@dimen/dp_m_10"
+                    app:avatarSize="@dimen/dp_80"
+                    app:isCanClick="false"
                     app:isShowSvgAvatar="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -54,8 +55,8 @@
                     android:id="@+id/tv_nickName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_25"
                     android:layout_marginStart="@dimen/dp_m_10"
+                    android:layout_marginTop="@dimen/dp_25"
                     android:text="@{userinfo.nickName}"
                     android:textColor="@color/fontTextColor"
                     android:textSize="@dimen/sp_15"
@@ -109,8 +110,20 @@
                     app:layout_constraintStart_toEndOf="@+id/avatarView"
                     app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
 
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_16"
+                    android:layout_marginBottom="@dimen/dp_25"
+                    drawableUrl="@{userinfo.beautifulIdImg}"
+                    placeholderId="@{-1}"
+                    android:visibility="@{TextUtils.isEmpty(userinfo.beautifulIdImg)?View.INVISIBLE:View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+                    app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+                    android:adjustViewBounds="true" />
+
                 <cn.yanhu.commonres.view.UserTagView
                     android:id="@+id/tv_copyId"
+                    android:visibility="@{TextUtils.isEmpty(userinfo.beautifulIdImg)?View.VISIBLE:View.INVISIBLE}"
                     tagColorId="@{@color/blackAlpha96}"
                     tagTextColorId="@{@color/fontGrayColor}"
                     tagValue='@{"ID:"+userinfo.userId}'

@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.yanhu.agora.R;
 import cn.yanhu.agora.adapter.ToolsAdapter;
 import cn.yanhu.agora.bean.ToolBean;
 import cn.yanhu.agora.databinding.DialogToolBinding;
@@ -67,7 +66,7 @@ public class ToolDialog extends BaseSheetDialog<DialogToolBinding> {
         toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_room_report, "投诉举报"));
         if (liveRoomInfo.isAdmin()) {
             toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_room_top, "置顶房间"));
-            toolBeanList.add(new ToolBean(R.drawable.svg_report, "发送警告"));
+            toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_warning, "发送警告"));
             toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_room_close, "强制关房"));
         }
         ToolsAdapter toolAdapter = new ToolsAdapter();

@@ -52,7 +52,6 @@ import cn.yanhu.commonres.bean.AppMsgNotifyInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.CmdMsgTypeConfig
-import cn.yanhu.commonres.config.ConfigParamsManager
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.AppManager
@@ -97,10 +96,12 @@ import com.hyphenate.chat.EMUserInfo
 import com.hyphenate.easeui.constants.EaseConstant
 import com.hyphenate.util.VersionUtils
 import com.opensource.svgaplayer.SVGAParser
+import com.opensource.svgaplayer.SVGASoundManager
 import com.pcl.sdklib.manager.SdkParamsManager
 import com.permissionx.guolindev.PermissionX
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
+import com.umeng.umcrash.UMCrash
 import okhttp3.Interceptor
 import org.litepal.LitePal
 import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
@@ -202,9 +203,8 @@ class BaseApplication : Application() {
     }
 
     private fun init() {
-        LitePal.initialize(this);
-        //设置LOG开关，默认为false
-        UMConfigure.setLogEnabled(false)
+        LitePal.initialize(this)
+
         //预初始化友盟
         UMConfigure.preInit(
             this,
@@ -235,6 +235,7 @@ class BaseApplication : Application() {
         DeviceIdentifier.register(this)
         initImConfig()
         initUm()
+        SVGASoundManager.init()
         SVGAParser.shareParser().init(this)
     }
 
@@ -242,6 +243,8 @@ class BaseApplication : Application() {
      * 初始化友盟
      * */
     private fun initUm() {
+        //设置LOG开关，默认为false
+        UMConfigure.setLogEnabled(BuildConfig.DEBUG)
         UMConfigure.init(
             this,
             "6709deac667bfe33f3be884e",
@@ -249,6 +252,11 @@ class BaseApplication : Application() {
             UMConfigure.DEVICE_TYPE_PHONE,
             ""
         )
+        UMCrash.setAppVersion(
+            BuildConfig.VERSION_NAME,
+            if (BuildConfig.DEBUG) "debug" else "release",
+            BuildConfig.VERSION_CODE.toString()
+        );
         // 微信设置
         PlatformConfig.setWeixin(SdkParamsManager.WX_APP_ID, SdkParamsManager.WX_APP_SECRET)
         PlatformConfig.setWXFileProvider(BuildConfig.APPLICATION_ID + ".fileprovider")
@@ -273,20 +281,21 @@ class BaseApplication : Application() {
         registerImMsgEvent()
     }
 
-    fun reInitImSdk(onImLoginListener:OnImLoginListener?=null) {
+    fun reInitImSdk(onImLoginListener: OnImLoginListener? = null) {
         if (!EMClient.getInstance().isSdkInited) {
             initImConfig()
         }
         if (!EMClient.getInstance().isLoggedIn) {
-            LoginResultManager.loginIM(false,object : EMCallBack{
+            LoginResultManager.loginIM(false, object : EMCallBack {
                 override fun onSuccess() {
                     onImLoginListener?.onSuccess()
                 }
+
                 override fun onError(code: Int, error: String?) {
-                    onImLoginListener?.onError(code,error)
+                    onImLoginListener?.onError(code, error)
                 }
             })
-        }else{
+        } else {
             onImLoginListener?.onSuccess()
         }
     }
@@ -298,14 +307,12 @@ class BaseApplication : Application() {
         val emMessageListener = object : EMMessageListener {
             override fun onMessageReceived(messages: MutableList<EMMessage>) {
                 //收到聊天消息
-                if (ConfigParamsManager.HAS_LOAD_CHAT) {
-                    ThreadUtils.getMainHandler().post {
-                        getMsgUserInfo(messages)
-                        LiveDataEventManager.sendLiveDataMessage(
-                            EventBusKeyConfig.RECEIVE_CHAT_MSG,
-                            messages
-                        )
-                    }
+                ThreadUtils.getMainHandler().post {
+                    getMsgUserInfo(messages)
+                    LiveDataEventManager.sendLiveDataMessage(
+                        EventBusKeyConfig.RECEIVE_CHAT_MSG,
+                        messages
+                    )
                 }
             }
 
@@ -503,106 +510,121 @@ class BaseApplication : Application() {
     }
 
     private fun dealCommonCmdMsg(message: EMMessage) {
-        val source = message.getIntAttribute("source", -1)
-        logcom("收到透传消息source=$source")
-        if (source == CmdMsgTypeConfig.ADD_FRIEND) {
-            val userInfo = ChatUserInfoManager.getUserInfo(message.conversationId())
-            userInfo?.apply {
-                this.isFriend = true
-                ChatUserInfoManager.saveUserInfo(this)
-            }
+        try {
+            val source = message.getIntAttribute("source", -1)
+            logcom("收到透传消息source=$source")
+            if (source == CmdMsgTypeConfig.ADD_FRIEND) {
+                val userInfo = ChatUserInfoManager.getUserInfo(message.conversationId())
+                userInfo?.apply {
+                    this.isFriend = true
+                    ChatUserInfoManager.saveUserInfo(this)
+                }
 
-        } else if (source == ChatConstant.ACTION_PHONE_CALL_VIDEO) {
-            //收到一对一视频
-            val callInfo = message.getStringAttribute("callInfo")
-            val appStatus: String
-            if (VersionUtils.isTargetQ(ActivityUtils.getTopActivity())) {
-                if (CommonUtils.isScreenOff()) {
-                    appStatus = "熄屏"
-                    showReceiveNewCallInBg(callInfo)
-                } else {
-                    if (AppUtils.isAppForeground()) {
-                        appStatus = "app前台显示"
-                        showNewCallWhenForeground(callInfo)
-                    } else {
-                        appStatus = "app后台显示"
+            } else if (source == ChatConstant.ACTION_PHONE_CALL_VIDEO) {
+                //收到一对一视频
+                val callInfo = message.getStringAttribute("callInfo")
+                val appStatus: String
+                if (VersionUtils.isTargetQ(ActivityUtils.getTopActivity())) {
+                    if (CommonUtils.isScreenOff()) {
+                        appStatus = "熄屏"
                         showReceiveNewCallInBg(callInfo)
-                    }
-                }
-            } else {
-                if (CommonUtils.isScreenOff()) {
-                    appStatus = "熄屏"
-                    RouteIntent.toToWaitPhoneActivity(callInfo)
-                } else {
-                    if (AppUtils.isAppForeground()) {
-                        appStatus = "app前台显示"
-                        showNewCallWhenForeground(callInfo)
                     } else {
-                        appStatus = "app后台显示"
+                        if (AppUtils.isAppForeground()) {
+                            appStatus = "app前台显示"
+                            showNewCallWhenForeground(callInfo)
+                        } else {
+                            appStatus = "app后台显示"
+                            showReceiveNewCallInBg(callInfo)
+                        }
+                    }
+                } else {
+                    if (CommonUtils.isScreenOff()) {
+                        appStatus = "熄屏"
                         RouteIntent.toToWaitPhoneActivity(callInfo)
+                    } else {
+                        if (AppUtils.isAppForeground()) {
+                            appStatus = "app前台显示"
+                            showNewCallWhenForeground(callInfo)
+                        } else {
+                            appStatus = "app后台显示"
+                            RouteIntent.toToWaitPhoneActivity(callInfo)
+                        }
                     }
                 }
-            }
-            logcom(appStatus)
+                logcom(appStatus)
 
-        } else if (source == ChatConstant.ACTION_MSG_APPLY_SET_UP_SUCCESS) {
-            if (!AgoraManager.isLiveRoom) {
-                //申请上麦成功
-                val roomId = message.getStringAttribute("roomId")
-                val seatId = message.getStringAttribute("seatId")
-                val ownerNickname = message.getStringAttribute("ownerNickname")
-                runOnUiThread { showApplySuccessDialog(roomId, seatId, ownerNickname) }
-            }
-        } else if (source == ChatConstant.ACTION_PHONE_CALL_REFUSE) {
-            val stringAttribute =
-                message.getStringAttribute(ChatConstant.CUSTOM_DATA, "")
-            if (!TextUtils.isEmpty(stringAttribute)) {
-                if (CommonUtils.isPopShow(receiveImCallPop)) {
-                    receiveImCallPop?.dismiss()
+            } else if (source == ChatConstant.ACTION_MSG_APPLY_SET_UP_SUCCESS) {
+                if (!AgoraManager.isLiveRoom) {
+                    //申请上麦成功
+                    val roomId = message.getStringAttribute("roomId")
+                    val seatId = message.getStringAttribute("seatId")
+                    val ownerNickname = message.getStringAttribute("ownerNickname")
+                    runOnUiThread { showApplySuccessDialog(roomId, seatId, ownerNickname) }
+                }
+            } else if (source == ChatConstant.ACTION_PHONE_CALL_REFUSE) {
+                val stringAttribute =
+                    message.getStringAttribute(ChatConstant.CUSTOM_DATA, "")
+                if (!TextUtils.isEmpty(stringAttribute)) {
+                    if (CommonUtils.isPopShow(receiveImCallPop)) {
+                        receiveImCallPop?.dismiss()
+                        return
+                    }
+                    if (CommonUtils.isPopShow(receiveImCallBgPop)) {
+                        receiveImCallBgPop?.dismiss()
+                        return
+                    }
+                    val topActivity = ActivityUtils.getTopActivity()
+                    if ((topActivity is VideoPhoneActivity && stringAttribute.equals(
+                            topActivity.chatUserId.toString()
+                        ))
+                    ) {
+                        topActivity.finish()
+                    }
+                }
+            } else if (source == ChatConstant.GLOBAL_GIFT_ALERT) {
+                if (CommonUtils.isScreenOff() || !AppUtils.isAppForeground()) {
                     return
                 }
-                if (CommonUtils.isPopShow(receiveImCallBgPop)) {
-                    receiveImCallBgPop?.dismiss()
-                    return
-                }
-                val topActivity = ActivityUtils.getTopActivity()
-                if ((topActivity is VideoPhoneActivity && stringAttribute.equals(
-                        topActivity.chatUserId.toString()
-                    ))
-                ) {
-                    topActivity.finish()
-                }
+                val data = message.getJSONObjectAttribute(ChatConstant.CUSTOM_DATA)
+                addGlobalPopTask(
+                    ChatConstant.GLOBAL_GIFT_ALERT,
+                    data.toString()
+                )
+            } else if (source == ChatConstant.ACTION_FORCE_AUTH) {
+                addPopTask(
+                    ChatConstant.ACTION_FORCE_AUTH,
+                    "1"
+                )
+            } else if (source == ChatConstant.ACTION_MSG_SET_UP) {
+                showReceiveInvitePop(message)
+            } else if (source == ChatConstant.ACTION_NEW_YEAR_RED_PACKET) {
+                val data = message.getJSONObjectAttribute(ChatConstant.CUSTOM_DATA)
+                addPopTask(
+                    ChatConstant.ACTION_NEW_YEAR_RED_PACKET,
+                    data.optString("url")
+                )
             }
-        }else if (source == ChatConstant.GLOBAL_GIFT_ALERT){
-            if (CommonUtils.isScreenOff() || !AppUtils.isAppForeground()) {
-                return
-            }
-            val data = message.getJSONObjectAttribute("data")
-            addPopTask(ChatConstant.GLOBAL_GIFT_ALERT,
-                data.toString())
-        }else if(source == ChatConstant.ACTION_FORCE_AUTH) {
-            addPopTask(ChatConstant.ACTION_FORCE_AUTH,
-                "1")
-        }else if (source == ChatConstant.ACTION_MSG_SET_UP){
-            showReceiveInvitePop(message)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+
     }
 
     private var receiveInviteSeatPop: ReceiveInviteSeatPop? = null
     private var receiveInviteSeatPop2: ReceiveInviteSeat2Pop? = null
 
     private fun showReceiveInvitePop(message: EMMessage) {
-        val roomId = message.getStringAttribute("roomId","")
-        if (TextUtils.isEmpty(roomId)){
+        val roomId = message.getStringAttribute("roomId", "")
+        if (TextUtils.isEmpty(roomId)) {
             return
         }
         val topActivity = ActivityUtils.getTopActivity()
-        if (topActivity == null || topActivity is LiveRoomActivity || LiveRoomVideoMiniManager.getInstance().isShowing){
+        if (topActivity == null || topActivity is LiveRoomActivity || LiveRoomVideoMiniManager.getInstance().isShowing) {
             return
         }
 
-        val roomInfo = message.getStringAttribute("roomInfo","")
-        if (TextUtils.isEmpty(roomInfo)){
+        val roomInfo = message.getStringAttribute("roomInfo", "")
+        if (TextUtils.isEmpty(roomInfo)) {
             //为了兼容老版本没有 roomInfo字段，老版本收到邀请上麦跟在直播间内收到邀请用同一个弹框(多迭代几个版本后 可考虑删除此逻辑)
             if (CommonUtils.isPopShow(receiveInviteSeatPop)) {
                 return
@@ -612,20 +634,23 @@ class BaseApplication : Application() {
                 message,
                 object : ReceiveInviteSeatPop.OnClickSeatUpListener {
                     override fun onClickSeatUp() {
-                        val seatId = message.getStringAttribute("seatId","")
-                        userSetSeat(roomId,seatId)
+                        val seatId = message.getStringAttribute("seatId", "")
+                        userSetSeat(roomId, seatId)
                     }
                 })
-        }else{
+        } else {
             if (CommonUtils.isPopShow(receiveInviteSeatPop2)) {
                 return
             }
-            receiveInviteSeatPop2 =  ReceiveInviteSeat2Pop.showDialog(topActivity,message,object : ReceiveInviteSeat2Pop.OnClickSeatUpListener {
-                override fun onClickSeatUp() {
-                    val seatId = message.getStringAttribute("seatId","")
-                    userSetSeat(roomId,seatId)
-                }
-            })
+            receiveInviteSeatPop2 = ReceiveInviteSeat2Pop.showDialog(
+                topActivity,
+                message,
+                object : ReceiveInviteSeat2Pop.OnClickSeatUpListener {
+                    override fun onClickSeatUp() {
+                        val seatId = message.getStringAttribute("seatId", "")
+                        userSetSeat(roomId, seatId)
+                    }
+                })
         }
 
     }
@@ -675,7 +700,14 @@ class BaseApplication : Application() {
 
     private fun userSetSeat(roomId: String, seatId: String) {
         DialogUtils.showLoading(hasShadow = false)
-        request({ agoraRxApi.userSetSeat(roomId, BaseLiveRoomFrg.SEAT_TYPE_AUTO, seatId, AppCacheManager.userId) },
+        request({
+            agoraRxApi.userSetSeat(
+                roomId,
+                BaseLiveRoomFrg.SEAT_TYPE_AUTO,
+                seatId,
+                AppCacheManager.userId
+            )
+        },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     LiveRoomManager.toLiveRoomPage(
@@ -691,15 +723,18 @@ class BaseApplication : Application() {
                         ErrorCode.CODE_NO_BALANCE -> {
                             showRechargePop()
                         }
+
                         ErrorCode.CODE_NEED_REAL_NAME -> {
                             showRealNameAuthPop()
                         }
-                        else ->{
+
+                        else -> {
                             showToast(msg)
                         }
                     }
                 }
-            },false)
+            }, false
+        )
     }
 
     private fun showRealNameAuthPop() {
@@ -794,6 +829,7 @@ class BaseApplication : Application() {
 
     companion object {
         private val appPopTaskQueueManagerImpl = TaskQueueManagerImpl()
+        private val globalTaskQueueManagerImpl = TaskQueueManagerImpl()
 
         init {
             RefreshManager.init(SmartRefreshProcessor())
@@ -801,6 +837,10 @@ class BaseApplication : Application() {
 
         fun addPopTask(type: Int, content: String) {
             appPopTaskQueueManagerImpl.addTask(AppPopTask(type, content))
+        }
+
+        fun addGlobalPopTask(type: Int, content: String) {
+            globalTaskQueueManagerImpl.addTask(AppPopTask(type, content))
         }
     }
 }

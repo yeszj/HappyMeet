@@ -4,6 +4,7 @@ import android.content.Context
 import cn.yanhu.agora.manager.AgoraSdkDownloadManager.getSoPath
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.manager.AppCacheManager
 import io.agora.rtc2.IMediaExtensionObserver
 import io.agora.rtc2.IRtcEngineEventHandler
 import io.agora.rtc2.RtcEngineConfig
@@ -20,7 +21,7 @@ object RtcEngineInit {
         try {
             val config = RtcEngineConfig()
             config.mContext = context
-            config.mAppId = "301729ee939d4470b6b60a795e9ccc22"
+            config.mAppId = AppCacheManager.agoraAppId
             config.mEventHandler = object : IRtcEngineEventHandler() {
             }
             config.mExtensionObserver = object : IMediaExtensionObserver{

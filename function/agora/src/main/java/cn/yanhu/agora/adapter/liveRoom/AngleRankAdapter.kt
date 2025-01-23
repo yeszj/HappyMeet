@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.databinding.AdapterAngleRoomRankItemBinding
+import cn.yanhu.agora.pop.RoomAngleRankPop
 import com.chad.library.adapter4.BaseQuickAdapter
 
 /**
@@ -34,7 +35,12 @@ class AngleRankAdapter : BaseQuickAdapter<AngleRankInfo, AngleRankAdapter.VH>() 
                 tvDesc.text = item.angelUnlockDesc
             }else{
                 clUser.setBackgroundColor(Color.parseColor("#FFFFFF"))
-                tvDesc.text = "距离解锁本场天使还差${item.diffRoseNum}玫瑰"
+                val desc = if (rankType==RoomAngleRankPop.TYPE_ANGLE){
+                    "天使"
+                }else{
+                    "歌手"
+                }
+                tvDesc.text = "距离解锁本场${desc}还差${item.diffRoseNum}玫瑰"
             }
             when (position) {
                 0 -> {
@@ -67,5 +73,10 @@ class AngleRankAdapter : BaseQuickAdapter<AngleRankInfo, AngleRankAdapter.VH>() 
 
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
         return VH(parent)
+    }
+
+    var rankType:Int = RoomAngleRankPop.TYPE_ANGLE
+    fun setType(type: Int) {
+        this.rankType = type
     }
 }

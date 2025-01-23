@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.R
+import cn.huanyuan.sweetlove.bean.AppStartResponse
 import cn.huanyuan.sweetlove.bean.AppVersionInfo
 import cn.huanyuan.sweetlove.bean.TabEntity
 import cn.huanyuan.sweetlove.databinding.ActivityMainBinding
@@ -33,6 +34,7 @@ import cn.yanhu.baselib.base.BaseTabAdapter
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.logcom
+import cn.yanhu.commonres.bean.AppPopResponse
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.bean.response.RoseRechargeResponse
 import cn.yanhu.commonres.config.ChatConstant
@@ -57,6 +59,7 @@ import com.blankj.utilcode.util.ThreadUtils
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.chaychan.library.BottomBarItem
+import com.chaychan.library.UIUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
@@ -74,20 +77,19 @@ import kotlinx.coroutines.withContext
  */
 @Route(path = RouterPath.ROUTER_MAIN)
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
-    R.layout.activity_main,
-    MainViewModel::class.java
+    R.layout.activity_main, MainViewModel::class.java
 ) {
     private var appVersionInfo: AppVersionInfo? = null
     private var isOpen: Boolean = false
-    private var titleList = mutableListOf<String>()
     private var mFragmentList = mutableListOf<Fragment>()
     private var tabList: MutableList<TabEntity> = mutableListOf()
+    private var selectItem = 2
     override fun initData() {
+
         setFullScreenStatusBar(true)
         setStatusBarStyle(false)
         AppManager.setAppState(
-            AppManager.STATE_FOREGROUND,
-            PermissionX.areNotificationsEnabled(mContext)
+            AppManager.STATE_FOREGROUND, PermissionX.areNotificationsEnabled(mContext)
         )
         downloadBeautySdk()
         downloadAgoraSdk()
@@ -96,10 +98,31 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         mViewModel.getMainTabInfo()
         initRtcEngine()
         checkInit()
+        appStart()
+        //startActivity(Intent(mContext,TestActivity::class.java))
+    }
+
+    override fun getSavedInstanceState(savedInstanceState: Bundle?) {
+        super.getSavedInstanceState(savedInstanceState)
+        savedInstanceState?.apply {
+            selectItem = this.getInt(IntentKeyConfig.POSITION,2)
+        }
+
     }
 
 
+    private fun appStart(){
+        request({ rxApi.appStart() }, object : OnRequestResultListener<AppStartResponse> {
+            override fun onSuccess(data: BaseBean<AppStartResponse>) {
+                val appStartResponse = data.data?:return
+                AppCacheManager.agoraAppId = appStartResponse.agoraAppId
+            }
+
+        }, false, activity = mContext)
+    }
+
     private var checkAuthInfo: BaseBean<Int>? = null
+    private var appPopInfo:AppPopResponse?=null
     private fun checkInit() {
         mContext.lifecycleScope.launch {
             runCatching {
@@ -109,14 +132,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     }
                     val two = async { rxApi.checkIsOpenJuvenileMode() }
                     val three = async { rxApi.checkAuthTip() }
+                    val four = async { rxApi.getToastInfo() }
+
                     val await = one.await()
                     val await1 = two.await()
                     checkAuthInfo = three.await()
+                    appPopInfo = four.await().data
                     appVersionInfo = await.data
                     isOpen = await1.data == true
                 }
-            }.onFailure {
-            }.onSuccess {
+            }.onFailure {}.onSuccess {
                 if (appVersionInfo == null) {
                     if (isOpen) {
                         //跳转到青少年模式页面
@@ -124,13 +149,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     } else {
                         if (checkAuthInfo != null && checkAuthInfo?.code == 200 && checkAuthInfo?.data != 0) {
                             BaseApplication.addPopTask(
-                                ChatConstant.ACTION_FORCE_AUTH,
-                                checkAuthInfo!!.data.toString()
+                                ChatConstant.ACTION_FORCE_AUTH, checkAuthInfo!!.data.toString()
                             )
                         }
                         if (!AppCacheManager.hasShowTeenApp) {
                             BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP, "")
                             AppCacheManager.hasShowTeenApp = true
+                        }
+                        if (appPopInfo!=null && appPopInfo!!.common!=null){
+                            BaseApplication.addPopTask(ChatConstant.ACTION_EVENT_POP, GsonUtils.toJson(appPopInfo!!.common))
                         }
                     }
                 } else {
@@ -232,8 +259,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             if (downLoadFail) {
                 downloadAgoraSdk()
             }
-            downloadProgressPop = DownloadProgressPop.showDialog(
-                ActivityUtils.getTopActivity(),
+            downloadProgressPop = DownloadProgressPop.showDialog(ActivityUtils.getTopActivity(),
                 progress,
                 object : SimpleCallback() {
                     override fun onDismiss(popupView: BasePopupView) {
@@ -253,14 +279,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             if (beautyDownLoadFail) {
                 downloadBeautySdk()
             }
-            beautyDownloadProgressPop = DownloadProgressPop.showDialog(
-                ActivityUtils.getTopActivity(),
-                progress,
-                object : SimpleCallback() {
-                    override fun onDismiss(popupView: BasePopupView) {
-                        beautyDownloadProgressPop = null
-                    }
-                })
+            beautyDownloadProgressPop =
+                DownloadProgressPop.showDialog(ActivityUtils.getTopActivity(),
+                    progress,
+                    object : SimpleCallback() {
+                        override fun onDismiss(popupView: BasePopupView) {
+                            beautyDownloadProgressPop = null
+                        }
+                    })
         } else {
             beautyDownloadProgressPop?.setProgress(progress)
         }
@@ -371,28 +397,22 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun createBottomBarItem(tabEntity: TabEntity): BottomBarItem {
-        val bottomBarItem = BottomBarItem.Builder(this)
-            .titleTextSize(12)
+        val bottomBarItem = BottomBarItem.Builder(this).titleTextSize(UIUtils.sp2px(mContext, 12f))
             .iconHeight(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_32))
-            .iconWidth(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_32))
-            .titleSelectedColor(
-            cn.yanhu.baselib.R.color.colorMain
-        ).titleNormalColor(cn.yanhu.baselib.R.color.color6)
-            .unreadNumThreshold(99)
-            .unreadTextColor(R.color.white)
+            .iconWidth(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_32)).titleSelectedColor(
+                CommonUtils.getColor(cn.yanhu.baselib.R.color.colorMain)
+            ).titleNormalColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.color6))
             //还有很多属性，详情请查看Builder里面的方法
             .create(
                 cn.yanhu.commonres.R.drawable.tab_default_bg,
                 cn.yanhu.commonres.R.drawable.tab_default_bg,
                 tabEntity.name
             )
-        GlideUtils.loadAsDrawable(
-            mContext,
+        GlideUtils.loadAsDrawable(mContext,
             tabEntity.normalIcon,
             object : CustomTarget<Drawable>() {
                 override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
+                    resource: Drawable, transition: Transition<in Drawable>?
                 ) {
                     bottomBarItem.setNormalIcon(resource)
                 }
@@ -400,13 +420,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
             })
-        GlideUtils.loadAsDrawable(
-            mContext,
+        GlideUtils.loadAsDrawable(mContext,
             tabEntity.selectIcon,
             object : CustomTarget<Drawable>() {
                 override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
+                    resource: Drawable, transition: Transition<in Drawable>?
                 ) {
                     bottomBarItem.setSelectedIcon(resource)
                 }
@@ -419,7 +437,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
 
     private fun bindTabToVp() {
-        val tabAdapter = BaseTabAdapter(supportFragmentManager, titleList, mFragmentList)
+        val tabAdapter = BaseTabAdapter(supportFragmentManager, mFragmentList)
         mBinding.viewPager.adapter = tabAdapter
         mBinding.tabLayout.setViewPager(mBinding.viewPager)
         mBinding.viewPager.offscreenPageLimit = mFragmentList.size
@@ -428,7 +446,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 mContext
             )
         }
-        mBinding.viewPager.setCurrentItem(2, false)
+        mBinding.tabLayout.currentItem = selectItem
 //        mBinding.viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
 //            override fun onPageSelected(position: Int) {
 //                super.onPageSelected(position)
@@ -475,6 +493,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     private fun sendHomeKeyEvent() {
         moveTaskToBack(true)
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(IntentKeyConfig.POSITION,mBinding.viewPager.currentItem)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

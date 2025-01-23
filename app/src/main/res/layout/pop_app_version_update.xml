@@ -8,6 +8,7 @@
             name="versionInfo"
             type="cn.huanyuan.sweetlove.bean.AppVersionInfo" />
         <import type="android.text.TextUtils"/>
+        <import type="android.view.View"/>
     </data>
 
     <LinearLayout
@@ -35,6 +36,7 @@
             android:background="@drawable/white_corner_5"
             android:backgroundTint="#1AF8459B"
             android:gravity="center"
+            android:visibility="@{TextUtils.isEmpty(versionInfo.versionNum)?View.GONE:View.VISIBLE}"
             android:text="@{TextUtils.isEmpty(versionInfo.versionNum)?``:`v `+versionInfo.versionNum}"
             android:paddingHorizontal="@dimen/dp_6"
             tools:text="V1.0.0"

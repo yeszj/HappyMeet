@@ -36,15 +36,19 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
             liveRoomFrg = ThreeLiveRoomFrg()
             liveRoomFrg?.arguments = intent.extras
             addFragment(liveRoomFrg)
-        }else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_SEVEN_ROOM){
+        } else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_SEVEN_ROOM) {
             liveRoomFrg = SevenLiveRoomFrg()
             liveRoomFrg?.arguments = intent.extras
             addFragment(liveRoomFrg)
-        }else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_NINE_ROOM){
+        } else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_NINE_ROOM) {
             liveRoomFrg = NineLiveRoomFrg()
             liveRoomFrg?.arguments = intent.extras
             addFragment(liveRoomFrg)
-        } else {
+        }  else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_SONG_ROOM) {
+            liveRoomFrg = SongLiveRoomFrg()
+            liveRoomFrg?.arguments = intent.extras
+            addFragment(liveRoomFrg)
+        }else {
             val upgradeTipFrg = NeedUpgradeTipFrg()
             addFragment(upgradeTipFrg)
         }
@@ -82,7 +86,7 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
         AgoraManager.isLiveRoom = false
     }
 
-    fun roomLeave(onRoomLeaveListener: OnRoomLeaveListener){
+    fun roomLeave(onRoomLeaveListener: OnRoomLeaveListener) {
         liveRoomFrg?.roomLeave(onRoomLeaveListener)
     }
 

@@ -19,6 +19,7 @@ import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ActivityUtils
 import com.hyphenate.EMCallBack
 import com.hyphenate.chat.EMClient
+import com.umeng.analytics.MobclickAgent
 
 /**
  * @author: zhengjun
@@ -60,6 +61,7 @@ object LoginResultManager {
 
     private var isReset: Boolean = false
     fun loginIM(isLogin:Boolean = false,callBack: EMCallBack?) {
+        MobclickAgent.onProfileSignIn(AppCacheManager.userId)
         if (TextUtils.isEmpty(AppCacheManager.imToken)) {
             getImToken(isLogin,callBack)
         } else {

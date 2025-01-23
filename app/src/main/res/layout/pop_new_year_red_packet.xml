@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_desc"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_87"
+            android:layout_marginBottom="@dimen/dp_60"
+            android:gravity="center"
+            android:text="霜影夜狼 x1天"
+            android:textColor="#C36E2A"
+            android:textSize="@dimen/sp_16"
+            android:visibility="invisible"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_image"
+            app:layout_constraintEnd_toEndOf="@+id/iv_image"
+            app:layout_constraintStart_toStartOf="@+id/iv_image" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

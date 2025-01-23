@@ -80,7 +80,7 @@ class SendGiftPop(
         //如果不是直播间 移除随机盲盒礼物
         if (SendGiftRequest.SOURCE_LIVE_ROOM != source) {
             giftInfo?.list?.removeIf {
-                it.type == 10
+                it.type == GiftInfo.TYPE_RANDOM_BOX
             }
         }
     }
@@ -111,6 +111,7 @@ class SendGiftPop(
                 giftAdapter.setSelectPosition(
                     position
                 )
+                mBinding.rvGift.scrollToPosition(position)
             }
 
         }
@@ -158,7 +159,7 @@ class SendGiftPop(
                             map,
                         )
                     }
-                    if (item.type == 10) {
+                    if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
                         item.randomBoxGiftInfo = data.data
                     }
                     onSendGiftListener.onSendGift(item)

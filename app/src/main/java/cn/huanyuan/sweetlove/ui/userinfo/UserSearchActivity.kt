@@ -2,12 +2,14 @@ package cn.huanyuan.sweetlove.ui.userinfo
 
 import android.content.Context
 import android.content.Intent
+import android.view.KeyEvent
 import android.view.View
-import cn.huanyuan.sweetlove.databinding.ActivityUserSearchBinding
-import cn.yanhu.baselib.base.BaseActivity
+import android.view.inputmethod.EditorInfo
 import cn.huanyuan.sweetlove.R
+import cn.huanyuan.sweetlove.databinding.ActivityUserSearchBinding
 import cn.huanyuan.sweetlove.ui.userinfo.adapter.UserSearchAdapter
 import cn.yanhu.agora.manager.LiveRoomManager
+import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.router.RouteIntent
@@ -50,6 +52,16 @@ class UserSearchActivity : BaseActivity<ActivityUserSearchBinding, UserViewModel
         super.initListener()
         mBinding.tvSearch.setOnSingleClickListener {
             requestData()
+        }
+        mBinding.etContent.setOnEditorActionListener { v, actionId, event ->
+            if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
+                return@setOnEditorActionListener true
+            }
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                requestData()
+                return@setOnEditorActionListener true
+            }
+            false
         }
     }
 

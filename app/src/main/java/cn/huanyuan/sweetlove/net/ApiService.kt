@@ -3,10 +3,15 @@ package cn.huanyuan.sweetlove.net
 import cn.huanyuan.sweetlove.bean.AppCheckItemInfo
 import cn.huanyuan.sweetlove.bean.AppStartResponse
 import cn.huanyuan.sweetlove.bean.AppVersionInfo
+import cn.huanyuan.sweetlove.bean.CommonEventImgConfig
+import cn.huanyuan.sweetlove.bean.CommonEventRankResponse
 import cn.huanyuan.sweetlove.bean.ComplaintInfo
 import cn.huanyuan.sweetlove.bean.GuardRankResponse
 import cn.huanyuan.sweetlove.bean.InviteInfo
 import cn.huanyuan.sweetlove.bean.InviteRecordResponse
+import cn.huanyuan.sweetlove.bean.NewYearInfo
+import cn.huanyuan.sweetlove.bean.NewYearRankResponse
+import cn.huanyuan.sweetlove.bean.RedPacketRewardInfo
 import cn.huanyuan.sweetlove.bean.SecurityInfo
 import cn.huanyuan.sweetlove.bean.SwitchConfigInfo
 import cn.huanyuan.sweetlove.bean.TabEntity
@@ -15,6 +20,7 @@ import cn.huanyuan.sweetlove.bean.UserLevelResponse
 import cn.huanyuan.sweetlove.bean.WalletInfo
 import cn.huanyuan.sweetlove.bean.WalletRecordResponse
 import cn.yanhu.commonres.api.CommonApiService
+import cn.yanhu.commonres.bean.AppPopResponse
 import cn.yanhu.commonres.bean.AuthCenterInfo
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.EditUserInfo
@@ -53,17 +59,14 @@ interface ApiService : CommonApiService {
     @GET("app/v1/userCenter/userInfo")
     suspend fun getMyPageInfo(): BaseBean<UserDetailInfo>
 
-
     @GET("app/v1/user/getUserInfoByUserId")
     suspend fun getUserInfoByUserId(@Query("uId") userId: String): BaseBean<UserDetailInfo>
 
     @GET("app/v1/userCenter/myServices")
     suspend fun getMyService(): BaseBean<MutableList<MineMenuBean>>
 
-
     @GET("app/v1/userCenter/getPersonalPage")
     suspend fun getEditInfo(): BaseBean<EditUserInfo>
-
 
     @FormUrlEncoded
     @POST("/app/v1/userCenter/updatePersonalPageSingle")
@@ -80,9 +83,9 @@ interface ApiService : CommonApiService {
         @Query("type") type: Int, @Query("page") page: Int
     ): BaseBean<RoomListResponse>
 
-    @GET("app/v1/rank/getGuardRankList")
+    @GET("app/v1/user/getUserGuardInfo")
     suspend fun getGuardRankList(
-        @Query("userId") userId: String
+        @Query("viewUserId") userId: String
     ): BaseBean<GuardRankResponse>
 
     @GET("app/v1/user/getUserLevelInfo")
@@ -326,4 +329,26 @@ interface ApiService : CommonApiService {
 
     @GET("app/v1/account/recharge/remind")
     suspend fun checkAuthTip(): BaseBean<Int>
+
+    @GET("app/v1/activity/redpack/getIndex")
+    suspend fun getNewYearInfo(): BaseBean<NewYearInfo>
+
+
+    @GET("app/v1/activity/redpack/getRanking")
+    suspend fun getNewYearRank(@Query("type") type:Int): BaseBean<NewYearRankResponse>
+
+    @POST("app/v1/activity/redpack/addVal")
+    suspend fun addVal(): BaseBean<String>
+
+    @POST("app/v1/activity/redpack/receiveReward")
+    suspend fun receiveRedPacket(): BaseBean<RedPacketRewardInfo>
+
+    @GET("app/v1/home/getToastInfo")
+    suspend fun getToastInfo(): BaseBean<AppPopResponse>
+
+    @GET("app/v1/activity/zxb/getIndex")
+    suspend fun getCommonEventConfig(@Query("activityId") activityId:String): BaseBean<CommonEventImgConfig>
+
+    @GET("app/v1/activity/zxb/getRanking")
+    suspend fun getCommonEventRank(@Query("type") type:Int,@Query("activityId") activityId:String): BaseBean<CommonEventRankResponse>
 }

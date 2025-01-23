@@ -58,6 +58,34 @@
 -keepattributes EnclosingMethod
 -keep public interface com.facebook.**
 -keep public interface com.tencent.**
+
+
+-keep class com.umeng.** {*;}
+
+-keep class org.repackage.** {*;}
+
+-keep class com.uyumao.** { *; }
+
+-keep class com.uc.** { *; }
+
+-keep class com.efs.** { *; }
+
+-keepclassmembers class *{
+     public<init>(org.json.JSONObject);
+}
+-keepclassmembers enum *{
+      publicstatic**[] values();
+      publicstatic** valueOf(java.lang.String);
+}
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
 -keep public interface com.umeng.socialize.**
 -keep public interface com.umeng.socialize.sensor.**
 -keep public interface com.umeng.scrshot.**

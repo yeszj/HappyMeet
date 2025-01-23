@@ -30,4 +30,5 @@ object EventBusKeyConfig {
     const val ADD_FRIEND_STATE = "add_friend_state"
     const val FRIEND_REQUEST_COUNT = "friend_request_count"
 
+
 }

@@ -84,7 +84,9 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
             TYPE_NINE_FRIEND,TYPE_NINE_ANGLE -> {
                 FRG_NINE_ROOM
             }
-
+            TYPE_SEVEN_SONG, TYPE_NINE_SONG ->{
+                FRG_SONG_ROOM
+            }
             else -> FRG_OTHER_ROOM
         }
     }
@@ -118,6 +120,8 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
         const val FRG_THREE_ROOM = 1
         const val FRG_SEVEN_ROOM = 2
         const val FRG_NINE_ROOM = 3
+        const val FRG_SONG_ROOM = 4
+
         const val FRG_OTHER_ROOM = 10
 
         const val TYPE_PUBLIC = 1

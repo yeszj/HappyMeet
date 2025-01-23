@@ -60,6 +60,8 @@
     <color name="whiteColorAlpha60">#66FFFFFF</color>
     <color name="whiteColorAlpha70">#4DFFFFFF</color>
     <color name="whiteColorAlpha80">#33FFFFFF</color>
+    <color name="whiteColorAlpha20">#ccFFFFFF</color>
+
     <color name="whiteColorAlpha92">#14ffffff</color>
     <color name="whiteColorAlpha90">#1AFFFFFF</color>
     <color name="blackAlpha10">#E61F1F23</color>

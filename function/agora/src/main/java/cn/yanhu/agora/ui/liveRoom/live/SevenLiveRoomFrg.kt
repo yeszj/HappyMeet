@@ -12,24 +12,22 @@ import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.ext.parseState
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager
 import cn.yanhu.agora.R
-import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.ViewSevenRoomRankViewBinding
-import cn.yanhu.agora.pop.LiveRoomSeatManagerPop
+import cn.yanhu.agora.pop.CrownedUserListPop
 import cn.yanhu.agora.pop.RoomAngleRankPop
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomListBean
-import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.PageIntentUtil
 import cn.zj.netrequest.ext.OnRequestResultListener
-import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
+import com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager
+import com.chad.library.adapter4.util.addOnDebouncedChildClick
 
 /**
  * @author: zhengjun
@@ -41,48 +39,78 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
     protected val rankAdapter by lazy { LiveRoomRoseRankAdapter() }
     override fun initData() {
         roomSourceBean = requireArguments().getSerializable(IntentKeyConfig.DATA) as RoomDetailInfo
-        seatUserAdapter =
-            MoreSeatRoomAdapter(roomSourceBean.getFragmentType())
-        super.initData()
-        addRankView()
-        val layoutManager = mBinding.rvSeat.layoutManager as QuickGridLayoutManager
-        layoutManager.spanCount = 3
-        mBinding.rvSeat.adapter = seatUserAdapter
-        getRoseRankList()
 
+        seatUserAdapter =
+            MoreSeatRoomAdapter(roomSourceBean.getFragmentType(), roomSourceBean.roomType)
+        val layoutManager = QuickGridLayoutManager(mContext, 3)
+        mBinding.rvSeat.layoutManager = layoutManager
+        super.initData()
+        (seatUserAdapter as MoreSeatRoomAdapter).setIsOwner(isOwner)
+        mBinding.rvSeat.adapter = seatUserAdapter
+        addRankView()
+        getRoseRankList()
     }
+
 
     private lateinit var rankViewBinding: ViewSevenRoomRankViewBinding
     protected open fun addRankView() {
         val rankView =
             LayoutInflater.from(mContext).inflate(R.layout.view_seven_room_rank_view, null)
         rankViewBinding = DataBindingUtil.bind(rankView)!!
-        val rvRank = rankViewBinding.rvRank
-        rankViewBinding.isAngle = roomType == RoomListBean.TYPE_SEVEN_ANGLE
+        rankViewBinding.apply {
+            bindSevenRankView(rankView)
+        }
+    }
+
+
+    private fun ViewSevenRoomRankViewBinding.bindSevenRankView(rankView: View?) {
+        roomInfo = roomSourceBean
+        this.isRoomOwner = isOwner
+        toggleAutoSeat.setOnSingleClickListener {
+            showSetAutoSeat()
+        }
+        isAngle = roomType == RoomListBean.TYPE_SEVEN_ANGLE
+        isSong = roomType == RoomListBean.TYPE_SEVEN_SONG
         rvRank.adapter = rankAdapter
+        if (AppCacheManager.isOpenGiftAudio) {
+            ivAudio.setImageResource(R.drawable.svg_voice_on)
+        } else {
+            ivAudio.setImageResource(R.drawable.svg_voice_off)
+        }
         rankAdapter.setOnItemClickListener { _, _, _ ->
             userReceiveRoseInfo?.apply {
                 showRankListPop()
             }
         }
-        rankViewBinding.ivExit.setOnSingleClickListener {
+        ivExit.setOnSingleClickListener {
             showFloatWindow(1)
         }
-        rankViewBinding.tvOnlineNum.setOnSingleClickListener {
+        tvOnlineNum.setOnSingleClickListener {
             showOnlineUserList()
         }
-        rankViewBinding.ivRank.setOnSingleClickListener {
+        ivRank.setOnSingleClickListener {
             showAngleRankPop()
         }
-        rankViewBinding.ivRule.setOnSingleClickListener {
+        ivRule.setOnSingleClickListener {
             PageIntentUtil.url2Page(mContext, WebUrlManager.ANGLE_ROOM_RULE)
         }
-        mBinding.flCustomView.addView(rankView)
-        if (!isOwner) {
-            rankViewBinding.tvOnlineNum.visibility = View.INVISIBLE
+        ivCrowned.setOnSingleClickListener {
+            showCrownedListPop(CrownedUserListPop.TYPE_ANGLE)
         }
+        vgGiftAudio.setOnSingleClickListener {
+            if (AppCacheManager.isOpenGiftAudio) {
+                ivAudio.setImageResource(R.drawable.svg_voice_off)
+                AppCacheManager.isOpenGiftAudio = false
+            } else {
+                ivAudio.setImageResource(R.drawable.svg_voice_on)
+                AppCacheManager.isOpenGiftAudio = true
+            }
+        }
+        mBinding.flCustomView.addView(rankView)
     }
-
+    override fun refreshAutoSeat() {
+            rankViewBinding.roomInfo = roomSourceBean
+    }
     override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {
         rankViewBinding.tvOnlineNum.text = onlineResponse.onlineNum.toString()
     }
@@ -139,16 +167,19 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
 
     override fun initListener() {
         super.initListener()
-        seatUserAdapter.addOnItemChildClickListener(
+        seatUserAdapter.addOnDebouncedChildClick(
             R.id.anchorSeatInfo,
+            1000,
             childItemClickListener
         )
-        seatUserAdapter.addOnItemChildClickListener(
+        seatUserAdapter.addOnDebouncedChildClick(
             R.id.vg_parent,
+            1000,
             childItemClickListener
         )
-        seatUserAdapter.addOnItemChildClickListener(
+        seatUserAdapter.addOnDebouncedChildClick(
             R.id.iv_voiceStatus,
+            1000,
             childItemClickListener
         )
     }
@@ -168,8 +199,8 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
                         val roomUserSeatInfo = item.roomUserSeatInfo ?: return
                         if (localUserId.toString() == roomUserSeatInfo.userId) {
                             switchMikeAlert(!item.mikeUser, item.id)
-                        }else if(isOwner){
-                            ownerSwitchMikeAlert(!item.mikeUser, item.id)
+                        } else if (isOwner) {
+                            ownerSwitchMikeAlert(!item.mikeUser, item.id, roomUserSeatInfo.userId)
                         }
                     }
 
@@ -200,21 +231,6 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
 
         }
 
-    private var liveRoomUserListPop: LiveRoomSeatManagerPop? = null
-    fun showSeatUserList() {
-        request({ agoraRxApi.getInviteList(roomId, "0", "0",1) },
-            object : OnRequestResultListener<MutableList<UserDetailInfo>> {
-                override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
-                    val userList = data.data ?: return
-                    if (CommonUtils.isPopShow(liveRoomUserListPop)) {
-                        return
-                    }
-                    liveRoomUserListPop = LiveRoomSeatManagerPop.showDialog(
-                        mContext,
-                        userList,roomSourceBean, onSendSeatInviteListener = inviteSeatListener
-                    )
-                }
-            })
-    }
 
 }
+

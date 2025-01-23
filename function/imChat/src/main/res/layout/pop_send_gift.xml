@@ -10,7 +10,8 @@
             type="cn.yanhu.commonres.bean.BaseUserInfo" />
 
         <import type="android.view.View" />
-        <import type="android.text.TextUtils"/>
+
+        <import type="android.text.TextUtils" />
     </data>
 
     <LinearLayout
@@ -114,7 +115,7 @@
                 android:textSize="@dimen/sp_13" />
         </LinearLayout>
 
-        <cn.yanhu.baselib.widget.RecyclerViewAtViewPager2
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_gift"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_306"
@@ -124,6 +125,7 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="4"
             tools:listitem="@layout/adapter_send_gift_item" />
+
 
     </LinearLayout>
 </layout>

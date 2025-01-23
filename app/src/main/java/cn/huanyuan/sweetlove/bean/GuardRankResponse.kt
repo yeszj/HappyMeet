@@ -6,4 +6,4 @@ package cn.huanyuan.sweetlove.bean
  * created: 2024/3/18
  * desc:
  */
-data class GuardRankResponse (val rankList: MutableList<RankInfo>,val noGuardInfo:RankInfo)
+data class GuardRankResponse (val guardUsers: MutableList<RankInfo>,val noGuardInfo:RankInfo,val myInfoRes:RankInfo)

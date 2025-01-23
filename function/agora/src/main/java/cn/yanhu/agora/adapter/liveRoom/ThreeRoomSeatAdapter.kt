@@ -6,6 +6,7 @@ import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import cn.yanhu.agora.R
 import cn.yanhu.agora.api.agoraRxApi
@@ -45,6 +46,23 @@ class ThreeRoomSeatAdapter :
     ) : RecyclerView.ViewHolder(binding.root)
 
     var roomDetailInfo: RoomDetailInfo? = null
+
+    class EntityDiffCallback: DiffUtil.ItemCallback<RoomSeatInfo>() {
+        override fun areItemsTheSame(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Boolean {
+            // 判断是否是同一个 item（通常使用id字段判断）
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Boolean {
+            // 如果是同一个item，则判断item内的数据内容是否有变化
+            return oldItem.roomUserSeatInfo?.userId == newItem.roomUserSeatInfo?.userId
+        }
+
+        override fun getChangePayload(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Any? {
+            // 可选实现
+            return true
+        }
+    }
 
     init {
         bindAnchorSeatItem()

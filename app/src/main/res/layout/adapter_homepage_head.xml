@@ -12,6 +12,7 @@
         <import type="android.view.View" />
 
         <import type="cn.yanhu.commonres.R" />
+        <import type="android.text.TextUtils"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -118,12 +119,25 @@
             app:layout_constraintStart_toEndOf="@+id/userAge"
             app:layout_constraintTop_toTopOf="@+id/userAge" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            drawableUrl="@{userinfo.beautifulIdImg}"
+            placeholderId="@{-1}"
+            android:visibility="@{TextUtils.isEmpty(userinfo.beautifulIdImg)?View.INVISIBLE:View.VISIBLE}"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/userAge"
+            android:adjustViewBounds="true" />
+
         <cn.yanhu.commonres.view.UserTagView
             android:id="@+id/tagId"
             tagColorId="@{@color/blackAlpha96}"
             tagTextColorId="@{@color/fontGrayColor}"
             tagValue='@{"ID:"+userinfo.userId}'
             android:layout_width="wrap_content"
+            android:visibility="@{TextUtils.isEmpty(userinfo.beautifulIdImg)?View.VISIBLE:View.INVISIBLE}"
+
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"

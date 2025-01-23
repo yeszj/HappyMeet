@@ -23,6 +23,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import com.chad.library.adapter4.BaseQuickAdapter
+import com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager
 
 /**
  * @author: zhengjun
@@ -31,15 +32,16 @@ import com.chad.library.adapter4.BaseQuickAdapter
  */
 class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     override fun initData() {
+        mBinding.rvSeat.layoutManager = QuickGridLayoutManager(mContext, 2)
         seatUserAdapter =
             ThreeRoomSeatAdapter()
         addTopTitleView()
         super.initData()
         mBinding.rvSeat.adapter = seatUserAdapter
         if (isOwner) {
-            topTitleBinding.tvOnlineNum.visibility = View.VISIBLE
+            mBinding.vgAutoSeat.visibility = View.VISIBLE
         } else {
-            topTitleBinding.tvOnlineNum.visibility = View.INVISIBLE
+            mBinding.vgAutoSeat.visibility = View.INVISIBLE
         }
 
 
@@ -109,7 +111,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         if (localUserId.toString() == roomUserSeatInfo.userId) {
                             switchMikeAlert(!item.mikeUser, item.id)
                         } else if (isOwner) {
-                            ownerSwitchMikeAlert(!item.mikeUser, item.id)
+                            ownerSwitchMikeAlert(!item.mikeUser, item.id,roomUserSeatInfo.userId)
                         }
                     }
                     cn.yanhu.agora.R.id.tv_manApplyCount -> {

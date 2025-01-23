@@ -31,7 +31,8 @@ class MyBannerImageAdapter(
         position: Int,
         size: Int
     ) {
-        GlideUtils.loadAsBitmap(ActivityUtils.getTopActivity(), bannerInfo.img, object : CustomTarget<Bitmap>() {
+        val topActivity = ActivityUtils.getTopActivity() ?: return
+        GlideUtils.loadAsBitmap(topActivity, bannerInfo.img, object : CustomTarget<Bitmap>() {
             override fun onResourceReady(
                 resource: Bitmap,
                 transition: Transition<in Bitmap>?

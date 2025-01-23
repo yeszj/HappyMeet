@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.userinfo.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ class GuardRankAdapter : BaseQuickAdapter<RankInfo, GuardRankAdapter.VH>() {
         )
     ) : RecyclerView.ViewHolder(binding.root)
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VH, position: Int, item: RankInfo?) {
         holder.binding.apply {
             rankInfo = item

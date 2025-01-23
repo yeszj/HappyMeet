@@ -5,7 +5,9 @@ import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.bean.AngleRoomResultInfo
 import cn.yanhu.agora.bean.RoomConfigInfo
+import cn.yanhu.agora.bean.RoomExtraInfo
 import cn.yanhu.agora.bean.RoomLeaveResponse
+import cn.yanhu.agora.bean.SongListResponse
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.agora.bean.request.CreateRoomRequest
@@ -138,5 +140,22 @@ class LiveRoomViewModel : BaseViewModel() {
     fun getAngelWinner(roomId: String,onRequestResultListener: OnRequestResultListener<AngleRoomResultInfo>) {
         request({ agoraRxApi.getAngelWinner(roomId) }, onRequestResultListener
         )
+    }
+
+    fun clickSong(roomId: String,seatUserId:String,giftId:String?,onRequestResultListener: OnRequestResultListener<String>) {
+        request({ agoraRxApi.clickSong(roomId,seatUserId,giftId) }, onRequestResultListener
+        )
+    }
+
+    fun getSongList(roomId: String,onRequestResultListener: OnRequestResultListener<SongListResponse>) {
+        request({ agoraRxApi.getSongList(roomId) }, onRequestResultListener)
+    }
+
+    fun getFitAngelRankList(roomId: String,onRequestResultListener: OnRequestResultListener<MutableList<AngleRankInfo>>) {
+        request({ agoraRxApi.getFitAngelRankList(roomId) }, onRequestResultListener)
+    }
+
+    fun getExtraInfo(roomId: String,onRequestResultListener: OnRequestResultListener<RoomExtraInfo>) {
+        request({ agoraRxApi.getExtraInfo(roomId) }, onRequestResultListener)
     }
 }

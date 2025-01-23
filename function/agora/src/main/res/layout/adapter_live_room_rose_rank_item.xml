@@ -8,6 +8,7 @@
         <variable
             name="rankInfo"
             type="cn.yanhu.commonres.bean.UserDetailInfo" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,6 +33,7 @@
             android:backgroundTint="@color/colorMain"
             android:gravity="center"
             tools:text="1.31k"
+            android:visibility='@{"0".equals(rankInfo.roseNum)?View.INVISIBLE:View.VISIBLE}'
             android:text="@{CommonUtils.INSTANCE.formatRoseNum(rankInfo.roseNum)}"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_9"

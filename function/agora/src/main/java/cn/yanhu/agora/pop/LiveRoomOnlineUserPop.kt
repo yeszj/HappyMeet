@@ -14,6 +14,7 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
+import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
@@ -49,10 +50,21 @@ class LiveRoomOnlineUserPop(
         val emptyView = NoMoreDataFootView(context)
         emptyView.footViewState(NoMoreDataFootView.FOOT_NO_DATA)
         emptyView.setFootText("暂无在线用户")
+        userAdapter.setIsOwner(roomDetailInfo.ownerInfo?.userId == AppCacheManager.userId)
         userAdapter.stateView = emptyView
         mBiding.rvUser.adapter = userAdapter
         userAdapter.submitList(userList)
         userAdapter.isStateViewEnable = userList.size <= 0
+        userAdapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener<UserDetailInfo>{
+            override fun onClick(
+                adapter: BaseQuickAdapter<UserDetailInfo, *>,
+                view: View,
+                position: Int
+            ) {
+                val item = userAdapter.getItem(position)?:return
+                onSendSeatInviteListener.onClickUser(item.userId)
+            }
+        })
         userAdapter.addOnItemChildClickListener(
             R.id.tv_invite,
             object : BaseQuickAdapter.OnItemChildClickListener<UserDetailInfo> {

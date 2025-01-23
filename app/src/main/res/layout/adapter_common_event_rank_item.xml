@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="rankInfo"
+            type="cn.huanyuan.sweetlove.bean.CommonEventRankInfo" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/vg_parent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_74"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_num"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#974D4D"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontBold"
+            android:text="@{rankInfo.rankingNum}"
+            tools:text="1" />
+
+        <FrameLayout
+            android:id="@+id/vg_rank"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_rank"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:src="@drawable/icon_new_year_rank1"
+                android:textColor="@color/fontGrayColor"
+                android:textSize="@dimen/sp_16"
+                app:fontType="@string/fontBold"
+                tools:text="1" />
+        </FrameLayout>
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/userAvatar"
+            imageUrl="@{rankInfo.portrait}"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            app:riv_oval="true"
+            tools:src="@drawable/icon_portrait" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:paddingStart="@dimen/dp_6"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:paddingEnd="@dimen/dp_10"
+                android:layout_height="wrap_content">
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_nickName"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@{rankInfo.nickName}"
+                    android:textColor="#722B2B"
+                    android:textSize="@dimen/sp_14"
+                    tools:text="宠爱佳哥一个人" />
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_5"
+                    android:text="@{rankInfo.value}"
+                    android:textColor="#E00707"
+                    android:layout_gravity="top"
+                    android:textSize="@dimen/sp_12"
+                    app:fontType="@string/fontMedium"
+                    tools:text="99+" />
+            </LinearLayout>
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{rankInfo.desc}"
+                android:textColor="#966C64"
+                android:layout_marginTop="@dimen/dp_6"
+                android:textSize="@dimen/sp_12"
+                tools:text="预计瓜分：87518玫瑰+活动套装" />
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+</layout>

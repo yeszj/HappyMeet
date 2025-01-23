@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/seat1"
+            layout="@layout/adapter_seven_room_user_seat_item"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/vg2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_240"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/seat1">
+
+            <include
+                android:id="@+id/seat2"
+                layout="@layout/adapter_seven_room_user_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/seat3"
+                    layout="@layout/adapter_seven_room_user_seat_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <include
+                    android:id="@+id/seat4"
+                    layout="@layout/adapter_seven_room_user_seat_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vg3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_120"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/vg2">
+
+            <include
+                android:id="@+id/seat5"
+                layout="@layout/adapter_seven_room_user_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <include
+                android:id="@+id/seat6"
+                layout="@layout/adapter_seven_room_user_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <include
+                android:id="@+id/seat7"
+                layout="@layout/adapter_seven_room_user_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

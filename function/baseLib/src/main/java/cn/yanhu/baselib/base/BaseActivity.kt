@@ -63,6 +63,7 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
         //设置禁止截屏、录屏标志
 //        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        getSavedInstanceState(savedInstanceState)
         setEnterAnim()
         setOrientation()
         mBinding = DataBindingUtil.setContentView(this, layoutId)
@@ -77,6 +78,9 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
         initRefresh()
         addBackPressListener()
     }
+
+    open fun getSavedInstanceState(savedInstanceState: Bundle?){}
+
     open fun setTitleMarginTop(view: View?) {
         if (view != null) {
             val statusBarHeight = StatusBarUtil.getStatusBarHeight(mContext)

@@ -122,6 +122,9 @@ public class AgoraManager implements IMediaExtensionObserver {
 
 
     public void setVideoEncoderConfiguration(int width, int height) {
+        if (mRtcEngine==null){
+            return;
+        }
         VideoEncoderConfiguration videoEncoderConfiguration = new VideoEncoderConfiguration();
         videoEncoderConfiguration.dimensions = new VideoEncoderConfiguration.VideoDimensions(width, height);
         CameraCapturerConfiguration cameraCapturerConfiguration = new CameraCapturerConfiguration(new CameraCapturerConfiguration.CaptureFormat(width,height,VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15.getValue()));

@@ -85,12 +85,17 @@ object ChatConstant {
     const val ACTION_MSG_SWITCH_TYPE_PLAZA = 1010 //切换房间为大厅房间
     const val ACTION_USER_OUT_TIME_LEAVE = 1011 //麦上用户离线超过1分钟 操作下麦
 
+
+
     const val ACTION_MSG_SERVICE_SIT_DOWN = 10021 //服务端强制下麦
     const val ACTION_MSG_ADMIN_ALERT = 10022 //管理员警告主持人
     const val ACTION_REFUSE_SWITCH_PRIVATE = 10023 //男嘉宾拒绝转为专属房间
     const val ACTION_ANGLE_ROOM_RESULT = 10024 //天使房间结束显示天使结果
 
     const val ACTION_NEW_FRIEND_REQUEST = 70 //新的好友请求
+    const val ACTION_NEW_YEAR_RED_PACKET = 71 //新年红包
+
+
 
     const  val ACTION_MSG_MAN_CONSUME_ALERT = 16 //男嘉宾聊天回复消费提示
 
@@ -98,5 +103,12 @@ object ChatConstant {
     const val GLOBAL_GIFT_ALERT = 18 //礼物飘屏
 
     const val ACTION_FORCE_AUTH = 48//强制实名认证
+
+    const val ACTION_EVENT_POP = 49//活动弹框
+
+
+
+    const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位
+
 
 }

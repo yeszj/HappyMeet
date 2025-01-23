@@ -137,7 +137,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         val giftInfo = GiftInfo()
         giftInfo.svga = url
         //显示礼物特效svg动画
-        giftAnimTaskManager.addTask(GiftPopAnimTask(giftInfo,mBinding.svgGiftAnim))
+        giftAnimTaskManager.addTask(GiftPopAnimTask(giftInfo,mBinding.svgGiftAnim,mBinding.videoGiftAnimView))
     }
 
     override fun initListener() {
@@ -168,6 +168,8 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         }
         LiveEventBus.get("sendGift", String::class.java).observe(this) { svga ->
             logcom("礼盒：$svga")
+            LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO)
+                .post(true)
             playSvga(svga.toString())
         }
         LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_CHAT_LIST).observe(this) {

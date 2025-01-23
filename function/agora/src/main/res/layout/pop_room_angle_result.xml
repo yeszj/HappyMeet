@@ -5,146 +5,22 @@
 
     <data>
 
-        <variable
-            name="angleUser"
-            type="cn.yanhu.commonres.bean.BaseUserInfo" />
-
-        <variable
-            name="guardUser"
-            type="cn.yanhu.commonres.bean.BaseUserInfo" />
 
         <import type="android.view.View" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
         tools:background="@color/black_alpha60">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{angleUser==null?View.GONE:View.VISIBLE}">
+        <com.opensource.svgaplayer.SVGAImageView
+            android:id="@+id/svgaImage"
+            app:loopCount="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/tv_angleTitle"
-                android:layout_width="@dimen/dp_297"
-                android:layout_height="@dimen/dp_33"
-                android:adjustViewBounds="true"
-                android:text="  恭喜，本场天使诞生!  "
-                android:src="@drawable/txt_angle_winner"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_angleBg"
-                android:layout_width="@dimen/dp_360"
-                android:layout_height="@dimen/dp_222"
-                android:layout_marginTop="@dimen/dp_10"
-                android:src="@drawable/bg_angle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_angleTitle" />
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                imageUrl="@{angleUser.portrait}"
-                placeholderId="-1"
-                android:layout_width="@dimen/dp_64"
-                android:layout_height="@dimen/dp_64"
-                android:src="@drawable/ease_default_avatar"
-                app:layout_constraintBottom_toBottomOf="@+id/avatarFrame"
-                app:layout_constraintEnd_toEndOf="@+id/avatarFrame"
-                app:layout_constraintStart_toStartOf="@+id/avatarFrame"
-                app:layout_constraintTop_toTopOf="@+id/avatarFrame"
-                app:riv_oval="true" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/avatarFrame"
-                android:layout_width="@dimen/dp_120"
-                android:layout_height="@dimen/dp_120"
-                android:src="@drawable/avatar_frame_angle"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_angleBg"
-                app:layout_constraintEnd_toEndOf="@+id/iv_angleBg"
-                app:layout_constraintStart_toStartOf="@+id/iv_angleBg"
-                app:layout_constraintTop_toTopOf="@+id/iv_angleBg" />
-
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_m_10"
-                android:text="@{angleUser.nickName}"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_14"
-                app:fontType="@string/fontBold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/avatarFrame"
-                tools:text="小草莓" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{guardUser==null?View.GONE:View.VISIBLE}">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/tv_guardTitle"
-                android:layout_width="@dimen/dp_297"
-                android:layout_height="@dimen/dp_33"
-                android:adjustViewBounds="true"
-                android:text="  恭喜，本场天使诞生!  "
-                android:src="@drawable/txt_guard_winner"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_guardBg"
-                android:layout_width="@dimen/dp_360"
-                android:layout_height="@dimen/dp_222"
-                android:layout_marginTop="@dimen/dp_10"
-                android:src="@drawable/bg_guard"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_guardTitle" />
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                imageUrl="@{guardUser.portrait}"
-                placeholderId="-1"
-                android:layout_width="@dimen/dp_60"
-                android:layout_height="@dimen/dp_60"
-                android:src="@drawable/ease_default_avatar"
-                app:layout_constraintBottom_toBottomOf="@+id/avatarFrame2"
-                app:layout_constraintEnd_toEndOf="@+id/avatarFrame2"
-                app:layout_constraintStart_toStartOf="@+id/avatarFrame2"
-                app:layout_constraintTop_toTopOf="@+id/avatarFrame2"
-                app:riv_oval="true" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/avatarFrame2"
-                android:layout_width="@dimen/dp_88"
-                android:layout_height="@dimen/dp_88"
-                android:src="@drawable/avatar_frame_guard"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_guardBg"
-                app:layout_constraintEnd_toEndOf="@+id/iv_guardBg"
-                app:layout_constraintStart_toStartOf="@+id/iv_guardBg"
-                app:layout_constraintTop_toTopOf="@+id/iv_guardBg" />
-
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{guardUser.nickName}"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_14"
-                app:fontType="@string/fontBold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/avatarFrame2"
-                tools:text="小草莓" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

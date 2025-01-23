@@ -21,8 +21,7 @@ import com.chad.library.adapter4.BaseMultiItemAdapter
  * created: 2024/4/1
  * desc:
  */
-class LiveRoomChatMessageAdapter :
-    BaseMultiItemAdapter<ChatRoomMsgInfo>() {
+class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
     class VH(
         val binding: AdapterChatRoomMsgNoticeItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
@@ -42,24 +41,27 @@ class LiveRoomChatMessageAdapter :
     class VH5(
         val binding: AdapterChatRoomMsgWelcomeItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
+
     class VH6(
         val binding: AdapterChatRoomMsgNoticeItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
+
     init {
-        addItemType(ChatRoomMsgInfo.ITEM_NEW_ADD_TYPE,object : OnMultiItemAdapterListener<ChatRoomMsgInfo,VH6>{
-            override fun onBind(holder: VH6, position: Int, item: ChatRoomMsgInfo?) {
-                holder.binding.tvNotice.text = "此版本暂不支持此消息"
-            }
-            override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH6 {
-                val binding: AdapterChatRoomMsgNoticeItemBinding =
-                    AdapterChatRoomMsgNoticeItemBinding.inflate(
-                        LayoutInflater.from(context), parent, false
-                    )
-                return VH6(binding)
-            }
-        })
-        addItemType(
-            ChatRoomMsgInfo.ITEM_WELCOME_TYPE,
+        addItemType(ChatRoomMsgInfo.ITEM_NEW_ADD_TYPE,
+            object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH6> {
+                override fun onBind(holder: VH6, position: Int, item: ChatRoomMsgInfo?) {
+                    holder.binding.tvNotice.text = "此版本暂不支持此消息"
+                }
+
+                override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH6 {
+                    val binding: AdapterChatRoomMsgNoticeItemBinding =
+                        AdapterChatRoomMsgNoticeItemBinding.inflate(
+                            LayoutInflater.from(context), parent, false
+                        )
+                    return VH6(binding)
+                }
+            })
+        addItemType(ChatRoomMsgInfo.ITEM_WELCOME_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH5> {
                 override fun onBind(holder: VH5, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.apply {
@@ -80,8 +82,7 @@ class LiveRoomChatMessageAdapter :
                     return true
                 }
             })
-        addItemType(
-            ChatRoomMsgInfo.ITEM_GIFT_TYPE,
+        addItemType(ChatRoomMsgInfo.ITEM_GIFT_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH4> {
                 override fun onBind(holder: VH4, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.apply {
@@ -106,8 +107,7 @@ class LiveRoomChatMessageAdapter :
                 }
             })
 
-        addItemType(
-            ChatRoomMsgInfo.ITEM_EMOJI_TYPE,
+        addItemType(ChatRoomMsgInfo.ITEM_EMOJI_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH3> {
                 override fun onBind(holder: VH3, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.apply {
@@ -132,8 +132,7 @@ class LiveRoomChatMessageAdapter :
                 }
             })
 
-        addItemType(
-            ChatRoomMsgInfo.ITEM_SYSTEM_TYPE,
+        addItemType(ChatRoomMsgInfo.ITEM_SYSTEM_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH> {
                 override fun onBind(holder: VH, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.tvNotice.text = item?.content
@@ -147,19 +146,16 @@ class LiveRoomChatMessageAdapter :
                     return VH(binding)
                 }
             })
-        addItemType(
-            ChatRoomMsgInfo.ITEM_DEFAULT_TYPE,
+        addItemType(ChatRoomMsgInfo.ITEM_DEFAULT_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH2> {
                 override fun onBind(holder: VH2, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.apply {
                         msgInfo = item
                         val altUser = msgInfo?.altUser
                         if (altUser != null) {
-                            val build =
-                                Spans.builder().text("@${altUser.nickName} ")
-                                    .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontOrangeColor))
-                                    .text(msgInfo?.content)
-                                    .build()
+                            val build = Spans.builder().text("@${altUser.nickName} ")
+                                .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontOrangeColor))
+                                .text(msgInfo?.content).build()
                             tvContent.text = build
                         } else {
                             tvContent.text = msgInfo?.content
@@ -178,9 +174,9 @@ class LiveRoomChatMessageAdapter :
 
             }).onItemViewType { position, _ ->
             val item = getItem(position)
-            if (item!!.type>=0 && item.type<=5){
+            if (item!!.type >= 0 && item.type <= 5) {
                 item.type
-            }else{
+            } else {
                 -1
             }
         }

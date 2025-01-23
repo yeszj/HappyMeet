@@ -9,6 +9,10 @@
             name="userinfo"
             type="cn.yanhu.commonres.bean.UserDetailInfo" />
 
+        <variable
+            name="isOwner"
+            type="java.lang.Boolean" />
+
         <import type="android.view.View" />
     </data>
 
@@ -71,13 +75,14 @@
             android:id="@+id/tv_invite"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_26"
-            android:paddingHorizontal="@dimen/dp_10"
             android:background="@drawable/white_corner_20"
             android:backgroundTint="@color/colorMain"
             android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_10"
             android:text='@{userinfo.seatNum>0?"下麦":"邀请"}'
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
+            android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
             app:fontType="@string/fontMedium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

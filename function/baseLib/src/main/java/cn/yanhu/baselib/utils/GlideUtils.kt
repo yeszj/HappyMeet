@@ -68,6 +68,9 @@ object GlideUtils {
         context: Context, imgUrl: Any, maskRadius: Int = 20,
         maskSampling: Int = 4, imageView: ImageView
     ) {
+        if (context is Activity && context.isDestroyed){
+            return
+        }
         val requestOptions = RequestOptions.bitmapTransform(BlurTransformation(maskRadius, maskSampling))
         Glide.with(context).load(imgUrl).apply(requestOptions)
             .into(imageView)

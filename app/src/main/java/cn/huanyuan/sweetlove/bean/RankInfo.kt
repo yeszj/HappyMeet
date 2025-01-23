@@ -9,6 +9,6 @@ import cn.yanhu.commonres.bean.BaseUserInfo
  */
 class RankInfo : BaseUserInfo() {
     val rankingNum: String? = null
-    val userGiftValue: String? = null
+    val roseNum: String? = null
     val guardTips:String = ""
 }

@@ -13,6 +13,7 @@ import android.os.Looper
 import android.os.Message
 import android.provider.Settings
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.fragment.app.FragmentActivity
 import cn.yanhu.agora.R
@@ -21,9 +22,12 @@ import cn.yanhu.agora.adapter.liveRoom.LiveRoomChatMessageAdapter
 import cn.yanhu.agora.adapter.liveRoom.MoreSeatRoomAdapter
 import cn.yanhu.agora.adapter.liveRoom.ThreeRoomSeatAdapter
 import cn.yanhu.agora.api.agoraRxApi
+import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.bean.AngleRoomResultInfo
 import cn.yanhu.agora.bean.ChatRoomMsgInfo
 import cn.yanhu.agora.bean.GiftMsgInfo
+import cn.yanhu.agora.bean.InviteSeatRecord
+import cn.yanhu.agora.bean.RoomExtraInfo
 import cn.yanhu.agora.bean.RoomLeaveResponse
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.FrgBaseLiveRoomBinding
@@ -31,11 +35,14 @@ import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener
 import cn.yanhu.agora.listener.OnSendSeatInviteListener
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.LiveRoomManager
+import cn.yanhu.agora.manager.dbCache.InviteRecordCacheManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
 import cn.yanhu.agora.miniwindow.MiniWindowManager
 import cn.yanhu.agora.pop.AdminCloseRoomReasonPop
 import cn.yanhu.agora.pop.AdminStickyRoomPop
+import cn.yanhu.agora.pop.CrownedUserListPop
 import cn.yanhu.agora.pop.LiveRoomOnlineUserPop
+import cn.yanhu.agora.pop.LiveRoomSeatManagerPop
 import cn.yanhu.agora.pop.ReceiveInviteSeatPop
 import cn.yanhu.agora.pop.RoomAngleResultPop
 import cn.yanhu.agora.pop.SeatUserOperatePop
@@ -137,23 +144,25 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     protected var localUserId: Int = 0
     var seatList = mutableListOf<RoomSeatInfo>()
     lateinit var seatUserAdapter: BaseMultiItemAdapter<RoomSeatInfo>
-    override fun initData() {
-        localUserId = AppCacheManager.userId.toInt()
-        roomSourceBean = requireArguments().getSerializable(IntentKeyConfig.DATA) as RoomDetailInfo
-        mBinding.rvSeat.itemAnimator?.changeDuration = 0
-        mBinding.rvChat.itemAnimator?.changeDuration = 0
-        mBinding.rvChat.adapter = chatRoomMsgAdapter
-        roomId = roomSourceBean.roomId.toString()
-        roomType = roomSourceBean.roomType
-        isOwner = roomSourceBean.ownerInfo?.userId == AppCacheManager.userId
+    private var seatHeight = 0
+    private var sevenSeatHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_142) * 3
+    private var nineSeatHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_360)
+    private var nineSongSeatHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_80) * 5
+    private var sevenSongSeatHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120) * 4
 
+    protected var hasExpand = false
+    override fun initData() {
+        initPageData()
+        seatList = roomSourceBean.roomSeatResList
+        hasExpand = seatList.indexOfFirst { it.isExpand } >= 0
+        setRvSeatHeight()
+        setRvChatMessageTop(false)
         initSeatStatus()
 
         AgoraManager.getInstance().setRtcEngineEventHandlerListener(this)
 
         mBinding.roomInfo = roomSourceBean
         getRoomInfoSuccess()
-        seatList = roomSourceBean.roomSeatResList
         getRoomSeatSuccess(seatList)
         setSeatApplyStatus()
         initRvChatTop()
@@ -164,16 +173,74 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         requestData()
         setUnReadMsgCount()
         getOnlineUser()
+        if (roomSourceBean.isSongRoom()) {
+            getRoomExtraInfo()
+        }
+    }
 
+    private fun getRoomExtraInfo() {
+        mViewModel.getExtraInfo(roomId, object : OnRequestResultListener<RoomExtraInfo> {
+            override fun onSuccess(data: BaseBean<RoomExtraInfo>) {
+                val extraInfo = data.data
+                mBinding.tvSongNum.text = extraInfo?.songCountDesc
+            }
+        })
+    }
+
+    private fun setRvSeatHeight() {
+        when (roomType) {
+            RoomListBean.TYPE_SEVEN_FRIEND, RoomListBean.TYPE_SEVEN_ANGLE -> {
+                seatHeight = sevenSeatHeight
+            }
+
+            RoomListBean.TYPE_SEVEN_SONG -> {
+                seatHeight = if (hasExpand) {
+                    sevenSongSeatHeight
+                } else {
+                    sevenSeatHeight
+                }
+            }
+
+            RoomListBean.TYPE_NINE_SONG -> {
+                seatHeight = if (hasExpand) {
+                    nineSongSeatHeight
+                } else {
+                    nineSeatHeight
+                }
+            }
+
+            RoomListBean.TYPE_NINE_FRIEND, RoomListBean.TYPE_NINE_ANGLE -> {
+                seatHeight = nineSeatHeight
+            }
+
+            RoomListBean.FRG_THREE_ROOM -> {
+                seatHeight =
+                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_360) + CommonUtils.getDimension(
+                        com.zj.dimens.R.dimen.dp_32
+                    )
+            }
+        }
+        // ViewUtils.setViewHeight(mBinding.rvSeat,seatHeight)
+        mBinding.rvSeat.isNestedScrollingEnabled = false
+
+    }
+
+    private fun initPageData() {
+        localUserId = AppCacheManager.userId.toInt()
+        roomSourceBean = requireArguments().getSerializable(IntentKeyConfig.DATA) as RoomDetailInfo
+        mBinding.rvSeat.itemAnimator?.changeDuration = 0
+        mBinding.rvChat.itemAnimator?.changeDuration = 0
+        mBinding.rvChat.adapter = chatRoomMsgAdapter
+        roomId = roomSourceBean.roomId.toString()
+        roomType = roomSourceBean.roomType
+        isOwner = roomSourceBean.ownerInfo?.userId == AppCacheManager.userId
     }
 
     private fun initSeatStatus() {
         if (isOwner) {
-            mBinding.vgAutoSeat.visibility = View.VISIBLE
             mBinding.ivSeatStatus.visibility = View.INVISIBLE
             mBinding.vgApplySeat.visibility = View.INVISIBLE
         } else {
-            mBinding.vgAutoSeat.visibility = View.INVISIBLE
             if (roomSourceBean.getFragmentType() == RoomListBean.FRG_THREE_ROOM) {
                 mBinding.ivSeatStatus.visibility = View.VISIBLE
                 mBinding.vgApplySeat.visibility = View.INVISIBLE
@@ -189,7 +256,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         list.add(
             ChatRoomMsgInfo(
                 ChatRoomMsgInfo.ITEM_SYSTEM_TYPE,
-                "平台公示：平台只提供交友介绍认识的服务，我们提倡文明直播、积极阳光交友，严谨涉黄、涉政、涉恐、低俗、辱骂等行为。发现违规行为将被封禁。保护网络绿色环境，从你我做起。",
+                "平台公示：平台只提供交友介绍认识的服务，我们提倡文明直播、积极阳光交友，严禁涉黄、涉政、涉恐、低俗、辱骂等行为。发现违规行为将被封禁。保护网络绿色环境，从你我做起。",
                 null
             )
         )
@@ -201,20 +268,19 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     /**
      * 获取在线用户
      */
-    private fun getOnlineUser() {
-        if (isOwner) {
-            request({ agoraRxApi.getOnlineUserList(roomSourceBean.roomId, 1) },
-                object : OnRequestResultListener<RoomOnlineResponse> {
-                    override fun onSuccess(data: BaseBean<RoomOnlineResponse>) {
-                        val onlineResponse = data.data ?: return
-                        refreshOnlineUser(onlineResponse)
-                        onlineUserList = onlineResponse.onlineUsers
-                        if (CommonUtils.isPopShow(onlineUserListPop)) {
-                            onlineUserListPop?.refreshOnlineUser(onlineUserList)
-                        }
+    protected fun getOnlineUser() {
+        getRoseRankList()
+        request({ agoraRxApi.getOnlineUserList(roomSourceBean.roomId, 1) },
+            object : OnRequestResultListener<RoomOnlineResponse> {
+                override fun onSuccess(data: BaseBean<RoomOnlineResponse>) {
+                    val onlineResponse = data.data ?: return
+                    refreshOnlineUser(onlineResponse)
+                    onlineUserList = onlineResponse.onlineUsers
+                    if (CommonUtils.isPopShow(onlineUserListPop)) {
+                        onlineUserListPop?.refreshOnlineUser(onlineUserList)
                     }
-                })
-        }
+                }
+            })
     }
 
     open fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {}
@@ -236,6 +302,20 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     val inviteSeatListener = object : OnSendSeatInviteListener {
         override fun onSendInvite(map: MutableMap<String, Any>, userInfo: UserDetailInfo) {
+            val inviteRecord =
+                InviteRecordCacheManager.getInviteRecordByUserId(userInfo.userId)
+
+            if (inviteRecord != null) {
+                val inviteTime = inviteRecord.inviteTime
+                val currentTimeMillis = System.currentTimeMillis()
+                val differTime = currentTimeMillis - inviteTime
+                if (differTime < 15 * 60 * 1000) {
+                    //主持人邀请同1个用户，15分钟最多邀请1次
+                    showToast("已经邀请过啦^_^")
+                    return
+                }
+            }
+
             val needSeatId = getNeedSeatId()
             if (needSeatId == -1) {
                 showToast("暂无可用座位")
@@ -247,7 +327,13 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             EmMsgManager.sendCmdMessagePeople(
                 userInfo.userId, ChatConstant.ACTION_MSG_SET_UP, map
             )
+            val inviteSeatRecord = InviteSeatRecord(userInfo.userId, System.currentTimeMillis())
+            InviteRecordCacheManager.saveInviteRecord(inviteSeatRecord)
             showToast("上麦邀请已发送")
+        }
+
+        override fun onClickUser(userId: String) {
+            showUserPop(userId)
         }
     }
 
@@ -320,7 +406,10 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 }
             })
         )
-        addUserEnterAnim(ImUserManager.getSelfUserInfo())
+        if (!roomSourceBean.isAdmin()) {
+            addUserEnterAnim(ImUserManager.getSelfUserInfo())
+        }
+
     }
 
     private fun isFreeSeat(): Boolean {
@@ -333,12 +422,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     private var seatStatus = 0
     override fun initListener() {
-        chatRoomMsgAdapter.addOnItemChildClickListener(R.id.userAvatar,
+        chatRoomMsgAdapter.addOnItemChildClickListener(
+            R.id.userAvatar,
             object : BaseQuickAdapter.OnItemChildClickListener<ChatRoomMsgInfo> {
                 override fun onItemClick(
-                    adapter: BaseQuickAdapter<ChatRoomMsgInfo, *>,
-                    view: View,
-                    position: Int
+                    adapter: BaseQuickAdapter<ChatRoomMsgInfo, *>, view: View, position: Int
                 ) {
                     val item = chatRoomMsgAdapter.getItem(position) ?: return
                     item.sendUserInfo?.apply {
@@ -351,9 +439,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         chatRoomMsgAdapter.addOnItemChildLongClickListener(R.id.userAvatar,
             object : BaseQuickAdapter.OnItemChildLongClickListener<ChatRoomMsgInfo> {
                 override fun onItemLongClick(
-                    adapter: BaseQuickAdapter<ChatRoomMsgInfo, *>,
-                    view: View,
-                    position: Int
+                    adapter: BaseQuickAdapter<ChatRoomMsgInfo, *>, view: View, position: Int
                 ): Boolean {
                     val item = chatRoomMsgAdapter.getItem(position) ?: return true
                     showInputDialog(item.sendUserInfo, true)
@@ -389,16 +475,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             updateReceivedMsg(it)
         }
         mBinding.toggleAutoSeat.setOnSingleClickListener {
-            val autoSeat = !roomSourceBean.autoSeat
-            DialogUtils.showConfirmDialog(
-                if (autoSeat) "开启自动上麦" else "关闭自动上麦",
-                {
-                    autoSeat(autoSeat)
-                    autoSeat.also { roomSourceBean.autoSeat = it }
-                },
-                {},
-                if (autoSeat) "用户申请上麦后将自动同意，是否确认开启？" else "关闭后，用户需申请才可上麦"
-            )
+            showSetAutoSeat()
 
         }
         mBinding.ivSetting.setOnSingleClickListener {
@@ -406,6 +483,24 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
         registerNetChange()
     }
+
+    protected fun showSetAutoSeat(): BasePopupView {
+        val autoSeat = !roomSourceBean.autoSeat
+        return DialogUtils.showConfirmDialog(
+            if (autoSeat) "开启自动上麦" else "关闭自动上麦",
+            {
+                autoSeat(autoSeat)
+                autoSeat.also {
+                    roomSourceBean.autoSeat = it
+                    refreshAutoSeat()
+                }
+            },
+            {},
+            if (autoSeat) "用户申请上麦后将自动同意，是否确认开启？" else "关闭后，用户需申请才可上麦"
+        )
+    }
+
+    protected open fun refreshAutoSeat() {}
 
     private fun registerNetChange() {
         LiveEventBus.get<Boolean>(EventBusKeyConfig.CHECK_NET).observe(this) {
@@ -443,8 +538,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 override fun onSuccess(data: BaseBean<String>) {
                     val content = data.data
                     val contentList = GsonUtils.fromJson<MutableList<StickyInfo>>(
-                        content,
-                        object : TypeToken<List<StickyInfo>>() {}.type
+                        content, object : TypeToken<List<StickyInfo>>() {}.type
                     )
                     if (CommonUtils.isPopShow(adminStickyRoomPop)) {
                         return
@@ -460,8 +554,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (CommonUtils.isPopShow(adminCloseRoomReasonPop)) {
             return
         }
-        adminCloseRoomReasonPop = AdminCloseRoomReasonPop.showDialog(
-            mContext,
+        adminCloseRoomReasonPop = AdminCloseRoomReasonPop.showDialog(mContext,
             roomSourceBean.closeReasons,
             object : AdminCloseRoomReasonPop.OnCloseRoomListener {
                 override fun onClose(reason: String) {
@@ -482,8 +575,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             EmMsgManager.sendCmdMessagePeople(userId, ChatConstant.ACTION_MSG_ADMIN_ALERT, map)
             showToast("已发送警告")
             mViewModel.saveRoomWarnRecord(userId, roomId, it, 1)
-        }, {
-        }, hint = "请输入警告内容")
+        }, {}, hint = "请输入警告内容")
     }
 
     private var sendGiftPop: SendGiftPop? = null
@@ -498,15 +590,23 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             0,
             object : SendGiftPop.OnSendGiftListener {
                 override fun onSendGift(item: GiftInfo) {
-                    playSvga(item, ImUserManager.getSelfUserInfo())
-                    val giftMsgInfo = GiftMsgInfo(item, roomUserSeatInfo)
-                    sendMessage(GsonUtils.toJson(giftMsgInfo), ChatRoomMsgInfo.ITEM_GIFT_TYPE)
+                    sendGiftSuccess(item, roomUserSeatInfo)
                 }
 
                 override fun onShowUserInfo(userId: String) {
                     showUserPop(userId)
                 }
             })
+    }
+
+    protected fun sendGiftSuccess(
+        item: GiftInfo, roomUserSeatInfo: UserDetailInfo
+    ) {
+        LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO)
+            .post(true)
+        playSvga(item, ImUserManager.getSelfUserInfo())
+        val giftMsgInfo = GiftMsgInfo(item, roomUserSeatInfo)
+        sendMessage(GsonUtils.toJson(giftMsgInfo), ChatRoomMsgInfo.ITEM_GIFT_TYPE)
     }
 
 
@@ -522,7 +622,10 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
 
-    private fun addHostSurfaceView() {
+    protected open fun addHostSurfaceView() {
+        if (roomSourceBean.isSongRoom()) {
+            return
+        }
         seatUserAdapter.notifyItemChanged(0)
     }
 
@@ -574,13 +677,13 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
 
     private fun autoSeat(autoSeat: Boolean) {
-        mViewModel.autoSeat(
-            roomId,
+        mViewModel.autoSeat(roomId,
             (if (autoSeat) 1 else 0).toString(),
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     logcom("开启/关闭自动上麦")
                     roomSourceBean.autoSeat = autoSeat
+                    refreshAutoSeat()
                     //需要透传消息提示观众房主已开启自动上麦/关闭自动上麦
                     if (autoSeat) {
                         EmMsgManager.sendCmdMessageToChatRoom(
@@ -601,8 +704,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             //如果是点击关闭或者物理键盘返回且不在麦位上直接关闭房间
             closeRoom()
         } else {
-            PermissionXUtils.checkAlertPermission(
-                mContext,
+            PermissionXUtils.checkAlertPermission(mContext,
                 "关闭房间",
                 object : PermissionXUtils.OnAlertPermissionListener {
                     override fun onSuccess() {
@@ -618,54 +720,67 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun closeRoom() {
-        if (isOwner && roomSourceBean.isAngleRoom()) {
-            checkAngleWinner()
-        } else {
-            leave()
-        }
+        leave()
     }
 
-    private fun checkAngleWinner() {
-        mViewModel.getAngelWinner(roomId, object : OnRequestResultListener<AngleRoomResultInfo> {
-            override fun onSuccess(data: BaseBean<AngleRoomResultInfo>) {
-                val angleResultInfo = data.data
-                if (angleResultInfo != null) {
-                    showAngleResultTip(angleResultInfo)
-                } else {
-                    leave()
-                }
-            }
-
-            override fun onFail(code: Int?, msg: String?) {
-                super.onFail(code, msg)
-                leave()
-            }
-        })
-    }
 
     private var roomAngleResultPop: RoomAngleResultPop? = null
-    private fun showAngleResultTip(angleResultInfo: AngleRoomResultInfo) {
+    private var angelAnimList = mutableListOf<AngleRoomResultInfo>()
+    private fun showAngleResultTip(angleResultInfo: AngleRoomResultInfo, type: Int) {
         val angleUser = angleResultInfo.angelInfo
         val guardUser = angleResultInfo.guardInfo
         if (angleUser == null && guardUser == null) {
             leave()
         } else {
             if (CommonUtils.isPopShow(roomAngleResultPop)) {
+                angelAnimList.add(angleResultInfo)
                 return
             }
-            roomAngleResultPop = RoomAngleResultPop.showDialog(mContext, angleUser, guardUser)
+            roomAngleResultPop = RoomAngleResultPop.showDialog(
+                mContext,
+                angleUser,
+                guardUser,
+                type,
+                object : SimpleCallback() {
+                    override fun onDismiss(popupView: BasePopupView?) {
+                        super.onDismiss(popupView)
+                        if (angelAnimList.size > 0) {
+                            val get = angelAnimList[0]
+                            showAngleResultTip(get, type)
+                            angelAnimList.removeAt(0)
+                        }
+                    }
+                })
             if (isOwner) {
                 EmMsgManager.sendCmdMessageToChatRoom(
                     roomSourceBean.uid,
                     GsonUtils.toJson(angleResultInfo),
                     ChatConstant.ACTION_ANGLE_ROOM_RESULT
                 )
-                ThreadUtils.getMainHandler().postDelayed({
-                    leave()
-                }, 5000)
             }
         }
     }
+
+    private var crownedUserListPop: CrownedUserListPop? = null
+    protected fun showCrownedListPop(type: Int) {
+        mViewModel.getFitAngelRankList(
+            roomId,
+            object : OnRequestResultListener<MutableList<AngleRankInfo>> {
+                override fun onSuccess(data: BaseBean<MutableList<AngleRankInfo>>) {
+                    if (CommonUtils.isPopShow(crownedUserListPop)) {
+                        return
+                    }
+                    crownedUserListPop = CrownedUserListPop.showDialog(
+                        mContext, data.data!!, object : CrownedUserListPop.OnClickCrownedListener {
+                            override fun onCrowned(angleResultInfo: AngleRoomResultInfo) {
+                                showAngleResultTip(angleResultInfo, type)
+                            }
+                        }, roomId, type
+                    )
+                }
+            })
+    }
+
 
     private fun leave() {
         if (isOwner) {
@@ -675,25 +790,30 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun doShowFloatWindow() {
-        val findViewHolderForAdapterPosition =
-            seatUserAdapter.recyclerView.findViewHolderForAdapterPosition(0)
-        val surfaceView = when (findViewHolderForAdapterPosition) {
-            is ThreeRoomSeatAdapter.VH -> {
-                findViewHolderForAdapterPosition.binding.anchorSeatInfo.itemVideoSf.tag as View?
-            }
+        val surfaceView = if (roomSourceBean.isSongRoom()) {
+            SongLiveRoomFrg.getOwnerSurfaceView(owenId = roomSourceBean.ownerInfo!!.userId)
+        } else {
+            val findViewHolderForAdapterPosition =
+                seatUserAdapter.recyclerView.findViewHolderForAdapterPosition(0)
+            when (findViewHolderForAdapterPosition) {
+                is ThreeRoomSeatAdapter.VH -> {
+                    findViewHolderForAdapterPosition.binding.anchorSeatInfo.itemVideoSf.tag as View?
+                }
 
-            is MoreSeatRoomAdapter.VH -> {
-                findViewHolderForAdapterPosition.binding.anchorSeatInfo.itemVideoSf.tag as View?
-            }
+                is MoreSeatRoomAdapter.VH -> {
+                    findViewHolderForAdapterPosition.binding.anchorSeatInfo.itemVideoSf.tag as View?
+                }
 
-            is MoreSeatRoomAdapter.VH2 -> {
-                findViewHolderForAdapterPosition.binding.itemVideoSf.tag as View?
-            }
+                is MoreSeatRoomAdapter.VH2 -> {
+                    findViewHolderForAdapterPosition.binding.itemVideoSf.tag as View?
+                }
 
-            else -> {
-                null
+                else -> {
+                    null
+                }
             }
         }
+
         surfaceView?.apply {
             LiveRoomVideoMiniManager.getInstance()
                 .show(mContext, 2, roomSourceBean.ownerInfo, object : PermissionListener {
@@ -788,9 +908,15 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     val alert: String =
                         it.getStringAttribute(ImMessageParamsConfig.KEY_WARNING_CONTENT, "")
                     if (!TextUtils.isEmpty(alert)) {
-                        DialogUtils.showConfirmDialog("下麦提醒", {
-                        }, {
-                        }, content = alert, cancel = "", confirm = "我知道了", isHideCancel = true)
+                        DialogUtils.showConfirmDialog(
+                            "下麦提醒",
+                            {},
+                            {},
+                            content = alert,
+                            cancel = "",
+                            confirm = "我知道了",
+                            isHideCancel = true
+                        )
                     }
                     setSeatOutSuccess()
                 }
@@ -801,8 +927,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         {},
                         {},
                         content = it.getStringAttribute(
-                            ImMessageParamsConfig.KEY_WARNING_CONTENT,
-                            ""
+                            ImMessageParamsConfig.KEY_WARNING_CONTENT, ""
                         ),
                         cancel = "",
                         confirm = "我知道了",
@@ -819,9 +944,15 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 val alert: String =
                     it.getStringAttribute(ImMessageParamsConfig.KEY_WARNING_CONTENT, "")
                 if (!TextUtils.isEmpty(alert)) {
-                    DialogUtils.showConfirmDialog("下麦提醒", {
-                    }, {
-                    }, content = alert, cancel = "", confirm = "我知道了", isHideCancel = true)
+                    DialogUtils.showConfirmDialog(
+                        "下麦提醒",
+                        {},
+                        {},
+                        content = alert,
+                        cancel = "",
+                        confirm = "我知道了",
+                        isHideCancel = true
+                    )
                 }
                 userDownSeat()
             } else if (source == ChatConstant.ACTION_USER_OUT_TIME_LEAVE) {
@@ -837,22 +968,20 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 showToast("房主已将房间类型切换至大厅")
                 getRoomDetail()
             } else if (source == ChatConstant.ACTION_MSG_SWITCH_MIKE) { //开/关麦
-                val position: Int = it.getIntAttribute("position")
+                val seatId: Int = it.getIntAttribute("position")
                 val mikeUse: Int = it.getIntAttribute("mike_use", 0)
-                logcom("position：$position  mike_use：$mikeUse")
-                val seatPosition = position - 1
+                logcom("position：$seatId  mike_use：$mikeUse")
+                val seatPosition = seatList.indexOfFirst { it.id == seatId }
                 val mickUser = mikeUse == 1
                 refreshSeatMicStatus(seatPosition, mickUser)
             } else if (source == ChatConstant.ACTION_MSG_CLOSE_MIKE_ASSIGN) { //关指定麦
                 showToast("房主关闭了你的麦克风")
-                val position: Int = it.getIntAttribute("position")
-                AgoraManager.getInstance().muteLocalAudioStream(true)
-                updateMyMicStatus(0, position)
+                val seatId: Int = it.getIntAttribute("position")
+                updateMyMicStatus(0, seatId)
             } else if (source == ChatConstant.ACTION_MSG_OPEN_MIKE_ASSIGN) { //开指定麦
                 showToast("房主开启了你的麦克风")
-                val position: Int = it.getIntAttribute("position")
-                AgoraManager.getInstance().muteLocalAudioStream(false)
-                updateMyMicStatus(1, position)
+                val seatId: Int = it.getIntAttribute("position")
+                updateMyMicStatus(1, seatId)
             } else if (source == ChatConstant.ACTION_MSG_SWITCH_TYPE_CONFIRM) { //切换房间为专属房间,通知用户房间结束
                 runOnUiThread {
                     roomSourceBean.roomType = 2
@@ -883,13 +1012,31 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 val angleResultString = it.getStringAttribute(ChatConstant.CUSTOM_DATA)
                 val angleRoomResultInfo =
                     GsonUtils.fromJson(angleResultString, AngleRoomResultInfo::class.java)
-                showAngleResultTip(angleRoomResultInfo)
+                showAngleResultTip(
+                    angleRoomResultInfo,
+                    if (roomSourceBean.isSongRoom()) CrownedUserListPop.TYPE_SONG else CrownedUserListPop.TYPE_ANGLE
+                )
+            } else {
+                onReceiveCmdMsg(it)
             }
 
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
+    protected open fun onReceiveCmdMsg(it: EMMessage) {
+
+    }
+
+    protected fun changeRvChatScroll() {
+        val softInputVisible = KeyboardUtils.isSoftInputVisible(mContext)
+        val isShowExpression =
+            messageDialog?.isShow == true && messageDialog?.isShowExpression() == true
+        setRvSeatHeight()
+        setRvChatMessageTop(softInputVisible || isShowExpression)
+    }
+
 
     private fun showSwitchTypeConfirmDialog(roomId: Int, price: Int) {
         val content = Spans.builder().text("红娘申请转为专属房间进行私密约\n")
@@ -902,7 +1049,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         DialogUtils.showConfirmDialog(
             "专属私密约会",
             {
-                mViewModel.switchTypeConfirm(roomId.toString(),
+                mViewModel.switchTypeConfirm(
+                    roomId.toString(),
                     object : OnRequestResultListener<Boolean> {
                         override fun onSuccess(data: BaseBean<Boolean>) {
 
@@ -912,9 +1060,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             },
             {
                 EmMsgManager.sendCmdMessagePeople(
-                    roomSourceBean.ownerInfo!!.userId,
-                    "",
-                    ChatConstant.ACTION_REFUSE_SWITCH_PRIVATE
+                    roomSourceBean.ownerInfo!!.userId, "", ChatConstant.ACTION_REFUSE_SWITCH_PRIVATE
                 )
             },
             confirm = "同意",
@@ -929,8 +1075,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (CommonUtils.isPopShow(receiveInviteSeatPop) || topActivity == null) {
             return
         }
-        receiveInviteSeatPop = ReceiveInviteSeatPop.showDialog(
-            topActivity,
+        receiveInviteSeatPop = ReceiveInviteSeatPop.showDialog(topActivity,
             it,
             object : ReceiveInviteSeatPop.OnClickSeatUpListener {
                 override fun onClickSeatUp() {
@@ -946,30 +1091,24 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun userSetOtherRoomSeat(roomId: String, seatId: String) {
-        CutLiveRoomUtils.showChangeAlert(object :
-            CutLiveRoomUtils.ChangeListener {
+        CutLiveRoomUtils.showChangeAlert(object : CutLiveRoomUtils.ChangeListener {
             override fun sure() {
                 request({
                     agoraRxApi.userSetSeat(
-                        roomId,
-                        SEAT_TYPE_AUTO,
-                        seatId,
-                        AppCacheManager.userId
+                        roomId, SEAT_TYPE_AUTO, seatId, AppCacheManager.userId
                     )
-                },
-                    object : OnRequestResultListener<String> {
-                        override fun onSuccess(data: BaseBean<String>) {
-                            LiveRoomManager.toLiveRoomPage(
-                                ActivityUtils.getTopActivity() as FragmentActivity,
-                                roomId
-                            )
-                        }
+                }, object : OnRequestResultListener<String> {
+                    override fun onSuccess(data: BaseBean<String>) {
+                        LiveRoomManager.toLiveRoomPage(
+                            ActivityUtils.getTopActivity() as FragmentActivity, roomId
+                        )
+                    }
 
-                        override fun onFail(code: Int?, msg: String?) {
-                            super.onFail(code, msg)
-                            userSeatFail(code, msg)
-                        }
-                    }, false
+                    override fun onFail(code: Int?, msg: String?) {
+                        super.onFail(code, msg)
+                        userSeatFail(code, msg)
+                    }
+                }, false
                 )
             }
         })
@@ -1031,8 +1170,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             return
         }
         isLeave = true
-        mViewModel.roomLeave(
-            roomId,
+        mViewModel.roomLeave(roomId,
             roomSourceBean.uuid,
             object : OnRequestResultListener<RoomLeaveResponse> {
                 override fun onSuccess(data: BaseBean<RoomLeaveResponse>) {
@@ -1053,43 +1191,40 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     protected fun userSetSeat(operate: String, seatNum: String = "") {
         val seatId = if (TextUtils.isEmpty(seatNum)) getNeedSeatId().toString() else seatNum
-        mViewModel.userSetSeat(roomId,
-            operate,
-            seatId,
-            object : OnRequestResultListener<String> {
-                override fun onSuccess(data: BaseBean<String>) {
-                    if (operate == SEAT_TYPE_APPLY) {
-                        //1：申请上麦
-                        val selfUserInfo = ImUserManager.getSelfUserInfo()
-                        showToast("您已申请上麦，请等待主持人通过")
-                        val map: MutableMap<String, Any> = HashMap()
-                        map["fromUid"] = AppCacheManager.userId
-                        map["seatId"] = seatId
-                        map["fromNickName"] = selfUserInfo.nickName
-                        map["portrait"] = selfUserInfo.portrait
-                        EmMsgManager.sendCmdMessagePeople(
-                            roomSourceBean.ownerInfo!!.userId,
-                            ChatConstant.ACTION_MSG_APPLY_SET_UP,
-                            map,
-                        )
-                        setHasApplyStatus()
+        mViewModel.userSetSeat(roomId, operate, seatId, object : OnRequestResultListener<String> {
+            override fun onSuccess(data: BaseBean<String>) {
+                if (operate == SEAT_TYPE_APPLY) {
+                    //1：申请上麦
+                    val selfUserInfo = ImUserManager.getSelfUserInfo()
+                    showToast("您已申请上麦，请等待主持人通过")
+                    val map: MutableMap<String, Any> = HashMap()
+                    map["fromUid"] = AppCacheManager.userId
+                    map["seatId"] = seatId
+                    map["fromNickName"] = selfUserInfo.nickName
+                    map["portrait"] = selfUserInfo.portrait
+                    EmMsgManager.sendCmdMessagePeople(
+                        roomSourceBean.ownerInfo!!.userId,
+                        ChatConstant.ACTION_MSG_APPLY_SET_UP,
+                        map,
+                    )
+                    setHasApplyStatus()
 
-                    } else if (operate == SEAT_TYPE_AUTO) {
-                        //自动上麦
-                        AgoraManager.getInstance().setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
-                        refreshSeatInfo(AppCacheManager.userId.toInt())
-                        requestInSeat[AppCacheManager.userId.toInt()] = false
-                        setHasSeatUpStatus()
-                    }
+                } else if (operate == SEAT_TYPE_AUTO) {
+                    //自动上麦
+                    AgoraManager.getInstance().setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
+                    refreshSeatInfo(AppCacheManager.userId.toInt())
+                    requestInSeat[AppCacheManager.userId.toInt()] = false
+                    setHasSeatUpStatus()
                 }
+            }
 
-                override fun onFail(code: Int?, msg: String?) {
-                    super.onFail(code, msg)
-                    userSeatFail(code, msg)
+            override fun onFail(code: Int?, msg: String?) {
+                super.onFail(code, msg)
+                userSeatFail(code, msg)
 
-                }
+            }
 
-            })
+        })
     }
 
     private fun userSeatFail(code: Int?, msg: String?) {
@@ -1114,8 +1249,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             {
                 RouteIntent.lunchToRealNamPage()
             },
-            {
-            },
+            {},
             "申请上麦请先完成实名认证",
             cancel = "取消",
             confirm = "去认证",
@@ -1130,8 +1264,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (roomSourceBean.getFragmentType() == RoomListBean.FRG_THREE_ROOM) {
             return if (AppCacheManager.isMan()) 2 else 3
         } else {
-            for (j in seatUserAdapter.items.indices) {
-                val roomSeatResListDTO = seatUserAdapter.getItem(j) ?: return -1
+            for (j in seatList.indices) {
+                val roomSeatResListDTO = seatList[j]
                 roomSeatResListDTO.roomUserSeatInfo ?: return roomSeatResListDTO.id
             }
             return -1
@@ -1249,11 +1383,20 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (giftInfo == null || TextUtils.isEmpty(giftInfo.svga)) {
             return
         }
-        giftAnimTaskManager.addTask(GiftPopAnimTask(giftInfo, mBinding.svgGiftAnim))
+        giftAnimTaskManager.addTask(
+            GiftPopAnimTask(
+                giftInfo,
+                mBinding.svgGiftAnim,
+                mBinding.videoGiftAnimView
+            )
+        )
     }
 
     //播放动画
     private fun playSvga(giftInfo: GiftInfo, sendUserInfo: UserDetailInfo) {
+        if (giftInfo.type == GiftInfo.TYPE_SONG) {
+            getRoomExtraInfo()
+        }
         starGiftAnimation(
             createGiftSendModel(
                 sendUserInfo.nickName,
@@ -1321,8 +1464,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     if (CommonUtils.isPopShow(seatUserOperatePop)) {
                         return
                     }
-                    seatUserOperatePop = SeatUserOperatePop.showDialog(
-                        mContext,
+                    seatUserOperatePop = SeatUserOperatePop.showDialog(mContext,
                         data.data!!,
                         object : SeatUserOperatePop.OnOperateUserListener {
                             override fun onSendGift(userInfo: UserDetailInfo) {
@@ -1371,7 +1513,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun addFriendByRose(userInfo: UserDetailInfo) {
-        request({ agoraRxApi.becomeFriendRose(userInfo.userId) },
+        request(
+            { agoraRxApi.becomeFriendRose(userInfo.userId) },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     userInfo.isFriend = true
@@ -1390,12 +1533,14 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         showToast(msg)
                     }
                 }
-            }, isShowToast = false
+            },
+            isShowToast = false
         )
     }
 
     private fun applyFriend(userInfo: UserDetailInfo) {
-        request({ agoraRxApi.addFriend(userInfo.userId) },
+        request(
+            { agoraRxApi.addFriend(userInfo.userId) },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     showToast("好友请求已发送～")
@@ -1405,7 +1550,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     super.onFail(code, msg)
                     showToast(msg)
                 }
-            }, isShowToast = false
+            },
+            isShowToast = false
         )
     }
 
@@ -1441,30 +1587,35 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             override fun onSuccess(data: BaseBean<MutableList<RoomSeatInfo>>) {
                 val it = data.data ?: return
                 seatList = it
-                for (i in 0 until it.size) {
-                    val seatInfo = it[i]
-                    val roomUserSeatInfo = seatInfo.roomUserSeatInfo
-                    if (roomUserSeatInfo != null) {
-                        val item = seatUserAdapter.getItem(i)
-                        if (item != null) {
-                            item.roomUserSeatInfo?.roseNum = roomUserSeatInfo.roseNum
-                            item.roomUserSeatInfo?.userList = roomUserSeatInfo.userList
-                        }
-                    }
-
-                }
+                updateSeatRoseInfo()
             }
         })
     }
 
+    protected open fun updateSeatRoseInfo() {
+        for (i in 0 until seatList.size) {
+            val seatInfo = seatList[i]
+            val roomUserSeatInfo = seatInfo.roomUserSeatInfo
+            if (roomUserSeatInfo != null) {
+                val item = seatUserAdapter.getItem(i)
+                if (item != null) {
+                    item.roomUserSeatInfo?.roseNum = roomUserSeatInfo.roseNum
+                    item.roomUserSeatInfo?.userList = roomUserSeatInfo.userList
+                }
+            }
 
-    private fun refreshSeatInfo(it: MutableList<RoomSeatInfo>, uid: Int) {
+        }
+    }
+
+
+    protected open fun refreshSeatInfo(it: MutableList<RoomSeatInfo>, uid: Int) {
         ThreadUtils.getMainHandler().post {
             for (i in 0 until it.size) {
                 val seatInfo = it[i]
                 if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
                     seatUserAdapter[i] = seatInfo
                     seatUserAdapter.notifyItemChanged(i)
+                    return@post
                 }
             }
         }
@@ -1505,9 +1656,9 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
                 override fun onError(error: Int, errorMsg: String?) {
                     logcom("加入聊天室失败，$error————msg$errorMsg")
-                    if (error==201 && !hasReLogin){
+                    if (error == 201 && !hasReLogin) {
                         reLoginIm()
-                    }else{
+                    } else {
                         showToast("直播间异常，请重新尝试进入直播间")
                         leaveRoomFinish()
                     }
@@ -1522,6 +1673,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             override fun onSuccess() {
                 joinChatRoom()
             }
+
             override fun onError(code: Int, error: String?) {
                 leaveRoomFinish()
             }
@@ -1551,6 +1703,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
      * 添加新用户进房漂流提示动画
      */
     private fun addUserEnterAnim(user: BaseUserInfo) {
+
         val carUrl = user.carUrl
         if (!TextUtils.isEmpty(carUrl)) {
             val giftInfo = GiftInfo()
@@ -1573,10 +1726,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     private fun initRvChatTop() {
         mBinding.rvSeat.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                val maxTop: Int =
-                    getMaxTopHeight()
-                ViewUtils.setMarginTop(mBinding.rvChat, maxTop)
-                ViewUtils.setMarginBottom(mBinding.rvChat, 0)
+                val maxTop: Int = getMaxTopHeight()
+                ViewUtils.setMarginVertical(mBinding.rvChat, maxTop, 0)
                 mBinding.rvSeat.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
@@ -1588,8 +1739,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
      */
     private fun setRvChatMessageTop(isShow: Boolean) {
         mBinding.rvSeat.post {
-            val maxTop: Int =
-                getMaxTopHeight()
+            val maxTop: Int = getMaxTopHeight()
             val minTop: Int = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20)
             if (isShow) {
                 if (mBinding.viewMask.visibility == View.INVISIBLE) {
@@ -1600,6 +1750,12 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 if (mBinding.viewMask.visibility == View.VISIBLE) {
                     mBinding.viewMask.visibility = View.INVISIBLE
                     AnimManager.showMarginTopAnimator(mBinding.rvChat, minTop, maxTop, 200)
+                } else {
+                    val topMargin =
+                        (mBinding.rvChat.layoutParams as ViewGroup.MarginLayoutParams).topMargin
+                    if (topMargin != maxTop) {
+                        AnimManager.showMarginTopAnimator(mBinding.rvChat, topMargin, maxTop, 200)
+                    }
                 }
             }
             scrollChatToBottom(400)
@@ -1608,8 +1764,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun getMaxTopHeight(): Int {
-        val titleHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_50)
-        return mBinding.rvSeat.height + titleHeight + mBinding.flTopView.height
+        val titleHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_40)
+        return (if (seatHeight > 0) seatHeight else mBinding.rvSeat.height) + titleHeight + mBinding.flTopView.height
     }
 
     /**
@@ -1635,7 +1791,9 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     private fun destroyRoom() {
         // 移除聊天室回调
-        AgoraManager.getInstance().setDownVideo(AppCacheManager.userId.toInt(), true)
+        if (!TextUtils.isEmpty(AppCacheManager.userId)) {
+            AgoraManager.getInstance().setDownVideo(AppCacheManager.userId.toInt(), true)
+        }
         AgoraManager.getInstance().leaveChannel()
         EMClient.getInstance().chatroomManager()
             .leaveChatRoom(roomSourceBean.uid, object : EMCallBack {
@@ -1734,10 +1892,18 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             if (type == AgoraManager.TOKEN_EXPIRE || type == AgoraManager.TOKEN_WILL_EXPIRE) { //token已过期、token即将过期
                 fetchToken()
             } else if (type == AgoraManager.USER_SET_UP) { //检测到有观众上麦，更新视图
+
                 requestInSeat[uid] = true
                 logcom("上麦请求$uid")
                 removeUserLeaveRecord(uid)
-                refreshSeatInfo(uid)
+                val indexOfFirst = seatList.indexOfFirst {
+                    it.roomUserSeatInfo?.userId == uid.toString()
+                }
+                if (indexOfFirst < 0) {
+                    //麦位上没有此用户 说明是新上麦的用户
+                    refreshSeatInfo(uid)
+                }
+
             } else if (type == AgoraManager.USER_SIT_DOWN) { //检测到有观众下麦，更新视图
                 logcom("下麦请求$uid")
                 updateUserLeaveView(uid)
@@ -1803,8 +1969,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     //嘉宾离线超时1分钟，强制踢出房间
     protected fun operateLeave(operatedUserId: Int) {
         logcom("强制下麦：$operatedUserId")
-        mViewModel.operateLeave(
-            roomId,
+        mViewModel.operateLeave(roomId,
             operatedUserId.toString(),
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
@@ -1912,8 +2077,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun isInSeatByUserId(uid: Int): Boolean {
-        for (j in seatUserAdapter.items.indices) {
-            val roomSeatResListDTO = seatUserAdapter.getItem(j) ?: return false
+        for (j in seatList.indices) {
+            val roomSeatResListDTO = seatList.get(j) ?: return false
             val roomUserSeatInfo = roomSeatResListDTO.roomUserSeatInfo
             if (roomUserSeatInfo != null) {
                 val userId: Int = roomUserSeatInfo.userId.toInt()
@@ -1931,8 +2096,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
      * 获取我的座位id
      */
     private fun getMySeatId(): Int {
-        for (j in seatUserAdapter.items.indices) {
-            val roomSeatResListDTO = seatUserAdapter.getItem(j) ?: return -1
+        for (j in seatList.indices) {
+            val roomSeatResListDTO = seatList[j]
             val roomUserSeatInfo = roomSeatResListDTO.roomUserSeatInfo
             if (roomUserSeatInfo != null) {
                 val userId: Int = roomUserSeatInfo.userId.toInt()
@@ -1947,7 +2112,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     /**
      * 有用户下麦
      */
-    protected fun userLeaveChanged(uid: Int) {
+    protected open fun userLeaveChanged(uid: Int) {
         refreshThreeRoomInfo()
         ThreadUtils.getMainHandler().post {
             for (i in 0 until seatUserAdapter.items.size) {
@@ -1973,15 +2138,19 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
      * 设置是否显示 预览页面
      */
     protected fun userVideoStatusChanged(uid: Int, isShowProload: Boolean) {
-        seatUserAdapter.items.forEach {
+        seatList.forEach {
             if (it.roomUserSeatInfo?.userId?.toInt() == uid) {
                 it.ifLeave = isShowProload
+                return
             }
         }
     }
 
 
     protected open fun getRoomInfoSuccess() {
+        if (roomSourceBean.isSongRoom()) {
+            return
+        }
         if (seatUserAdapter is MoreSeatRoomAdapter) {
             (seatUserAdapter as MoreSeatRoomAdapter).roomDetailInfo = roomSourceBean
             if ((seatUserAdapter as MoreSeatRoomAdapter).roomDetailInfo == null) {
@@ -1999,7 +2168,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
     }
 
-    private fun getRoomSeatSuccess(seatList: MutableList<RoomSeatInfo>) {
+    protected open fun getRoomSeatSuccess(seatList: MutableList<RoomSeatInfo>) {
         seatUserAdapter.submitList(seatList)
     }
 
@@ -2050,7 +2219,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             LiveRoomEndActivity.lunch(
                 mContext, LiveRoomManager.HOUSE_OFF, "", this@BaseLiveRoomFrg.roomId
             )
-
         }
         isLeave = true
         leaveRoomFinish()
@@ -2059,7 +2227,9 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     //是否开、关麦提示弹窗
     protected fun switchMikeAlert(mikeUse: Boolean, seatNum: Int) {
         if (mikeUse) {
-            switchMike(1, seatNum, localUserId)
+            DialogUtils.showConfirmDialog("开启麦克风", {
+                switchMike(1, seatNum, localUserId)
+            }, {}, "当前正在交友中，确定开启麦克风吗？", cancel = "取消", confirm = "确定开启")
         } else {
             DialogUtils.showConfirmDialog("关闭麦克风", {
                 switchMike(0, seatNum, localUserId)
@@ -2068,13 +2238,15 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
 
-    protected fun ownerSwitchMikeAlert(mikeUse: Boolean, seatNum: Int) {
+    protected fun ownerSwitchMikeAlert(mikeUse: Boolean, seatNum: Int, targetUserId: String) {
         roomSourceBean.ownerInfo?.apply {
             if (mikeUse) {
-                switchMike(1, seatNum, this.userId.toInt(), true)
+                DialogUtils.showConfirmDialog("开启麦克风", {
+                    switchMike(1, seatNum, this.userId.toInt(), true, targetUserId)
+                }, {}, "确定开启此用户麦克风吗？", cancel = "取消", confirm = "确定开启")
             } else {
                 DialogUtils.showConfirmDialog("关闭麦克风", {
-                    switchMike(0, seatNum, this.userId.toInt(), true)
+                    switchMike(0, seatNum, this.userId.toInt(), true, targetUserId)
                 }, {}, "确定关闭此用户麦克风吗？", cancel = "取消", confirm = "确定关闭")
             }
         }
@@ -2087,7 +2259,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         operate: Int,
         seatNum: Int,
         operatedUserId: Int,
-        isOwnerOperate: Boolean = false
+        isOwnerOperate: Boolean = false,
+        targetUserId: String = ""
     ) {
         mViewModel.switchMike(Integer.valueOf(roomId),
             operate,
@@ -2100,11 +2273,12 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         //是房主操作开关麦
                         val map: MutableMap<String, Any> = HashMap()
                         map["position"] = seatNum
+
                         EmMsgManager.sendCmdMessagePeople(
-                            roomSourceBean.uid,
+                            targetUserId,
                             if (operate == 0) ChatConstant.ACTION_MSG_CLOSE_MIKE_ASSIGN else ChatConstant.ACTION_MSG_OPEN_MIKE_ASSIGN,
                             map,
-                            EMMessage.ChatType.ChatRoom
+                            EMMessage.ChatType.Chat
                         )
                     } else {
                         updateMyMicStatus(operate, seatNum)
@@ -2113,13 +2287,15 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             })
     }
 
-    private fun updateMyMicStatus(operate: Int, seatNum: Int) {
+    private fun updateMyMicStatus(operate: Int, seatId: Int) {
         AgoraManager.getInstance().muteLocalAudioStream(operate == 0)
-        val seatPosition = seatNum - 1
+        val seatPosition = seatList.indexOfFirst {
+            it.id == seatId
+        }
         val mickUser = operate == 1
         refreshSeatMicStatus(seatPosition, mickUser)
         val map: MutableMap<String, Any> = HashMap()
-        map["position"] = seatNum
+        map["position"] = seatId
         map["mike_use"] = operate
         EmMsgManager.sendCmdMessagePeople(
             roomSourceBean.uid,
@@ -2129,7 +2305,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         )
     }
 
-    private fun refreshSeatMicStatus(seatPosition: Int, mickUser: Boolean) {
+    protected open fun refreshSeatMicStatus(seatPosition: Int, mickUser: Boolean) {
         seatUserAdapter.getItem(seatPosition)?.mikeUser = mickUser
     }
 
@@ -2204,4 +2380,22 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     override fun onAnnouncementChanged(chatRoomId: String?, announcement: String?) {
     }
 
+    private var liveRoomUserListPop: LiveRoomSeatManagerPop? = null
+    protected fun showSeatUserList() {
+        request({ agoraRxApi.getInviteList(roomId, "0", "0", 1) },
+            object : OnRequestResultListener<MutableList<UserDetailInfo>> {
+                override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
+                    val userList = data.data ?: return
+                    if (CommonUtils.isPopShow(liveRoomUserListPop)) {
+                        return
+                    }
+                    liveRoomUserListPop = LiveRoomSeatManagerPop.showDialog(
+                        mContext,
+                        userList,
+                        roomSourceBean,
+                        onSendSeatInviteListener = inviteSeatListener
+                    )
+                }
+            })
+    }
 }

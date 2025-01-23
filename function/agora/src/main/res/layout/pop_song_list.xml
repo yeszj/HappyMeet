@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_top_corner_10"
+        android:backgroundTint="#161727"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:paddingTop="@dimen/dp_20"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_16"
+                android:src="@drawable/svg_white_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已点列表"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                app:fontType="@string/fontBold"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iv_close" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_20"
+            android:text="正在演唱"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontBold" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_tips"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_106"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="#1AFFFFFF"
+            android:gravity="center"
+            android:text="暂无人演唱"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_10"
+            android:text="等待演唱（8）"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:fontType="@string/fontBold" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_106"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="#1AFFFFFF"
+            android:gravity="center"
+            android:text="暂无用户点歌"
+            android:textColor="@color/fontGrayColor"
+            android:textSize="@dimen/sp_14"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_song"
+            android:paddingTop="@dimen/dp_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="3"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/adapter_song_list_item" />
+
+    </LinearLayout>
+</layout>

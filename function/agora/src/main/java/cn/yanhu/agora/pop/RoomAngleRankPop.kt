@@ -20,7 +20,7 @@ import com.lxj.xpopup.core.BottomPopupView
  * desc:
  */
 @SuppressLint("ViewConstructor")
-class RoomAngleRankPop(context: Context, private val rankList: List<AngleRankInfo>) :
+class RoomAngleRankPop(context: Context, private val rankList: List<AngleRankInfo>,val type:Int) :
     BottomPopupView(context) {
     private val userAdapter by lazy { AngleRankAdapter() }
     override fun getImplLayoutId(): Int {
@@ -38,9 +38,14 @@ class RoomAngleRankPop(context: Context, private val rankList: List<AngleRankInf
         emptyView.setFootText("暂无榜单")
         userAdapter.stateView = emptyView
         mBiding.rvUser.adapter = userAdapter
+        userAdapter.setType(type)
         userAdapter.submitList(rankList)
         mBiding.tvRoseTotal.visibility = View.GONE
-        mBiding.tvNickName.text = "本场天使榜单"
+        if (type == TYPE_ANGLE){
+            mBiding.tvNickName.text = "本场天使榜单"
+        }else{
+            mBiding.tvNickName.text = "本场歌手榜单"
+        }
         userAdapter.isStateViewEnable = rankList.isEmpty()
         userAdapter.addOnItemChildClickListener(R.id.userAvatar,
             object : BaseQuickAdapter.OnItemChildClickListener<AngleRankInfo> {
@@ -57,11 +62,13 @@ class RoomAngleRankPop(context: Context, private val rankList: List<AngleRankInf
     }
 
     companion object {
+        const val TYPE_SONG = 1
+        const val TYPE_ANGLE = 2
         @JvmStatic
         fun showDialog(
-            mContext: Context, rankList: List<AngleRankInfo>
+            mContext: Context, rankList: List<AngleRankInfo>,type:Int = TYPE_ANGLE
         ): RoomAngleRankPop {
-            val matchPop = RoomAngleRankPop(mContext, rankList)
+            val matchPop = RoomAngleRankPop(mContext, rankList,type)
             val builder =
                 XPopup.Builder(mContext)
             builder.asCustom(matchPop).show()
