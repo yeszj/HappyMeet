@@ -1016,7 +1016,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     angleRoomResultInfo,
                     if (roomSourceBean.isSongRoom()) CrownedUserListPop.TYPE_SONG else CrownedUserListPop.TYPE_ANGLE
                 )
-            }else if(source == ChatConstant.ACTION_REFRESH_SEAT){
+            } else if (source == ChatConstant.ACTION_REFRESH_SEAT) {
                 refreshSeatInfo()
             } else {
                 onReceiveCmdMsg(it)
@@ -1898,18 +1898,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 requestInSeat[uid] = true
                 logcom("上麦请求$uid")
                 removeUserLeaveRecord(uid)
-                val indexOfFirst = seatList.indexOfFirst {
-                    it.roomUserSeatInfo?.userId == uid.toString()
-                }
-                if (indexOfFirst < 0) {
-                    //麦位上没有此用户 说明是新上麦的用户
-                    refreshSeatInfo(uid)
-                }
+                refreshSeatInfo(uid)
 
             } else if (type == AgoraManager.USER_SIT_DOWN) { //检测到有观众下麦，更新视图
                 logcom("下麦请求$uid")
                 updateUserLeaveView(uid)
-                //refreshSeatInfo(uid)
             } else if (type == AgoraManager.USER_QUIT) { //检测到有观众离开
                 logcom("用户离开$uid")
                 updateUserLeaveView(uid)
