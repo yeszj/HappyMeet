@@ -1016,6 +1016,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     angleRoomResultInfo,
                     if (roomSourceBean.isSongRoom()) CrownedUserListPop.TYPE_SONG else CrownedUserListPop.TYPE_ANGLE
                 )
+            }else if(source == ChatConstant.ACTION_REFRESH_SEAT){
+                refreshSeatInfo()
             } else {
                 onReceiveCmdMsg(it)
             }
@@ -2124,6 +2126,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     seatUserAdapter.notifyItemChanged(i)
                 }
             }
+            seatList = seatUserAdapter.items.toMutableList()
         }
     }
 

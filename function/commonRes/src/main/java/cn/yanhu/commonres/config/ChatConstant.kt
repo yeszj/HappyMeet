@@ -85,6 +85,7 @@ object ChatConstant {
     const val ACTION_MSG_SWITCH_TYPE_PLAZA = 1010 //切换房间为大厅房间
     const val ACTION_USER_OUT_TIME_LEAVE = 1011 //麦上用户离线超过1分钟 操作下麦
 
+    const val ACTION_REFRESH_SEAT = 1012 //刷新麦位
 
 
     const val ACTION_MSG_SERVICE_SIT_DOWN = 10021 //服务端强制下麦
