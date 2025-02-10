@@ -42,7 +42,6 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
         mBinding.recyclerView.layoutManager = linearLayoutManager
         linearLayoutManager.isItemPrefetchEnabled = true
         linearLayoutManager.initialPrefetchItemCount = 10
-        adapter.setHasStableIds(true)
         mBinding.recyclerView.adapter = adapter
         requestData()
     }

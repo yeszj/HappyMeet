@@ -1399,6 +1399,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (giftInfo.type == GiftInfo.TYPE_SONG) {
             getRoomExtraInfo()
         }
+
         starGiftAnimation(
             createGiftSendModel(
                 sendUserInfo.nickName,

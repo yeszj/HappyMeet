@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.R
@@ -394,6 +395,27 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             mBinding.tabLayout.addItem(createBottomBarItem(it))
         }
         bindTabToVp()
+        if (fragments.size>0){
+            if (selectItem>0){
+                mBinding.tabLayout.currentItem = selectItem-1
+            }else{
+                mBinding.tabLayout.currentItem = 1
+            }
+        }
+        mBinding.tabLayout.currentItem = selectItem
+    }
+
+    private fun clearAllFrgManager() {
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        val fragments = supportFragmentManager.fragments
+        if (fragments.size > 0) {
+            for (fragment in fragments) {
+                ft.remove(fragment)
+            }
+            ft.commitNow()
+            mFragmentList.clear()
+            mBinding.tabLayout.removeAllViews()
+        }
     }
 
     private fun createBottomBarItem(tabEntity: TabEntity): BottomBarItem {
@@ -438,27 +460,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     private fun bindTabToVp() {
         val tabAdapter = BaseTabAdapter(supportFragmentManager, mFragmentList)
+        mBinding.viewPager.offscreenPageLimit = mFragmentList.size
         mBinding.viewPager.adapter = tabAdapter
         mBinding.tabLayout.setViewPager(mBinding.viewPager)
-        mBinding.viewPager.offscreenPageLimit = mFragmentList.size
         mBinding.tabLayout.setOnItemSelectedListener { _, _, _ ->
             KeyboardUtils.hideSoftInput(
                 mContext
             )
         }
-        mBinding.tabLayout.currentItem = selectItem
-//        mBinding.viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-//            override fun onPageSelected(position: Int) {
-//                super.onPageSelected(position)
-//                if (position == getTabSameCityPosition()) {
-//                    LiveDataEventManager.sendLiveDataMessage(
-//                        LiveDataEventManager.SWITCH_TO_SAME_CITY,
-//                        position
-//                    )
-//                }
-//            }
-//        })
-        // mBinding.viewPager.currentItem = 2
+
     }
 
     private fun getTabSameCityPosition(): Int {

@@ -87,7 +87,11 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
                 access_token = baiduPackBean.accessToken
                 realName = baiduPackBean.realName
                 idCard = baiduPackBean.idCard
-                checkIsCanBaiduFace()
+                if (!TextUtils.isEmpty(realName)){
+                    checkIsCanBaiduFace()
+                }else{
+                    mBinding.viewBg2.visibility = View.INVISIBLE
+                }
             }else{
                 mBinding.viewBg2.visibility = View.INVISIBLE
             }

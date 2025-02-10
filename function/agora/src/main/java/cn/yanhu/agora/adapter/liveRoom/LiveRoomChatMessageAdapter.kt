@@ -111,8 +111,12 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH3> {
                 override fun onBind(holder: VH3, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.apply {
-                        itemLiveRoomMsgEmoji.setAnimationFromUrl(item?.content)
-                        itemLiveRoomMsgEmoji.playAnimation()
+                        try {
+                            itemLiveRoomMsgEmoji.setAnimationFromUrl(item?.content)
+                            itemLiveRoomMsgEmoji.playAnimation()
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                        }
                         userInfo = item?.sendUserInfo
                         executePendingBindings()
                     }

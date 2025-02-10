@@ -1,5 +1,6 @@
 package cn.yanhu.agora.manager;
 
+import android.app.Activity;
 import android.text.TextUtils;
 
 import com.blankj.utilcode.util.ActivityUtils;
@@ -79,7 +80,8 @@ public class BeautySetManager {
 
     /**
      * 设置美颜滤镜参数
-     * @param value 进度值
+     *
+     * @param value      进度值
      * @param filterName 滤镜名称
      */
     public void setBeautyFilter(int value, String filterName) {
@@ -175,7 +177,11 @@ public class BeautySetManager {
     }
 
     private File getExternalFilesDir() {
-        return ActivityUtils.getTopActivity().getExternalFilesDir("assets");
+        Activity topActivity = ActivityUtils.getTopActivity();
+        if (topActivity == null) {
+            return new File("/storage/emulated/0/Android/data/cn.huanyuan.sweetlove/files/assets");
+        }
+        return topActivity.getExternalFilesDir("assets");
     }
 
     //加载道具包

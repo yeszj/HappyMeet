@@ -24,7 +24,11 @@ class MessageLottieExpressionAdapter : BaseQuickAdapter<ExpressionInfo,MessageLo
     override fun onBindViewHolder(holder: VH, position: Int, item: ExpressionInfo?) {
         holder.binding.apply {
             tvValue.text = item?.name
-            animExpression.setAnimationFromUrl(item?.url, item?.name)
+            try {
+                animExpression.setAnimationFromUrl(item?.url, item?.name)
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
         }
     }
 

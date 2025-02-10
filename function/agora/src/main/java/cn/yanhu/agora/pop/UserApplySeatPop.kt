@@ -26,10 +26,10 @@ class UserApplySeatPop(context: Context, val it: EMMessage,val roomID:String) : 
     override fun onCreate() {
         super.onCreate()
         mBiding = PopUserApplySeatBinding.bind(popupImplView)
-        val fromUid: String = it.getStringAttribute("fromUid")
-        val fromNickName: String = it.getStringAttribute("fromNickName")
-        val seatId: String = it.getStringAttribute("seatId")
-        val portrait: String = it.getStringAttribute("portrait")
+        val fromUid: String = it.getStringAttribute("fromUid","")
+        val fromNickName: String = it.getStringAttribute("fromNickName","")
+        val seatId: String = it.getStringAttribute("seatId","")
+        val portrait: String = it.getStringAttribute("portrait","")
         VibrateUtils.vibrate(1000L)
         GlideUtils.load(context, portrait, mBiding.ivAvatar)
         mBiding.tvNickName.text = fromNickName

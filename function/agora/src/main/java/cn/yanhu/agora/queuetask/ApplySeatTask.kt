@@ -10,7 +10,6 @@ import com.lxj.xpopup.interfaces.SimpleCallback
 /**
  * @author: zhengjun
  * created: 2023/5/29
- * desc:svga动画播放队列实现
  */
 class ApplySeatTask(private val it: EMMessage,val roomId:String): BaseQueueTask() {
     override fun doTask() {
