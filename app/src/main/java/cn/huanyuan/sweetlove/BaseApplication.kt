@@ -61,6 +61,7 @@ import cn.yanhu.imchat.custom.chat.EaseCommonUtils
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EMInitUtils
 import cn.yanhu.imchat.manager.EaseHelper.initEaseUI
+import cn.yanhu.imchat.manager.EmMsgManager
 import cn.zj.netrequest.RetrofitUtil
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.application.OnImLoginListener
@@ -108,6 +109,15 @@ import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
 import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
 import java.io.File
+import kotlin.Exception
+import kotlin.Int
+import kotlin.RuntimeException
+import kotlin.String
+import kotlin.Suppress
+import kotlin.Throwable
+import kotlin.apply
+import kotlin.arrayOfNulls
+import kotlin.toString
 
 
 @Suppress("DEPRECATION")
@@ -115,6 +125,7 @@ class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         if (ProcessUtils.isMainProcess()) {
+           // AppSecurityManager.checkDynamicDebug()
             Utils.init(this)
             ApplicationProxy.instance = ApplicationRouterImpl.getInstance()
             init()
@@ -497,10 +508,10 @@ class BaseApplication : Application() {
             val sendUserInfo: UserDetailInfo? =
                 GsonUtils.fromJson(stringAttribute, UserDetailInfo::class.java)
             sendUserInfo?.apply {
-                if (!TextUtils.isEmpty(nickName)) {
+                if (!TextUtils.isEmpty(this.nickName)) {
                     appMsgNotifyInfo.nickName = this.nickName
                 }
-                if (!TextUtils.isEmpty(portrait)) {
+                if (!TextUtils.isEmpty(this.portrait)) {
                     appMsgNotifyInfo.portrait = this.portrait
                 }
             }
@@ -602,6 +613,26 @@ class BaseApplication : Application() {
                 addPopTask(
                     ChatConstant.ACTION_NEW_YEAR_RED_PACKET,
                     data.optString("url")
+                )
+            }else if(source == ChatConstant.ACTION_BIND_LOVERS_SUCCESS){
+                val content =
+                    message.getStringAttribute(ChatConstant.CUSTOM_DATA, "")
+                EmMsgManager.saveAlert(
+                    content,
+                    "",
+                    "", conversationId = message.from, event = ChatConstant.MSG_ALERT
+                )
+                LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
+            }else if(source == ChatConstant.ACTION_CANCEL_LOVERS){
+                LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
+            }else if (source == ChatConstant.ACTION_USER_ONLINE) {
+                if (CommonUtils.isScreenOff() || !AppUtils.isAppForeground()) {
+                    return
+                }
+                val data = message.getJSONObjectAttribute(ChatConstant.CUSTOM_DATA)
+                addGlobalPopTask(
+                    ChatConstant.ACTION_USER_ONLINE,
+                    data.toString()
                 )
             }
         } catch (e: Exception) {

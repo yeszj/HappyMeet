@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="beautifulIdImg"
+            type="java.lang.String" />
+
+        <variable
+            name="userId"
+            type="java.lang.String" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            drawableUrl="@{beautifulIdImg}"
+            placeholderId="@{-1}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:adjustViewBounds="true"
+            android:visibility="@{TextUtils.isEmpty(beautifulIdImg)?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/tv_copyId"
+            tagValue='@{"ID:"+userId}'
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{TextUtils.isEmpty(beautifulIdImg)?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

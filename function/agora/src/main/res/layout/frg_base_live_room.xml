@@ -267,29 +267,40 @@
         <LinearLayout
             android:id="@+id/giftAnimView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_108"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:orientation="vertical"
+            android:paddingStart="@dimen/dp_10"
             app:layout_constraintStart_toStartOf="@+id/rv_chat"
             app:layout_constraintTop_toTopOf="@+id/rv_chat">
 
-            <cn.yanhu.commonres.view.GiftFrameLayout
-                android:id="@+id/call_gift_dialog_one"
+            <cn.yanhu.commonres.view.floatScreenView.RewardLayout
+                android:id="@+id/giftRewardLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_10"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toTopOf="@+id/call_gift_dialog_two" />
+                android:layout_height="match_parent"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                app:gift_item_layout="@layout/gift_animation_item"
+                app:max_gift="2"/>
 
-            <cn.yanhu.commonres.view.GiftFrameLayout
-                android:id="@+id/call_gift_dialog_two"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_10"
-                android:layout_marginBottom="@dimen/dp_20"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toTopOf="@+id/call_gift" />
+            <!--            <cn.yanhu.commonres.view.GiftFrameLayout-->
+            <!--                android:id="@+id/call_gift_dialog_one"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="@dimen/dp_10"-->
+            <!--                android:visibility="invisible"-->
+            <!--                app:layout_constraintBottom_toTopOf="@+id/call_gift_dialog_two" />-->
+
+            <!--            <cn.yanhu.commonres.view.GiftFrameLayout-->
+            <!--                android:id="@+id/call_gift_dialog_two"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="@dimen/dp_10"-->
+            <!--                android:layout_marginBottom="@dimen/dp_20"-->
+            <!--                android:visibility="invisible"-->
+            <!--                app:layout_constraintBottom_toTopOf="@+id/call_gift" />-->
         </LinearLayout>
 
         <cn.yanhu.commonres.view.floatScreenView.RewardLayout
@@ -323,8 +334,77 @@
         <com.tencent.qgame.animplayer.AnimView
             android:id="@+id/videoGiftAnimView"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="vertical"
-            android:layout_height="match_parent" />
+            android:orientation="vertical" />
+
+        <RelativeLayout
+            android:id="@+id/vg_clickRose"
+            android:layout_width="@dimen/dp_81"
+            android:layout_height="@dimen/dp_81"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            android:layout_marginBottom="@dimen/dp_80"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <cn.yanhu.commonres.view.CircularCountdownTimer
+                android:id="@+id/progress"
+                android:layout_width="@dimen/dp_81"
+                android:layout_height="@dimen/dp_81"
+                app:stroke_width="@dimen/dp_3"
+                app:background_color="@color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:circle_progress_color="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_78"
+                android:layout_height="@dimen/dp_78"
+                android:layout_centerInParent="true"
+                android:src="@drawable/gift_more_click" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <cn.yanhu.baselib.view.StrokeGradientTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  连击  "
+                    android:textSize="@dimen/sp_24"
+                    app:endColor="@color/white"
+                    app:fontCustomStyle="bold|italic"
+                    app:gradientStrokeWidth="@dimen/dp_2"
+                    app:startColor="@color/white"
+                    app:strokeColor="#80AA1C00"
+                    tools:textStyle="bold|italic" />
+
+                <cn.yanhu.baselib.view.StrokeGradientTextView
+                    android:id="@+id/tv_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="x1"
+                    android:textSize="@dimen/sp_24"
+                    app:endColor="@color/white"
+                    app:fontCustomStyle="bold|italic"
+                    app:gradientStrokeWidth="@dimen/dp_2"
+                    app:startColor="@color/white"
+                    app:strokeColor="#80AA1C00"
+                    tools:textStyle="bold|italic" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <cn.yanhu.commonres.view.roseAnim.RoseSurfaceView
+            android:id="@+id/roseAnimView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

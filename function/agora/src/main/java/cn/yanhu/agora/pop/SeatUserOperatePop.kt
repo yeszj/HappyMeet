@@ -35,6 +35,9 @@ class SeatUserOperatePop(
         mBinding.ivAvatar.setOnSingleClickListener {
             RouteIntent.lunchPersonHomePage(userId = userInfo.userId)
         }
+        mBinding.tvUserDetail.setOnSingleClickListener {
+            RouteIntent.lunchPersonHomePage(userId = userInfo.userId)
+        }
         mBinding.tvAlt.setOnSingleClickListener {
             dismiss()
             onOperateUserListener.onAlt(userInfo)
@@ -53,6 +56,13 @@ class SeatUserOperatePop(
         mBinding.vgGuard.setOnSingleClickListener {
             RouteIntent.lunchGuardRankPage(userInfo.userId)
         }
+        mBinding.vgLovers.setOnSingleClickListener {
+            RouteIntent.lunchLoversPage(userInfo.userId)
+        }
+    }
+
+    fun refreshUserInfo(userInfo: UserDetailInfo){
+        mBinding.userInfo = userInfo
     }
 
     companion object {

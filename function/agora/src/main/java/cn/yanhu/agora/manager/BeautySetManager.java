@@ -330,4 +330,66 @@ public class BeautySetManager {
         }
     }
 
+    /**
+     * 关闭贴脸特效
+     * @param bundleName
+     */
+    public void closeFaceEffect(String bundleName){
+        try {
+            File makeupDir = new File(getExternalFilesDir(),
+                    "Resource/graphics/face_makeup.bundle");
+            File combinationmakeupItemDir = new File(getExternalFilesDir(),
+                    "Resource/makeup/combination_bundle/" + bundleName);
+            String curCombineMarkupPath = combinationmakeupItemDir.getAbsolutePath();
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("obj_handle", makeupDir.getAbsolutePath());
+            setExtensionProperty("fuUnbindAllItems", jsonObject.toString());
+
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("item", curCombineMarkupPath);
+            setExtensionProperty("fuDestroyItem", jsonObject2.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 打开贴脸特效
+     * @param bundleName
+     */
+    public void openFaceEffect(String bundleName) {
+        try {
+            File makeupDir = new File(getExternalFilesDir(),
+                    "Resource/makeup/face_makeup.bundle");
+            File combinationmakeupItemDir = new File(getExternalFilesDir(),
+                    "Resource/makeup/combination_bundle/" + bundleName);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("data", makeupDir.getAbsolutePath());
+            setExtensionProperty("fuCreateItemFromPackage", jsonObject.toString());
+
+
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("data", combinationmakeupItemDir.getAbsolutePath());
+            setExtensionProperty("fuCreateItemFromPackage", jsonObject2.toString());
+
+            JSONObject jsonObject3 = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(combinationmakeupItemDir.getAbsolutePath());
+            jsonObject3.put("obj_handle", makeupDir.getAbsolutePath());
+            jsonObject3.put("p_items", jsonArray);
+            setExtensionProperty("fuBindItems", jsonObject3.toString());
+
+            JSONObject  jsonObject4 = new JSONObject();
+            jsonObject4.put("obj_handle", makeupDir.getAbsolutePath());
+            jsonObject4.put("name", "makeup_intensity");
+            jsonObject4.put("value", 0.8);
+            setExtensionProperty("fuItemSetParam", jsonObject4.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

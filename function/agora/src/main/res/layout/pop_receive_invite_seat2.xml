@@ -114,27 +114,15 @@
             app:layout_constraintTop_toBottomOf="@+id/iv_avatar"
             tools:text="忧伤开满来时路" />
 
-        <LinearLayout
+        <cn.yanhu.commonres.view.UserInfoTagLayout
             android:id="@+id/vg_tag"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
+            userInfo="@{roomBean.ownerInfo}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nickName">
-
-            <cn.yanhu.commonres.view.UserTagView
-                android:layout_width="wrap_content"
-                userGender="@{roomBean.ownerInfo.gender}"
-                userAge="@{roomBean.ownerInfo.age}"
-                android:layout_height="wrap_content" />
-
-            <cn.yanhu.commonres.view.UserTagView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                userProvince="@{roomBean.ownerInfo.province}"
-                android:layout_marginStart="@dimen/dp_5" />
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/tv_nickName"
+            android:layout_height="wrap_content"/>
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_tips"

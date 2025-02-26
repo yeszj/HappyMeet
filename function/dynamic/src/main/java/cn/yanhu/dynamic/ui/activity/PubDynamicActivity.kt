@@ -26,14 +26,11 @@ import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.upload.UploadFileClient
 import cn.zj.netrequest.upload.UploadFileProgressListener
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.chad.library.adapter4.dragswipe.listener.OnItemDragListener
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
-import com.pcl.sdklib.sdk.location.LocationUtils
-import com.tencent.map.geolocation.TencentLocation
 
 
 /**
@@ -46,7 +43,7 @@ class PubDynamicActivity : BaseActivity<ActivityPubDynamicBinding, DynamicViewMo
     R.layout.activity_pub_dynamic,
     DynamicViewModel::class.java
 ) {
-    private var currentLocation: TencentLocation? = null
+    //private var currentLocation: TencentLocation? = null
     private val editPhotoAdapter by lazy {
         UploadDynamicPicAdapter()
     }
@@ -311,7 +308,7 @@ class PubDynamicActivity : BaseActivity<ActivityPubDynamicBinding, DynamicViewMo
             }
             list.add(it.url)
         }
-        mViewModel.pubDynamic(currentLocation?.city, content,GsonUtils.toJson(list))
+       // mViewModel.pubDynamic(currentLocation?.city, content,GsonUtils.toJson(list))
     }
 
     override fun registerNecessaryObserver() {
@@ -332,16 +329,16 @@ class PubDynamicActivity : BaseActivity<ActivityPubDynamicBinding, DynamicViewMo
     }
 
     private fun getLocation() {
-        LocationUtils.getTencentLocation(mContext, object : LocationUtils.OnLocationResultListener {
-            override fun onLocationResult(aMapLocation: TencentLocation?) {
-                if (aMapLocation != null) {
-                    currentLocation = aMapLocation
-                    mBinding.ivDelete.visibility = View.VISIBLE
-                    mBinding.tvLocation.text = aMapLocation.city
-                    mBinding.tvLocation.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.locationTagColor))
-                    mBinding.ivLocation.setImageResource(cn.yanhu.commonres.R.drawable.svg_location_blue)
-                }
-            }
-        })
+//        LocationUtils.getTencentLocation(mContext, object : LocationUtils.OnLocationResultListener {
+//            override fun onLocationResult(aMapLocation: TencentLocation?) {
+//                if (aMapLocation != null) {
+//                    currentLocation = aMapLocation
+//                    mBinding.ivDelete.visibility = View.VISIBLE
+//                    mBinding.tvLocation.text = aMapLocation.city
+//                    mBinding.tvLocation.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.locationTagColor))
+//                    mBinding.ivLocation.setImageResource(cn.yanhu.commonres.R.drawable.svg_location_blue)
+//                }
+//            }
+//        })
     }
 }

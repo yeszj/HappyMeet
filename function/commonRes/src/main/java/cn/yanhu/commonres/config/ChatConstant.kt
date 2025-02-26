@@ -93,6 +93,12 @@ object ChatConstant {
     const val ACTION_REFUSE_SWITCH_PRIVATE = 10023 //男嘉宾拒绝转为专属房间
     const val ACTION_ANGLE_ROOM_RESULT = 10024 //天使房间结束显示天使结果
 
+    const val ACTION_SEND_ROSE = 10025
+
+    const val ACTION_BIND_LOVERS_SUCCESS= 10026
+    const val ACTION_CANCEL_LOVERS = 10027
+
+
     const val ACTION_NEW_FRIEND_REQUEST = 70 //新的好友请求
     const val ACTION_NEW_YEAR_RED_PACKET = 71 //新年红包
 
@@ -107,6 +113,7 @@ object ChatConstant {
 
     const val ACTION_EVENT_POP = 49//活动弹框
 
+    const val ACTION_USER_ONLINE = 50//用户上线
 
 
     const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位

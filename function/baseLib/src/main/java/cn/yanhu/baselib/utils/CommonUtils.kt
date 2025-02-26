@@ -176,6 +176,10 @@ object CommonUtils {
         return BigDecimal(startValue).subtract(BigDecimal(endValue)).toPlainString()
     }
 
+    fun subBigDecimal(startValue: BigDecimal, endValue: BigDecimal): BigDecimal {
+        return startValue.subtract(endValue)
+    }
+
     private var touchTime: Long = 0
     private const val WAIT_TIME: Long = 2000
 

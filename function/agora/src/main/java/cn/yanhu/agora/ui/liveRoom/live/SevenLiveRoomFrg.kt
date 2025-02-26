@@ -182,6 +182,10 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
             1000,
             childItemClickListener
         )
+        seatUserAdapter.addOnItemChildClickListener(
+            R.id.iv_sendRose,
+            childItemClickListener
+        )
     }
 
     private val childItemClickListener =
@@ -225,6 +229,10 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
                                 showSendGiftPop(roomUserSeatInfo)
                             }
                         }
+                    }
+                    R.id.iv_sendRose ->{
+                        val roomUserSeatInfo = item.roomUserSeatInfo?:return
+                        sendRose(roomUserSeatInfo)
                     }
                 }
             }

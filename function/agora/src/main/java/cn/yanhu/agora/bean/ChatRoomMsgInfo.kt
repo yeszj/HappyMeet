@@ -1,13 +1,14 @@
 package cn.yanhu.agora.bean
 
 import cn.yanhu.commonres.bean.BaseUserInfo
+import cn.yanhu.commonres.bean.UserDetailInfo
 
 /**
  * @author: zhengjun
  * created: 2024/4/2
  * desc:
  */
-data class ChatRoomMsgInfo(val type: Int, val content: String,val sendUserInfo:BaseUserInfo?,val altUser:BaseUserInfo?=null){
+data class ChatRoomMsgInfo(val type: Int, val content: String,val sendUserInfo:UserDetailInfo?,val altUser:BaseUserInfo?=null){
     companion object{
         const val ITEM_NEW_ADD_TYPE = -1 //新增的消息 老版本不支持
 

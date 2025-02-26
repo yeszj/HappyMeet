@@ -12,6 +12,7 @@ import org.litepal.crud.LitePalSupport;
 import java.io.Serializable;
 
 import cn.yanhu.commonres.BR;
+import cn.yanhu.commonres.manager.AppCacheManager;
 
 /**
  * @author: zhengjun
@@ -47,6 +48,29 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
     private String  enterAnimUrl;
 
     private boolean ifEdit;
+    private String beautifulIdImg;
+
+    private boolean ifHide;
+
+    public boolean isSameGender(){
+        return gender == AppCacheManager.INSTANCE.getGender();
+    }
+
+    public boolean isIfHide() {
+        return ifHide;
+    }
+
+    public void setIfHide(boolean ifHide) {
+        this.ifHide = ifHide;
+    }
+
+    public String getBeautifulIdImg() {
+        return beautifulIdImg;
+    }
+
+    public void setBeautifulIdImg(String beautifulIdImg) {
+        this.beautifulIdImg = beautifulIdImg;
+    }
 
     private BaseUserInfo myGuardedInfo;
 
@@ -121,6 +145,10 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
             return 0;
         }
         return level;
+    }
+
+    public boolean isShowChatBg(){
+        return level>=20;
     }
 
     public void setLevel(int level) {

@@ -14,6 +14,7 @@ import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ViewUtils
+import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.OperateInfo
@@ -25,6 +26,7 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.pop.CommonOperatePop
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
+import cn.yanhu.commonres.utils.TraceUtils
 import cn.yanhu.dynamic.adapter.DynamicAdapter
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EmMsgManager
@@ -71,6 +73,7 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
         } else {
             intent.getStringExtra(IntentKeyConfig.ID).toString()
         }
+        TraceUtils.onEventObject("q_app_page_view", userId)
         requestData()
     }
 
@@ -112,11 +115,6 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
         mBinding.ivMore.setOnSingleClickListener {
             showOperatePop()
         }
-        homePageHeadAdapter.addOnItemChildClickListener(
-            R.id.iv_guardFrame
-        ) { _, _, _ ->
-            GuardRankActivity.lunch(mContext, userId)
-        }
         LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO).observe(this) {
             requestData()
         }
@@ -127,7 +125,11 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
         if (userInfo?.isFriend == true){
             list.add(OperateInfo("解除好友", cn.yanhu.commonres.R.color.cl_common, -1))
         }else{
-            list.add(OperateInfo("添加好友", cn.yanhu.commonres.R.color.cl_common, 0))
+            if (userInfo?.isSameGender == true && AppCacheManager.isMan()){
+                logcom("同性别，男性不显示添加好友")
+            }else{
+                list.add(OperateInfo("添加好友", cn.yanhu.commonres.R.color.cl_common, 0))
+            }
         }
         list.add(OperateInfo("拉黑", cn.yanhu.commonres.R.color.cl_common, 1))
         list.add(OperateInfo("举报", cn.yanhu.commonres.R.color.colorTextRed, 2))
@@ -284,7 +286,23 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
         if (it.thumbnail.isNotEmpty()) {
             it.coverImg = it.thumbnail[0]
         }
-        if (it.roomId == 0) {
+
+        mBinding.userinfo = it
+        homePageHeadAdapter.item = it
+        val isSelf = AppCacheManager.userId == it.userId
+        mBinding.isSelf = isSelf
+        if (it.hideChatBtn()){
+            ViewUtils.setMarginRight(
+                mBinding.vgRoom,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_16)
+            )
+        }else{
+            ViewUtils.setMarginRight(
+                mBinding.vgRoom,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_16)
+            )
+        }
+        if (it.hideRoomBtn()) {
             ViewUtils.setMarginLeft(
                 mBinding.vgChat,
                 CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_16)
@@ -295,8 +313,5 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                 CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_6)
             )
         }
-        mBinding.userinfo = it
-        homePageHeadAdapter.item = it
-        mBinding.isSelf = AppCacheManager.userId == it.userId
     }
 }

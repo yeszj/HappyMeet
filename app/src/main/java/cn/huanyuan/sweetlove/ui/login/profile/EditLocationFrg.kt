@@ -1,13 +1,10 @@
 package cn.huanyuan.sweetlove.ui.login.profile
 
-import android.annotation.SuppressLint
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgEditLocationBinding
 import cn.huanyuan.sweetlove.ui.login.LoginViewModel
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
-import com.pcl.sdklib.sdk.location.LocationUtils
-import com.tencent.map.geolocation.TencentLocation
 
 /**
  * @author: zhengjun
@@ -21,18 +18,18 @@ class EditLocationFrg : BaseFragment<FrgEditLocationBinding, LoginViewModel>(
     override fun initData() {
         val selfViewModel = (context as CompleteProfileActivity).mViewModel
         mBinding.tvProvince.setOnSingleClickListener {
-            LocationUtils.getTencentLocation(mContext,object : LocationUtils.OnLocationResultListener{
-                @SuppressLint("SetTextI18n")
-                override fun onLocationResult(aMapLocation: TencentLocation?) {
-                    if (aMapLocation!=null){
-                        val value = selfViewModel.personInfo.value
-                        value?.province = aMapLocation.province
-                        value?.city = aMapLocation.city
-                        mBinding.tvProvince.text = "${aMapLocation.province}·${aMapLocation.city}"
-                    }
-                }
-
-            })
+//            LocationUtils.getTencentLocation(mContext,object : LocationUtils.OnLocationResultListener{
+//                @SuppressLint("SetTextI18n")
+//                override fun onLocationResult(aMapLocation: TencentLocation?) {
+//                    if (aMapLocation!=null){
+//                        val value = selfViewModel.personInfo.value
+//                        value?.province = aMapLocation.province
+//                        value?.city = aMapLocation.city
+//                        mBinding.tvProvince.text = "${aMapLocation.province}·${aMapLocation.city}"
+//                    }
+//                }
+//
+//            })
         }
     }
 

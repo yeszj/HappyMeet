@@ -22,6 +22,8 @@ object AppCacheManager {
     var isFirstOpenApp by ConfigPref(Constants.IS_FIRST_OPEN_APP, true)
     var isAdmin by ConfigPref(Constants.IS_ADMIN, false)
     var beautySdkInfo by ConfigPref(Constants.BEAUTYSDKINFO, "")
+    var faceEffectSdkInfo by ConfigPref(Constants.FACEEFFECT, "")
+
     var rechargeInfo by ConfigPref(Constants.RECHARGEINFO,"")
     var giftInfo by ConfigPref(Constants.GIFTINFO,"")
     var oaid by ConfigPref(Constants.OAID,"")

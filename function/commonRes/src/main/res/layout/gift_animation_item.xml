@@ -4,117 +4,144 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/prl_gift_animation_item"
     android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_54"
     android:clipChildren="false"
-    android:clipToPadding="false"
-    android:layout_height="@dimen/dp_54">
+    android:clipToPadding="false">
 
-    <LinearLayout
-        android:id="@+id/vg_parent"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_root"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_48"
-        android:layout_gravity="bottom"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:background="@drawable/bg_gift_gradient_normal"
-        android:gravity="center_vertical"
-        android:paddingEnd="@dimen/dp_10"
-        tools:ignore="RtlSymmetry"
-        android:orientation="horizontal">
+        android:background="@drawable/shape_send_gift_bg"
+        app:layout_constraintEnd_toEndOf="@+id/vg_parent"
+        app:layout_constraintStart_toStartOf="@+id/vg_parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/iv_avatar"
-            android:layout_width="@dimen/dp_36"
-            android:layout_height="@dimen/dp_36"
-            android:layout_marginStart="@dimen/dp_5"
-            tools:src="@drawable/icon_portrait"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:riv_oval="true" />
+        <net.center.blurview.ShapeBlurView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_48"
+            app:blur_mode="rectangle"
+            app:layout_constraintTop_toTopOf="@+id/vg_parent"
+            app:layout_constraintStart_toStartOf="@+id/vg_parent"
+            app:layout_constraintEnd_toEndOf="@+id/vg_parent"
+            app:blur_corner_radius_bottom_left="@dimen/dp_500"
+            app:blur_corner_radius_top_left="@dimen/dp_500"
+            app:blur_radius="@dimen/dp_20" />
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/dp_6"
-            android:layout_marginBottom="@dimen/dp_6"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:id="@+id/vg_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_48"
+            android:layout_gravity="bottom"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry">
 
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:id="@+id/tv_user_name"
+            <cn.yanhu.commonres.view.UserAvatarView
+                android:id="@+id/iv_avatar"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:paddingStart="@dimen/dp_5"
-                android:textColor="#FF8F8F"
-                android:textSize="@dimen/sp_14"
-                android:maxLines="1"
-                android:ellipsize="end"
-                app:fontType="@string/fontMedium"
-                app:layout_constraintStart_toEndOf="@id/iv_avatar"
-                app:layout_constraintTop_toTopOf="@+id/iv_avatar"
-                app:layout_constraintVertical_chainStyle="packed"
-                tools:ignore="NestedWeights,RtlSymmetry"
-                tools:text="Sandra" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_5"
+                app:avatarSize="@dimen/dp_36"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_oval="true"
+                app:isCanClick="false"
+                app:svgAvatarSize="@dimen/dp_36"
+                tools:src="@drawable/icon_portrait" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/dp_6"
+                android:layout_marginBottom="@dimen/dp_6"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <cn.yanhu.baselib.view.CustomFontTextView
-                    android:id="@+id/tv_gift_name"
+                    android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/dp_5"
-                    android:text="送给"
-                    android:textColor="@color/color_black_white"
-                    android:textSize="@dimen/sp_12"
-                    app:fontType="@string/fontMedium"
-                    app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
-                    app:layout_constraintStart_toEndOf="@id/iv_avatar"
-                    tools:ignore="RtlSymmetry" />
-
-                <cn.yanhu.baselib.view.CustomFontTextView
-                    android:id="@+id/tv_targetName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingStart="@dimen/dp_5"
-                    android:textColor="#6ADBFF"
-                    android:textSize="@dimen/sp_12"
+                    android:textColor="#FF8F8F"
+                    android:textSize="@dimen/sp_14"
                     app:fontType="@string/fontMedium"
-                    app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
-                    app:layout_constraintStart_toEndOf="@id/tv_gift_name"
-                    tools:ignore="RtlSymmetry"
-                    tools:text="且听风吟" />
+                    app:layout_constraintStart_toEndOf="@id/iv_avatar"
+                    app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:ignore="NestedWeights,RtlSymmetry"
+                    tools:text="Sandra" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_gift_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/dp_5"
+                        android:text="送给"
+                        android:textColor="@color/color_black_white"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+                        app:layout_constraintStart_toEndOf="@id/iv_avatar"
+                        tools:ignore="RtlSymmetry" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_targetName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/dp_5"
+                        android:textColor="#6ADBFF"
+                        android:textSize="@dimen/sp_14"
+                        app:fontType="@string/fontMedium"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+                        app:layout_constraintStart_toEndOf="@id/tv_gift_name"
+                        tools:ignore="RtlSymmetry"
+                        tools:text="且听风吟" />
+                </LinearLayout>
+
             </LinearLayout>
 
+            <ImageView
+                android:id="@+id/iv_gift_img"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_36"
+                android:layout_marginStart="@dimen/dp_5"
+                android:layout_marginEnd="@dimen/dp_5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/icon_rose_16" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_gift_amount"
+                style="@style/common_white_shadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_20"
+                app:fontType="@string/fontMedium"
+                tools:text="×66" />
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/iv_gift_img"
-            android:layout_width="@dimen/dp_36"
-            android:layout_height="@dimen/dp_36"
-            android:layout_marginStart="@dimen/dp_5"
-            android:layout_marginEnd="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/icon_rose_16" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_gift_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textSize="@dimen/sp_20"
-            android:textColor="@color/white"
-            app:fontCustomStyle="italic"
-            style="@style/common_white_shadow"
-            app:fontType="@string/fontMedium"
-            tools:text="×66" />
-    </LinearLayout>
-
+        <!--        <eightbitlab.com.blurview.BlurView-->
+        <!--            android:id="@+id/blurView"-->
+        <!--            android:layout_width="@dimen/dp_250"-->
+        <!--            android:layout_height="@dimen/dp_48" />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

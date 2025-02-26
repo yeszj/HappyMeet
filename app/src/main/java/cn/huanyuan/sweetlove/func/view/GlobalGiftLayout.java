@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
@@ -34,9 +35,15 @@ public class GlobalGiftLayout extends FrameLayout {
         super(context, attrs);
         View mInflater = LayoutInflater.from(context).inflate(R.layout.global_gift_layout, this, false);
         binding = DataBindingUtil.bind(mInflater);
+        setClickable(false);
+        setFocusable(false);
         initView();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return false;
+    }
 
     private void initView() {
         this.addView(binding.getRoot());
@@ -51,7 +58,7 @@ public class GlobalGiftLayout extends FrameLayout {
     }
 
     public AnimatorSet startAnimation() {
-        ObjectAnimator flyFromLtoR = AnimationUtil.createFlyFromLtoR(binding.getRoot(), +getWidth(), 0, 5000, new LinearInterpolator());
+        ObjectAnimator flyFromLtoR = AnimationUtil.createFlyFromLtoR(this, +getWidth(), 0, 5000, new LinearInterpolator());
         flyFromLtoR.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -63,7 +70,7 @@ public class GlobalGiftLayout extends FrameLayout {
         });
 
 
-        ObjectAnimator flyFromLtoR2 = AnimationUtil.createFlyFromLtoR(binding.getRoot(), 0, -getWidth(), 5000, new LinearInterpolator());
+        ObjectAnimator flyFromLtoR2 = AnimationUtil.createFlyFromLtoR(this, 0, -getWidth(), 5000, new LinearInterpolator());
         flyFromLtoR2.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

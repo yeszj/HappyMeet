@@ -63,7 +63,6 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
     }
 
 
-
     private var isRoomOwner = false
     private var seatInfoList: MutableList<RoomSeatInfo> = mutableListOf()
     fun setSeatList(seatList: MutableList<RoomSeatInfo>) {
@@ -85,8 +84,7 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
     }
 
     fun bindRoseInfo(
-        i: Int,
-        seatInfo: RoomSeatInfo
+        i: Int, seatInfo: RoomSeatInfo
     ) {
         val songBinding = mBinding as ViewSevenSongRoomSeatBinding
         when (i) {
@@ -135,8 +133,7 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
     }
 
     fun bindScaleRoseInfo(
-        i: Int,
-        seatInfo: RoomSeatInfo
+        i: Int, seatInfo: RoomSeatInfo
     ) {
         val songBinding = mBinding as ViewSevenSongRoomScaleSeatBinding
         when (i) {
@@ -185,8 +182,7 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
     }
 
     fun bindScaleByPosition(
-        i: Int,
-        seatInfo: RoomSeatInfo
+        i: Int, seatInfo: RoomSeatInfo
     ) {
         val songBinding = mBinding as ViewSevenSongRoomScaleSeatBinding
         when (i) {
@@ -231,8 +227,7 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
     }
 
     fun bindSeatByPosition(
-        i: Int,
-        seatInfo: RoomSeatInfo
+        i: Int, seatInfo: RoomSeatInfo
     ) {
         seatInfoList[i] = seatInfo
         val songBinding = mBinding as ViewSevenSongRoomSeatBinding
@@ -271,8 +266,7 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
 
 
     private fun AdapterSevenRoomUserSeatItemBinding.bindItemInfo(
-        item: RoomSeatInfo?,
-        position: Int
+        item: RoomSeatInfo?, position: Int
     ) {
         ivChooseSong.setOnSingleClickListener {
             onClickSeatListener?.onChildClickListener(ivChooseSong, position, item)
@@ -289,6 +283,9 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
         ivVoiceStatus.setOnSingleClickListener {
             onClickSeatListener?.onChildClickListener(ivVoiceStatus, position, item)
         }
+        ivSendRose.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(ivSendRose, position, item)
+        }
         tvSeatIndex.text = (item!!.id - 1).toString()
         this.currentRoomType = RoomListBean.TYPE_SEVEN_SONG
         this.isOwner = isRoomOwner
@@ -300,20 +297,17 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
         if (isScaleStyle) {
             if (position == 1) {
                 ViewUtils.setViewHeight(
-                    vgParent,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_240)
+                    vgParent, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_240)
                 )
             } else {
                 ViewUtils.setViewHeight(
-                    vgParent,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
+                    vgParent, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
                 )
             }
 
         } else {
             ViewUtils.setViewHeight(
-                vgParent,
-                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_142)
+                vgParent, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_142)
             )
         }
 
@@ -346,10 +340,9 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
         if (dto.roomUserSeatInfo != null) {
             this.isSelf = dto.roomUserSeatInfo!!.userId == AppCacheManager.userId
 
-            val liveRoomSeatBean: LiveRoomSeatBean? =
-                SongLiveRoomFrg.surfaceViewList[position]
+            val liveRoomSeatBean: LiveRoomSeatBean? = SongLiveRoomFrg.surfaceViewList[position]
             var surfaceView: View?
-            if (liveRoomSeatBean == null || liveRoomSeatBean.surfaceView ==null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
+            if (liveRoomSeatBean == null || liveRoomSeatBean.surfaceView == null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
                 surfaceView = TextureView(context)
                 this.itemVideoSf.removeAllViews()
                 this.itemVideoSf.addView(surfaceView)
@@ -391,17 +384,15 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
     }
 
     private fun addVideoSf(surfaceView: View, dto: RoomSeatInfo, position: Int) {
-        if (dto.isExpand){
+        if (dto.isExpand) {
             AgoraManager.getInstance().setVideoEncoderConfiguration(250, 280)
-        }else{
+        } else {
             AgoraManager.getInstance().setVideoEncoderConfiguration(360, 360)
         }
         val userId = dto.roomUserSeatInfo!!.userId
-        SongLiveRoomFrg.surfaceViewList[position] =
-            LiveRoomSeatBean(userId.toInt(), surfaceView)
+        SongLiveRoomFrg.surfaceViewList[position] = LiveRoomSeatBean(userId.toInt(), surfaceView)
         AgoraManager.getInstance().setupVideo(
-            userId.toInt(),
-            userId == AppCacheManager.userId, surfaceView
+            userId.toInt(), userId == AppCacheManager.userId, surfaceView
         )
         if (userId == AppCacheManager.userId) {
             AgoraManager.getInstance().muteLocalAudioStream(!dto.mikeUser)
@@ -413,16 +404,14 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
     private fun showUserReceiveRoseDetailPop(item: RoomSeatInfo?) {
         request({
             agoraRxApi.getRoomUserRoseList(
-                currentRoomId,
-                item?.roomUserSeatInfo?.userId
+                currentRoomId, item?.roomUserSeatInfo?.userId
             )
         }, object : OnRequestResultListener<UserReceiveRoseInfo> {
             override fun onSuccess(data: BaseBean<UserReceiveRoseInfo>) {
                 if (CommonUtils.isPopShow(liveRoomUserRoseDetailPop)) {
                     return
                 }
-                liveRoomUserRoseDetailPop =
-                    LiveRoomUserRoseRankPop.showDialog(context, data.data!!)
+                liveRoomUserRoseDetailPop = LiveRoomUserRoseRankPop.showDialog(context, data.data!!)
             }
         })
     }
@@ -442,6 +431,30 @@ open class SevenSongRoomSeatView(context: Context, private var isScaleStyle: Boo
     private var onClickSeatListener: OnClickSeatListener? = null
     fun setOnClickSeatListener(onClickSeatListener: OnClickSeatListener) {
         this.onClickSeatListener = onClickSeatListener
+    }
+
+    fun userVideoStatusChanged(uid: Int, showPreload: Boolean,networkType:Int) {
+        seatInfoList.forEach {
+            if (it.roomUserSeatInfo?.userId?.toInt() == uid) {
+                if (showPreload){
+                    if (networkType==1){
+                        it.ifLeave = true
+                    }
+                }else{
+                    it.ifLeave = false
+                }
+                return
+            }
+        }
+    }
+
+    fun userNetChanged(uid: String, ifNetDisConnect: Boolean) {
+        seatInfoList.forEach {
+            if (it.roomUserSeatInfo?.userId == uid && it.ifNetDisConnect!=ifNetDisConnect) {
+                it.ifNetDisConnect = ifNetDisConnect
+                return
+            }
+        }
     }
 
 

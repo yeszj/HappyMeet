@@ -33,6 +33,15 @@ class InviteRecordHeadAdapter : BaseSingleItemAdapter<InviteRecordResponse, Invi
         }
     }
 
+    var filterName = "累计收益"
+    override fun onBindViewHolder(holder: VH, item: InviteRecordResponse?, payloads: List<Any>) {
+        if (!payloads.isNullOrEmpty()){
+            holder.binding.apply {
+                tvFilter.text = filterName
+            }
+        }
+    }
+
 
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
         return VH(parent)

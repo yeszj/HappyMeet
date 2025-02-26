@@ -9,9 +9,11 @@ import cn.huanyuan.sweetlove.databinding.ActivityRealNameBinding
 import cn.huanyuan.sweetlove.ui.userinfo.UserViewModel
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.DialogUtils
+import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.config.IntentKeyConfig
+import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.manager.RequestCodeManager
 import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.application.ApplicationProxy
@@ -20,10 +22,11 @@ import cn.zj.netrequest.status.ErrorCode
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.RegexUtils
-import com.pcl.sdklib.bean.BaiduPackBean
-import com.pcl.sdklib.bean.CheckBaiduFaceResult
+import com.jeremyliao.liveeventbus.LiveEventBus
+import com.pcl.sdklib.bean.CheckFaceAuthResult
+import com.pcl.sdklib.bean.FaceAuthInfo
 import com.pcl.sdklib.bean.PostBaiduAuthBean
-import com.pcl.sdklib.sdk.baiduFace.BaiduFaceAuthUtils
+import com.pcl.sdklib.sdk.faceAuth.FaceAuthActivity
 
 /**
  * @author: zhengjun
@@ -35,11 +38,10 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
     R.layout.activity_real_name,
     UserViewModel::class.java
 ) {
-    private var access_token: String = ""
     override fun initData() {
         setStatusBarStyle(false)
         val checkBaiduFaceResult =
-            intent.getSerializableExtra(IntentKeyConfig.DATA) as CheckBaiduFaceResult?
+            intent.getSerializableExtra(IntentKeyConfig.DATA) as CheckFaceAuthResult?
         if (checkBaiduFaceResult != null) {
             toCheckFace(checkBaiduFaceResult)
         } else {
@@ -54,85 +56,117 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
                 mViewModel.realNameProve(realName, idCard)
             }
         }
+        LiveEventBus.get<Boolean>(LiveDataEventManager.FACE_RESULT).observe(this) {
+            if (it){
+                authSuccess()
+            }else{
+                authFail()
+            }
+        }
+        LiveEventBus.get<String>(LiveDataEventManager.START_FACE_AUTH).observe(this){
+            checkBaiduStep()
+        }
     }
 
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
-        mViewModel.realNameObservable.observe(this) {
+        mViewModel.realNameObservable.observe(this) { it ->
             parseState(it, {
-                access_token = it
-                checkIsCanBaiduFace()
+                faceAuthInfo = it
+                checkIsCanFace()
             })
         }
-
-
-    }
-
-    private fun checkBaiduStep() {
-        mViewModel.checkBaiduStep()
         mViewModel.checkFaceResultObservable.observe(this) { it ->
             parseState(it, {
                 toCheckFace(it)
+            },{
+                DialogUtils.dismissLoading()
+                finish()
             })
         }
-    }
-
-    private var hasRealName = false
-    private fun toCheckFace(it: CheckBaiduFaceResult) {
-        if (it.authId <= 2) {
-            val params = it.params
-            if (!TextUtils.isEmpty(params)) {
-                hasRealName = true
-                val baiduPackBean = GsonUtils.fromJson(params, BaiduPackBean::class.java)
-                access_token = baiduPackBean.accessToken
-                realName = baiduPackBean.realName
-                idCard = baiduPackBean.idCard
-                if (!TextUtils.isEmpty(realName)){
-                    checkIsCanBaiduFace()
-                }else{
-                    mBinding.viewBg2.visibility = View.INVISIBLE
-                }
-            }else{
-                mBinding.viewBg2.visibility = View.INVISIBLE
-            }
-        }else{
-            mBinding.viewBg2.visibility = View.INVISIBLE
-        }
-    }
-
-    private fun checkIsCanBaiduFace() {
-        DialogUtils.showLoading()
-        mViewModel.ifCanBaiduFace()
         mViewModel.canBaidFaceObservable.observe(this) { it ->
             parseState(it, {
                 startBaiduFaceAuth()
             }, {
-                if (it.code == ErrorCode.CODE_CANT_FACE_AUTH){
-                    DialogUtils.showConfirmDialog("温馨提示",{
+                if (it.code == ErrorCode.CODE_CANT_FACE_AUTH) {
+                    DialogUtils.showConfirmDialog("温馨提示", {
                         ApplicationProxy.instance.askCustomer()
-                    },{
-                    },it.msg!!,cancel = "稍后再试",confirm = "联系客服")
-                }else{
+                    }, {
+                    }, it.msg!!, cancel = "稍后再试", confirm = "联系客服")
+                } else {
                     showToast(it.msg)
                 }
                 DialogUtils.dismissLoading()
             })
         }
+
+        mViewModel.postBaidFaceObservable.observe(this@RealNameActivity) {
+            parseState(it, {
+                authSuccess()
+            }, {
+                authFail()
+
+            })
+        }
+    }
+
+    private fun checkBaiduStep() {
+        DialogUtils.showLoading()
+        mViewModel.checkBaiduStep()
+    }
+
+
+    private var hasRealName = false
+    private var faceAuthInfo: FaceAuthInfo? = null
+    private fun toCheckFace(it: CheckFaceAuthResult) {
+        if (it.authId <= 2) {
+            val params = it.params
+            if (!TextUtils.isEmpty(params)) {
+                hasRealName = true
+                faceAuthInfo = GsonUtils.fromJson(params, FaceAuthInfo::class.java)
+                realName = faceAuthInfo!!.realName
+                if (!TextUtils.isEmpty(realName)) {
+                    logcom("1.sessionId="+faceAuthInfo!!.sessionId)
+                    checkIsCanFace()
+                } else {
+                    DialogUtils.dismissLoading()
+                    mBinding.viewBg2.visibility = View.INVISIBLE
+                }
+            } else {
+                DialogUtils.dismissLoading()
+                mBinding.viewBg2.visibility = View.INVISIBLE
+            }
+        } else {
+            DialogUtils.dismissLoading()
+            mBinding.viewBg2.visibility = View.INVISIBLE
+        }
+    }
+
+
+    private fun checkIsCanFace() {
+        DialogUtils.showLoading()
+        mViewModel.ifCanBaiduFace()
     }
 
     private fun startBaiduFaceAuth() {
-        val baiduPackBean = BaiduPackBean(realName, idCard, access_token)
-        BaiduFaceAuthUtils.getInstance().startBaiduFaceAuth(
-            mContext,
-            baiduPackBean,
-            object : BaiduFaceAuthUtils.OnSubmitAuthListener {
-                override fun onAuthSuccess(idCardImage: String,score:String) {
-                    submitBaiduFace(idCardImage, score)
-                }
-                override fun onAuthFail() {
-                    authFail()
-                }
-            })
+        DialogUtils.dismissLoading()
+        faceAuthInfo?.apply {
+            logcom("2.sessionId="+this.sessionId)
+            FaceAuthActivity.lunch(mContext,this)
+        }
+//        val baiduPackBean = BaiduPackBean(realName, idCard, access_token)
+//        BaiduFaceAuthUtils.getInstance().startBaiduFaceAuth(
+//            mContext,
+//            baiduPackBean,
+//            object : BaiduFaceAuthUtils.OnSubmitAuthListener {
+//                override fun onAuthSuccess(idCardImage: String, score: String) {
+//                    submitBaiduFace(idCardImage, score)
+//                }
+//
+//                override fun onAuthFail() {
+//                    authFail()
+//                }
+//            })
     }
 
     private fun submitBaiduFace(idCardImage: String, score: String) {
@@ -143,17 +177,14 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
             idCard
         )
         mViewModel.submitBaiduFace(baiduFaceResult)
-        mViewModel.postBaidFaceObservable.observe(this@RealNameActivity) {
-            parseState(it, {
-                showToast("认证成功")
-                DialogUtils.dismissLoading()
-                setResult(RESULT_OK)
-                finish()
-            },{
-                authFail()
 
-            })
-        }
+    }
+
+    private fun authSuccess() {
+        showToast("认证成功")
+        DialogUtils.dismissLoading()
+        setResult(RESULT_OK)
+        finish()
     }
 
     private fun authFail() {
@@ -180,7 +211,7 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
     }
 
     companion object {
-        fun lunch(context: Activity, checkBaiduFaceResult: CheckBaiduFaceResult? = null) {
+        fun lunch(context: Activity, checkBaiduFaceResult: CheckFaceAuthResult? = null) {
             val intent = Intent(context, RealNameActivity::class.java)
             intent.putExtra(IntentKeyConfig.DATA, checkBaiduFaceResult)
             context.startActivityForResult(

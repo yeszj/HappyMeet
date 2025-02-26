@@ -37,7 +37,7 @@ class WalletViewModel : BaseViewModel() {
     fun withdrawal(type:Int?,withdrawalId:Int){
         request({ rxApi.withdrawal(type,withdrawalId)},withdrawalResultLivedata,
             isShowDialog = true,
-            loadingHasContent = true
+            loadingHasContent = true,isShowToast = false
         )
     }
     fun roseExchange(id:Int){

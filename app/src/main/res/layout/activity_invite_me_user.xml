@@ -79,35 +79,15 @@
             app:layout_constraintStart_toEndOf="@+id/tv_nickName"
             app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
 
-        <cn.yanhu.commonres.view.UserLevelView
-            android:id="@+id/userLevel"
-            userLevel="@{userinfo.level}"
+        <cn.yanhu.commonres.view.UserInfoTagLayout
+            android:id="@+id/userTag"
+            userInfo="@{userinfo}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_6"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
-            app:layout_constraintStart_toStartOf="@+id/tv_nickName" />
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"/>
 
-        <cn.yanhu.commonres.view.UserTagView
-            android:id="@+id/userAge"
-            userAge="@{userinfo.age}"
-            userGender="@{userinfo.gender}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/userLevel"
-            android:layout_marginBottom="@dimen/dp_6"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar" />
-
-        <cn.yanhu.commonres.view.UserTagView
-            userProvince='@{userinfo.province}'
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/userAge"
-            app:layout_constraintStart_toEndOf="@+id/userAge"
-            app:layout_constraintTop_toTopOf="@+id/userAge" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/dp_16"

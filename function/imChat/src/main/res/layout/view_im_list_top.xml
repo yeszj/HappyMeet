@@ -146,7 +146,6 @@
             android:id="@+id/browser_cl"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_74"
-            android:visibility="gone"
             android:layout_marginStart="@dimen/dp_12"
             android:layout_marginEnd="@dimen/dp_12">
 
@@ -167,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_2"
-                android:text="谁喜欢我"
+                android:text="谁看过我"
                 android:textColor="@color/fontTextColor"
                 android:textSize="@dimen/sp_15"
                 app:fontType="@string/fontMedium"

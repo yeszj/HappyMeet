@@ -44,6 +44,7 @@ class LiveRoomOnlineUserPop(
     }
 
     private lateinit var mBiding: PopLiveRoomOnlineUserBinding
+    private val userIdList: MutableList<String> = mutableListOf()
     override fun onCreate() {
         super.onCreate()
         mBiding = PopLiveRoomOnlineUserBinding.bind(popupImplView)
@@ -53,6 +54,7 @@ class LiveRoomOnlineUserPop(
         userAdapter.setIsOwner(roomDetailInfo.ownerInfo?.userId == AppCacheManager.userId)
         userAdapter.stateView = emptyView
         mBiding.rvUser.adapter = userAdapter
+        removeSameUser(userList)
         userAdapter.submitList(userList)
         userAdapter.isStateViewEnable = userList.size <= 0
         userAdapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener<UserDetailInfo>{
@@ -100,6 +102,17 @@ class LiveRoomOnlineUserPop(
         }
     }
 
+    private fun removeSameUser(userList:MutableList<UserDetailInfo>) {
+        for (i in userList.count() - 1 downTo 0) {
+            val userInfo = userList[i]
+            if (userIdList.contains(userInfo.userId)) {
+                userList.removeAt(i)
+            } else {
+                userIdList.add(userInfo.userId)
+            }
+        }
+    }
+
     private var page = 1
     private fun getOnlineUserList() {
         request({ agoraRxApi.getOnlineUserList(roomDetailInfo.roomId, page) },
@@ -107,6 +120,10 @@ class LiveRoomOnlineUserPop(
                 override fun onSuccess(data: BaseBean<RoomOnlineResponse>) {
                     val onlineResponse = data.data ?: return
                     val onlineUsers = onlineResponse.onlineUsers
+                    if (page == 1) {
+                        userIdList.clear()
+                    }
+                    removeSameUser(onlineUsers)
                     if (page == 1) {
                         userAdapter.submitList(onlineUsers)
                         mBiding.refresh.finishRefresh()

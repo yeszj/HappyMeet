@@ -100,6 +100,7 @@ class UserTagView : LinearLayout {
     fun setUserLocation(province: String?) {
         if (TextUtils.isEmpty(province)) {
             tvTag.visibility = View.GONE
+            return
         } else {
             tvTag.visibility = View.VISIBLE
         }
@@ -113,6 +114,24 @@ class UserTagView : LinearLayout {
         tvTag.text = province
     }
 
+
+    @SuppressLint("SetTextI18n")
+    fun setUserHomeTown(hometown: String?) {
+        if (TextUtils.isEmpty(hometown) || hometown=="null") {
+            tvTag.visibility = View.GONE
+            return
+        } else {
+            tvTag.visibility = View.VISIBLE
+        }
+        TextViewDrawableUtils.setDrawableLeft(
+            tvTag,
+            null
+        )
+        tvTag.textSize = CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_11).toFloat()
+        tvTag.backgroundTintList =
+            ColorStateList.valueOf(CommonUtils.getColor(cn.yanhu.baselib.R.color.locationTagColor))
+        tvTag.text = "老家$hometown"
+    }
 
     @SuppressLint("SetTextI18n")
     fun setUserAge(age: Int, gender: Int) {
@@ -139,6 +158,9 @@ class UserTagView : LinearLayout {
      */
     @SuppressLint("SetTextI18n")
     fun setTagValue(value: String?,colorId:Int,tagTextColorId:Int) {
+        if (TextUtils.isEmpty(value)){
+            visibility = View.GONE
+        }
         TextViewDrawableUtils.setDrawableLeft(
             tvTag,
             null
@@ -149,4 +171,13 @@ class UserTagView : LinearLayout {
         tvTag.text = value
     }
 
+    fun setTagColor(colorId:Int,tagTextColorId:Int) {
+        TextViewDrawableUtils.setDrawableLeft(
+            tvTag,
+            null
+        )
+        tvTag.setTextColor(tagTextColorId)
+        tvTag.backgroundTintList =
+            ColorStateList.valueOf(colorId)
+    }
 }

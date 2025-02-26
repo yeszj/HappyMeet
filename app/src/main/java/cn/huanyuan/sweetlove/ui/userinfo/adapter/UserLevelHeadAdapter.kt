@@ -1,6 +1,8 @@
 package cn.huanyuan.sweetlove.ui.userinfo.adapter
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface.BOLD
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -26,10 +28,16 @@ class UserLevelHeadAdapter :
             }
             userLevel = item
             val build =
-                Spans.builder().text("已解锁").text(item.hasLockCount.toString()).color(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
+                Spans.builder().text("已解锁")
+                    .text(item.hasLockCount.toString()).color(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
+                    .style(BOLD)
                     .text("/${item.totalPrivilegeCount}项")
                     .build()
             tvHasLockDesc.text = build
+            tvDays.text =
+                Spans.builder().text("加入暖遇的第 ").text(item.registerDay.toString()).color(Color.parseColor("#FFE086"))
+                    .text(" 天，感恩有你")
+                    .build()
             executePendingBindings()
         }
     }

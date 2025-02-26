@@ -231,8 +231,39 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             nineSongRoomScaleView?.setSeatList(seatList)
             nineSongRoomScaleView?.setOnClickSeatListener(onClickSeatListener)
         }
+    }
 
 
+    override fun userVideoStatusChanged(uid: Int, isShowPreload: Boolean) {
+        if(isSevenSong()){
+            if (hasExpand) {
+                sevenSongRoomScaleView?.userVideoStatusChanged(uid,isShowPreload,networkType)
+            } else {
+                sevenSongRoomSeatView?.userVideoStatusChanged(uid,isShowPreload,networkType)
+            }
+        }else{
+            if (hasExpand) {
+                nineSongRoomScaleView?.userVideoStatusChanged(uid,isShowPreload,networkType)
+            } else {
+                nineSongRoomSeatView?.userVideoStatusChanged(uid,isShowPreload,networkType)
+            }
+        }
+    }
+
+    override fun userNetChanged(uid: String, ifNetDisConnect: Boolean) {
+        if(isSevenSong()){
+            if (hasExpand) {
+                sevenSongRoomScaleView?.userNetChanged(uid,ifNetDisConnect)
+            } else {
+                sevenSongRoomSeatView?.userNetChanged(uid,ifNetDisConnect)
+            }
+        }else{
+            if (hasExpand) {
+                nineSongRoomScaleView?.userNetChanged(uid,ifNetDisConnect)
+            } else {
+                nineSongRoomSeatView?.userNetChanged(uid,ifNetDisConnect)
+            }
+        }
     }
 
     private fun isSevenSong(): Boolean {
@@ -338,6 +369,10 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                         position.toString(),
                         ChatConstant.ACTION_EXPAND_SEAT_ITEM
                     )
+                }
+                R.id.iv_sendRose ->{
+                    val roomUserSeatInfo = item.roomUserSeatInfo?:return
+                    sendRose(roomUserSeatInfo)
                 }
             }
         }

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="switchInfo"
             type="cn.huanyuan.sweetlove.bean.SwitchConfigInfo" />
@@ -20,38 +21,68 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_18"
             android:paddingStart="@dimen/dp_12"
-            android:paddingTop="@dimen/dp_18"
-            tools:text="个性化推荐"
             android:text="@{switchInfo.title}"
             android:textColor="@color/fontTextColor"
             android:textSize="@dimen/sp_15"
             app:fontType="@string/fontMedium"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="个性化推荐" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_8"
+            android:text="@{switchInfo.subTitle}"
+            android:textColor="@color/colorMain"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+            app:layout_constraintStart_toEndOf="@+id/tv_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_title"
+            tools:text="Lv.30 可设置" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_desc"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/dp_12"
             android:paddingTop="@dimen/dp_4"
-            android:text="@{switchInfo.desc}"
+            android:paddingEnd="@dimen/dp_10"
             android:paddingBottom="@dimen/dp_18"
-            tools:text="关闭后平台将不会推荐合适的嘉宾给你"
+            android:text="@{switchInfo.desc}"
             android:textColor="@color/fontGrayColor"
             android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toStartOf="@+id/vg_toggle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            tools:text="关闭后平台将不会推荐合适的嘉宾给你" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/toggle_switch"
-            android:layout_width="@dimen/dp_35"
-            android:layout_height="@dimen/dp_20"
-            android:layout_marginEnd="@dimen/dp_12"
-            android:src="@{switchInfo.open?@drawable/svg_toggle_on:@drawable/svg_toggle_off}"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <LinearLayout
+            android:id="@+id/vg_toggle"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_horizontal"
+            android:layout_marginEnd="@dimen/dp_12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/toggle_switch"
+                android:layout_width="@dimen/dp_35"
+                android:layout_height="@dimen/dp_20"
+                android:src="@drawable/svg_toggle_off" />
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{switchInfo.statusDesc}"
+                android:paddingTop="@dimen/dp_4"
+                android:textColor="@{switchInfo.status==1?@color/colorMain:@color/fontGrayColor}"
+                android:textSize="@dimen/sp_12"
+                tools:text="已隐藏" />
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

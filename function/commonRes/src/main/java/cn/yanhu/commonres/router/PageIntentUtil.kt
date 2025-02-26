@@ -27,6 +27,7 @@ object PageIntentUtil {
     const val PAGE_ABOUT_US = "{clsPath:cn.huanyuan.sweetlove.ui.system.AboutUsActivity}"
     const val PAGE_TEENAGE_MODE =
         "{clsPath:cn.huanyuan.sweetlove.ui.teenage.TeenAgeModeActivity}"
+    const val PAGE_PRIVATE_SET = "{clsPath:cn.huanyuan.sweetlove.ui.setting.PrivacySwitchSetActivity}"
 
     @JvmStatic
     fun url2Page(mContext: Context, url: String?) {

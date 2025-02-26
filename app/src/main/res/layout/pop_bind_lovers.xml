@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_top_corner_10"
+        android:backgroundTint="#161727"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+    <cn.yanhu.baselib.view.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:text="绑定情侣"
+        android:textColor="@color/white"
+        android:paddingTop="@dimen/dp_20"
+        android:textSize="@dimen/sp_16"
+        app:fontType="@string/fontMedium"
+        android:layout_height="wrap_content"/>
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:text="请选择情侣等级，赠送礼物后自动绑定"
+            android:textColor="@color/whiteColorAlpha60"
+            android:textSize="@dimen/sp_13"
+            android:paddingTop="@dimen/dp_8"
+            android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_gift"
+            android:layout_width="match_parent"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_14"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
+            tools:itemCount="3"
+            tools:listitem="@layout/adapter_bind_lovers_gift_item"
+            android:layout_height="wrap_content"/>
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_send"
+            android:layout_width="@dimen/dp_188"
+            android:background="@drawable/white_corner_30"
+            android:backgroundTint="@color/femaleColor"
+            android:layout_marginBottom="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_24"
+            android:textColor="@color/white"
+            android:text="立即赠送"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_height="@dimen/dp_50"/>
+    </LinearLayout>
+</layout>

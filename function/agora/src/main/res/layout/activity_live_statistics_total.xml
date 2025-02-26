@@ -196,7 +196,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="@dimen/dp_8"
-                        android:text="我的徒弟"
+                        android:text="我的邀请"
                         android:textColor="@color/fontTextColor"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontBold"

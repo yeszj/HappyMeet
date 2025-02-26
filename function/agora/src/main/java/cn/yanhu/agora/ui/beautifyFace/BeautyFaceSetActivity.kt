@@ -77,6 +77,9 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
         mBinding.rvBeauty.adapter = beautyFaceSetAdapter
         getSkinCareList()
         getSkinTypeList()
+//        ThreadUtils.getMainHandler().postDelayed({
+//            BeautySetManager.getInstance().openFaceEffect("fox.bundle")
+//        },3000)
     }
 
     private fun getSkinCareList() {

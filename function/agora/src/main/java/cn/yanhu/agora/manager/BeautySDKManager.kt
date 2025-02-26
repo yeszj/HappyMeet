@@ -38,7 +38,7 @@ class BeautySDKManager {
                         if (beautyCache != null) {
                             val destFile = getAssetsFile()
                             val length = FileUtils.getLength(destFile)
-                            if (beautyCache.fileMd5 != length.toString() || hasNewVersion|| length<=0) {
+                            if ( hasNewVersion|| length<=0) {
                                 downloadSdkInfo(downloadProgressListener)
                             }
                         } else {
@@ -85,10 +85,10 @@ class BeautySDKManager {
                 override fun onFinish(file: File?) {
                     try {
                         val destFile = getAssetsFile()
-                        if (FileUtils.isFileExists(destFile)
-                        ) {
-                            FileUtils.delete(destFile)
-                        }
+//                        if (FileUtils.isFileExists(destFile)
+//                        ) {
+//                            FileUtils.delete(destFile)
+//                        }
                         val unzipFile = ZipUtils.unzipFile(file!!, destFile)
                         if (unzipFile.size > 0) {
                             var beautyCache = BeautyCacheManager.getBeautyCache()

@@ -130,8 +130,8 @@ class StrokeGradientTextView @JvmOverloads constructor(
     }
 
     fun setStrokeText(text: CharSequence?) {
-        backGroundText.text = String.format("%s ", text)
-        setText(String.format("%s ", text))
+        backGroundText.text = String.format("%s", text)
+        setText(String.format("%s", text))
     }
 
     fun init() {

@@ -228,7 +228,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
     }
 
     private fun addFriend() {
-        mViewModel.addFriend(userId)
+        mViewModel.becomeFriendRose(userId)
         mViewModel.addFriendObservable.observe(this) { it ->
             parseState(it, {
                 userInfo?.isFriend = true
@@ -272,13 +272,14 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun bindUserInfo(it: UserDetailInfo) {
         mBinding.userInfo = it
         mBinding.executePendingBindings()
         userInfo = it
 
         chatFragment.setUserInfo(userInfo)
-//        if (it.isFriend) {
+//        if (it.isFriend || !it.sameSex) {
 //            mBinding.vgAddFriendTips.visibility = View.GONE
 //        } else {
 //            mBinding.vgAddFriendTips.visibility = View.VISIBLE

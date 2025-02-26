@@ -37,5 +37,10 @@ SHA-256: 98:05:D1:31:DB:1D:3C:76:F4:AC:88:D9:5E:62:0C:3F:73:FA:6E:E6:75:DE:9F:E7
 "{clsPath:cn.huanyuan.sweetlove.ui.userinfo.GuardRankActivity,id:100013}"
 {clsPath:cn.huanyuan.sweetlove.ui.event.common.AppCommonEventActivity,activityId:1}
 
+{clsPath:cn.huanyuan.sweetlove.ui.userinfo.edit.EditUserInfoActivity}
+{clsPath:cn.huanyuan.sweetlove.ui.userinfo.edit.EditUserInfoActivity}
+
+
+
 
 

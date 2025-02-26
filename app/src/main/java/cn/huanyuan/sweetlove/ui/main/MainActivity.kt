@@ -26,6 +26,7 @@ import cn.huanyuan.sweetlove.ui.main.tab_wallet.TabWalletFrg
 import cn.huanyuan.sweetlove.ui.teenage.TeenAgeModeActivity
 import cn.yanhu.agora.listener.OnDownloadProgressListener
 import cn.yanhu.agora.manager.AgoraSdkDownloadManager
+import cn.yanhu.agora.manager.BeautyFaceEffectManager
 import cn.yanhu.agora.manager.BeautySDKManager
 import cn.yanhu.agora.manager.RtcEngineInit
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
@@ -206,6 +207,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     private var beautySdkDownloadProgress = 0
     private fun downloadBeautySdk() {
+        downloadFaceEffect()
         BeautySDKManager.sharedInstance().downloadBundle(object : OnDownloadProgressListener {
             override fun onProgress(progress: Int) {
                 if (progress >= beautySdkDownloadProgress) {
@@ -224,6 +226,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             }
 
         })
+    }
+
+    private fun downloadFaceEffect() {
+        BeautyFaceEffectManager.sharedInstance()
+            .downloadBundle(object : OnDownloadProgressListener {
+                override fun onProgress(progress: Int) {
+                }
+
+                override fun onDownLoadFail() {
+                }
+            })
     }
 
 
@@ -312,7 +325,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun getGiftInfo() {
-        request({ imChatRxApi.getGiftList() }, object : OnRequestResultListener<GiftResponse> {
+        request({ imChatRxApi.getGiftList(1) }, object : OnRequestResultListener<GiftResponse> {
             override fun onSuccess(data: BaseBean<GiftResponse>) {
                 val giftInfo = data.data
                 AppCacheManager.giftInfo = GsonUtils.toJson(giftInfo)
@@ -472,8 +485,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun getTabSameCityPosition(): Int {
-        for (i in 0..<mFragmentList.size) {
-            val fragment = mFragmentList[i]
+        val fragments = supportFragmentManager.fragments
+        for (i in 0..<fragments.size) {
+            val fragment = fragments[i]
             if (fragment is TabSameCityFrg) {
                 return i
             }
@@ -482,8 +496,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun getTabMsgPosition(): Int {
-        for (i in 0..<mFragmentList.size) {
-            val fragment = mFragmentList[i]
+        val fragments = supportFragmentManager.fragments
+        for (i in 0..<fragments.size) {
+            val fragment = fragments[i]
             if (fragment is TabMessageFrg) {
                 return i
             }

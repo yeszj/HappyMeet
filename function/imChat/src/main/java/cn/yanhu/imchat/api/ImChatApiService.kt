@@ -166,7 +166,7 @@ interface ImChatApiService : CommonApiService {
     suspend fun getSystemMsg(): BaseBean<SystemMsgUnReadInfo>
 
     @GET("app/v1/room/gift/list")
-    suspend fun getGiftList(): BaseBean<GiftResponse>
+    suspend fun getGiftList(@Query("type") type: Int): BaseBean<GiftResponse>
 
     @FormUrlEncoded
     @POST("app/v1/operates/blockUser")
@@ -191,5 +191,6 @@ interface ImChatApiService : CommonApiService {
     @FormUrlEncoded
     @POST("app/v1/chat/call")
     suspend fun call(@FieldMap map: Map<String, String>): BaseBean<ChatCallResponseInfo>
+
 
 }

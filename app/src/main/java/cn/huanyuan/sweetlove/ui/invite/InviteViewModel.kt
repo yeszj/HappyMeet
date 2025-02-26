@@ -6,7 +6,9 @@ import cn.huanyuan.sweetlove.bean.InviteRecordResponse
 import cn.huanyuan.sweetlove.net.rxApi
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.zj.netrequest.BaseViewModel
+import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.ResultState
 
 /**
@@ -22,11 +24,15 @@ class InviteViewModel:BaseViewModel() {
         request({ rxApi.getInviteMyUser() }, userInfoObservable, true)
     }
 
-    fun getMyInviteUser(page:Int) {
-        request({ rxApi.getMyInviteUser(page) }, myInviteInfoObservable, true)
+    fun getMyInviteUser(page:Int,filterId:String) {
+        request({ rxApi.getMyInviteUser(page,filterId) }, myInviteInfoObservable, true)
     }
 
     fun getInviteInfo() {
         request({ rxApi.getInviteInfo() }, invitePageInfoObservable, true)
+    }
+
+    fun shareSuccess(source: Int= 1 , onRequestResultListener: OnRequestResultListener<String>) {
+        request2({ rxApi.shareSuccess(source) },onRequestResultListener)
     }
 }

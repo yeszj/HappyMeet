@@ -13,7 +13,14 @@ data class UserLevelResponse(
     val needWealthValue: Int,
     val progressTotal: Int,
     val progress: Int,
-    val totalPrivilegeCount:Int,
-    val hasLockCount:Int,
-    val privilegeList:MutableList<LevelPrivilegeInfo>
-)
+    val totalPrivilegeCount: Int,
+    val hasLockCount: Int,
+    val privilegeList: MutableList<LevelPrivilegeInfo>,
+    val registerDay: Int,
+    val ruleInfo: RuleInfo
+) {
+    data class RuleInfo(
+        val levelRuleImg: String,
+        val wealthSourceImg: String
+    )
+}

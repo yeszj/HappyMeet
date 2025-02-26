@@ -317,6 +317,9 @@ open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Bool
         ivVoiceStatus.setOnSingleClickListener {
             onClickSeatListener?.onChildClickListener(ivVoiceStatus, position, item)
         }
+        ivSendRose.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(ivSendRose, position, item)
+        }
         tvSeatIndex.text = (item!!.id - 1).toString()
         this.currentRoomType = RoomListBean.TYPE_SEVEN_SONG
         this.isOwner = isRoomOwner
@@ -466,6 +469,30 @@ open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Bool
     private var onClickSeatListener: OnClickSeatListener? = null
     fun setOnClickSeatListener(onClickSeatListener: OnClickSeatListener) {
         this.onClickSeatListener = onClickSeatListener
+    }
+
+    fun userVideoStatusChanged(uid: Int, showPreload: Boolean,networkType:Int) {
+        seatInfoList.forEach {
+            if (it.roomUserSeatInfo?.userId?.toInt() == uid) {
+                if (showPreload){
+                    if (networkType==1){
+                        it.ifLeave = true
+                    }
+                }else{
+                    it.ifLeave = false
+                }
+                return
+            }
+        }
+    }
+
+    fun userNetChanged(uid: String, ifNetDisConnect: Boolean) {
+        seatInfoList.forEach {
+            if (it.roomUserSeatInfo?.userId == uid && it.ifNetDisConnect!=ifNetDisConnect) {
+                it.ifNetDisConnect = ifNetDisConnect
+                return
+            }
+        }
     }
 
     init {

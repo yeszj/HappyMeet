@@ -58,6 +58,7 @@ fun setClickAlpha(view: View?) {
                         cancelled = true
                     }
                 }
+
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     if (!cancelled) {
                         view.alpha = 1f
@@ -85,4 +86,57 @@ fun View?.setOnSingleClickListener(listener: OnSingleClickListener, timeSecond: 
         }
     }
 }
+
+
+fun View.setClickScaleListener(
+    scale: Float = 1.1f,
+    singleEvent: (View) -> Any?
+) {
+    setClickZoomEffect(this, scale)
+    setOnClickListener {
+        singleEvent.invoke(this)
+        clickTime = System.currentTimeMillis()
+    }
+}
+
+fun setClickZoomEffect(view: View?, scale: Float = 1.2f) {
+    view?.setOnTouchListener(object : OnTouchListener {
+        var cancelled = false
+        val rect = Rect()
+
+        @SuppressLint("ClickableViewAccessibility")
+        override fun onTouch(v: View, event: MotionEvent): Boolean {
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    scaleTo(v, 1.2f)
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    if (rect.isEmpty) {
+                        v.getDrawingRect(rect);
+                    }
+                    if (!rect.contains(event.x.toInt(), event.y.toInt())) {
+                        scaleTo(v, 1f)
+                        cancelled = true
+                    }
+                }
+
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    if (!cancelled) {
+                        scaleTo(v, 1f)
+                    } else {
+                        cancelled = false
+                    }
+                }
+            }
+            return false
+        }
+    })
+}
+
+fun scaleTo(v: View, scale: Float) {
+    v.scaleX = scale;
+    v.scaleY = scale;
+}
+
 

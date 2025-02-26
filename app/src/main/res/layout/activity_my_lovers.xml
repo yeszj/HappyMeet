@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="isSelf"
+            type="java.lang.Boolean" />
+
+        <variable
+            name="isSameSex"
+            type="java.lang.Boolean" />
+        <variable
+            name="loversRes"
+            type="cn.yanhu.commonres.bean.response.LoversResponse" />
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFF7FA">
+
+
+        <com.lihang.ShadowLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_480"
+            app:hl_angle="90"
+            app:hl_endColor="#FF8BB5"
+            app:hl_startColor="#FFF7FA"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_top"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_303"
+            android:adjustViewBounds="true"
+            android:src="@mipmap/lovers_top_bg"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_56"
+            android:layout_height="@dimen/dp_53"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_13"
+            android:src="@mipmap/lover2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_42"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_13"
+            android:layout_marginEnd="@dimen/dp_50"
+            android:src="@mipmap/lover4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/titleBar" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_33"
+            android:layout_height="@dimen/dp_32"
+            android:layout_marginTop="@dimen/dp_39"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:src="@mipmap/lover4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar" />
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleColor="@color/white"
+            app:titleLeftIco="@drawable/svg_white_back"
+            app:titleLeftName="我的情侣"
+            app:titleRightName="解除情侣"/>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_46">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <cn.yanhu.commonres.view.UserAvatarView
+                            avatarFrameUrl="@{loversRes.viewInfo.avatarFrame}"
+                            avatarUrl="@{loversRes.viewInfo.portrait}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:avatarSize="@dimen/dp_70"
+                            app:isShowSvgAvatar="true"
+                            app:svgAvatarSize="@dimen/dp_112" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_m_10"
+                            android:text="@{loversRes.viewInfo.nickName}"
+                            android:textColor="@color/cl_common"
+                            android:textSize="@dimen/sp_14"
+                            tools:text="佊岸花开" />
+
+                        <cn.yanhu.commonres.view.UserIdTagLayout
+                            beautifulIdImg="@{loversRes.viewInfo.beautifulIdImg}"
+                            userId="@{loversRes.viewInfo.userId}"
+                            tagBgColor="@{@color/blackAlpha80}"
+                            tagTxtColor="@{@color/white}"
+                            android:layout_marginTop="@dimen/dp_4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dp_21"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="@dimen/dp_70"
+                            android:layout_height="@dimen/dp_70"
+                            android:src="@mipmap/lovers1" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_16"
+                            tools:background="@drawable/bg_lovers1_tag_r6"
+                            android:background="@{loversRes.loversType==1?@drawable/bg_lovers1_tag_r6:loversRes.loversType==2?@drawable/bg_lovers2_tag_r6:@drawable/bg_lovers3_tag_r6}"
+                            android:gravity="center_vertical"
+                            android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName)?View.GONE:View.VISIBLE}"
+                            android:paddingStart="@dimen/dp_4"
+                            android:paddingEnd="@dimen/dp_6"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="@dimen/dp_14"
+                                android:layout_height="@dimen/dp_14"
+                                android:src="@{loversRes.loversType==1?@drawable/icon_lovers1:loversRes.loversType==2?@drawable/icon_lovers2:@drawable/icon_lovers3}"
+                                tools:src="@drawable/icon_lovers1" />
+
+                            <cn.yanhu.baselib.view.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text='@{loversRes.loversType==1?"黄金情侣":loversRes.loversType==2?"水晶情侣":"钻石情侣"}'
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/sp_11"
+                                app:fontType="@string/fontMedium"
+                                tools:text="黄金情侣" />
+                        </LinearLayout>
+                        
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <cn.yanhu.commonres.view.UserAvatarView
+                            avatarFrameUrl="@{loversRes.loverInfo.avatarFrame}"
+                            avatarUrl="@{loversRes.loverInfo.portrait}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:avatarSize="@dimen/dp_70"
+                            app:isShowSvgAvatar="true"
+                            app:svgAvatarSize="@dimen/dp_112" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{loversRes.loverInfo.nickName}"
+                            android:textColor="@color/cl_common"
+                            android:layout_marginTop="@dimen/dp_m_10"
+                            android:textSize="@dimen/sp_14"
+                            android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName)?View.GONE:View.VISIBLE}"
+                            tools:text="佊岸花开"
+                            tools:visibility="gone" />
+
+                        <cn.yanhu.commonres.view.UserIdTagLayout
+                            beautifulIdImg="@{loversRes.loverInfo.beautifulIdImg}"
+                            userId="@{loversRes.loverInfo.userId}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tagBgColor="@{@color/blackAlpha80}"
+                            android:layout_marginTop="@dimen/dp_4"
+                            tagTxtColor="@{@color/white}"
+                            android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName)?View.GONE:View.VISIBLE}" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_bind"
+                            android:layout_width="@dimen/dp_80"
+                            android:layout_height="@dimen/dp_32"
+                            android:background="@drawable/gradient_main_r16"
+                            android:gravity="center"
+                            android:text="绑定情侣"
+                            tools:visibility="gone"
+                            android:layout_marginTop="@dimen/dp_m_10"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14"
+                            android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName) &amp;&amp; !isSelf &amp;&amp; !isSameSex?View.VISIBLE:View.GONE}"
+                            app:fontType="@string/fontMedium" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="暂无情侣"
+                            android:layout_marginTop="@dimen/dp_m_10"
+                            android:textColor="#888888"
+                            android:textSize="@dimen/sp_14"
+                            android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName) &amp;&amp; isSelf?View.VISIBLE:View.GONE}" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:text="你和九月的情侣关系将在3天后失效"
+                    android:textColor="#66000000"
+                    android:textSize="@dimen/sp_13" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dp_348"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_20"
+                    drawableUrl="@{loversRes.ruleImg}"
+                    android:adjustViewBounds="true" />
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.opensource.svgaplayer.SVGAImageView
+            android:id="@+id/svg_giftAnim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:clickable="false"
+            android:scaleType="centerCrop"
+            app:autoPlay="false"
+            app:clearsAfterDetached="true"
+            app:fillMode="Clear"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:loopCount="1" />
+
+        <com.tencent.qgame.animplayer.AnimView
+            android:id="@+id/videoGiftAnimView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

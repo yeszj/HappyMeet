@@ -57,6 +57,10 @@ class ErrorTypeAdapter :
         return VH(parent)
     }
 
+    fun getSelectItem():String?{
+        return getItem(selectPosition)
+    }
+
     private var selectPosition: Int = -1
     fun setSelectPosition(position:Int) {
         val oldPosition = selectPosition

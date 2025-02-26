@@ -27,7 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,73 +64,32 @@
                     app:layout_constraintTop_toTopOf="@+id/avatarView"
                     tools:text="黑白、素初的颜色" />
 
-                <LinearLayout
+                <cn.yanhu.commonres.view.UserInfoTagLayout
+                    android:id="@+id/userTag"
+                    userInfo="@{userinfo}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="@+id/avatarView"
                     app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-                    app:layout_constraintTop_toTopOf="@+id/avatarView">
-
-                    <cn.yanhu.commonres.view.UserLevelView
-                        android:id="@+id/userLevel"
-                        userLevel="@{userinfo.level}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dp_5"
-                        android:visibility="gone" />
-
-                    <cn.yanhu.commonres.view.UserTagView
-                        android:id="@+id/userAge"
-                        userAge="@{userinfo.age}"
-                        userGender="@{userinfo.gender}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="@+id/userLevel"
-                        app:layout_constraintStart_toEndOf="@+id/userLevel"
-                        app:layout_constraintTop_toTopOf="@+id/userLevel" />
-
-                    <cn.yanhu.commonres.view.UserTagView
-                        userProvince='@{userinfo.province}'
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dp_5"
-                        app:layout_constraintBottom_toBottomOf="@+id/userLevel"
-                        app:layout_constraintStart_toEndOf="@+id/userAge"
-                        app:layout_constraintTop_toTopOf="@+id/userLevel" />
-                </LinearLayout>
+                    app:layout_constraintTop_toTopOf="@+id/avatarView" />
 
                 <View
                     android:id="@+id/viewInfo"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_copyId"
+                    app:layout_constraintBottom_toBottomOf="@+id/userTag"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/avatarView"
                     app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
 
-                <androidx.appcompat.widget.AppCompatImageView
+                <cn.yanhu.commonres.view.UserIdTagLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_16"
                     android:layout_marginBottom="@dimen/dp_25"
-                    drawableUrl="@{userinfo.beautifulIdImg}"
-                    placeholderId="@{-1}"
-                    android:visibility="@{TextUtils.isEmpty(userinfo.beautifulIdImg)?View.INVISIBLE:View.VISIBLE}"
+                    beautifulIdImg="@{userinfo.beautifulIdImg}"
+                    userId="@{userinfo.userId}"
                     app:layout_constraintBottom_toBottomOf="@+id/avatarView"
                     app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-                    android:adjustViewBounds="true" />
-
-                <cn.yanhu.commonres.view.UserTagView
-                    android:id="@+id/tv_copyId"
-                    android:visibility="@{TextUtils.isEmpty(userinfo.beautifulIdImg)?View.VISIBLE:View.INVISIBLE}"
-                    tagColorId="@{@color/blackAlpha96}"
-                    tagTextColorId="@{@color/fontGrayColor}"
-                    tagValue='@{"ID:"+userinfo.userId}'
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_25"
-                    app:layout_constraintBottom_toBottomOf="@+id/avatarView"
-                    app:layout_constraintStart_toStartOf="@+id/tv_nickName" />
+                    android:layout_height="wrap_content"/>
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"

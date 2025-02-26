@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="giftInfo"
+            type="cn.yanhu.commonres.bean.GiftInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_parent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_122"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
+        tools:background="@drawable/bg_lovers_gift_select"
+        android:background="@drawable/white_corner10_alpha4"
+        android:orientation="vertical">
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:background="@drawable/white_bottom_corner_10"
+            android:backgroundTint="@color/blackAlpha80"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:text='@{giftInfo.loversType==1?"黄金情侣":giftInfo.loversType==2?"水晶情侣":"钻石情侣"}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_11"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="钻石情侣"
+            tools:visibility="invisible" />
+
+        <LinearLayout
+            android:id="@+id/vg_selectTag"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            tools:background="@drawable/bg_lovers1_tag_gift"
+            android:background="@{giftInfo.loversType==1?@drawable/bg_lovers1_tag_gift:giftInfo.loversType==2?@drawable/bg_lovers2_tag_gift:@drawable/bg_lovers3_tag_gift}"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_4"
+            android:paddingEnd="@dimen/dp_6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="@dimen/dp_14"
+                android:src="@{giftInfo.loversType==1?@drawable/icon_lovers1:giftInfo.loversType==2?@drawable/icon_lovers2:@drawable/icon_lovers3}"
+                tools:src="@drawable/icon_lovers1" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{giftInfo.loversType==1?"黄金情侣":giftInfo.loversType==2?"水晶情侣":"钻石情侣"}'
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_11"
+                app:fontType="@string/fontMedium"
+                tools:text="黄金情侣" />
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_gift"
+            imageUrl="@{giftInfo.giftIcon}"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tag"
+            tools:src="@drawable/svg_gift" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="@{giftInfo.name}"
+            android:textColor="@color/whiteAlpha20"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_gift"
+            tools:text="黄金情侣" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:text='@{giftInfo.price+"玫瑰"}'
+            android:textColor="@color/whiteColorAlpha60"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name"
+            tools:text="1玫瑰" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_select_tag"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

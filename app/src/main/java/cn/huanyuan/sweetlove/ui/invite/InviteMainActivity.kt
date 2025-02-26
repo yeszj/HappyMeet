@@ -12,6 +12,7 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.manager.ServiceConfigKeyManager
 import cn.yanhu.commonres.utils.ZXingUtils
 import cn.zj.netrequest.ext.OnRequestResultListener
@@ -21,6 +22,7 @@ import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ClipboardUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.reflect.TypeToken
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.pcl.sdklib.sdk.share.ContentShare
 
 /**
@@ -90,7 +92,15 @@ class InviteMainActivity : BaseActivity<ActivityInviteMainBinding, InviteViewMod
                 ClipboardUtils.copyText(mBinding.inviteInfo!!.userId)
                 showToast("复制成功")
             }
+        }
 
+        LiveEventBus.get<Boolean>(LiveDataEventManager.WX_SHARE_SUCCESS).observe(this) {
+            //分享成功
+            mViewModel.shareSuccess(onRequestResultListener = object : OnRequestResultListener<String>{
+                override fun onSuccess(data: BaseBean<String>) {
+                    LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
+                }
+            })
         }
     }
 

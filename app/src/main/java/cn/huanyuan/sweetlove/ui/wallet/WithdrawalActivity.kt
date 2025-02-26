@@ -16,19 +16,26 @@ import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.baselib.widget.spans.CustomClickSpan
 import cn.yanhu.baselib.widget.spans.Spans
+import cn.yanhu.commonres.bean.CommonErrorTipsInfo
 import cn.yanhu.commonres.bean.PayWayInfo
 import cn.yanhu.commonres.bean.WithDrawInfo
 import cn.yanhu.commonres.bean.response.WithdrawResponse
 import cn.yanhu.commonres.manager.WebUrlManager
+import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.view.PayWaySelectView
 import cn.zj.netrequest.ext.parseState
+import cn.zj.netrequest.status.CustomException
+import cn.zj.netrequest.status.ErrorCode
+import com.blankj.utilcode.util.GsonUtils
+import com.lxj.xpopup.core.BasePopupView
 import com.pcl.sdklib.listener.OnAuthResultListener
 import com.pcl.sdklib.sdk.alipay.AliAuthUtils
 import com.pcl.sdklib.sdk.wechat.WxAuthUtils
@@ -178,10 +185,16 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     @SuppressLint("SetTextI18n")
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
-        mViewModel.withdrawalResultLivedata.observe(this) {
+        mViewModel.withdrawalResultLivedata.observe(this) { it ->
             parseState(it, {
                 showToast("提现申请提交成功，请耐心等待")
                 requestData()
+            },{
+                if (it.code==ErrorCode.COMMON_TIP_POP){
+                    showErrorTip(it)
+                }else{
+                    showToast(it.msg)
+                }
             })
         }
         mViewModel.withdrawalInfoLivedata.observe(this) { it ->
@@ -199,11 +212,25 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
         }
     }
 
+    private var errorTipsPop:BasePopupView?=null
+    private fun showErrorTip(it: CustomException) {
+        if (CommonUtils.isPopShow(errorTipsPop)){
+            return
+        }
+        val msg = it.msg
+        val commonTipsInfo = GsonUtils.fromJson(
+            msg,
+            CommonErrorTipsInfo::class.java
+        )
+        errorTipsPop = DialogUtils.showConfirmDialog(commonTipsInfo.title, {
+            PageIntentUtil.url2Page(mContext, commonTipsInfo.pageUrl)
+        }, {
+        }, commonTipsInfo.content, commonTipsInfo.leftBtn, commonTipsInfo.rightBtn)
+    }
+
     @SuppressLint("SetTextI18n")
     private fun setWithdrawRule(){
-        mBinding.tvRule.text = "1.提现时间：9:00-18:00，每日可提现5次。\n" +
-                "2.本平台支持17点前提现当日到账，17点后提现次日到；申请提现后请及时查看到账情况，超过3天未到账请及时联系客服。\n" +
-                "3.提现时将从提现金额中扣除${CommonUtils.multiplyString(selectItem!!.ratio.toPlainString(),"100")}%作为手续费和平台服务费。"
+        mBinding.tvRule.text = withDrawInfo?.desc
     }
 
     @SuppressLint("SetTextI18n")

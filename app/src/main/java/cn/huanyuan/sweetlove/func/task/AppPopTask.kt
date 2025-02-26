@@ -1,17 +1,28 @@
 package cn.huanyuan.sweetlove.func.task
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
 import android.app.Activity
 import android.graphics.drawable.Drawable
+import android.view.View
+import android.view.View.OnAttachStateChangeListener
+import android.view.ViewGroup
+import android.view.Window
+import androidx.core.view.contains
 import cn.huanyuan.sweetlove.bean.GlobalGiftBean
-import cn.huanyuan.sweetlove.func.dialog.GlobalGiftPop
+import cn.huanyuan.sweetlove.func.dialog.NewYearRedPacketPop
+import cn.huanyuan.sweetlove.func.dialog.TeenTipPop
+import cn.huanyuan.sweetlove.func.view.GlobalGiftLayout
+import cn.huanyuan.sweetlove.func.view.GlobalUserOnlineLayout
+import cn.yanhu.baselib.anim.AnimManager
 import cn.yanhu.baselib.queue.BaseQueueTask
 import cn.yanhu.baselib.utils.CommonUtils
-import cn.yanhu.commonres.config.ChatConstant
-import cn.huanyuan.sweetlove.func.dialog.TeenTipPop
 import cn.yanhu.baselib.utils.GlideUtils
-import cn.yanhu.commonres.bean.CommonTipsInfo
-import cn.huanyuan.sweetlove.func.dialog.NewYearRedPacketPop
+import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.CommonEventPopInfo
+import cn.yanhu.commonres.bean.CommonTipsInfo
+import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.pop.CommonImagePop
 import cn.yanhu.commonres.pop.CommonTipDialog
 import cn.yanhu.commonres.router.RouteIntent
@@ -24,6 +35,7 @@ import com.google.gson.Gson
 import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
 
+
 /**
  * @author: zhengjun
  * created: 2024/10/28
@@ -33,6 +45,7 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
     companion object {
         var currentPopTask: AppPopTask? = null
     }
+
     override fun doTask() {
         currentPopTask = this
         val topActivity = ActivityUtils.getTopActivity()
@@ -40,62 +53,82 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
             AppPopTypeManager.TYPE_TEE_POP -> {
                 showTeenTipPop(topActivity)
             }
+
             ChatConstant.GLOBAL_GIFT_ALERT -> {
                 //礼物飘屏
-                showGiftGlobal(topActivity)
+                showGiftGlobalAnim(topActivity)
             }
-            ChatConstant.ACTION_FORCE_AUTH ->{
-                showAuthTipPop(info.toInt(),topActivity)
+
+            ChatConstant.ACTION_USER_ONLINE -> {
+                //用户上线
+                showUserOnlineGlobalAnim(topActivity)
             }
-            ChatConstant.ACTION_NEW_YEAR_RED_PACKET ->{
+
+            ChatConstant.ACTION_FORCE_AUTH -> {
+                showAuthTipPop(info.toInt(), topActivity)
+            }
+
+            ChatConstant.ACTION_NEW_YEAR_RED_PACKET -> {
                 //新年红包
                 showNewYearRedPacketPop(topActivity)
             }
-            ChatConstant.ACTION_EVENT_POP ->{
+
+            ChatConstant.ACTION_EVENT_POP -> {
                 //活动弹框
                 showEventPop(topActivity)
             }
         }
     }
 
-    private var commonImagePop:CommonImagePop?=null
+
+
+    private var commonImagePop: CommonImagePop? = null
     private fun showEventPop(topActivity: Activity) {
         val fromJson =
             GsonUtils.fromJson(info, CommonEventPopInfo::class.java)
 
-        GlideUtils.loadAsDrawable(topActivity, fromJson.bgImaUrl, object : CustomTarget<Drawable>() {
-            override fun onResourceReady(
-                resource: Drawable,
-                transition: Transition<in Drawable>?
-            ) {
-                if (CommonUtils.isPopShow(commonImagePop)){
-                    return
+        GlideUtils.loadAsDrawable(
+            topActivity,
+            fromJson.bgImaUrl,
+            object : CustomTarget<Drawable>() {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    if (CommonUtils.isPopShow(commonImagePop)) {
+                        return
+                    }
+                    commonImagePop =
+                        CommonImagePop.showDialog(topActivity, fromJson, resource, dismissCallBack)
                 }
-                commonImagePop = CommonImagePop.showDialog(topActivity, fromJson,resource,dismissCallBack)
-            }
-            override fun onLoadCleared(placeholder: Drawable?) {
-            }
-            override fun onLoadFailed(errorDrawable: Drawable?) {
-                super.onLoadFailed(errorDrawable)
-                doNextTask()
-            }
-        })
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+                    doNextTask()
+                }
+            })
     }
 
-    private var redPacketPop: NewYearRedPacketPop?=null
+    private var redPacketPop: NewYearRedPacketPop? = null
     private fun showNewYearRedPacketPop(topActivity: Activity) {
         GlideUtils.loadAsDrawable(topActivity, info, object : CustomTarget<Drawable>() {
             override fun onResourceReady(
                 resource: Drawable,
                 transition: Transition<in Drawable>?
             ) {
-                if (CommonUtils.isPopShow(redPacketPop)){
+                if (CommonUtils.isPopShow(redPacketPop)) {
                     return
                 }
-                redPacketPop = NewYearRedPacketPop.showDialog(topActivity, resource, dismissCallBack)
+                redPacketPop =
+                    NewYearRedPacketPop.showDialog(topActivity, resource, dismissCallBack)
             }
+
             override fun onLoadCleared(placeholder: Drawable?) {
             }
+
             override fun onLoadFailed(errorDrawable: Drawable?) {
                 super.onLoadFailed(errorDrawable)
                 doNextTask()
@@ -117,26 +150,112 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
             type == 2
         )
         forceAuthTipDialog =
-            CommonTipDialog.showDialog(topActivity, commonTipsInfo, object : CommonTipDialog.OnClickBtnListener {
-                override fun onClickCancel() {}
-                override fun onClickBtn() {
-                    RouteIntent.lunchToRealNamPage()
-                }
-            }, object : SimpleCallback() {
-                override fun onDismiss(popupView: BasePopupView) {
-                    super.onDismiss(popupView)
-                    forceAuthTipDialog = null
-                    doNextTask()
-                }
-            })
+            CommonTipDialog.showDialog(
+                topActivity,
+                commonTipsInfo,
+                object : CommonTipDialog.OnClickBtnListener {
+                    override fun onClickCancel() {}
+                    override fun onClickBtn() {
+                        RouteIntent.lunchToRealNamPage()
+                    }
+                },
+                object : SimpleCallback() {
+                    override fun onDismiss(popupView: BasePopupView) {
+                        super.onDismiss(popupView)
+                        forceAuthTipDialog = null
+                        doNextTask()
+                    }
+                })
     }
 
-    private fun showGiftGlobal(topActivity: Activity?) {
+
+    private fun showUserOnlineGlobalAnim(topActivity: Activity?) {
+        topActivity?.apply {
+            val userInfo = Gson().fromJson(
+                info, BaseUserInfo::class.java
+            )
+            val globalUserOnlineLayout = GlobalUserOnlineLayout(topActivity)
+            val window: Window = topActivity.window
+            val decorView = window.decorView as ViewGroup
+            // 添加飘屏 View
+            if (globalUserOnlineLayout.parent == null) {
+                globalUserOnlineLayout.setUserInfo(userInfo)
+                globalUserOnlineLayout.visibility = View.INVISIBLE
+                decorView.addView(globalUserOnlineLayout)
+                globalUserOnlineLayout.post {
+                    val animatorSet: AnimatorSet = globalUserOnlineLayout.startAnimation()
+                    animatorSet.addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            doNextTask()
+                            if (globalUserOnlineLayout.parent != null && decorView.contains(
+                                    globalUserOnlineLayout
+                                ) && !topActivity.isDestroyed
+                            ) {
+                                decorView.removeView(globalUserOnlineLayout)
+                            }
+                        }
+                    })
+                    globalUserOnlineLayout.addOnAttachStateChangeListener(object :
+                        OnAttachStateChangeListener {
+                        override fun onViewAttachedToWindow(v: View) {
+                            globalUserOnlineLayout.visibility = View.VISIBLE
+                        }
+
+                        override fun onViewDetachedFromWindow(v: View) {
+                            globalUserOnlineLayout.removeOnAttachStateChangeListener(this)
+                            AnimManager.removeAnimSet(animatorSet)
+                            doNextTask()
+                        }
+                    })
+                }
+            }
+        }
+    }
+
+    private fun showGiftGlobalAnim(topActivity: Activity?) {
         topActivity?.apply {
             val globalGiftBean = Gson().fromJson(
                 info, GlobalGiftBean::class.java
             )
-            GlobalGiftPop.showDialog(topActivity, globalGiftBean, dismissCallBack)
+            val globalGiftLayout = GlobalGiftLayout(topActivity)
+            val window: Window = topActivity.window
+            val decorView = window.decorView as ViewGroup
+            // 添加飘屏 View
+            if (globalGiftLayout.parent == null) {
+                globalGiftLayout.setModel(globalGiftBean)
+                globalGiftLayout.visibility = View.INVISIBLE
+                decorView.addView(globalGiftLayout)
+                globalGiftLayout.post {
+                    val animatorSet: AnimatorSet = globalGiftLayout.startAnimation()
+                    animatorSet.addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            doNextTask()
+                            if (globalGiftLayout.parent != null && decorView.contains(
+                                    globalGiftLayout
+                                ) && !topActivity.isDestroyed
+                            ) {
+                                decorView.removeView(globalGiftLayout)
+                            }
+                        }
+                    })
+                    globalGiftLayout.addOnAttachStateChangeListener(object :
+                        OnAttachStateChangeListener {
+                        override fun onViewAttachedToWindow(v: View) {
+                            globalGiftLayout.visibility = View.VISIBLE
+                        }
+
+                        override fun onViewDetachedFromWindow(v: View) {
+                            globalGiftLayout.removeOnAttachStateChangeListener(this)
+                            AnimManager.removeAnimSet(animatorSet)
+                            doNextTask()
+                        }
+                    })
+                }
+
+            }
+            //GlobalGiftPop.showDialog(topActivity, globalGiftBean, dismissCallBack)
         }
     }
 

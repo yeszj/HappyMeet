@@ -6,6 +6,7 @@ import cn.huanyuan.sweetlove.bean.AppVersionInfo
 import cn.huanyuan.sweetlove.bean.CommonEventImgConfig
 import cn.huanyuan.sweetlove.bean.CommonEventRankResponse
 import cn.huanyuan.sweetlove.bean.ComplaintInfo
+import cn.huanyuan.sweetlove.bean.ErrorLogInfo
 import cn.huanyuan.sweetlove.bean.GuardRankResponse
 import cn.huanyuan.sweetlove.bean.InviteInfo
 import cn.huanyuan.sweetlove.bean.InviteRecordResponse
@@ -34,6 +35,7 @@ import cn.yanhu.commonres.bean.request.DressBuyRequest
 import cn.yanhu.commonres.bean.request.DressUpRequest
 import cn.yanhu.commonres.bean.response.DressUpResponse
 import cn.yanhu.commonres.bean.response.FriendsResponse
+import cn.yanhu.commonres.bean.response.LoversResponse
 import cn.yanhu.commonres.bean.response.RoomListResponse
 import cn.yanhu.commonres.bean.response.RoseExchangeResponse
 import cn.yanhu.commonres.bean.response.RoseRechargeResponse
@@ -41,9 +43,10 @@ import cn.yanhu.commonres.bean.response.SameCityUserResponse
 import cn.yanhu.commonres.bean.response.SeenMeHistoryResponse
 import cn.yanhu.commonres.bean.response.WithdrawResponse
 import cn.zj.netrequest.status.BaseBean
-import com.pcl.sdklib.bean.CheckBaiduFaceResult
+import com.pcl.sdklib.bean.CheckFaceAuthResult
+import com.pcl.sdklib.bean.FaceAuthInfo
 import com.pcl.sdklib.bean.PostBaiduAuthBean
-import okhttp3.RequestBody
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 
@@ -208,7 +211,7 @@ interface ApiService : CommonApiService {
     ): BaseBean<MutableList<AppCheckItemInfo>>
 
 
-    @GET("app/v1/user/getSwitchSetInfo")
+    @GET("app/v1/user/getPrivacySettingList")
     suspend fun getSwitchSetInfo(
     ): BaseBean<MutableList<SwitchConfigInfo>>
 
@@ -219,12 +222,16 @@ interface ApiService : CommonApiService {
 
     @GET("app/v1/user/getMyInviteUser")
     suspend fun getMyInviteUser(
-        @Query("page") page: Int
+        @Query("page") page: Int,@Query("filterId") filterId:String
     ): BaseBean<InviteRecordResponse>
 
     @GET("app/v1/user/getInviteInfo")
     suspend fun getInviteInfo(
     ): BaseBean<InviteInfo>
+
+
+    @POST("app/v1/user/share")
+    suspend fun shareSuccess(@Query("source") source:Int): BaseBean<String>
 
     @GET("app/v1/userTask/getTaskList")
     suspend fun getTaskList(
@@ -254,10 +261,13 @@ interface ApiService : CommonApiService {
 
 
     //文件上传
-    @POST("file/uploadImg")
+    @Multipart
+    @POST("app/v1/file/upload")
     suspend fun uploadFile(
-        @Body file: RequestBody,
+        @Part multipartBody: MultipartBody.Part,
+        @Query("source") source: Int
     ): BaseBean<String>
+
 
     @GET("app/v1/message/getSystemNotification")
     suspend fun getAllSystemMsg(): BaseBean<MutableList<SystemMessageInfo>>
@@ -278,10 +288,10 @@ interface ApiService : CommonApiService {
     @POST("app/v1/auth/realNameAuth")
     suspend fun realNameProve(
         @Field("realName") realName: String, @Field("idCard") idCard: String
-    ): BaseBean<String>
+    ): BaseBean<FaceAuthInfo>
 
     @GET("app/v1/auth/checkAuth")
-    suspend fun checkBaiduFace(): BaseBean<CheckBaiduFaceResult>
+    suspend fun checkBaiduFace(): BaseBean<CheckFaceAuthResult>
 
     /**
      * 查询是否可以百度人脸认证
@@ -351,4 +361,16 @@ interface ApiService : CommonApiService {
 
     @GET("app/v1/activity/zxb/getRanking")
     suspend fun getCommonEventRank(@Query("type") type:Int,@Query("activityId") activityId:String): BaseBean<CommonEventRankResponse>
+
+    @GET("app/v1/relationship/getLoversIndex")
+    suspend fun getLoversIndex(@Query("viewUserId") viewUserId: String): BaseBean<LoversResponse>
+
+    @POST("app/v1/relationship/cancelLovers")
+    suspend fun cancelLovers(@Query("cancelUserId") cancelUserId:String): BaseBean<String>
+
+    @POST("app/v1/relationship/bindLovers")
+    suspend fun bindLovers(@Query("bindUserId") bindUserId:String,@Query("giftId") giftId:String): BaseBean<String>
+
+    @POST("app/v1/exception/report")
+    suspend fun uploadLog(@Body logInfo: ErrorLogInfo): BaseBean<String>
 }

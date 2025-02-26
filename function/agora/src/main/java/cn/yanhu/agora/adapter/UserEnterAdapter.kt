@@ -17,7 +17,6 @@ import cn.yanhu.agora.databinding.UserEnterAnimationItemBinding
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.commonres.bean.ChatRoomGiftMsg
-import cn.yanhu.commonres.config.LevelTagConfig
 import cn.yanhu.commonres.utils.SVGAUtils
 import cn.yanhu.commonres.view.floatScreenView.RewardAnimUtils
 import cn.yanhu.commonres.view.floatScreenView.RewardLayout
@@ -104,18 +103,18 @@ class UserEnterAdapter(
                             }
                         })
                 }
-
-            } else if (level > 0) {
-                val userEnterBg = LevelTagConfig.getUserEnterBg(level)
-                ivBg.setImageResource(userEnterBg)
             }
+
+//            } else if (level > 0) {
+//                val userEnterBg = LevelTagConfig.getUserEnterBg(level)
+//                ivBg.setImageResource(userEnterBg)
+//            }
             // 初始化数据
             tvUserName.text = sendUser.nickName
             vgParent.setOnClickListener {
                 clickUserListener.onClickUser(sendUser.userId)
             }
         }
-
         return view
     }
 
@@ -147,7 +146,7 @@ class UserEnterAdapter(
 
     override fun addAnim(view: View, mBean: ChatRoomGiftMsg) {
         val enterAnimUrl = mBean.sendUser.enterAnimUrl
-        if (!enterAnimUrl.endsWith(".svga")) {
+        if (TextUtils.isEmpty(enterAnimUrl) || !enterAnimUrl.endsWith(".svga")) {
             val giftInAnim: Animation =
                 RewardAnimUtils.getUserEnterInAnimation(context)
             view.startAnimation(giftInAnim)

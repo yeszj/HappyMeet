@@ -30,7 +30,6 @@ import com.blankj.utilcode.util.Utils
 import com.hyphenate.EMCallBack
 import com.hyphenate.chat.EMClient
 import com.pcl.sdklib.sdk.jverrify.JiGuangSDKUtils
-import com.pcl.sdklib.sdk.location.LocationCacheManager
 import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
 
 /**
@@ -59,7 +58,7 @@ class ApplicationRouterImpl : IApplication {
 
     private fun logoutSuccess() {
         UserPref.clear()
-        LocationCacheManager.mapLocation = null
+      //  LocationCacheManager.mapLocation = null
         RouteIntent.lunchLoginPage()
         for (activity in ActivityUtils.getActivityList()) {
             if (activity !is LoginActivity) {

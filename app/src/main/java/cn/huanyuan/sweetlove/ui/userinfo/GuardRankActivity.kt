@@ -42,7 +42,7 @@ class GuardRankActivity : BaseActivity<ActivityGuardRankBinding, UserViewModel>(
     override fun initData() {
         setFullScreenStatusBar()
         userId = intent.getStringExtra(IntentKeyConfig.ID).toString()
-        addEmptyView()
+        //addEmptyView()
         mBinding.rvRank.adapter = guardRankAdapter
         if (userId==AppCacheManager.userId){
             mBinding.vgMyInfo.clUser.visibility = View.GONE
@@ -136,7 +136,7 @@ class GuardRankActivity : BaseActivity<ActivityGuardRankBinding, UserViewModel>(
             parseState(it, {
                 mBinding.vgMyInfo.rankInfo = it.myInfoRes
                 val rankingList = it.guardUsers
-                guardRankAdapter.isStateViewEnable = rankingList.size < 4
+                //guardRankAdapter.isStateViewEnable = rankingList.size < 4
                 if (rankingList.size > 0) {
                     mBinding.rankInfo1 = rankingList[0]
                     rankingList.removeAt(0)

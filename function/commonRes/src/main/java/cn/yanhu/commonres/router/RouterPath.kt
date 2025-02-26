@@ -28,6 +28,10 @@ object RouterPath {
 
     const val ROUTER_GUARD_RANK = "/app/guardRank"
 
+    const val ROUTER_MY_LOVERS = "/app/myLovers"
+
+    const val ROUTER_ERRORLOGPOST = "/app/errorLogPost"
+
     const val ROUTER_MY_INVITE_RECORD_PAGE = "/app/myInviteRecordActivity"
 
 

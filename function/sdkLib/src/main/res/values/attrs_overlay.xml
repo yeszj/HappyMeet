@@ -1,0 +1,13 @@
+<resources>
+    <declare-styleable name="Overlay">
+        <attr name="target_restrict_area_shape" format="enum">
+            <enum name="circle" value="0" />
+            <enum name="rect" value="1" />
+        </attr>
+        <attr name="target_restrict_circle_radius" format="dimension" />
+        <attr name="target_restrict_rect_width" format="dimension" />
+        <attr name="target_restrict_rect_height" format="dimension" />
+        <attr name="target_restrict_rect_round_radius" format="dimension" />
+        <attr name="mask_color" format="color" />
+    </declare-styleable>
+</resources>

@@ -6,9 +6,11 @@ import android.util.Log
 import android.view.View
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgTabMineBinding
+import cn.huanyuan.sweetlove.func.dialog.AvatarAndNickNameEditPop
 import cn.huanyuan.sweetlove.ui.main.tab_my.adapter.EditPhotoAdapter
 import cn.huanyuan.sweetlove.ui.main.tab_my.adapter.MineMenuAdapter
 import cn.huanyuan.sweetlove.ui.userinfo.UserViewModel
+import cn.huanyuan.sweetlove.ui.userinfo.edit.UserParamType
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.func.photo.ImageSelectUtils
 import cn.yanhu.baselib.refresh.IRefreshCallBack
@@ -25,9 +27,8 @@ import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.ImageSelectManager
-import cn.yanhu.commonres.manager.SexManager
+import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.pop.CommonOperatePop
-import cn.yanhu.commonres.pop.UploadAvatarPop
 import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.utils.VideoUtils
@@ -88,11 +89,28 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO).observe(this) {
             getData()
         }
+        LiveEventBus.get<String>(LiveDataEventManager.REFRESH_USER_CACHE).observe(this) {
+            refreshUserInfo()
+        }
+        LiveEventBus.get<Boolean>(LiveDataEventManager.FACE_RESULT).observe(this){
+            if (it){
+                getData()
+            }
+        }
     }
 
     private fun getData() {
         mViewModel.getMyService()
         mViewModel.getMyPageInfo()
+    }
+
+    private fun refreshUserInfo() {
+        mViewModel.refreshMyPageInfo(object : OnRequestResultListener<UserDetailInfo> {
+            override fun onSuccess(data: BaseBean<UserDetailInfo>) {
+                val userDetailInfo = data.data ?: return
+                refreshUserCache(userDetailInfo)
+            }
+        })
     }
 
     override fun initRefresh() {
@@ -147,18 +165,7 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
     private fun onGetUserInfoListener() {
         mViewModel.myPageInfoObservable.observe(this) { it ->
             parseState(it, {
-                userInfo = it
-                val userInfo = EMUserInfo()
-                userInfo.userId = it.userId
-                userInfo.avatarUrl = it.portrait
-                userInfo.nickname = it.nickName
-                userInfo.gender = it.gender
-                userInfo.ext = GsonUtils.toJson(it)
-                ImUserManager.updateUserInfo(userInfo)
-                AppCacheManager.userInfo = userInfo.ext
-                AppCacheManager.isAdmin = it.isAdmin
-                AppCacheManager.gender = it.gender
-                mBinding.userinfo = it
+                refreshUserCache(it)
                 showMyPicData(it)
                 bindBanner(it.banners)
                 showUploadAvatarPop(it)
@@ -166,24 +173,60 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         }
     }
 
-    private var hasShowAvatarPop = false
-    private var uploadAvatarPop:UploadAvatarPop?=null
+    private fun refreshUserCache(it: UserDetailInfo) {
+        userInfo = it
+        val emUserInfo = EMUserInfo()
+        emUserInfo.userId = it.userId
+        emUserInfo.avatarUrl = it.portrait
+        emUserInfo.nickname = it.nickName
+        emUserInfo.gender = it.gender
+        emUserInfo.ext = GsonUtils.toJson(it)
+        ImUserManager.updateUserInfo(emUserInfo)
+        AppCacheManager.userInfo = emUserInfo.ext
+        AppCacheManager.isAdmin = it.isAdmin
+        AppCacheManager.gender = it.gender
+        mBinding.userinfo = it
+    }
+
+    private var uploadAvatarPop: AvatarAndNickNameEditPop? = null
     private fun showUploadAvatarPop(it: UserDetailInfo) {
-        if (CommonUtils.isPopShow(uploadAvatarPop)){
+        if (CommonUtils.isPopShow(uploadAvatarPop)) {
             return
         }
-        if (it.needUploadPortrait && isResumed && !hasShowAvatarPop) {
-            hasShowAvatarPop = true
-            uploadAvatarPop = UploadAvatarPop.showDialog(mContext,
-                SexManager.isMan(it.gender), object : UploadAvatarPop.OnSelectPicResultListener {
-                    override fun onPicPath(availablePath: String) {
+        isSaveNickSuccess = !it.needEditNickName
+        isSaveAvatarSuccess = !it.needUploadPortrait
+        if ((it.needUploadPortrait || it.needEditNickName) && isResumed) {
+            uploadAvatarPop = AvatarAndNickNameEditPop.showDialog(mContext,
+                it.needUploadPortrait,
+                it.needEditNickName,
+                object : AvatarAndNickNameEditPop.OnEditResultListener {
+                    override fun onEditNickName(nickName: String) {
+                        saveNickName(nickName)
+                    }
+                    override fun onEditAvatar(availablePath: String) {
                         uploadAvatar(availablePath)
                     }
-                })
+                }
+            )
         }
+    }
+    private var isSaveNickSuccess = false
+    private var isSaveAvatarSuccess = false
+    private fun saveNickName(nickName: String) {
+        mViewModel.updatePersonalPageSingle(UserParamType.TYPE_NICKNAME.type, nickName, object : OnRequestResultListener<String> {
+            override fun onSuccess(data: BaseBean<String>) {
+                isSaveNickSuccess = true
+                if (isSaveAvatarSuccess){
+                    DialogUtils.dismissLoading()
+                    uploadAvatarPop?.dismiss()
+                    getData()
+                }
+            }
+        })
     }
 
     private fun uploadAvatar(availablePath: String) {
+        DialogUtils.showLoading()
         UploadFileClient.uploadFile(
             availablePath,
             object : UploadFileProgressListener {
@@ -192,7 +235,13 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
                 }
 
                 override fun onUploadSuccess(url: String) {
+                    isSaveAvatarSuccess = true
                     saveAvatar(url)
+                    if (isSaveNickSuccess){
+                        DialogUtils.dismissLoading()
+                        uploadAvatarPop?.dismiss()
+                        getData()
+                    }
                 }
 
                 override fun onUploadFail(msg: String) {
@@ -203,10 +252,9 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
 
     private fun saveAvatar(url: String) {
         ThreadUtils.getMainHandler().post {
-            mViewModel.updatePersonalPageSingle(1, url,object : OnRequestResultListener<String>{
+            mViewModel.updatePersonalPageSingle(1, url, object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     getData()
-
                 }
             })
         }
@@ -419,7 +467,7 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
             })
     }
 
-    private fun removePic(position:Int){
+    private fun removePic(position: Int) {
         val item = editPhotoAdapter.getItem(position)
         photoList.removeIf {
             it.url == item?.url
@@ -442,7 +490,7 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
                 }
             }
         }
-        mViewModel.updatePersonalPageSingle(2, urls,object : OnRequestResultListener<String>{
+        mViewModel.updatePersonalPageSingle(2, urls, object : OnRequestResultListener<String> {
             override fun onSuccess(data: BaseBean<String>) {
 
             }

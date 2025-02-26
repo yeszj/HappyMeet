@@ -56,7 +56,7 @@ class TabWalletFrg : BaseFragment<FrgTabWalletBinding, MainViewModel>(
             RoseExchangeActivity.lunch(mContext)
         }
         mBinding.btnInvite.setOnSingleClickListener { InviteMainActivity.lunch(mContext) }
-        mBinding.tvInviteMyTitle.setOnSingleClickListener {
+        mBinding.vgInvite.setOnSingleClickListener {
             if (TextUtils.isEmpty(walletInfo?.inviteNickName)) {
                 BindInviteCodeActivity.lunch(mContext)
             } else {

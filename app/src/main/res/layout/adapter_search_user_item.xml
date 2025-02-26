@@ -73,25 +73,15 @@
             android:text='@{"ID:"+userinfo.userId}'
             android:backgroundTint="@color/blackAlpha96"
             android:layout_height="@dimen/dp_16"/>
-
-        <cn.yanhu.commonres.view.UserTagView
-            android:id="@+id/userAge"
-            android:layout_marginBottom="@dimen/dp_2"
-            userAge="@{userinfo.age}"
-            userGender="@{userinfo.gender}"
+        <cn.yanhu.commonres.view.UserInfoTagLayout
+            android:id="@+id/userTag"
+            userInfo="@{userinfo}"
             android:layout_marginStart="@dimen/dp_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_2"
             app:layout_constraintStart_toEndOf="@+id/avatarView"
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"  />
-        <cn.yanhu.commonres.view.UserTagView
-            userProvince='@{userinfo.province}'
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/userAge"
-            app:layout_constraintStart_toEndOf="@+id/userAge"
-            app:layout_constraintTop_toTopOf="@+id/userAge" />
 
 
         <LinearLayout

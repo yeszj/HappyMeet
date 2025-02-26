@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.databinding.AdapterSameCityUserItemBinding
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.TextViewDrawableUtils
 import cn.yanhu.commonres.bean.SameCityUserInfo
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -16,7 +17,7 @@ import com.chad.library.adapter4.BaseQuickAdapter
  * created: 2024/2/21
  * desc:
  */
-class SameCityUserListAdapter: BaseQuickAdapter<SameCityUserInfo, SameCityUserListAdapter.VH>() {
+class SameCityUserListAdapter : BaseQuickAdapter<SameCityUserInfo, SameCityUserListAdapter.VH>() {
     class VH(
         parent: ViewGroup,
         val binding: AdapterSameCityUserItemBinding = AdapterSameCityUserItemBinding.inflate(
@@ -38,12 +39,32 @@ class SameCityUserListAdapter: BaseQuickAdapter<SameCityUserInfo, SameCityUserLi
             })
             val thumbnail = item?.thumbnail?.toMutableList()
             val take = thumbnail?.take(3)
-            picGridLayout.setUrlList(take)
-            if (item?.isAuth == true){
-                TextViewDrawableUtils.setDrawableRight(tvNickName,ContextCompat.getDrawable(context,
-                    cn.yanhu.commonres.R.drawable.svg_identify_tag))
-            }else{
-                TextViewDrawableUtils.setDrawableRight(tvNickName,null)
+            if (!take.isNullOrEmpty()) {
+                picGridLayout.visibility = View.VISIBLE
+                picGridLayout.setImageUrls(take)
+                picGridLayout.setNineGridImgListener { index, imageViewList ->
+                    val imageView = imageViewList[index]
+                    DialogUtils.showImageViewerDialog(imageView,index, take.toMutableList()
+                    ) { popupView, position ->
+                        try {
+                            val ivBg2 = imageViewList[position]
+                            popupView.updateSrcView(ivBg2)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            } else {
+                picGridLayout.visibility = View.GONE
+            }
+            if (item?.isAuth == true) {
+                TextViewDrawableUtils.setDrawableRight(
+                    tvNickName, ContextCompat.getDrawable(
+                        context, cn.yanhu.commonres.R.drawable.svg_identify_tag
+                    )
+                )
+            } else {
+                TextViewDrawableUtils.setDrawableRight(tvNickName, null)
             }
             executePendingBindings()
         }

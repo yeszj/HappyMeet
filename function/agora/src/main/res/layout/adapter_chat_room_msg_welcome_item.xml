@@ -5,42 +5,44 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="userInfo"
-            type="cn.yanhu.commonres.bean.BaseUserInfo" />
+            type="cn.yanhu.commonres.bean.UserDetailInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp_10"
-        android:background="@drawable/white_corner_10"
-        android:backgroundTint="@color/blackAlpha80"
-        android:paddingEnd="@dimen/dp_10">
+        android:background="@drawable/black_alpha80_corner_10"
+        android:paddingEnd="@dimen/dp_20"
+        android:paddingBottom="@dimen/dp_5"
+        tools:background="@drawable/black_alpha80_corner_10">
 
         <cn.yanhu.commonres.view.UserAvatarView
             android:id="@+id/userAvatar"
-            avatarUrl="@{userInfo.portrait}"
-            avatarUserId="@{userInfo.userId}"
             avatarFrameUrl="@{userInfo.avatarFrame}"
-            app:isCanClick="false"
+            avatarUrl="@{userInfo.portrait}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:avatarSize="@dimen/dp_32"
+            app:isCanClick="false"
             app:isShowSvgAvatar="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:svgAvatarSize="@dimen/dp_45"
-            app:avatarSize="@dimen/dp_32" />
+            app:svgAvatarSize="@dimen/dp_45" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_nickName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_5"
             android:text="@{userInfo.nickName}"
             android:textColor="@{userInfo.gender==1?@color/manColor:@color/femaleColor}"
             android:textSize="@dimen/sp_14"
             app:fontType="@string/fontMedium"
-            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
             app:layout_constraintStart_toEndOf="@+id/userAvatar"
             app:layout_constraintTop_toTopOf="@+id/userAvatar"
             tools:text="女性昵称"
@@ -53,10 +55,80 @@
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
             app:fontType="@string/fontMedium"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
             app:layout_constraintStart_toEndOf="@+id/tv_nickName"
             app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
 
+
+        <cn.yanhu.commonres.view.UserInfoTagLayout
+            android:id="@+id/userTag"
+            userInfo="@{userInfo}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
+
+        <LinearLayout
+            android:id="@+id/vg_guard"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_4"
+            android:background="@drawable/bg_gradient_guard_msg"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_5"
+            android:visibility="@{userInfo.myGuardedInfo!=null &amp;&amp; userInfo.showMyGuardInfo?View.VISIBLE:View.GONE}"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/userTag">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="@dimen/dp_10"
+                android:src="@drawable/icon_guard_hand" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{userInfo.myGuardedInfo.nickName+"的守护"}'
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_11"
+                app:fontType="@string/fontMedium"
+                tools:text="用户昵称的守护" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="@dimen/dp_10"
+                android:src="@drawable/icon_guard_hand2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vg_loverInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_4"
+            android:background="@{userInfo.loverInfo.loversType==1?@drawable/bg_lovers1_tag_r6:userInfo.loverInfo.loversType==2?@drawable/bg_lovers2_tag_r6:@drawable/bg_lovers3_tag_r6}"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dp_4"
+            android:paddingEnd="@dimen/dp_6"
+            android:visibility="@{userInfo.loverInfo!=null &amp;&amp; userInfo.showLoverInfo?View.VISIBLE:View.GONE}"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/vg_guard"
+            tools:background="@drawable/bg_lovers1_tag">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="@dimen/dp_14"
+                android:src="@{userInfo.loverInfo.loversType==1?@drawable/icon_lovers1:userInfo.loverInfo.loversType==2?@drawable/icon_lovers2:@drawable/icon_lovers3}" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{userInfo.loverInfo.nickName+"的情侣"}'
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_11"
+                app:fontType="@string/fontMedium"
+                tools:text="用户昵称的情侣" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

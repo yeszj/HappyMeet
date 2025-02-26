@@ -26,6 +26,9 @@
 -dontwarn org.apache.lucene.**
 -keep class org.apache.lucene.** {*;}
 
+-keep class com.airbnb.lottie.** { *; }
+-keep class androidx.** { *; }
+
 
 
 ## glide 4

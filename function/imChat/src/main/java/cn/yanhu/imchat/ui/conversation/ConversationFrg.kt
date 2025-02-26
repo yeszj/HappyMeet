@@ -106,6 +106,18 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
                     topBinding.imSystemMsgTime.text = ""
                     topBinding.imSystemMsgContent.text = "暂无官方消息"
                 }
+
+                val viewPageInfoCount = it.viewPageInfoCount
+                if (viewPageInfoCount > 0) {
+                    topBinding.tvReadCount.visibility = View.VISIBLE
+                    if (viewPageInfoCount > 99) {
+                        topBinding.tvReadCount.text = "99+"
+                    } else {
+                        topBinding.tvReadCount.text = viewPageInfoCount.toString()
+                    }
+                } else {
+                    topBinding.tvReadCount.visibility = View.INVISIBLE
+                }
             })
         }
     }

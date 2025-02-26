@@ -1,9 +1,12 @@
 package cn.yanhu.commonres.bind
 
 import androidx.databinding.BindingAdapter
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.view.UserTagView
 import cn.yanhu.commonres.view.UserAvatarView
+import cn.yanhu.commonres.view.UserIdTagLayout
+import cn.yanhu.commonres.view.UserInfoTagLayout
 import cn.yanhu.commonres.view.UserLevelView
 
 /**
@@ -26,14 +29,14 @@ fun setUserAvatar(
     userAvatarView.setUserAvatar(user)
 }
 
-@BindingAdapter(value = ["tagValue", "tagColorId","tagTextColorId"], requireAll = false)
-fun setTagValue(userAgeView: UserTagView, tagValue: String?, tagColorId: Int,tagTextColorId:Int) {
-    userAgeView.setTagValue(tagValue, tagColorId,tagTextColorId)
+@BindingAdapter(value = ["tagValue", "tagColorId", "tagTextColorId"], requireAll = false)
+fun setTagValue(userAgeView: UserTagView, tagValue: String?, tagColorId: Int, tagTextColorId: Int) {
+    userAgeView.setTagValue(tagValue, tagColorId, tagTextColorId)
 }
 
-@BindingAdapter(value = ["userLevel"], requireAll = false)
-fun setUserLevel(useLevelView: UserLevelView, userLevel: Int) {
-    useLevelView.setUserLevel(userLevel)
+@BindingAdapter(value = ["userLevel", "isShowZero"], requireAll = false)
+fun setUserLevel(useLevelView: UserLevelView, userLevel: Int, isShowZero: Boolean = false) {
+    useLevelView.setUserLevel(userLevel, isShowZero)
 }
 
 @BindingAdapter(value = ["userAge", "userGender"], requireAll = false)
@@ -43,7 +46,12 @@ fun setUserAge(userAgeView: UserTagView, userAge: Int, userGender: Int) {
 
 @BindingAdapter(value = ["userProvince"], requireAll = false)
 fun setUserLocation(userAgeView: UserTagView, userProvince: String?) {
-        userAgeView.setUserLocation(userProvince)
+    userAgeView.setUserLocation(userProvince)
+}
+
+@BindingAdapter(value = ["userHomeTown"], requireAll = false)
+fun setUserHomeTown(userAgeView: UserTagView, userHomeTown: String?) {
+    userAgeView.setUserHomeTown(userHomeTown)
 }
 
 @BindingAdapter(value = ["onlineCount"], requireAll = false)
@@ -59,4 +67,34 @@ fun setGroupUserTotalCount(userAgeView: UserTagView, groupUserTotalCount: Int) {
 @BindingAdapter(value = ["groupUserCount"], requireAll = false)
 fun setGroupUserCount(userAgeView: UserTagView, groupUserCount: String) {
     userAgeView.setGroupUserCount(groupUserCount)
+}
+
+
+@BindingAdapter(value = ["userInfo"], requireAll = false)
+fun setUserTagInfo(useLevelView: UserInfoTagLayout, userInfo: BaseUserInfo?) {
+    userInfo?.apply {
+        useLevelView.setUserInfo(this)
+    }
+}
+
+@BindingAdapter(
+    value = ["beautifulIdImg", "userId", "tagBgColor", "tagTxtColor"],
+    requireAll = false
+)
+fun setUserIdTag(
+    useLevelView: UserIdTagLayout,
+    beautifulIdImg: String?,
+    userId: String?,
+    tagBgColor: Int?,
+    tagTxtColor: Int?
+) {
+    useLevelView.setUserInfo(beautifulIdImg, userId)
+    if (tagBgColor == null || tagTxtColor == null) {
+        useLevelView.setUserIdTagColor(
+            CommonUtils.getColor(cn.yanhu.baselib.R.color.blackAlpha96),
+            CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor)
+        )
+    } else {
+        useLevelView.setUserIdTagColor(tagBgColor, tagTxtColor)
+    }
 }

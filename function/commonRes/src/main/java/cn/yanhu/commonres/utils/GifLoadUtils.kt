@@ -80,16 +80,15 @@ object GifLoadUtils {
         } else {
             val requestOptions = RequestOptions().diskCacheStrategy(
                 DiskCacheStrategy.ALL
-            ).skipMemoryCache(false)
-            requestOptions.transform(
-                CenterCrop(),
-                RoundedCorners(
-                    CommonUtils.getDimension(dimenId)
-                )
             )
             requestOptions.placeholder(R.drawable.pic_default_bg)
             requestOptions.error(R.drawable.pic_default_bg)
-            Glide.with(context).load(ImageThumbUtils.getThumbUrl(url)).apply(requestOptions).into(imageView)
+            Glide.with(context).load(ImageThumbUtils.getThumbUrl(url))
+                .transform(CenterCrop(),
+                    RoundedCorners(
+                        CommonUtils.getDimension(dimenId)
+                    ))
+                .apply(requestOptions).into(imageView)
         }
     }
 }

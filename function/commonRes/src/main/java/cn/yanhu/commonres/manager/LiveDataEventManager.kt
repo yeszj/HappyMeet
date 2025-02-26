@@ -43,6 +43,9 @@ object LiveDataEventManager {
     const val DRESS_UP_SUCCESS = "dress_up_success"
 
     const val WX_SHARE_SUCCESS = "wx_share_success"
+    const val REFRESH_USER_CACHE = "refresh_user_cache"
+    const val FACE_RESULT = "face_result"
+    const val START_FACE_AUTH = "start_face_auth"
 
     @JvmStatic
     fun sendLiveDataMessage(key: String, value: Any = key) {

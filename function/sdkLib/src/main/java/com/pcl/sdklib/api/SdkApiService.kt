@@ -1,6 +1,8 @@
 package com.pcl.sdklib.api
 
 import cn.zj.netrequest.status.BaseBean
+import com.pcl.sdklib.bean.CheckFaceAuthResult
+import com.pcl.sdklib.bean.FaceParamsBody
 import com.pcl.sdklib.bean.PayRequest
 import com.pcl.sdklib.bean.PostBaiduAuthBean
 import com.pcl.sdklib.bean.WechatPayData
@@ -50,8 +52,15 @@ interface SdkApiService {
         @Query("wxCode") wxCode: String?
     ): BaseBean<Boolean>
 
+
+    @POST("app/v1/auth/shangtangFace")
+    suspend fun checkFaceAuthResult(@Body faceParamsBody: FaceParamsBody): BaseBean<String>
+
     @POST("/app/v1/auth/baiduFace")
     fun submitBaiduFace(@Body baiduFaceRequest: PostBaiduAuthBean?): BaseBean<String>
+
+    @GET("app/v1/auth/checkAuth")
+    suspend fun checkBaiduFace(): BaseBean<CheckFaceAuthResult>
 
     @FormUrlEncoded
     @POST("/app/v1/userCenter/updatePersonalPageSingle")

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="agreement_content_color">#787E85</color>
+    <color name="agreement_sort_color">#171D24</color>
+    <color name="background">#F0F1F2</color>
+    <color name="home_agree_color">#77787A</color>
+    <color name="home_agreement_color">#0080FF</color>
+    <color name="home_sort_color">#171D24</color>
+    <color name="home_sort_describe_color">#787E85</color>
+    <color name="home_text_color_black">#FF171D24</color>
+    <color name="home_text_color_skyblue">#00BAF2</color>
+    <color name="home_text_color_white">#ffffff</color>
+    <color name="home_title1">#171D24</color>
+    <color name="home_title2">#171D24</color>
+    <color name="homr_text_color_grey">#999999</color>
+    <color name="idcard_edit_text_content_color">#171D24</color>
+    <color name="idcard_edit_text_hint_color">#FFC8C9CC</color>
+    <color name="idcard_edit_text_title_color">#303133</color>
+    <color name="idcard_error_color">#FFFF194F</color>
+    <color name="idcard_image_fill">#99171D24</color>
+    <color name="idcard_image_stroke">#0080FF</color>
+    <color name="idcard_image_text_color">#FFFFFF</color>
+    <color name="idcard_input_txt">#171D24</color>
+    <color name="idcard_line_color">#E5E5E5</color>
+    <color name="idcard_text_color_grey">#666666</color>
+    <color name="idcard_text_tip_color">#FF787E85</color>
+    <color name="item_main_color">#ffffff</color>
+    <color name="item_main_color_selected">#63B8FF</color>
+    <color name="item_main_text_color">#63B8FF</color>
+    <color name="item_main_text_color_selected">#ffffff</color>
+    <color name="result_button_go_home">#FF171D24</color>
+    <color name="result_button_retry">#FFFFFF</color>
+    <color name="title_bar">#FDFDFE</color>
+    <color name="title_line_color">#E8E9EB</color>
+    <color name="verify_black_txt">#171d24</color>
+    <color name="verify_result_txt">#77787A</color>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="agreement_content_font">14sp</dimen>
+    <dimen name="agreement_title_font">16sp</dimen>
+    <dimen name="button_font">16sp</dimen>
+    <dimen name="collect_bottom_font">12sp</dimen>
+    <dimen name="home_button_font">16sp</dimen>
+    <dimen name="home_sort_describe_font">14sp</dimen>
+    <dimen name="home_sort_font">18sp</dimen>
+    <dimen name="home_title_font1">24sp</dimen>
+    <dimen name="home_title_font2">28sp</dimen>
+    <dimen name="idcard_edit_text_font">16sp</dimen>
+    <dimen name="idcard_tips_font">13sp</dimen>
+    <dimen name="title_font">18sp</dimen>
+    <dimen name="title_height">56dp</dimen>
+    <dimen name="title_line_height">0.5dp</dimen>
+    <dimen name="verify_error_font">16sp</dimen>
+    <dimen name="verify_font">20sp</dimen>
+    <string name="app_name">百度人证核验</string>
+    <string name="collect_bottom_txt">— 百度大脑技术支持 —</string>
+    <string name="home_agree_txt">阅读并同意</string>
+    <string name="home_agreement_functional_explain_old_txt">
+        该功能会请求权威数据源进行身份信息确认。
+    </string>
+    <string name="home_agreement_functional_explain_txt">
+        为保障用户账户的安全，提供更好的服务，在提供部分产品及服务之前,
+        采用人脸实名认证功能对用户的身份进行认证，
+        用于验证操作人是否为账户持有者本人，
+        通过人脸识别结果评估是否为用户提供后续产品或服务。
+    </string>
+    <string name="home_agreement_functional_txt">功能说明</string>
+    <string name="home_agreement_permission_explain_txt">
+        如您点击“开始认证”或以其他方式选择接受本协议规则，则视为您在使用人脸识别服务时，
+        同意并授权、获取、使用您在申请过程中所提供的个人信息。
+    </string>
+    <string name="home_agreement_permission_txt">授权与许可</string>
+    <string name="home_agreement_rmation_security_explaoin_txt">
+        承诺对您的个人信息严格保密，并基于国家监管部门认可的加密算法进行数据加密传输，数据加密存储，
+        承诺尽到信息安全保护义务。
+    </string>
+    <string name="home_agreement_rmation_security_txt">信息安全声明</string>
+    <string name="home_agreement_titlebar_txt">实名认证用户隐私协议</string>
+    <string name="home_agreement_txt">《实名认证用户隐私协议》</string>
+    <string name="home_but_txt">开始身份认证</string>
+    <string name="home_greet_sdk_txt">请进行人脸识别认证</string>
+    <string name="home_greet_txt">为保证您的信息安全</string>
+    <string name="home_handset_explain_txt">保持您的脸出现在取景框内</string>
+    <string name="home_handset_txt">正面对准手机</string>
+    <string name="home_light_explain_txt">请保证光线不要过暗或过亮</string>
+    <string name="home_light_txt">识别光线适中</string>
+    <string name="home_mask_explain_txt">非本人操作将无法通过认证</string>
+    <string name="home_mask_txt">确保本人操作</string>
+    <string name="id_card_input_txt">输入身份证姓名和号码</string>
+    <string name="id_card_invalid_txt">身份信息填写不合法</string>
+    <string name="id_card_name_txt">姓名</string>
+    <string name="id_card_next_txt">进行身份核验</string>
+    <string name="id_card_num_txt">身份证号</string>
+    <string name="id_card_retake_txt">重新拍摄</string>
+    <string name="id_card_title_confirm_txt">确认个人信息</string>
+    <string name="id_card_title_txt">身份信息采集</string>
+    <string name="idcard_ing_txt">身份证识别中...</string>
+    <string name="idcard_recollect">点击重新采集身份证</string>
+    <string name="idcard_retry">重新加载</string>
+    <string name="idcard_return_home">退出身份证识别</string>
+    <string name="idcard_tips_modify">识别到以下身份信息，点击可进行修改</string>
+    <string name="main_item_face_bank_cards">银行卡</string>
+    <string name="main_item_face_delete">删除功能</string>
+    <string name="main_item_face_detect">人脸图像采集</string>
+    <string name="main_item_face_id_cards">身份证</string>
+    <string name="main_item_face_lite">人脸图像验证</string>
+    <string name="main_item_face_live">活体检测</string>
+    <string name="main_item_face_recognition">人脸识别 1v1</string>
+    <string name="main_item_face_recognition_id">人脸识别 公安验证</string>
+    <string name="main_item_face_recognition_n">人脸识别 1vN</string>
+    <string name="main_item_face_register">人脸注册</string>
+    <string name="play">play</string>
+    <string name="record">record</string>
+    <string name="setting_actionlive_blink_txt">眨眨眼</string>
+    <string name="setting_actionlive_look_up_txt">向上抬头</string>
+    <string name="setting_actionlive_nod_txt">向下低头</string>
+    <string name="setting_actionlive_open_mouth_txt">张张嘴</string>
+    <string name="setting_actionlive_shake_head_txt">左右摇头</string>
+    <string name="setting_actionlive_turn_left_txt">向左摇头</string>
+    <string name="setting_actionlive_turn_right_txt">向右摇头</string>
+    <string name="setting_actionlive_txt">活体动作顺序随机</string>
+    <string name="setting_announcements_txt">语音播报</string>
+    <string name="setting_live_detect_txt">活体检测</string>
+    <string name="setting_prompt_txt">提示: 正式使用时，开发者可将前端设置功能隐藏</string>
+    <string name="setting_titlebar_txt">设置</string>
+    <string name="splash_text">Face Recognition</string>
+    <string name="stop">stop</string>
+    <string name="stop_playback">stop playback</string>
+    <string name="stop_recording">stop recording</string>
+    <string name="verify_check_net_txt">请检查网络</string>
+    <string name="verify_error_build_data_failed">构建数据异常</string>
+    <string name="verify_error_camera_open_failed">摄像头调起失败</string>
+    <string name="verify_error_cancel_collect_process">采集流程取消</string>
+    <string name="verify_error_collect_after_process_exception">采集后内部异常</string>
+    <string name="verify_error_collect_before_process_exception">采集前内部异常</string>
+    <string name="verify_error_color_exception">炫彩异常</string>
+    <string name="verify_error_get_data_failed">获取安全数据失败</string>
+    <string name="verify_error_have_had_collect_process">已有采集流程运行中</string>
+    <string name="verify_error_live_verify_exception">活体验证步骤异常</string>
+    <string name="verify_error_liveness_score_exception">活体分数异常</string>
+    <string name="verify_error_no">未知异常</string>
+    <string name="verify_error_no_agreement">未同意隐私协议</string>
+    <string name="verify_error_permission_exception">无摄像头/麦克风权限</string>
+    <string name="verify_error_preview_exception">预览异常</string>
+    <string name="verify_error_record_failed">视频录制错误</string>
+    <string name="verify_error_safety_no_init">安全SDK未初始化</string>
+    <string name="verify_error_select_image_exception">筛选图片异常</string>
+    <string name="verify_error_thread_exception">线程异常</string>
+    <string name="verify_error_timeout_exit">超时，用户取消采集流程</string>
+    <string name="verify_ing_txt">身份核验中...</string>
+    <string name="verify_net_error_txt">网络连接失败</string>
+    <string name="verify_title_txt">人脸身份核验</string>
+    <string name="zero">0</string>
+    <style name="DefaultDialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+    <style name="Theme_Fullscreen" parent="android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="Theme_NoTitle" parent="android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+    <style name="Theme_Translucent" parent="android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+    <style name="TipDialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

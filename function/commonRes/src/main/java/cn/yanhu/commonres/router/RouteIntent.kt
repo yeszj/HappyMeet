@@ -50,6 +50,15 @@ object RouteIntent {
             .withString(IntentKeyConfig.ID, userId).navigation()
     }
 
+    fun lunchLoversPage(userId: String?) {
+        if (TextUtils.isEmpty(userId)) {
+            return
+        }
+        ARouter.getInstance().build(RouterPath.ROUTER_MY_LOVERS)
+            .withString(IntentKeyConfig.ID, userId).navigation()
+    }
+
+
 
     fun lunchPersonHomePage(userInfo: SameCityUserInfo?) {
         if (userInfo == null) {
@@ -146,6 +155,14 @@ object RouteIntent {
     fun toVideoPhonePage(chatUser: ChatCallResponseInfo) {
         ARouter.getInstance().build(RouterPath.ROUTER_VIDEO_PHONE)
             .withSerializable(IntentKeyConfig.DATA, chatUser).navigation()
+    }
+
+
+    fun lunchLogPostPage(position: Int,extraInfo:String) {
+        ARouter.getInstance().build(RouterPath.ROUTER_ERRORLOGPOST)
+            .withInt(IntentKeyConfig.POSITION, position)
+            .withString(IntentKeyConfig.DATA, extraInfo)
+            .navigation()
     }
 
 

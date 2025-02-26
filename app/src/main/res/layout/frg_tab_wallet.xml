@@ -8,6 +8,7 @@
         <variable
             name="walletInfo"
             type="cn.huanyuan.sweetlove.bean.WalletInfo" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -93,10 +94,10 @@
                         android:id="@+id/tv_wallet"
                         android:layout_width="@dimen/dp_132"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/dp_36"
                         android:layout_marginStart="@dimen/dp_24"
-                        android:text="钱包余额(元)"
                         android:gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp_36"
+                        android:text="钱包余额(元)"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontMedium"
@@ -121,10 +122,10 @@
                         android:id="@+id/tv_ncomeTitle"
                         android:layout_width="@dimen/dp_132"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/dp_36"
-                        android:text="累计总收入(元)"
                         android:layout_marginEnd="@dimen/dp_24"
                         android:gravity="center_horizontal"
+                        android:paddingTop="@dimen/dp_36"
+                        android:text="累计总收入(元)"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontMedium"
@@ -163,7 +164,6 @@
                         android:id="@+id/btn_exchange"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_40"
-                        android:visibility="gone"
                         android:layout_marginStart="@dimen/dp_12"
                         android:layout_marginEnd="@dimen/dp_24"
                         android:layout_marginBottom="@dimen/dp_24"
@@ -171,6 +171,7 @@
                         android:text="兑换玫瑰"
                         android:textColor="@color/colorMain"
                         android:textSize="@dimen/sp_14"
+                        android:visibility="gone"
                         app:fontType="@string/fontBold"
                         app:layout_constraintBottom_toTopOf="@+id/tv_monthIncome"
                         app:layout_constraintEnd_toEndOf="@id/bgBalance"
@@ -208,8 +209,8 @@
                         android:id="@+id/tv_inviteTitle"
                         android:layout_width="@dimen/dp_132"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
                         android:layout_marginStart="@dimen/dp_24"
+                        android:gravity="center_horizontal"
                         android:paddingTop="@dimen/dp_36"
                         android:text="邀请收益(元)"
                         android:textColor="@color/white"
@@ -236,12 +237,12 @@
                         android:id="@+id/tv_hasInviteTitle"
                         android:layout_width="@dimen/dp_132"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dp_24"
+                        android:gravity="center_horizontal"
                         android:paddingTop="@dimen/dp_36"
                         android:text="已邀请(人)"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14"
-                        android:gravity="center_horizontal"
-                        android:layout_marginEnd="@dimen/dp_24"
                         app:fontType="@string/fontMedium"
                         app:layout_constraintEnd_toEndOf="@+id/bgInvite"
                         app:layout_constraintTop_toTopOf="@+id/bgInvite" />
@@ -269,9 +270,9 @@
                         android:layout_marginBottom="@dimen/dp_24"
                         android:background="@drawable/white_alpha60_r20"
                         android:text="查看详情"
-                        android:visibility="gone"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14"
+                        android:visibility="gone"
                         app:fontType="@string/fontBold"
                         app:layout_constraintBottom_toTopOf="@+id/tv_monthInvite"
                         app:layout_constraintEnd_toStartOf="@+id/btn_invite"
@@ -319,50 +320,62 @@
                         app:layout_constraintBottom_toBottomOf="@+id/divider"
                         app:layout_constraintTop_toBottomOf="@+id/bgInvite" />
 
-                    <cn.yanhu.baselib.view.CustomFontTextView
-                        android:id="@+id/tv_inviteMyTitle"
+                    <LinearLayout
+                        android:id="@+id/vg_invite"
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/dp_48"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_6"
-                        android:drawableStart="@drawable/svg_invite_gray"
-                        android:drawablePadding="@dimen/dp_8"
                         android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_12"
-                        android:text="邀请我的人"
-                        android:textColor="@color/fontTextColor"
-                        android:textSize="@dimen/sp_14"
+                        android:visibility="@{walletInfo.ifEdit?View.VISIBLE:View.GONE}"
                         app:layout_constraintEnd_toEndOf="@+id/bgInviteInfo"
                         app:layout_constraintStart_toStartOf="@+id/bgInviteInfo"
-                        app:layout_constraintTop_toTopOf="@+id/bgInviteInfo" />
+                        app:layout_constraintTop_toTopOf="@+id/bgInviteInfo">
 
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        imageUrl="@{walletInfo.invitePortrait}"
-                        placeholderId="@{-1}"
-                        android:layout_width="@dimen/dp_24"
-                        android:layout_height="@dimen/dp_24"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_inviteMyTitle"
-                        app:layout_constraintEnd_toStartOf="@+id/tv_inviteName"
-                        app:layout_constraintTop_toTopOf="@+id/tv_inviteMyTitle"
-                        app:riv_oval="true"
-                        tools:src="@mipmap/ic_launcher_round" />
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_inviteMyTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/dp_48"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/svg_invite_gray"
+                            android:drawablePadding="@dimen/dp_8"
+                            android:gravity="center_vertical"
+                            android:paddingStart="@dimen/dp_12"
+                            android:text="邀请我的人"
+                            android:textColor="@color/fontTextColor"
+                            android:textSize="@dimen/sp_14"
+                            app:layout_constraintEnd_toEndOf="@+id/bgInviteInfo"
+                            app:layout_constraintStart_toStartOf="@+id/bgInviteInfo"
+                            app:layout_constraintTop_toTopOf="@+id/bgInviteInfo" />
 
-                    <cn.yanhu.baselib.view.CustomFontTextView
-                        android:id="@+id/tv_inviteName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/svg_arrow_right"
-                        android:drawablePadding="@dimen/dp_4"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_4"
-                        android:paddingEnd="@dimen/dp_12"
-                        android:text="@{walletInfo.inviteNickName}"
-                        android:textColor="@color/color_666666"
-                        android:textSize="@dimen/sp_14"
-                        app:fontType="@string/fontMedium"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_inviteMyTitle"
-                        app:layout_constraintEnd_toEndOf="@+id/bgInvite"
-                        app:layout_constraintTop_toTopOf="@+id/tv_inviteMyTitle"
-                        tools:text="彩色的黑" />
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            imageUrl="@{walletInfo.invitePortrait}"
+                            placeholderId="@{-1}"
+                            android:layout_width="@dimen/dp_24"
+                            android:layout_height="@dimen/dp_24"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_inviteMyTitle"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_inviteName"
+                            app:layout_constraintTop_toTopOf="@+id/tv_inviteMyTitle"
+                            app:riv_oval="true"
+                            tools:src="@mipmap/ic_launcher_round" />
+
+                        <cn.yanhu.baselib.view.CustomFontTextView
+                            android:id="@+id/tv_inviteName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableEnd="@drawable/svg_arrow_right"
+                            android:drawablePadding="@dimen/dp_4"
+                            android:gravity="center_vertical"
+                            android:paddingStart="@dimen/dp_4"
+                            android:paddingEnd="@dimen/dp_12"
+                            android:text="@{walletInfo.inviteNickName}"
+                            android:textColor="@color/color_666666"
+                            android:textSize="@dimen/sp_14"
+                            app:fontType="@string/fontMedium"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_inviteMyTitle"
+                            app:layout_constraintEnd_toEndOf="@+id/bgInvite"
+                            app:layout_constraintTop_toTopOf="@+id/tv_inviteMyTitle"
+                            tools:text="彩色的黑" />
+                    </LinearLayout>
 
 
                     <cn.yanhu.baselib.view.CustomFontTextView
@@ -379,7 +392,7 @@
                         android:textSize="@dimen/sp_14"
                         app:layout_constraintEnd_toEndOf="@+id/bgInvite"
                         app:layout_constraintStart_toStartOf="@+id/bgInviteInfo"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_inviteMyTitle" />
+                        app:layout_constraintTop_toBottomOf="@+id/vg_invite" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
                         android:layout_width="wrap_content"
@@ -403,12 +416,12 @@
                         android:layout_marginEnd="@dimen/dp_12"
                         android:background="@drawable/white_right_corner_10"
                         android:backgroundTint="@color/colorMain"
+                        android:gravity="center"
                         android:paddingHorizontal="@dimen/dp_6"
                         android:text="复制"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         app:fontType="@string/fontMedium"
-                        android:gravity="center"
-                        android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_inviteCodeTitle"
                         app:layout_constraintEnd_toEndOf="@id/bgInvite"
                         app:layout_constraintTop_toTopOf="@+id/tv_inviteCodeTitle" />

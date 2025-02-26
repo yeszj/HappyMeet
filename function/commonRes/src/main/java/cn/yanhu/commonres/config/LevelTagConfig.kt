@@ -10,6 +10,9 @@ import cn.yanhu.commonres.R
 object LevelTagConfig {
     fun getLevelTagBg(level:Int):Int{
        return when (level) {
+            0 -> {
+               R.drawable.level_tag0
+           }
            in 1..9 -> {
                R.drawable.level_tag1
            }

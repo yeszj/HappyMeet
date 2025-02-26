@@ -7,4 +7,4 @@ import cn.yanhu.commonres.bean.SystemMessageInfo
  * created: 2024/10/11
  * desc:
  */
-data class SystemMsgUnReadInfo(val unReadSystemCount: Int, val systemNotice: SystemMessageInfo?)
+data class SystemMsgUnReadInfo(val unReadSystemCount: Int, val systemNotice: SystemMessageInfo?,val viewPageInfoCount:Int)

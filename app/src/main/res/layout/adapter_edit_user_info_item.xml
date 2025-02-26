@@ -35,7 +35,7 @@
             android:drawablePadding="@dimen/dp_4"
             android:text='@{TextUtils.isEmpty(itemInfo.value)?"请选择":itemInfo.value}'
             tools:text="昵称"
-            android:textColor='@{TextUtils.isEmpty(itemInfo.value)?@color/colorMain:@color/fontGrayColor}'
+            android:textColor='@{TextUtils.isEmpty(itemInfo.value)?@color/fontRedColor:@color/fontGrayColor}'
             android:textSize="@dimen/sp_15" />
     </LinearLayout>
 </layout>

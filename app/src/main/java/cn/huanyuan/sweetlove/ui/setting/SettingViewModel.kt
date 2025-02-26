@@ -8,7 +8,9 @@ import cn.huanyuan.sweetlove.net.rxApi
 import cn.yanhu.commonres.bean.ChatPriceItemInfo
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.zj.netrequest.BaseViewModel
+import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.ResultState
 
 /**
@@ -26,8 +28,12 @@ class SettingViewModel : BaseViewModel() {
         request({ rxApi.checkVersion() }, checkVersionObservable, false)
     }
 
-    fun getAppCheckInfo(hasCameraPermission:Boolean,hasMicrophonePermission: Boolean) {
-        request({ rxApi.getAppCheckInfo(hasCameraPermission,hasMicrophonePermission) }, checkInfoObservable, true)
+    fun getAppCheckInfo(hasCameraPermission: Boolean, hasMicrophonePermission: Boolean) {
+        request(
+            { rxApi.getAppCheckInfo(hasCameraPermission, hasMicrophonePermission) },
+            checkInfoObservable,
+            true
+        )
     }
 
     fun getSwitchSetInfo() {
@@ -35,12 +41,24 @@ class SettingViewModel : BaseViewModel() {
     }
 
     val priceConfigObservable = MutableLiveData<ResultState<MutableList<ChatPriceItemInfo>>>()
-    fun getPriceConfig(chatUserId:Int = 0) {
+    fun getPriceConfig(chatUserId: Int = 0) {
         request({ imChatRxApi.getPriceConfig(chatUserId) }, priceConfigObservable, false)
     }
 
     val setPriceObservable = MutableLiveData<ResultState<Boolean>>()
-    fun setPrice(chatUserId:Int = 0,type:String,id:Int) {
-        request({ imChatRxApi.setPrice(chatUserId.toString(),type,id) }, setPriceObservable, false)
+    fun setPrice(chatUserId: Int = 0, type: String, id: Int) {
+        request(
+            { imChatRxApi.setPrice(chatUserId.toString(), type, id) },
+            setPriceObservable,
+            false
+        )
+    }
+
+    fun switchConfig(
+        key: String,
+        status: Int,
+        onRequestResultListener: OnRequestResultListener<String>
+    ) {
+        request2({ imChatRxApi.switchConfig(key, status) }, onRequestResultListener)
     }
 }

@@ -9,7 +9,7 @@
     native <methods>;
 }
 -keep class c.t.**{*;}
--keep class com.tencent.map.geolocation.**{*;}
+#-keep class com.tencent.map.geolocation.**{*;}
 -dontwarn  org.eclipse.jdt.annotation.**
 -dontwarn  c.t.**
 -dontwarn  android.location.Location
@@ -203,5 +203,9 @@
 }
 
 -keep class com.pcl.sdklib.bean.** { *; }
+
+#商汤炫彩活体检测
+-keep class com.sensetime.senseid.** { *; }
+
 
 

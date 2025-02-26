@@ -1,6 +1,7 @@
 package cn.yanhu.commonres.bean
 
 import androidx.databinding.Bindable
+import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.RoomTypeManager
 import cn.zj.netrequest.BR
 import java.io.Serializable
@@ -14,10 +15,10 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var isMatchmaker = false ////是否是月老/红娘
     var banners: MutableList<BannerBean> = mutableListOf()
     var needUploadPortrait = false
+    var needEditNickName = false
     var isAuth = false
     var personInfo: MutableList<TagInfo> = mutableListOf()
     var friendCondition: MutableList<TagInfo> = mutableListOf()
-    var guardInfo: GuardInfo? = null
     var roomId: Int = 0
     var roomType: Int = 0
     var isAdmin: Boolean = false
@@ -32,8 +33,28 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var addFriendWay:Int = 0
     var seatId:Int = 0
     var guardNickName:String = ""
-    var beautifulIdImg:String = ""
+    var loverInfo:LoverInfo?=null
+    var guardInfo: BaseUserInfo? = null
 
+    fun hideChatBtn():Boolean{
+        return userId==AppCacheManager.userId || (sameSex && gender==1)
+    }
+
+    fun hideRoomBtn():Boolean{
+        return roomId == 0 || userId==AppCacheManager.userId
+    }
+
+    fun isShowLoverInfo():Boolean{
+        return loverInfo==null || loverInfo?.ifHide == false || (loverInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
+    }
+
+    fun isShowGuardInfo():Boolean{
+        return guardInfo==null || guardInfo?.isIfHide == false || (guardInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
+    }
+
+    fun isShowMyGuardInfo():Boolean{
+        return myGuardedInfo==null || myGuardedInfo?.isIfHide == false || (myGuardedInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
+    }
     @Bindable
     var roseNum: String = "0"
         set(value) {

@@ -200,7 +200,7 @@ class ThreeRoomSeatAdapter :
             val currentSurfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = surfaceViewMap
             val liveRoomSeatBean: LiveRoomSeatBean? =
                 currentSurfaceViewMap[position]
-            if (liveRoomSeatBean == null) {
+            if (liveRoomSeatBean == null  || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
                 val surfaceView = TextureView(context)
                 currentSurfaceViewMap[position] =
                     LiveRoomSeatBean(dto.roomUserSeatInfo!!.userId.toInt(), surfaceView)

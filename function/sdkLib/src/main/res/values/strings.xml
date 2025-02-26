@@ -1,0 +1,11 @@
+<resources>
+    <string name="label_button_start_liveness">开始身份核验</string>
+    <string name="label_button_start_ocr">开始证卡识别</string>
+    <string name="label_button_ok">确定</string>
+    <string name="label_detect_success">身份核验成功</string>
+    <string name="label_detect_failure">身份核验失败</string>
+    <string name="tips_server_error">服务器异常</string>
+    <string name="tips_server_detect_error">识别错误</string>
+    <string name="tips_detect_alert">为保证您的信息安全，将进行人脸识别认证，请确保是本人操作</string>
+
+</resources>

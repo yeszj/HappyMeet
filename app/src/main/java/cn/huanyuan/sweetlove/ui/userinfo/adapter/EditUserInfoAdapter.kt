@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.databinding.AdapterEditUserTypeItemBinding
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.bean.EditIUserItemInfo
 import cn.yanhu.commonres.bean.UserInfoItem
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -42,6 +43,11 @@ class EditUserInfoAdapter(var isShowLoadMore:Boolean = true) : BaseSingleItemAda
                 rvInfo.tag = editInfoAdapter
             }
             editInfoAdapter.submitList(item.list)
+            if (item.key.contains("必填")){
+                tvTitle.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontRedColor))
+            }else{
+                tvTitle.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontTextColor))
+            }
             tvTitle.text = item.key
             executePendingBindings()
         }

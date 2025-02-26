@@ -7,4 +7,5 @@ package cn.yanhu.commonres.task
  */
 object AppPopTypeManager {
     const val TYPE_TEE_POP = 8001
+
 }

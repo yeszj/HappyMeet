@@ -123,7 +123,7 @@
                     android:textColorHint="@color/fontGrayColor"
                     android:textSize="@dimen/sp_16" />
 
-                <cn.yanhu.baselib.view.CustomFontButton
+                <cn.yanhu.baselib.view.CustomFontTextView
                     android:id="@+id/btn_commit"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_50"
@@ -132,6 +132,7 @@
                     android:background="@drawable/white_corner_30"
                     android:backgroundTint="@color/colorMain"
                     android:text="上传日志"
+                    android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_17"
                     app:fontType="@string/fontBold" />

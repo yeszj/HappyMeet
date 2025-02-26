@@ -22,7 +22,7 @@
         android:layout_marginBottom="@dimen/dp_10"
         android:background="@{giftMsgInfo.giftInfo.randomBoxGiftBean==null?@drawable/black_alpha80_corner_10:@drawable/bg_gradient_random_box_gift}"
         android:orientation="vertical"
-        android:paddingEnd="@dimen/dp_10"
+        android:paddingEnd="@dimen/dp_20"
         android:paddingBottom="@dimen/dp_10"
         tools:background="@drawable/black_alpha80_corner_10">
 
@@ -35,7 +35,6 @@
                 android:id="@+id/userAvatar"
                 avatarFrameUrl="@{userInfo.avatarFrame}"
                 avatarUrl="@{userInfo.portrait}"
-                avatarUserId="@{userInfo.userId}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_5"
@@ -113,7 +112,7 @@
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{" "+giftMsgInfo.giftInfo.name+"x1"}'
+                android:text='@{" "+giftMsgInfo.giftInfo.name+"x"+giftMsgInfo.giftInfo.sendNumber}'
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14"
                 app:fontType="@string/fontMedium"

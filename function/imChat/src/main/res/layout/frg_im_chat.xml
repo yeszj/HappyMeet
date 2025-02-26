@@ -102,7 +102,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="加好友对方优先看到你"
+                    android:text="同性别之间只能加好友聊天"
                     android:textColor="@color/color_222222"
                     android:textSize="@dimen/sp_14" />
 

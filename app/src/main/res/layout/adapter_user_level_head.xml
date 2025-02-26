@@ -41,6 +41,7 @@
         <cn.yanhu.commonres.view.UserLevelView
             android:id="@+id/levelInfo"
             userLevel="@{userLevel.userLevel}"
+            isShowZero="@{true}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
@@ -89,6 +90,7 @@
             tools:progress="20" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_currentLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
@@ -115,13 +117,34 @@
             tools:ignore="RtlSymmetry"
             tools:text="Lv.1" />
 
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_days"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_30"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="@color/whiteColorAlpha90"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_12"
+            android:text="加入暖遇的第12天,感恩有你"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:fontType="@string/fontBold"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_topBg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:background="#0A0600"
+            app:layout_constraintTop_toBottomOf="@+id/iv_topBg"
+            android:layout_height="@dimen/dp_20"/>
         <View
             android:id="@+id/levelBg"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_74"
             android:background="#0A0600"
-            app:layout_constraintTop_toBottomOf="@+id/iv_topBg" />
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             style="@style/constraintHorizonCenter"
@@ -139,12 +162,11 @@
             style="@style/constraintHorizonCenter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="已解锁1/12项"
             android:textColor="@color/whiteColorAlpha50"
             android:textSize="@dimen/sp_12"
-            app:fontType="@string/fontBold"
             app:layout_constraintBottom_toBottomOf="@+id/icon_left"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            tools:text="已解锁1/12项" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/icon_left"

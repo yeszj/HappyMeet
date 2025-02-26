@@ -10,11 +10,13 @@ import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
+import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.loading.RoomLoadingCallBack
 import cn.yanhu.commonres.router.RouteIntent
 import cn.zj.netrequest.ext.parseState
 import com.chad.library.adapter4.util.setOnDebouncedItemClick
+import com.jeremyliao.liveeventbus.LiveEventBus
 
 /**
  * @author: zhengjun
@@ -75,9 +77,9 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
 
     override fun initListener() {
         super.initListener()
-//        LiveEventBus.get<String>(EventBusKeyConfig.CLOSELIVEROOM).observe(this) {
-//            refreshRoomList()
-//        }
+        LiveEventBus.get<String>(EventBusKeyConfig.CLOSELIVEROOM).observe(this) {
+            refreshRoomList()
+        }
 //        LiveEventBus.get<EMMessage>(EventBusKeyConfig.RECEIVE_CMD_MSG).observe(this){
 //            val source = it.getIntAttribute("source", -1)
 //            if (source == ChatConstant.ACTION_MSG_SWITCH_TYPE_CONFIRM || source == ChatConstant.ACTION_MSG_SWITCH_TYPE_PLAZA){

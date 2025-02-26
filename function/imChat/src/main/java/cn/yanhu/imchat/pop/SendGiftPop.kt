@@ -1,8 +1,10 @@
 package cn.yanhu.imchat.pop
 
 import android.annotation.SuppressLint
-import android.text.TextUtils
+import android.view.View
 import androidx.fragment.app.FragmentActivity
+import androidx.viewpager.widget.ViewPager
+import cn.yanhu.baselib.adapter.CustomViewPagerAdapter
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
@@ -14,17 +16,16 @@ import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.imchat.R
-import cn.yanhu.imchat.adapter.SendGiftItemAdapter
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.databinding.PopSendGiftBinding
 import cn.yanhu.imchat.manager.EmMsgManager
+import cn.yanhu.imchat.view.GiftShowView
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.OnRequestResultListener
-import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
-import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.XPopup
@@ -39,7 +40,7 @@ import java.math.BigDecimal
 @SuppressLint("ViewConstructor")
 class SendGiftPop(
     val context: FragmentActivity,
-    private val sendUserInfo: UserDetailInfo,
+    private var sendUserInfo: UserDetailInfo,
     private val source: Int,
     private val callId: Int,
     val onSendGiftListener: OnSendGiftListener
@@ -48,7 +49,6 @@ class SendGiftPop(
         return R.layout.pop_send_gift
     }
 
-    private val giftAdapter by lazy { SendGiftItemAdapter() }
     private lateinit var mBinding: PopSendGiftBinding
     private var giftInfo: GiftResponse? = null
     override fun onCreate() {
@@ -56,11 +56,12 @@ class SendGiftPop(
         mBinding = PopSendGiftBinding.bind(popupImplView)
         mBinding.userInfo = sendUserInfo
         mBinding.executePendingBindings()
-        initGiftAdapter()
-        if (!TextUtils.isEmpty(AppCacheManager.giftInfo)) {
-            giftInfo = GsonUtils.fromJson(AppCacheManager.giftInfo, GiftResponse::class.java)
-            removeRandomBoxGift()
-            setGiftInfo()
+
+        ThreadUtils.getMainHandler().postDelayed({
+            initTabLayout()
+        },20)
+        mBinding.tvAddFriend.setOnSingleClickListener {
+            onSendGiftListener.onAddFriend()
         }
         mBinding.tvRecharge.setOnSingleClickListener {
             ApplicationProxy.instance.showRechargePop(context, true)
@@ -68,60 +69,91 @@ class SendGiftPop(
         mBinding.tvUserDetail.setOnSingleClickListener {
             onSendGiftListener.onShowUserInfo(sendUserInfo.userId)
         }
+        mBinding.ivAvatar.setOnSingleClickListener {
+            onSendGiftListener.onShowUserInfo(sendUserInfo.userId)
+        }
         LiveEventBus.get<Boolean>(LiveDataEventManager.PAY_RESULT).observe(context) {
             if (it) {
-                getGiftInfo()
-            }
-        }
-        getGiftInfo()
-    }
-
-    private fun removeRandomBoxGift() {
-        //如果不是直播间 移除随机盲盒礼物
-        if (SendGiftRequest.SOURCE_LIVE_ROOM != source) {
-            giftInfo?.list?.removeIf {
-                it.type == GiftInfo.TYPE_RANDOM_BOX
+                giftViewsList[0].getGiftInfo()
             }
         }
     }
 
-    private fun getGiftInfo() {
-        request({ imChatRxApi.getGiftList() }, object : OnRequestResultListener<GiftResponse> {
-            override fun onSuccess(data: BaseBean<GiftResponse>) {
-                giftInfo = data.data
-                removeRandomBoxGift()
-                setGiftInfo()
+    fun showAddFriendsBtn(userInfo: UserDetailInfo){
+        this.sendUserInfo = userInfo
+        if (sendUserInfo.isFriend || (sendUserInfo.isSameGender && AppCacheManager.isMan())){
+            mBinding.tvAddFriend.visibility = View.INVISIBLE
+        }else{
+            mBinding.tvAddFriend.visibility = View.VISIBLE
+        }
+    }
+
+    private var sendGiftListener = object : GiftShowView.OnClickSendListener{
+        override fun onSendGift(item: GiftInfo?) {
+            item?.apply {
+                startSendGift(this)
             }
-        })
+        }
+        override fun setGiftInfo(giftResponse: GiftResponse) {
+            giftInfo = giftResponse
+            setGiftInfo()
+        }
+    }
+
+    private val giftViewsList = mutableListOf<GiftShowView>()
+    private fun initTabLayout() {
+        mBinding.apply {
+            val giftShowView = GiftShowView(context,source,GiftShowView.TYPE_GIFT)
+            giftShowView.registerClickSendListener(sendGiftListener)
+            giftViewsList.add(giftShowView)
+            if (SendGiftRequest.SOURCE_LIVE_ROOM== source){
+                val faceGiftShowView = GiftShowView(context,source,GiftShowView.TYPE_FACE)
+                giftViewsList.add(faceGiftShowView)
+                faceGiftShowView.registerClickSendListener(sendGiftListener)
+            }else{
+                mBinding.tvFace.visibility = View.INVISIBLE
+            }
+
+            viewPager.adapter = CustomViewPagerAdapter(giftViewsList)
+            tabLayout.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
+                    R.id.tv_gift -> {
+                        setCurrentItem(0)
+                    }
+                    R.id.tv_face -> {
+                        setCurrentItem(1)
+                    }
+                }
+            }
+            tabLayout.check(tabLayout.getChildAt(0).id)
+            viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
+                }
+                override fun onPageSelected(position: Int) {
+                    mBinding.tabLayout.check(mBinding.tabLayout.getChildAt(position).id)
+                }
+                override fun onPageScrollStateChanged(state: Int) {
+                }
+            })
+        }
+    }
+
+    private fun setCurrentItem(position: Int) {
+        mBinding.viewPager.setCurrentItem(position, true)
     }
 
     private fun setGiftInfo() {
         giftInfo?.apply {
             mBinding.tvRoseNum.text = this.roseNum.toPlainString()
-            giftAdapter.submitList(this.list)
         }
     }
 
-    private fun initGiftAdapter() {
-        mBinding.rvGift.adapter = giftAdapter
-        giftAdapter.setOnItemClickListener { _, _, position ->
-            if (position == giftAdapter.getSelectPosition()) {
-                startSendGift(position)
-            } else {
-                giftAdapter.setSelectPosition(
-                    position
-                )
-                mBinding.rvGift.scrollToPosition(position)
-            }
 
-        }
-        giftAdapter.addOnItemChildClickListener(
-            R.id.tv_send
-        ) { _, _, position -> startSendGift(position) }
-    }
-
-    private fun startSendGift(position: Int) {
-        val item = giftAdapter.getItem(position) ?: return
+    private fun startSendGift(item: GiftInfo) {
         val sendGiftRequest = SendGiftRequest()
         sendGiftRequest.roomId = sendUserInfo.roomId.toString()
         sendGiftRequest.toUid = sendUserInfo.userId
@@ -136,8 +168,6 @@ class SendGiftPop(
         request2({ imChatRxApi.sendGift(sendGiftRequest) },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
-
-
                     giftInfo?.roseNum = BigDecimal(
                         CommonUtils.subString(
                             giftInfo!!.roseNum.toPlainString(),
@@ -175,9 +205,22 @@ class SendGiftPop(
             })
     }
 
+    override fun doAfterShow() {
+        super.doAfterShow()
+        if (SendGiftRequest.SOURCE_LIVE_ROOM == source){
+            onSendGiftListener.onShowFriendBtn()
+        }
+    }
+
+    fun hideFriendBtn() {
+        mBinding.tvAddFriend.visibility = View.INVISIBLE
+    }
+
     interface OnSendGiftListener {
         fun onSendGift(item: GiftInfo)
         fun onShowUserInfo(userId: String) {}
+        fun onAddFriend() {}
+        fun onShowFriendBtn(){}
     }
 
     companion object {

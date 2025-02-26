@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -21,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#0A0600"
+                tools:listitem="@layout/adapter_user_level_item"
                 app:layoutManager="com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager"
                 app:spanCount="3" />
         </cn.yanhu.baselib.refresh.MyRefreshLayout>

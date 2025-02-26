@@ -14,8 +14,10 @@ import cn.yanhu.imchat.api.imChatRxApi
 import cn.zj.netrequest.BaseViewModel
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.ResultState
-import com.pcl.sdklib.bean.CheckBaiduFaceResult
+import com.pcl.sdklib.bean.CheckFaceAuthResult
+import com.pcl.sdklib.bean.FaceAuthInfo
 import com.pcl.sdklib.bean.PostBaiduAuthBean
 
 /**
@@ -64,6 +66,10 @@ class UserViewModel : BaseViewModel() {
         request({ rxApi.getMyPageInfo() }, myPageInfoObservable, true)
     }
 
+    fun refreshMyPageInfo(onRequestResultListener: OnRequestResultListener<UserDetailInfo>) {
+        request2({ rxApi.getMyPageInfo() }, onRequestResultListener)
+    }
+
     fun getMyService() {
         request({ rxApi.getMyService() }, myServiceObservable, false)
     }
@@ -102,13 +108,13 @@ class UserViewModel : BaseViewModel() {
         request({ rxApi.getUserLevelInfo() }, userLevelObservable, true)
     }
 
-    val realNameObservable = MutableLiveData<ResultState<String>>()
+    val realNameObservable = MutableLiveData<ResultState<FaceAuthInfo>>()
     fun realNameProve(realName:String,idCard:String) {
         request({ rxApi.realNameProve(realName,idCard) }, realNameObservable,
             isShowDialog = true, loadingHasContent = true
         )
     }
-     val checkFaceResultObservable = MutableLiveData<ResultState<CheckBaiduFaceResult>>()
+     val checkFaceResultObservable = MutableLiveData<ResultState<CheckFaceAuthResult>>()
     fun checkBaiduStep() {
         request({ rxApi.checkBaiduFace() }, checkFaceResultObservable,
             isShowDialog = false

@@ -12,6 +12,7 @@ import cn.zj.netrequest.download.InputParameter
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.opensource.svgaplayer.SVGACache
 import com.opensource.svgaplayer.SVGACallback
 import com.opensource.svgaplayer.SVGADrawable
@@ -97,7 +98,9 @@ class GiftPopAnimTask(
                 override fun onFailed(errorType: Int, errorMsg: String?) {
                 }
                 override fun onVideoComplete() {
-                   doNextTask()
+                    ThreadUtils.getMainHandler().post {
+                        doNextTask()
+                    }
                 }
                 override fun onVideoDestroy() {
                 }

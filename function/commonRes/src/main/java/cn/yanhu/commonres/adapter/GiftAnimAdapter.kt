@@ -3,6 +3,7 @@ package cn.yanhu.commonres.adapter
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.widget.ImageView
@@ -17,7 +18,7 @@ import com.bumptech.glide.Glide
 import cn.yanhu.commonres.R
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.SexManager
-import cn.yanhu.commonres.router.RouteIntent
+import cn.yanhu.commonres.view.UserAvatarView
 import cn.yanhu.commonres.view.floatScreenView.RewardAnimUtils
 import cn.yanhu.commonres.view.floatScreenView.NumAnim
 
@@ -32,15 +33,24 @@ class GiftAnimAdapter(private var clearListener: OnClearListener) :
         val giftInfo = bean.giftInfo
         val sendUser = bean.sendUser
         val giftNum = view.findViewById<CustomFontTextView>(R.id.tv_gift_amount)
-        val ivAvatar = view.findViewById<ImageView>(R.id.iv_avatar)
+        val ivAvatar = view.findViewById<UserAvatarView>(R.id.iv_avatar)
         val giftImage = view.findViewById<ImageView>(R.id.iv_gift_img)
+      //  val blurView = view.findViewById<BlurView>(R.id.blurView)
+        val vgRoot = view.findViewById<ViewGroup>(R.id.vg_root)
+//        ThreadUtils.getMainHandler().post {
+//            val blurView = BlurUtil.blurView(vgRoot.context, vgRoot, 20f)
+//            vgRoot.background = blurView.toDrawable(vgRoot.context.resources)
+//        }
 
+//        blurView.setupWith(vgRoot)
+//            .setBlurRadius(10f)
+            //.setFrameClearDrawable(vgRoot.background)
         val userName = view.findViewById<TextView>(R.id.tv_user_name)
         val tvTargetName = view.findViewById<TextView>(R.id.tv_targetName)
-        Glide.with(ActivityUtils.getTopActivity()).load(sendUser.portrait).into(ivAvatar)
+        ivAvatar.setUserAvatar(sendUser)
         ivAvatar.setOnClickListener {
             if (!TextUtils.isEmpty(sendUser.userId)) {
-                RouteIntent.lunchPersonHomePage(sendUser.userId)
+                clearListener.onShowUserInfo(sendUser.userId)
             }
         }
         // 初始化数据
@@ -54,15 +64,15 @@ class GiftAnimAdapter(private var clearListener: OnClearListener) :
             userName.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.femaleColor))
         }
         userName.text = sendUser.nickName
-        if (!TextUtils.isEmpty(bean.receiverUser.nickName)) {
-            if (SexManager.isMan(bean.receiverUser.gender)) {
+        if (!TextUtils.isEmpty(bean.targetUserInfo.nickName)) {
+            if (SexManager.isMan(bean.targetUserInfo.gender)) {
                 tvTargetName.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.manColor))
             } else {
                 tvTargetName.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.femaleColor))
             }
         }
         tvTargetName.text =
-            if (TextUtils.isEmpty(bean.receiverUser.nickName)) "everyone" else bean.receiverUser.nickName
+            if (TextUtils.isEmpty(bean.targetUserInfo.nickName)) "" else bean.targetUserInfo.nickName
         return view
     }
 
@@ -133,7 +143,7 @@ class GiftAnimAdapter(private var clearListener: OnClearListener) :
 
     override fun checkUnique(o: ChatRoomGiftMsg, t: ChatRoomGiftMsg): Boolean {
         return o.giftInfo.id == t.giftInfo.id && (o.sendUser.userId
-            .equals(t.sendUser.userId) && o.receiverUser.userId.equals(t.receiverUser.userId))
+            .equals(t.sendUser.userId) && o.targetUserInfo.userId.equals(t.targetUserInfo.userId))
     }
 
     override fun generateBean(bean: ChatRoomGiftMsg): ChatRoomGiftMsg? {
@@ -152,5 +162,7 @@ class GiftAnimAdapter(private var clearListener: OnClearListener) :
     interface OnClearListener {
         fun onClear()
         fun onSendGiftSuccess(chatRoomGiftMsg: ChatRoomGiftMsg) {}
+        fun onShowUserInfo(userId:String){}
+
     }
 }

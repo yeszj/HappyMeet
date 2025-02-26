@@ -354,7 +354,7 @@ public class RewardLayout extends LinearLayout {
                 if (adapter != null) {
                     giftView = adapter.onUpdate(giftView, mBean, sBean);
                 }
-                mBean.setTheLatestRefreshTime(System.currentTimeMillis());
+               // mBean.setTheLatestRefreshTime(System.currentTimeMillis());
                 giftView.setTag(mBean);
                 ViewGroup vg = (ViewGroup) giftView.getParent();
                 vg.setTag(mBean.getTheLatestRefreshTime());

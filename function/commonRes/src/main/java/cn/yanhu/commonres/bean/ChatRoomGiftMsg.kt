@@ -8,13 +8,13 @@ import java.io.Serializable
  * desc:
  */
 data class ChatRoomGiftMsg(
-    val sendUser: BaseUserInfo,
-    val receiverUser: BaseUserInfo=BaseUserInfo(),
+    var sendUser: BaseUserInfo,
+    val targetUserInfo: BaseUserInfo=BaseUserInfo(),
     val giftInfo: GiftInfo = GiftInfo(),
     var currentIndex: Int = 0,
     var latestRefreshTime: Long = 0,//礼物刷新时间
     var giftStayTime: Long = 0,//礼物持续时间
-    var giftCount:Int = 0,
+    var giftCount:Int = 1,
     var source:Int = 1,
     var isSendNetGift : Boolean = true, //是否调用服务端接口发送礼物
     var toUid:MutableList<String> = mutableListOf()

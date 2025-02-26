@@ -27,5 +27,6 @@ object ErrorCode {
     const val CODE_NEED_REAL_NAME = 330 //需要实名认证
     const val HAS_BLACK = 331//被拉黑
     const val CODE_CANT_FACE_AUTH = 351//不允许活体
+    const val COMMON_TIP_POP = 353//通用弹框
 
 }

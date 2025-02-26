@@ -39,8 +39,7 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_example"
-            android:layout_width="wrap_content"
-            android:maxWidth="@dimen/dp_280"
+            android:layout_width="@dimen/dp_280"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_24"
             android:adjustViewBounds="true" />
@@ -66,7 +65,6 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_style"
-            placeholderId="@{-1}"
             android:layout_width="@dimen/dp_280"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_24"

@@ -41,6 +41,14 @@ class RoomSeatInfo : BaseObservable(), Serializable {
             field = value
             notifyPropertyChanged(BR.ifLeave)
         }
+    @Bindable
+    var ifNetDisConnect: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.ifNetDisConnect)
+        }
+
+
     var seatRoseNum: Int = 0
     var seatUserRose: Boolean = false
 

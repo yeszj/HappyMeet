@@ -64,6 +64,7 @@ public class ToolDialog extends BaseSheetDialog<DialogToolBinding> {
         List<ToolBean> toolBeanList = new ArrayList<>();
         toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_network, "网络状态"));
         toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_room_report, "投诉举报"));
+        toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_log_upload, "日志上报"));
         if (liveRoomInfo.isAdmin()) {
             toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_room_top, "置顶房间"));
             toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_warning, "发送警告"));
@@ -88,6 +89,8 @@ public class ToolDialog extends BaseSheetDialog<DialogToolBinding> {
                 onClickListener.onStickyRoom();
             }else if ("投诉举报" .equals(name)) {
                 RouteIntent.INSTANCE.lunchReportPage("");
+            }else if ("日志上报".equals(name)){
+                RouteIntent.INSTANCE.lunchLogPostPage(1,liveRoomInfo.getRoomId());
             }
         });
     }

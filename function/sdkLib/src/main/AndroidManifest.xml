@@ -48,6 +48,17 @@
             android:name="cn.huanyuan.sweetlove.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" /> <!-- 美颜设置界面 -->
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".sdk.faceAuth.FaceAuthActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".sdk.faceAuth.FaceAuthResultActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

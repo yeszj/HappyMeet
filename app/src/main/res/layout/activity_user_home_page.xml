@@ -74,6 +74,7 @@
         </LinearLayout>
 
 
+
         <LinearLayout
             android:id="@+id/vg_room"
             android:layout_width="0dp"
@@ -83,7 +84,7 @@
             android:layout_marginBottom="@dimen/dp_20"
             android:background="@drawable/common_shape_btn_gradient_r30"
             android:gravity="center"
-            android:visibility="@{(isSelf || userinfo.roomId == 0)? View.GONE : View.VISIBLE}"
+            android:visibility="@{userinfo.hideRoomBtn()? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/vgChat"
             app:layout_constraintStart_toStartOf="parent">
@@ -116,7 +117,7 @@
             android:layout_marginEnd="@dimen/dp_16"
             android:layout_marginBottom="@dimen/dp_20"
             android:background="@drawable/blue_shape_btn_gradient_r30"
-            android:visibility="@{isSelf || userinfo.sameSex?View.GONE:View.VISIBLE}"
+            android:visibility="@{userinfo.hideChatBtn()?View.GONE:View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/vg_room"
@@ -132,7 +133,7 @@
             android:text="打招呼"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_17"
-            android:visibility="@{isSelf|| userinfo.sameSex?View.GONE:View.VISIBLE}"
+            android:visibility="@{isSelf|| (userinfo.sameSex &amp;&amp; userinfo.gender==1)?View.GONE:View.VISIBLE}"
             app:fontType="@string/fontBold"
             app:layout_constraintBottom_toBottomOf="@+id/vgChat"
             app:layout_constraintEnd_toEndOf="@+id/vgChat"

@@ -17,8 +17,6 @@ import cn.yanhu.baselib.widget.indicator.CommonIndicatorTitleView
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.pcl.sdklib.sdk.location.LocationUtils
-import com.tencent.map.geolocation.TencentLocation
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import org.json.JSONObject
 
@@ -31,7 +29,6 @@ class TabSameCityFrg : BaseFragment<FrgTabSameCityBinding, MainViewModel>(
     R.layout.frg_tab_same_city, MainViewModel::class.java
 ) {
     private lateinit var commonNavigator: CommonNavigator
-    private var isGetLocation: Boolean = false
     private var filterCity: String = ""
     private var filterAge: String = ""
     override fun initData() {
@@ -126,28 +123,11 @@ class TabSameCityFrg : BaseFragment<FrgTabSameCityBinding, MainViewModel>(
 
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
-//        LiveEventBus.get<Int>(LiveDataEventManager.SWITCH_TO_SAME_CITY).observe(this) {
-//            getLocation()
-//        }
         LiveEventBus.get<String>(LiveDataEventManager.REFRESH_SAMECITY_TAB).observe(this) {
             refreshLocationTab(it)
         }
     }
 
-    private fun getLocation() {
-        if (!isGetLocation && TextUtils.isEmpty(AppCacheManager.province)) {
-            isGetLocation = true
-            LocationUtils.getTencentLocation(
-                this@TabSameCityFrg,
-                object : LocationUtils.OnLocationResultListener {
-                    override fun onLocationResult(aMapLocation: TencentLocation?) {
-                        val province = aMapLocation?.province
-                        refreshLocationTab(province)
-                    }
-
-                })
-        }
-    }
 
     private fun refreshLocationTab(province: String?) {
         if (!TextUtils.isEmpty(province)) {

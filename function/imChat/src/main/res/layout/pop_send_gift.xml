@@ -36,6 +36,7 @@
                 android:textSize="@dimen/sp_14" />
 
             <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_avatar"
                 imageUrl="@{userInfo.portrait}"
                 android:layout_width="@dimen/dp_36"
                 android:layout_height="@dimen/dp_36"
@@ -54,6 +55,20 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14"
                 tools:text="抹茶玛奇哚" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_addFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_corner_20"
+                android:backgroundTint="@color/colorMain"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:paddingVertical="@dimen/dp_4"
+                android:text="加好友"
+                android:visibility="invisible"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:id="@+id/tv_userDetail"
@@ -77,17 +92,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_44"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/dp_12">
+            android:gravity="center_vertical">
 
-            <cn.yanhu.baselib.view.CustomFontTextView
+            <RadioGroup
+                android:id="@+id/tabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/tv_gift"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/dp_12"
+                    android:text="礼物"
+                    android:textColor="@color/color_gift_tab"
+                    android:textSize="@dimen/sp_13"
+                    app:fontType="@string/fontMedium" />
+
+                <RadioButton
+                    android:id="@+id/tv_face"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:button="@null"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/dp_12"
+                    android:text="贴脸"
+                    android:textColor="@color/color_gift_tab"
+                    android:textSize="@dimen/sp_13"
+                    app:fontType="@string/fontMedium" />
+            </RadioGroup>
+
+            <View
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="礼物"
-                android:textColor="@color/colorMain"
-                android:textSize="@dimen/sp_13"
-                app:fontType="@string/fontMedium" />
+                android:layout_weight="1" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/dp_20"
@@ -115,16 +158,11 @@
                 android:textSize="@dimen/sp_13" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_gift"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_306"
-            android:fadingEdgeLength="@dimen/dp_40"
-            android:paddingHorizontal="@dimen/dp_5"
-            android:requiresFadingEdge="vertical"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="4"
-            tools:listitem="@layout/adapter_send_gift_item" />
+            android:layout_height="@dimen/dp_306" />
+
 
 
     </LinearLayout>

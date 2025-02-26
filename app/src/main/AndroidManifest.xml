@@ -218,5 +218,9 @@
             android:name=".ui.event.common.AppCommonEventActivity"
             android:configChanges="orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.userinfo.lovers.MyLoversActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

@@ -101,17 +101,17 @@
         <attr name="speedDuration" format="integer" />
     </declare-styleable>
 
-    <declare-styleable name="HighlightAnimView"  >
+    <declare-styleable name="HighlightAnimView">
         <attr name="highlight_view_highlightColor" format="reference|color" />
         <attr name="highlight_view_duration" format="integer" />
         <attr name="highlight_view_repeatCount" format="integer" />
         <attr name="highlight_view_highlightWidth" format="dimension" />
         <attr name="highlight_view_highlightRotateDegrees" format="float" />
-        <attr name="highlight_view_repeatMode" format="enum" >
+        <attr name="highlight_view_repeatMode" format="enum">
             <enum name="restart" value="1" />
             <enum name="reverse" value="2" />
         </attr>
-        <attr name="highlight_view_startDirection" format="enum" >
+        <attr name="highlight_view_startDirection" format="enum">
             <enum name="from_left" value="1" />
             <enum name="from_right" value="2" />
             <enum name="from_top" value="3" />
@@ -128,5 +128,17 @@
 
         <attr name="start_angle" format="float" />
         <attr name="sweep_angle" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="CircularCountdownTimer">
+        <attr name="background_color" format="color" />
+        <attr name="circle_progress_color" format="color" />
+        <attr name="stroke_width" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="NineGridlayout">
+        <attr name="lineCount" format="integer" />
+        <attr name="img_spacing" format="dimension" />
+        <attr name="showVideo" format="boolean" />
     </declare-styleable>
 </resources>

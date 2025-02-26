@@ -21,7 +21,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.GsonUtils
-import com.pcl.sdklib.bean.CheckBaiduFaceResult
+import com.pcl.sdklib.bean.CheckFaceAuthResult
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
 /**
@@ -56,8 +56,8 @@ class TabBlindDateFrg : BaseFragment<FrgTabBlinddateBinding, MainViewModel>(
         }
         isChecking = true
         request({ rxApi.checkBaiduFace() },
-            object : OnRequestResultListener<CheckBaiduFaceResult> {
-                override fun onSuccess(data: BaseBean<CheckBaiduFaceResult>) {
+            object : OnRequestResultListener<CheckFaceAuthResult> {
+                override fun onSuccess(data: BaseBean<CheckFaceAuthResult>) {
                     isChecking = false
                     val roomConfigInfo = data.data ?: return
                     when (roomConfigInfo.authId) {

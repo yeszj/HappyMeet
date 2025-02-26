@@ -78,6 +78,9 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         topTitleBinding.ivExit.setOnSingleClickListener {
             showFloatWindow(1)
         }
+        topTitleBinding.ivRoomCover.setOnSingleClickListener {
+            showUserPop(roomSourceBean.ownerInfo!!.userId)
+        }
         mBinding.flTopView.addView(rankView)
     }
 
@@ -152,6 +155,11 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                             }
                         }
                     }
+
+                    cn.yanhu.agora.R.id.iv_rose ->{
+                        val roomUserSeatInfo = item.roomUserSeatInfo?:return
+                        sendRose(roomUserSeatInfo)
+                    }
                 }
             }
 
@@ -177,6 +185,10 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         )
         seatUserAdapter.addOnItemChildClickListener(
             cn.yanhu.agora.R.id.tv_womanApplyCount,
+            childItemClickListener
+        )
+        seatUserAdapter.addOnItemChildClickListener(
+            cn.yanhu.agora.R.id.iv_rose,
             childItemClickListener
         )
     }

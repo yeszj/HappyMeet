@@ -12,7 +12,8 @@
         <import type="android.view.View" />
 
         <import type="cn.yanhu.commonres.R" />
-        <import type="android.text.TextUtils"/>
+
+        <import type="android.text.TextUtils" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,91 +84,50 @@
             app:layout_constraintStart_toEndOf="@+id/tv_nickName"
             app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
 
-        <cn.yanhu.commonres.view.UserLevelView
-            android:id="@+id/userLevel"
-            userLevel="@{userinfo.level}"
+        <cn.yanhu.commonres.view.UserInfoTagLayout
+            android:id="@+id/userTag"
+            userInfo="@{userinfo}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_9"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
             app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
 
-        <View
-            android:id="@+id/divider5"
-            android:layout_width="@dimen/dp_5"
-            android:layout_height="@dimen/dp_10"
-            android:visibility="@{userinfo.level>0?View.VISIBLE:View.GONE}"
-            app:layout_constraintStart_toEndOf="@+id/userLevel"
-            app:layout_constraintTop_toTopOf="@+id/userLevel" />
-
-        <cn.yanhu.commonres.view.UserTagView
-            android:id="@+id/userAge"
-            userAge="@{userinfo.age}"
-            userGender="@{userinfo.gender}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_9"
-            app:layout_constraintStart_toEndOf="@+id/divider5"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
-
-        <cn.yanhu.commonres.view.UserTagView
-            userProvince='@{userinfo.province}'
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/userAge"
-            app:layout_constraintStart_toEndOf="@+id/userAge"
-            app:layout_constraintTop_toTopOf="@+id/userAge" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_16"
-            drawableUrl="@{userinfo.beautifulIdImg}"
-            placeholderId="@{-1}"
-            android:visibility="@{TextUtils.isEmpty(userinfo.beautifulIdImg)?View.INVISIBLE:View.VISIBLE}"
-            android:layout_marginTop="@dimen/dp_10"
-            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-            app:layout_constraintTop_toBottomOf="@+id/userAge"
-            android:adjustViewBounds="true" />
-
-        <cn.yanhu.commonres.view.UserTagView
+        <cn.yanhu.commonres.view.UserIdTagLayout
             android:id="@+id/tagId"
-            tagColorId="@{@color/blackAlpha96}"
-            tagTextColorId="@{@color/fontGrayColor}"
-            tagValue='@{"ID:"+userinfo.userId}'
             android:layout_width="wrap_content"
-            android:visibility="@{TextUtils.isEmpty(userinfo.beautifulIdImg)?View.VISIBLE:View.INVISIBLE}"
-
-            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
+            beautifulIdImg="@{userinfo.beautifulIdImg}"
+            userId="@{userinfo.userId}"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-            app:layout_constraintTop_toBottomOf="@+id/userAge" />
+            app:layout_constraintTop_toBottomOf="@+id/userTag"
+            android:layout_height="wrap_content"/>
 
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/iv_avatar1"
-            imageUrl="@{userinfo.guardInfo.guardUserPortrait}"
-            placeholderId="@{-1}"
-            android:layout_width="@dimen/dp_60"
-            android:layout_height="@dimen/dp_60"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_guardFrame"
-            app:layout_constraintEnd_toEndOf="@+id/iv_guardFrame"
-            app:layout_constraintStart_toStartOf="@+id/iv_guardFrame"
-            app:layout_constraintTop_toTopOf="@+id/iv_guardFrame"
-            app:riv_oval="true"
-            tools:src="@drawable/icon_portrait" />
+<!--        <com.makeramen.roundedimageview.RoundedImageView-->
+<!--            android:id="@+id/iv_avatar1"-->
+<!--            imageUrl="@{userinfo.guardInfo.guardUserPortrait}"-->
+<!--            placeholderId="@{-1}"-->
+<!--            android:layout_width="@dimen/dp_60"-->
+<!--            android:layout_height="@dimen/dp_60"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/iv_guardFrame"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/iv_guardFrame"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/iv_guardFrame"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/iv_guardFrame"-->
+<!--            app:riv_oval="true"-->
+<!--            tools:src="@drawable/icon_portrait" />-->
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_guardFrame"
-            imageUrl="@{userinfo.guardInfo.guardFrame}"
-            placeholderId="@{-1}"
-            android:layout_width="@dimen/dp_105"
-            android:layout_height="@dimen/dp_105"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:visibility="@{userinfo.guardInfo!=null ?View.VISIBLE:View.INVISIBLE}"
-            app:layout_constraintBottom_toTopOf="@id/divider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_cover" />
+<!--        <androidx.appcompat.widget.AppCompatImageView-->
+<!--            android:id="@+id/iv_guardFrame"-->
+<!--            imageUrl="@{userinfo.guardInfo.guardFrame}"-->
+<!--            placeholderId="@{-1}"-->
+<!--            android:layout_width="@dimen/dp_105"-->
+<!--            android:layout_height="@dimen/dp_105"-->
+<!--            android:layout_marginEnd="@dimen/dp_5"-->
+<!--            android:visibility="@{userinfo.guardInfo!=null ?View.VISIBLE:View.INVISIBLE}"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/divider"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/iv_cover" />-->
 
         <View
             android:id="@+id/divider"

@@ -323,7 +323,7 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
     }
 
     open fun endLoad(pageNum: Int, bgRefresh: MyRefreshLayout) {
-        if (pageNum == 0) {
+        if (pageNum == 1) {
             endRefreshing(bgRefresh)
         } else {
             endLoadingMore(bgRefresh)

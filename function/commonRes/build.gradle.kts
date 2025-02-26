@@ -71,5 +71,8 @@ dependencies {
     api("com.github.lihangleo2:SmartViewPager2Adapter:3.1.3")
     api ("com.caverock:androidsvg:1.4")
     api ("org.litepal.guolindev:core:3.2.3")
+    api ("com.github.Dimezis:BlurView:version-2.0.6")
+    //https://github.com/centerzx/ShapeBlurView
+    api ("com.github.centerzx:ShapeBlurView:1.0.5")
 
 }

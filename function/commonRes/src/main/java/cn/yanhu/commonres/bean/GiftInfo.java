@@ -15,6 +15,11 @@ import java.util.Objects;
 public class GiftInfo implements Serializable {
     public static final int TYPE_SONG = 11;//点歌礼物
     public static final int TYPE_RANDOM_BOX= 10;//随机礼物
+
+    public static final int TYPE_FACE = 12;//贴脸礼物
+
+    public static final int TYPE_ROSE = 13;
+
     private String name;
     private int price;
     private boolean allBroadcast;
@@ -29,6 +34,16 @@ public class GiftInfo implements Serializable {
     private String randomBoxGiftInfo;
 
     private int clickedCount;
+
+    private int loversType;
+
+    public int getLoversType() {
+        return loversType;
+    }
+
+    public void setLoversType(int loversType) {
+        this.loversType = loversType;
+    }
 
     public int getClickedCount() {
         return clickedCount;

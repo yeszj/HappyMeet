@@ -41,6 +41,12 @@
             android:layout_height="match_parent"
             android:visibility="@{seatInfo.ifLeave?View.INVISIBLE:View.VISIBLE}"
             tools:visibility="gone" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_78"
+            android:layout_gravity="center"
+            android:visibility="@{seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.ifNetDisConnect?View.VISIBLE:View.INVISIBLE,default = invisible}"
+            android:src="@drawable/icon_net_error_seat"
+            android:layout_height="@dimen/dp_20"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vg_emptySeat"

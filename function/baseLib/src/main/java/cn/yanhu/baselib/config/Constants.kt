@@ -17,6 +17,8 @@ object Constants {
     const val OAID = "oaid"
 
     const val BEAUTYSDKINFO = "beautySdkInfo"
+    const val FACEEFFECT = "faceEffect"
+
     const val IS_SHOW_TEEN = "is_show_teen"
     const val SELECTBEAUTYFILTER = "selectBeautyFilter"
 

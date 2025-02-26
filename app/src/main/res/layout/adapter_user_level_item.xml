@@ -8,6 +8,7 @@
         <variable
             name="levelInfo"
             type="cn.huanyuan.sweetlove.bean.LevelPrivilegeInfo" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,6 +68,7 @@
             android:textColor="@{levelInfo.hasLock?@color/whiteColorAlpha50:@color/color_ffd990}"
             android:textSize="@dimen/sp_10"
             app:fontType="@string/fontMedium"
+            android:visibility='@{levelInfo.privilegeTitle.equals("敬请期待")?View.INVISIBLE:View.VISIBLE}'
             app:layout_constraintBottom_toBottomOf="parent"
             tools:ignore="MissingConstraints"
             tools:text="还需3213财富值"

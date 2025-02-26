@@ -7,7 +7,7 @@
 
         <variable
             name="userInfo"
-            type="cn.yanhu.commonres.bean.BaseUserInfo" />
+            type="cn.yanhu.commonres.bean.UserDetailInfo" />
 
         <import type="android.view.View" />
 
@@ -23,7 +23,6 @@
             android:id="@+id/userAvatar"
             avatarFrameUrl="@{userInfo.avatarFrame}"
             avatarUrl="@{userInfo.portrait}"
-            avatarUserId="@{userInfo.userId}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:avatarSize="@dimen/dp_32"
@@ -47,62 +46,75 @@
             tools:text="女性昵称"
             tools:textColor="@color/femaleColor" />
 
-        <LinearLayout
-            android:id="@+id/vg_info"
+        <cn.yanhu.commonres.view.UserInfoTagLayout
+            android:id="@+id/userTag"
+            userInfo="@{userInfo}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
-            app:layout_constraintStart_toEndOf="@+id/userAvatar"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nickName">
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
 
-            <cn.yanhu.commonres.view.UserLevelView
-                android:id="@+id/userLevel"
+        <LinearLayout
+            android:id="@+id/vg_guard"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_4"
+            android:background="@drawable/bg_gradient_guard_msg"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_5"
+            android:visibility="@{userInfo.myGuardedInfo!=null &amp;&amp; userInfo.showMyGuardInfo?View.VISIBLE:View.GONE}"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/userTag">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="@dimen/dp_10"
+                android:src="@drawable/icon_guard_hand" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_4"
-                android:visibility="gone" />
+                android:text='@{userInfo.myGuardedInfo.nickName+"的守护"}'
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_11"
+                app:fontType="@string/fontMedium"
+                tools:text="用户昵称的守护" />
 
-            <cn.yanhu.commonres.view.UserTagView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="@dimen/dp_10"
+                android:src="@drawable/icon_guard_hand2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vg_loverInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_4"
+            android:background="@{userInfo.loverInfo.loversType==1?@drawable/bg_lovers1_tag_r6:userInfo.loverInfo.loversType==2?@drawable/bg_lovers2_tag_r6:@drawable/bg_lovers3_tag_r6}"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dp_4"
+            android:paddingEnd="@dimen/dp_6"
+            android:visibility="@{userInfo.loverInfo!=null &amp;&amp; userInfo.showLoverInfo?View.VISIBLE:View.GONE}"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/vg_guard"
+            tools:background="@drawable/bg_lovers1_tag">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="@dimen/dp_14"
+                android:src="@{userInfo.loverInfo.loversType==1?@drawable/icon_lovers1:userInfo.loverInfo.loversType==2?@drawable/icon_lovers2:@drawable/icon_lovers3}" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_4"
-                app:userAge="@{userInfo.age}"
-                app:userGender="@{userInfo.gender}" />
-
-            <cn.yanhu.commonres.view.UserTagView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_4"
-                app:userProvince="@{userInfo.province}" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_16"
-                android:layout_marginStart="@dimen/dp_4"
-                android:background="@drawable/bg_gradient_guard_msg"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/dp_5"
-                android:visibility="@{userInfo.myGuardedInfo==null?View.GONE:View.VISIBLE}">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/dp_10"
-                    android:layout_height="@dimen/dp_10"
-                    android:src="@drawable/icon_guard_hand" />
-
-                <cn.yanhu.baselib.view.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text='@{userInfo.myGuardedInfo.nickName+"的守护"}'
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_11"
-                    app:fontType="@string/fontMedium"
-                    tools:text="用户昵称的守护" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/dp_10"
-                    android:layout_height="@dimen/dp_10"
-                    android:src="@drawable/icon_guard_hand2" />
-            </LinearLayout>
+                android:text='@{userInfo.loverInfo.nickName+"的情侣"}'
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_11"
+                app:fontType="@string/fontMedium"
+                tools:text="用户昵称的情侣" />
         </LinearLayout>
 
         <FrameLayout
@@ -110,11 +122,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
-            android:background="@drawable/white_corner_10"
-            android:backgroundTint="@color/blackAlpha80"
-            android:padding="@dimen/dp_10"
+            tools:background="@drawable/chatbg"
+            android:background="@{userInfo.showChatBg?@drawable/chatbg:@drawable/black_alpha80_corner_10}"
+            android:paddingVertical="@dimen/dp_10"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingEnd="@dimen/dp_20"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-            app:layout_constraintTop_toBottomOf="@+id/vg_info">
+            app:layout_constraintTop_toBottomOf="@+id/vg_loverInfo">
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/item_live_room_msg_emoji"

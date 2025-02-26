@@ -69,45 +69,16 @@
             app:layout_constraintStart_toEndOf="@id/userAvatar"
             app:layout_constraintTop_toTopOf="@+id/userAvatar"
             tools:text="Jasmine" />
-
-        <LinearLayout
+        <cn.yanhu.commonres.view.UserInfoTagLayout
+            android:id="@+id/userTag"
+            userInfo="@{rankInfo}"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_2"
             android:paddingStart="@dimen/dp_5"
             app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
-            app:layout_constraintStart_toEndOf="@id/userAvatar"
-            android:layout_height="wrap_content">
-            <cn.yanhu.commonres.view.UserLevelView
-                android:id="@+id/userLevel"
-                userLevel="@{rankInfo.level}"
-                android:layout_width="wrap_content"
-                android:layout_marginStart="@dimen/dp_5"
-                android:layout_height="wrap_content" />
+            app:layout_constraintStart_toEndOf="@id/userAvatar"/>
 
-            <cn.yanhu.commonres.view.UserTagView
-                android:id="@+id/userAge"
-                userAge="@{rankInfo.age}"
-                userGender="@{rankInfo.gender}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_5"
-                app:layout_constraintBottom_toBottomOf="@+id/userLevel"
-                app:layout_constraintStart_toEndOf="@id/userLevel"
-                app:layout_constraintTop_toTopOf="@+id/userLevel"
-                tools:visibility="invisible" />
-
-
-            <cn.yanhu.commonres.view.UserTagView
-                android:id="@+id/userProvince"
-                userProvince="@{rankInfo.province}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_5"
-                app:layout_constraintBottom_toBottomOf="@+id/userLevel"
-                app:layout_constraintStart_toEndOf="@id/userAge"
-                app:layout_constraintTop_toTopOf="@+id/userLevel"
-                tools:visibility="invisible" />
-        </LinearLayout>
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_value"

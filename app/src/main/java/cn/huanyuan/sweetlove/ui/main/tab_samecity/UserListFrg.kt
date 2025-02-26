@@ -11,6 +11,7 @@ import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.commonres.bean.SameCityUserInfo
+import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouteIntent
@@ -37,9 +38,9 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
     private var filterAge:String = ""
     override fun initData() {
         adapter.stateView = getEmptyView()
-        mBinding.recyclerView.itemAnimator?.changeDuration = 0
         val linearLayoutManager = LinearLayoutManager(context)
         mBinding.recyclerView.layoutManager = linearLayoutManager
+        mBinding.recyclerView.itemAnimator?.changeDuration = 0
         linearLayoutManager.isItemPrefetchEnabled = true
         linearLayoutManager.initialPrefetchItemCount = 10
         mBinding.recyclerView.adapter = adapter
@@ -72,6 +73,10 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
                 ImChatActivity.lunch(mContext,item.userId)
             }
         })
+        LiveEventBus.get<String>(EventBusKeyConfig.CLOSELIVEROOM).observe(this) {
+            page = 1
+            requestData()
+        }
     }
 
     override fun initRefresh() {
@@ -99,11 +104,23 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
         }
     }
 
+    private val userIdList: MutableList<String> = mutableListOf()
     private fun onGetUserListResult() {
         mViewModel.sameCityUserObservable.observe(this) { it ->
             parseState(it, {
                 adapter.isStateViewEnable = true
                 val tcListRes = it.tcListRes
+                if (page == 1) {
+                    userIdList.clear()
+                }
+                for (i in tcListRes.count() - 1 downTo 0) {
+                    val userInfo = tcListRes[i]
+                    if (userIdList.contains(userInfo.userId)) {
+                        tcListRes.removeAt(i)
+                    } else {
+                        userIdList.add(userInfo.userId)
+                    }
+                }
                 if (page == 1) {
                     adapter.submitList(tcListRes)
                 } else {

@@ -34,6 +34,23 @@
             app:layout_constraintTop_toTopOf="parent"
             app:svgAvatarSize="@dimen/dp_96" />
 
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_18"
+            android:background="@drawable/bg_gradient_red_r4"
+            android:backgroundTint="@color/colorMain"
+            android:gravity="center"
+            android:text="新人"
+            android:padding="@dimen/dp_2"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            android:visibility="@{userinfo.newUser?View.VISIBLE:View.INVISIBLE}"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintStart_toStartOf="@+id/avatarView"
+            app:layout_constraintTop_toTopOf="@+id/avatarView" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,24 +89,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="佊岸、花开" />
 
-            <cn.yanhu.commonres.view.UserTagView
-                android:id="@+id/userAge"
-                userAge="@{userinfo.age}"
-                userGender="@{userinfo.gender}"
+            <cn.yanhu.commonres.view.UserInfoTagLayout
+                android:id="@+id/userTag"
+                userInfo="@{userinfo}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-                app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
-
-            <cn.yanhu.commonres.view.UserTagView
-                userProvince='@{userinfo.province}'
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_5"
-                app:layout_constraintBottom_toBottomOf="@+id/userAge"
-                app:layout_constraintStart_toEndOf="@+id/userAge"
-                app:layout_constraintTop_toTopOf="@+id/userAge" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_nickName"
+                tools:layout_height="@dimen/dp_16" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:id="@+id/tv_intro"
@@ -104,7 +112,7 @@
                 android:visibility="@{TextUtils.isEmpty(userinfo.description)?View.GONE:View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/userAge"
+                app:layout_constraintTop_toBottomOf="@+id/userTag"
                 tools:text="你认真的样子，就像天桥上贴膜就像天桥上贴膜" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -150,15 +158,17 @@
                 tools:text="相亲中" />
         </LinearLayout>
 
-        <cn.yanhu.commonres.view.gridimage.ImageNineGridLayout
+        <cn.yanhu.commonres.view.ninegridlayout.NineGridlayout
             android:id="@+id/picGridLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_8"
             android:layout_marginBottom="@dimen/dp_6"
+            app:img_spacing="@dimen/dp_5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/vg_info"
             app:layout_constraintTop_toBottomOf="@+id/vg_info"
-            app:spacing="@dimen/dp_6" />
+            app:lineCount="3"
+            app:showVideo="false" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

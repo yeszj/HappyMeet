@@ -233,7 +233,7 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
             val liveRoomSeatBean: LiveRoomSeatBean? =
                 currentSurfaceViewMap[position]
             var surfaceView: View?
-            if (liveRoomSeatBean == null) {
+            if (liveRoomSeatBean == null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
                 surfaceView = TextureView(context)
 
 

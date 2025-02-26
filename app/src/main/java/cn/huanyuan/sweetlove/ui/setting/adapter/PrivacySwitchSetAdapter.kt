@@ -25,23 +25,28 @@ class PrivacySwitchSetAdapter : BaseQuickAdapter<SwitchConfigInfo, PrivacySwitch
     override fun onBindViewHolder(holder: VH, position: Int, item: SwitchConfigInfo?) {
         holder.binding.apply {
             switchInfo = item
+            bindStatus(holder, item)
             executePendingBindings()
         }
     }
 
     override fun onBindViewHolder(
-        holder: VH,
-        position: Int,
-        item: SwitchConfigInfo?,
-        payloads: List<Any>
+        holder: VH, position: Int, item: SwitchConfigInfo?, payloads: List<Any>
     ) {
-        if (payloads.isNotEmpty()){
-            holder.binding.apply {
-                if (item?.isOpen == true){
-                    toggleSwitch.setImageResource(R.drawable.svg_toggle_on)
-                }else{
-                    toggleSwitch.setImageResource(R.drawable.svg_toggle_off)
-                }
+        if (payloads.isNotEmpty()) {
+            bindStatus(holder, item)
+        }
+    }
+
+    private fun bindStatus(
+        holder: VH,
+        item: SwitchConfigInfo?
+    ) {
+        holder.binding.apply {
+            if (item?.status == 1) {
+                toggleSwitch.setImageResource(R.drawable.svg_toggle_on_red)
+            } else {
+                toggleSwitch.setImageResource(R.drawable.svg_toggle_off_gray)
             }
         }
     }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="selectPosition"
+            type="java.lang.Integer" />
+        <import type="android.view.View"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/dp_20"
+        android:background="@drawable/white_corner_20"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dp_18"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content">
+          <LinearLayout
+              android:id="@+id/vg_rule"
+              android:layout_width="wrap_content"
+              android:orientation="vertical"
+              android:paddingVertical="@dimen/dp_12"
+              android:paddingHorizontal="@dimen/dp_12"
+              android:gravity="center_horizontal"
+              android:layout_height="wrap_content">
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:text="等级规则"
+                android:textSize="@dimen/sp_16"
+                app:fontType="@string/fontBold"
+                android:textColor="@{selectPosition==0?@color/cl_common:@color/color_666666}"
+                tools:textColor="@color/cl_common"
+                android:layout_height="wrap_content"/>
+              <View
+                  android:layout_width="@dimen/dp_16"
+                  android:background="@drawable/white_corner_5"
+                  android:backgroundTint="@color/colorMain"
+                  android:visibility="@{selectPosition==0?View.VISIBLE:View.INVISIBLE}"
+                  android:layout_marginTop="@dimen/dp_4"
+                  android:layout_height="@dimen/dp_3"/>
+          </LinearLayout>
+            <LinearLayout
+                android:id="@+id/vg_wealth"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="@dimen/dp_12"
+                android:gravity="center_horizontal"
+                android:paddingHorizontal="@dimen/dp_12"
+                android:layout_height="wrap_content">
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_wealth"
+                    android:layout_width="wrap_content"
+                    android:text="如何获得财富值"
+                    android:textSize="@dimen/sp_16"
+                    app:fontType="@string/fontBold"
+                    android:textColor="@{selectPosition==1?@color/cl_common:@color/color_666666}"
+                    android:layout_height="wrap_content"/>
+                <View
+                    android:layout_width="@dimen/dp_16"
+                    android:background="@drawable/white_corner_5"
+                    android:backgroundTint="@color/colorMain"
+                    android:layout_marginTop="@dimen/dp_4"
+                    tools:visibility="invisible"
+                    android:visibility="@{selectPosition==1?View.VISIBLE:View.INVISIBLE}"
+                    android:layout_height="@dimen/dp_3"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_rule"
+            android:layout_width="@dimen/dp_260"
+            android:layout_marginTop="@dimen/dp_12"
+            android:adjustViewBounds="true"
+            android:layout_height="wrap_content"/>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_dismiss"
+            android:layout_width="@dimen/dp_288"
+            android:background="@drawable/shape_common_btn_r30"
+            android:text="我知道了"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/dp_24"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold"
+            android:layout_height="@dimen/dp_50"/>
+
+    </LinearLayout>
+</layout>

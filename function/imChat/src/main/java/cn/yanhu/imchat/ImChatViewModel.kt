@@ -120,7 +120,7 @@ class ImChatViewModel : BaseViewModel() {
 
 
     val addFriendObservable = MutableLiveData<ResultState<String>>()
-    fun addFriend(chatUserId: String) {
-        request({ imChatRxApi.addFriend(chatUserId) }, addFriendObservable, false)
+    fun becomeFriendRose(chatUserId: String) {
+        request({ imChatRxApi.becomeFriendRose(chatUserId) }, addFriendObservable, false)
     }
 }

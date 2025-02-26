@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.invite.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -23,6 +24,8 @@ class InviteRecordAdapter : BaseQuickAdapter<InviteRecordInfo, InviteRecordAdapt
         )
     ) : RecyclerView.ViewHolder(binding.root)
 
+    var filterName = "累计收益"
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VH, position: Int, item: InviteRecordInfo?) {
         holder.binding.apply {
             userinfo = item
@@ -32,6 +35,9 @@ class InviteRecordAdapter : BaseQuickAdapter<InviteRecordInfo, InviteRecordAdapt
             }else{
                 TextViewDrawableUtils.setDrawableRight(tvNickName,null)
             }
+            tvTotalDesc.text = "$filterName(元)："
+            val replace = filterName.replace("收益", "")
+            tvIncomeDesc.text = "${replace}贡献收益(元)："
             executePendingBindings()
         }
     }

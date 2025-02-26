@@ -141,7 +141,12 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
                 pageUrl = PageIntentUtil.PAGE_BEAUTY_SET
             )
         )
-        PageIntentUtil
+        list.add(
+            SettingItemInfo(
+                name = "隐私设置",
+                pageUrl = PageIntentUtil.PAGE_PRIVATE_SET
+            )
+        )
         list.add(
             SettingItemInfo(
                 name = "黑名单",

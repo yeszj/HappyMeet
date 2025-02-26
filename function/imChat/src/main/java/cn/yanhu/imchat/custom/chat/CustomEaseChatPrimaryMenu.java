@@ -69,7 +69,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
     private ImageView imExtendGift;
     private RecyclerView quickMsgRv;
 
-    private ViewGroup vgRechargeTips;
+    private ViewGroup vgAddFriendTips;
 
     private EaseChatPrimaryMenuListener listener;
     private EaseInputMenuStyle menuType = EaseInputMenuStyle.All;//菜单展示形式
@@ -120,7 +120,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
 
         btmRlHeight = rlBottom.getLayoutParams().height;
         animatorSet = AnimManager.showScaleAnim(imExtendPhone, 1.2f);
-        vgRechargeTips = findViewById(R.id.vg_rechargeTips);
+        vgAddFriendTips = findViewById(R.id.vg_addFriendTips);
         ivFreeTag = findViewById(R.id.iv_freeTag);
         showNormalStatus();
         hideSoftKeyboard();
@@ -208,7 +208,7 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
             }
             return false;
         });
-        vgRechargeTips.setOnClickListener(v -> onChatTypeClickListener.onRecharge());
+        vgAddFriendTips.setOnClickListener(v -> onChatTypeClickListener.onAddFriend());
     }
 
 
@@ -392,10 +392,10 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
     }
 
     private boolean checkIsFriend() {
-//        if (isNotFriend) {
-//            onChatTypeClickListener.onAddFriend();
-//            return true;
-//        }
+        if (vgAddFriendTips.getVisibility() == View.VISIBLE) {
+            onChatTypeClickListener.onAddFriend();
+            return true;
+        }
         return false;
     }
 
@@ -523,20 +523,18 @@ public class CustomEaseChatPrimaryMenu extends RelativeLayout implements IChatPr
         this.onChatTypeClickListener = onChatTypeClickListener;
     }
 
-    private boolean isNotFriend;
 
     public void setUserInfo(UserDetailInfo userInfo) {
-        isNotFriend = !userInfo.isFriend();
-//        if (userInfo.isFriend()) {
-//            vgRechargeTips.setVisibility(View.GONE);
-//            edittext_layout.setVisibility(View.VISIBLE);
-//            editText.setHint("输入聊天内容");
-//            showNormalStatus();
-//        } else {
-//            vgRechargeTips.setVisibility(View.VISIBLE);
-//            buttonPressToSpeak.setVisibility(View.GONE);
-//            edittext_layout.setVisibility(View.GONE);
-//        }
+        if (userInfo.isFriend() || !userInfo.getSameSex()) {
+            vgAddFriendTips.setVisibility(View.GONE);
+            edittext_layout.setVisibility(View.VISIBLE);
+            editText.setHint("输入聊天内容");
+            showNormalStatus();
+        } else {
+            vgAddFriendTips.setVisibility(View.VISIBLE);
+            buttonPressToSpeak.setVisibility(View.GONE);
+            edittext_layout.setVisibility(View.GONE);
+        }
     }
 
 

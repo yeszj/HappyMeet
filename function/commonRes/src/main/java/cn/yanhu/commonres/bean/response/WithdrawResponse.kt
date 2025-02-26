@@ -15,5 +15,6 @@ data class WithdrawResponse(
     val aliAccount: String?,
     val wxNickName: String?,
     val wxAvatar:String?,
-    var realName: String
+    var realName: String,
+    val desc:String
 )
