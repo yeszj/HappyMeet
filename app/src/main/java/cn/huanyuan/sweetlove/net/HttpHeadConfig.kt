@@ -3,7 +3,6 @@ package cn.huanyuan.sweetlove.net
 import android.text.TextUtils
 import cn.huanyuan.sweetlove.BuildConfig
 import cn.yanhu.baselib.utils.ImeiUtils
-import cn.yanhu.baselib.utils.IpAddressUtils
 import cn.yanhu.baselib.utils.SystemUtils
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.application.ApplicationProxy
@@ -26,7 +25,7 @@ object HttpHeadConfig {
             if (!TextUtils.isEmpty(systemVersion)) {
                 map["systemversion"] = systemVersion!!
             }
-            map["ip"] = IpAddressUtils.ip
+           // map["ip"] = IpAddressUtils.ip
             map["user_id"] = AppCacheManager.userId
             val systemModel = DeviceUtils.getModel()
             if (!TextUtils.isEmpty(systemModel)) {

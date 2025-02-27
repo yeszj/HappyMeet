@@ -144,8 +144,8 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         mBinding.topBarEye.setOnSingleClickListener {
             //开、关对方摄像头
             if (!mBinding.chatVideoClose) {
-                val isCloseVideo: Boolean = !mBinding.callInfo!!.chatUser.colseVideo
-                mBinding.callInfo!!.chatUser.colseVideo = isCloseVideo
+                val isCloseVideo: Boolean = !mBinding.chatUserInfo!!.colseVideo
+                mBinding.chatUserInfo!!.colseVideo = isCloseVideo
                 isShowVideo(false, isCloseVideo)
             }
         }
@@ -335,7 +335,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
      * */
     private fun callFinish(isSelfFinish: Boolean, onLeaveListener: OnLeaveListener) {
         logcom("结束通话：$isSelfFinish")
-        if (mBinding.callInfo == null) {
+        if (callInfo == null) {
             leave(onLeaveListener)
         }
         if (isSelfFinish) {
@@ -596,15 +596,15 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
                     })
                 }
             } else if (type == AgoraPhoneManager.TO_USER_MIC_OPEN) { //远端用户麦克风状态
-                mBinding.callInfo!!.chatUser.colseMic = false
+                mBinding.chatUserInfo!!.colseMic = false
             } else if (type == AgoraPhoneManager.TO_USER_MIC_CLOSE) { //远端用户麦克风状态
-                mBinding.callInfo!!.chatUser.colseMic = true
+                mBinding.chatUserInfo!!.colseMic = true
             } else if (type == AgoraPhoneManager.TO_USER_VIDEO_OPEN) { //远端用户摄像头状态
-                mBinding.callInfo!!.chatUser.colseVideo = false
+                mBinding.chatUserInfo!!.colseVideo = false
                 mBinding.chatVideoClose = false
                 isShowVideo(false, false)
             } else if (type == AgoraPhoneManager.TO_USER_VIDEO_CLOSE) { //远端用户摄像头状态
-                mBinding.callInfo!!.chatUser.colseVideo = true
+                mBinding.chatUserInfo!!.colseVideo = true
                 mBinding.chatVideoClose = true
                 isShowVideo(false, true)
             } else if (type == AgoraPhoneManager.USER_LOCAL_VIDEO_INIT_FINISH) { //本地摄像头初始化完毕
@@ -641,14 +641,14 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
                 floatView?.updataView(
                     this@VideoPhoneActivity, callInfo!!.chatUser, false
                 )
-                isShowVideo(true, mBinding.callInfo!!.user.colseVideo)
+                isShowVideo(true, callInfo!!.user.colseVideo)
                 bgBlur(callInfo!!.user.portrait)
             } else {
                 AgoraPhoneManager.getInstance().setupRemoteVideo(
                     chatUserId, mBinding.callToVideoSf
                 )
                 floatView?.updataView(this@VideoPhoneActivity, callInfo!!.user, true)
-                isShowVideo(false, mBinding.callInfo!!.chatUser.colseVideo)
+                isShowVideo(false,callInfo!!.chatUser.colseVideo)
                 bgBlur(callInfo!!.chatUser.portrait)
             }
         }

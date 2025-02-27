@@ -148,7 +148,7 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
     }
 
     public boolean isShowChatBg(){
-        return level>=20;
+        return getLevel()>=20;
     }
 
     public void setLevel(int level) {
