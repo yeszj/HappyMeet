@@ -110,8 +110,16 @@ class SendGiftPop(
                 val faceGiftShowView = GiftShowView(context,source,GiftShowView.TYPE_FACE)
                 giftViewsList.add(faceGiftShowView)
                 faceGiftShowView.registerClickSendListener(sendGiftListener)
+                if (!sendUserInfo.isSameGender){
+                    val loversGiftShowView = GiftShowView(context,source,GiftShowView.TYPE_LOVER)
+                    giftViewsList.add(loversGiftShowView)
+                    loversGiftShowView.registerClickSendListener(sendGiftListener)
+                }else{
+                    mBinding.tvLovers.visibility = View.INVISIBLE
+                }
             }else{
                 mBinding.tvFace.visibility = View.INVISIBLE
+                mBinding.tvLovers.visibility = View.INVISIBLE
             }
 
             viewPager.adapter = CustomViewPagerAdapter(giftViewsList)
@@ -122,6 +130,9 @@ class SendGiftPop(
                     }
                     R.id.tv_face -> {
                         setCurrentItem(1)
+                    }
+                    R.id.tv_lovers -> {
+                        setCurrentItem(2)
                     }
                 }
             }

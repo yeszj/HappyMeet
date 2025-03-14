@@ -20,8 +20,8 @@ class LiveStatisticsViewModel : BaseViewModel() {
     val liveRecordLivedata = MutableLiveData<ResultState<LiveRecordResponse>>()
     val incomeDetailLivedata = MutableLiveData<ResultState<LiveIncomeDetailInfo>>()
 
-    fun getLiveStatisticInfo() {
-        request({ agoraRxApi.getLiveStatisticInfo() }, liveStatisticLivedata, true)
+    fun getLiveStatisticInfo(filterId:String) {
+        request({ agoraRxApi.getLiveStatisticInfo(filterId) }, liveStatisticLivedata, true)
     }
 
     fun getRoomIncomeDetail(roomId:String) {

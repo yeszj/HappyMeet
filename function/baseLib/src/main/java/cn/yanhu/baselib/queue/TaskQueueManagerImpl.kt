@@ -87,6 +87,7 @@ class TaskQueueManagerImpl {
      * 重置数据
      */
     private fun reset() {
+        channel.close()
         channel = Channel(Channel.BUFFERED)
         loop()
     }
@@ -110,11 +111,7 @@ class TaskQueueManagerImpl {
             if (it.getDuration() != 0L) {
                 delay(it.getDuration())
                 withContext(Dispatchers.Main) { it.finishTask() }
-                currRunningTask = null
 
-                Log.d(TAG, "tryToHandlerTask finish，removeTask -> ${it.getTaskName()}")
-                TaskQueueManager.removeTask(it)
-                cacheTaskNameList.remove(it.getTaskName())
             } else {
                 withContext(Dispatchers.IO) {
                     deferred.take()
@@ -123,6 +120,11 @@ class TaskQueueManagerImpl {
         } catch (ex: Exception) {
             ex.printStackTrace()
             Log.d(TAG, "handlerTaskCatch -> $ex")
+        }finally {
+            currRunningTask = null
+            TaskQueueManager.removeTask(it)
+            cacheTaskNameList.remove(it.getTaskName())
+            Log.d(TAG, "tryToHandlerTask finish，removeTask -> ${it.getTaskName()}")
         }
     }
 

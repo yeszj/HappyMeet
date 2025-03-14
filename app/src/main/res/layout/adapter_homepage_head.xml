@@ -95,39 +95,81 @@
 
         <cn.yanhu.commonres.view.UserIdTagLayout
             android:id="@+id/tagId"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
             beautifulIdImg="@{userinfo.beautifulIdImg}"
             userId="@{userinfo.userId}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-            app:layout_constraintTop_toBottomOf="@+id/userTag"
-            android:layout_height="wrap_content"/>
+            app:layout_constraintTop_toBottomOf="@+id/userTag" />
 
-<!--        <com.makeramen.roundedimageview.RoundedImageView-->
-<!--            android:id="@+id/iv_avatar1"-->
-<!--            imageUrl="@{userinfo.guardInfo.guardUserPortrait}"-->
-<!--            placeholderId="@{-1}"-->
-<!--            android:layout_width="@dimen/dp_60"-->
-<!--            android:layout_height="@dimen/dp_60"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/iv_guardFrame"-->
-<!--            app:layout_constraintEnd_toEndOf="@+id/iv_guardFrame"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/iv_guardFrame"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/iv_guardFrame"-->
-<!--            app:riv_oval="true"-->
-<!--            tools:src="@drawable/icon_portrait" />-->
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar1"
+            imageUrl="@{userinfo.guardInfo.portrait}"
+            placeholderId="@{-1}"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:scaleType="centerCrop"
+            android:visibility="@{userinfo.showGuardInfo ?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_guardFrame"
+            app:layout_constraintEnd_toEndOf="@+id/iv_guardFrame"
+            app:layout_constraintStart_toStartOf="@+id/iv_guardFrame"
+            app:layout_constraintTop_toTopOf="@+id/iv_guardFrame"
+            app:riv_oval="true"
+            tools:src="@drawable/icon_portrait" />
 
-<!--        <androidx.appcompat.widget.AppCompatImageView-->
-<!--            android:id="@+id/iv_guardFrame"-->
-<!--            imageUrl="@{userinfo.guardInfo.guardFrame}"-->
-<!--            placeholderId="@{-1}"-->
-<!--            android:layout_width="@dimen/dp_105"-->
-<!--            android:layout_height="@dimen/dp_105"-->
-<!--            android:layout_marginEnd="@dimen/dp_5"-->
-<!--            android:visibility="@{userinfo.guardInfo!=null ?View.VISIBLE:View.INVISIBLE}"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/divider"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/iv_cover" />-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_guardFrame"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:visibility="@{userinfo.showGuardInfo ?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/dp_m_10"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName"
+            app:layout_constraintBottom_toBottomOf="@+id/tagId"
+            tools:src="@drawable/icon_no_guard" />
+
+        <LinearLayout
+            android:id="@+id/vg_lovers"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_20"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@+id/iv_guardFrame"
+            android:background="@drawable/bg_lovers1_tag">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:layout_marginStart="@dimen/dp_8"
+                android:src="@{userinfo.loverInfo.loversType==3?@drawable/icon_lovers3:userinfo.loverInfo.loversType==2?@drawable/icon_lovers2:userinfo.loverInfo.loversType==4?@drawable/icon_lovers4:@drawable/icon_lovers1}"
+                tools:src="@drawable/icon_lovers2" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="@dimen/dp_5"
+                android:text='@{TextUtils.isEmpty(userinfo.loverInfo.nickName)?"暂无情侣":userinfo.loverInfo.loverDesc()}'
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                app:fontType="@string/fontMedium"
+                tools:text="黄金情侣" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/dp_15"
+                android:text="@{userinfo.loverInfo.nickName}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                tools:text="琼(舞)" />
+        </LinearLayout>
 
         <View
             android:id="@+id/divider"
@@ -135,7 +177,7 @@
             android:layout_height="@dimen/dp_1"
             android:layout_marginTop="@dimen/dp_20"
             android:background="@color/blackAlpha96"
-            app:layout_constraintTop_toBottomOf="@+id/tagId" />
+            app:layout_constraintTop_toBottomOf="@+id/vg_lovers" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_info"

@@ -65,14 +65,13 @@ dependencies {
     api ("com.google.zxing:core:3.3.3")
 
     //https://github.com/airbnb/lottie-android
-    api ("com.airbnb.android:lottie:6.4.0")
+    api ("com.airbnb.android:lottie:6.6.3")
 
     //https://gitcode.com/lihangleo2/ViewPager2Demo/overview
     api("com.github.lihangleo2:SmartViewPager2Adapter:3.1.3")
     api ("com.caverock:androidsvg:1.4")
     api ("org.litepal.guolindev:core:3.2.3")
-    api ("com.github.Dimezis:BlurView:version-2.0.6")
+//    api ("com.github.Dimezis:BlurView:version-2.0.6")
     //https://github.com/centerzx/ShapeBlurView
-    api ("com.github.centerzx:ShapeBlurView:1.0.5")
-
+//    api ("com.github.centerzx:ShapeBlurView:1.0.5")
 }

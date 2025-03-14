@@ -47,6 +47,8 @@ class LiveRoomSeatManagerPop(
     private var inRoomUserList: MutableList<UserDetailInfo> = mutableListOf()
     private var onlineUserList: MutableList<UserDetailInfo> = mutableListOf()
     private var friendUserList: MutableList<UserDetailInfo> = mutableListOf()
+    private var groupMemberUserList: MutableList<UserDetailInfo> = mutableListOf()
+
     override fun onCreate() {
         super.onCreate()
         mBiding = PopLiveRoomUserListBinding.bind(popupImplView)
@@ -108,6 +110,10 @@ class LiveRoomSeatManagerPop(
                     userAdapter.submitList(friendUserList)
                     type = 2
                 }
+                R.id.rb4 -> {
+                    userAdapter.submitList(groupMemberUserList)
+                    type = 3
+                }
             }
             refreshUserList()
         }
@@ -134,6 +140,9 @@ class LiveRoomSeatManagerPop(
                             2 -> {
                                 friendUserList = userList
                             }
+                            3->{
+                                groupMemberUserList = userList
+                            }
                         }
                         userAdapter.submitList(userList)
                         mBiding.refresh.finishRefresh()
@@ -147,6 +156,9 @@ class LiveRoomSeatManagerPop(
                             }
                             2 -> {
                                 friendUserList.addAll(userList)
+                            }
+                            3 ->{
+                                groupMemberUserList.addAll(userList)
                             }
                         }
                         userAdapter.addAll(userList)

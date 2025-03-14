@@ -17,8 +17,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:titleLeftName="玫瑰明细"
-            app:titleRightColor="@color/fontTextColor"
             app:titleRightDrawableLeft="false"
+            app:titleRightColor="@color/fontTextColor"
             app:titleRightIco="@drawable/icon_down_trangle"
             app:titleRightName="全部交易类型" />
 

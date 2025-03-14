@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.login.profile
 
+import android.annotation.SuppressLint
 import android.view.View
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgEditSexAndAgeBinding
@@ -22,6 +23,7 @@ class EditSexAndAgeFrg : BaseFragment<FrgEditSexAndAgeBinding, LoginViewModel>(
     LoginViewModel::class.java
 ) {
     private lateinit var selfViewModel: LoginViewModel
+    @SuppressLint("SetTextI18n")
     override fun initData() {
         selfViewModel = (context as CompleteProfileActivity).mViewModel
         mBinding.viewModel = selfViewModel

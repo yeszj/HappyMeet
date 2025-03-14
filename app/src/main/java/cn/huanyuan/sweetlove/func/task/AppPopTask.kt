@@ -10,15 +10,21 @@ import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
 import android.view.Window
 import androidx.core.view.contains
+import cn.huanyuan.sweetlove.bean.CutDeviceConsumeBean
 import cn.huanyuan.sweetlove.bean.GlobalGiftBean
+import cn.huanyuan.sweetlove.func.dialog.DeviceChangeAuthTipDialog
 import cn.huanyuan.sweetlove.func.dialog.NewYearRedPacketPop
 import cn.huanyuan.sweetlove.func.dialog.TeenTipPop
 import cn.huanyuan.sweetlove.func.view.GlobalGiftLayout
 import cn.huanyuan.sweetlove.func.view.GlobalUserOnlineLayout
+import cn.huanyuan.sweetlove.net.rxApi
+import cn.huanyuan.sweetlove.ui.userinfo.auth.RealNameActivity
 import cn.yanhu.baselib.anim.AnimManager
 import cn.yanhu.baselib.queue.BaseQueueTask
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
+import cn.yanhu.baselib.utils.ext.logcom
+import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.CommonEventPopInfo
 import cn.yanhu.commonres.bean.CommonTipsInfo
@@ -27,6 +33,9 @@ import cn.yanhu.commonres.pop.CommonImagePop
 import cn.yanhu.commonres.pop.CommonTipDialog
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.task.AppPopTypeManager
+import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.bumptech.glide.request.target.CustomTarget
@@ -34,6 +43,8 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
 import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
+import com.pcl.sdklib.bean.CheckFaceAuthResult
+import com.pcl.sdklib.bean.FaceAuthInfo
 
 
 /**
@@ -77,9 +88,60 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
                 //活动弹框
                 showEventPop(topActivity)
             }
+
+            ChatConstant.ACTION_CHANGE_DEVICE -> {
+                //设备变更
+                showChangeDevicePop(topActivity)
+            }
         }
     }
 
+    //设备改变安全认证提示
+    private var deviceChangeAuthTipDialog: DeviceChangeAuthTipDialog? = null
+    private fun showChangeDevicePop(topActivity: Activity) {
+        logcom("checkOaid","showChangeDevicePop")
+        if (CommonUtils.isPopShow(deviceChangeAuthTipDialog)) {
+            return
+        }
+        val cutDeviceConsumeBean = GsonUtils.fromJson(info, CutDeviceConsumeBean::class.java)
+        deviceChangeAuthTipDialog = DeviceChangeAuthTipDialog.showPop(
+            topActivity,
+            object : DeviceChangeAuthTipDialog.OnClickAuthListener {
+                override fun onAuth() {
+                    if (cutDeviceConsumeBean.consumeGold <= cutDeviceConsumeBean.userGoldNum) {
+                        toFaceAuth(cutDeviceConsumeBean, topActivity)
+                    } else {
+                        showToast("金币不足，请联系客服处理")
+                    }
+                }
+            },
+            dismissCallBack
+        )
+    }
+
+    private var isLoadFaceInfo = false
+    private fun toFaceAuth(cutDeviceConsumeBean: CutDeviceConsumeBean, topActivity: Activity) {
+        if (isLoadFaceInfo) {
+            return
+        }
+        isLoadFaceInfo = true
+        request({ rxApi.getFaceAuthInfo() }, object : OnRequestResultListener<FaceAuthInfo> {
+            override fun onSuccess(data: BaseBean<FaceAuthInfo>) {
+                isLoadFaceInfo = false
+                if (topActivity.isDestroyed) {
+                    return
+                }
+                val faceInfo = data.data ?: return
+                val checkFaceAuthResult = CheckFaceAuthResult(2, GsonUtils.toJson(faceInfo),true)
+                RealNameActivity.lunch(topActivity, checkFaceAuthResult,2,cutDeviceConsumeBean.isIsConsume)
+            }
+
+            override fun onFail(code: Int?, msg: String?) {
+                isLoadFaceInfo = false
+            }
+
+        }, true)
+    }
 
 
     private var commonImagePop: CommonImagePop? = null

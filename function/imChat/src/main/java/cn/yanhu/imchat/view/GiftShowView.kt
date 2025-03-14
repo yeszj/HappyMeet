@@ -121,6 +121,8 @@ class GiftShowView : LinearLayout {
     companion object {
         const val TYPE_GIFT = 1
         const val TYPE_FACE = 12
+        const val TYPE_LOVER = 14
+
     }
 
 }

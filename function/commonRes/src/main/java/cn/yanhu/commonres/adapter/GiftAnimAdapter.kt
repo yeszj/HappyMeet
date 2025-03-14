@@ -35,16 +35,8 @@ class GiftAnimAdapter(private var clearListener: OnClearListener) :
         val giftNum = view.findViewById<CustomFontTextView>(R.id.tv_gift_amount)
         val ivAvatar = view.findViewById<UserAvatarView>(R.id.iv_avatar)
         val giftImage = view.findViewById<ImageView>(R.id.iv_gift_img)
-      //  val blurView = view.findViewById<BlurView>(R.id.blurView)
         val vgRoot = view.findViewById<ViewGroup>(R.id.vg_root)
-//        ThreadUtils.getMainHandler().post {
-//            val blurView = BlurUtil.blurView(vgRoot.context, vgRoot, 20f)
-//            vgRoot.background = blurView.toDrawable(vgRoot.context.resources)
-//        }
 
-//        blurView.setupWith(vgRoot)
-//            .setBlurRadius(10f)
-            //.setFrameClearDrawable(vgRoot.background)
         val userName = view.findViewById<TextView>(R.id.tv_user_name)
         val tvTargetName = view.findViewById<TextView>(R.id.tv_targetName)
         ivAvatar.setUserAvatar(sendUser)

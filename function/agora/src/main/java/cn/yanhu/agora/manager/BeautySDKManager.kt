@@ -126,12 +126,10 @@ class BeautySDKManager {
         }
     }
 
-
     private fun getAssetsFile(): File {
-        val unZipPath: String =
-            ActivityUtils.getTopActivity()
-                .getExternalFilesDir(null)?.absolutePath + File.separator + "/assets"
-        return File(unZipPath)
+        val topActivity = ActivityUtils.getTopActivity()
+            ?: return File("/storage/emulated/0/Android/data/cn.huanyuan.sweetlove/files/assets")
+        return topActivity.getExternalFilesDir("assets")!!
     }
 
     private fun getFile(path: String): File {

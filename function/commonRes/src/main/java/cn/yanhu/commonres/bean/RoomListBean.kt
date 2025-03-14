@@ -24,13 +24,12 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
             field = value
             notifyPropertyChanged(BR._all)
         }
-    var isFullSeat = false
+    var fullSeat = false
     var ownerInfo: UserDetailInfo? = null
     var seatInfo: BaseUserInfo? = null
     var roomPortraitList: List<String> = mutableListOf()
     var roomId: String? = ""
     val banners: MutableList<BannerBean> = mutableListOf()
-
     fun getRoomTypeName():String{
         return when (roomType) {
             0 -> {

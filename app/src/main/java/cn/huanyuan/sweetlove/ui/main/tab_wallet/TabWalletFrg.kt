@@ -15,6 +15,7 @@ import cn.huanyuan.sweetlove.ui.wallet.detail.WalletDetailActivity
 import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.zj.netrequest.ext.parseState
@@ -31,6 +32,8 @@ class TabWalletFrg : BaseFragment<FrgTabWalletBinding, MainViewModel>(
 ) {
     private var walletInfo: WalletInfo? = null
     override fun initData() {
+        val toFloat = CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_18).toFloat()
+        mBinding.tvTitle.textSize = toFloat
         requestData()
     }
 

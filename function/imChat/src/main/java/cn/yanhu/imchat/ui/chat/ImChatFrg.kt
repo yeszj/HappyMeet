@@ -168,8 +168,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         }
         LiveEventBus.get("sendGift", String::class.java).observe(this) { svga ->
             logcom("礼盒：$svga")
-            LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO)
-                .post(true)
+            LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
             playSvga(svga.toString())
         }
         LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_CHAT_LIST).observe(this) {

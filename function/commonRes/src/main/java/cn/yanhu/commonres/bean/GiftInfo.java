@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 public class GiftInfo implements Serializable {
     public static final int TYPE_SONG = 11;//点歌礼物
-    public static final int TYPE_RANDOM_BOX= 10;//随机礼物
+    public static final int TYPE_RANDOM_BOX = 10;//随机礼物
 
     public static final int TYPE_FACE = 12;//贴脸礼物
 
@@ -37,6 +37,20 @@ public class GiftInfo implements Serializable {
 
     private int loversType;
 
+    public String getLoversDesc() {
+        if (loversType == 1) {
+            return "黄金情侣";
+        } else if (loversType == 2) {
+            return "水晶情侣";
+
+        } else if (loversType == 3) {
+            return "钻石情侣";
+
+        } else {
+            return "永久情侣";
+        }
+    }
+
     public int getLoversType() {
         return loversType;
     }
@@ -57,9 +71,9 @@ public class GiftInfo implements Serializable {
         return randomBoxGiftInfo;
     }
 
-    public GiftInfo getRandomBoxGiftBean(){
-        if(!TextUtils.isEmpty(randomBoxGiftInfo)){
-            return GsonUtils.fromJson(randomBoxGiftInfo,GiftInfo.class);
+    public GiftInfo getRandomBoxGiftBean() {
+        if (!TextUtils.isEmpty(randomBoxGiftInfo)) {
+            return GsonUtils.fromJson(randomBoxGiftInfo, GiftInfo.class);
         }
         return null;
     }

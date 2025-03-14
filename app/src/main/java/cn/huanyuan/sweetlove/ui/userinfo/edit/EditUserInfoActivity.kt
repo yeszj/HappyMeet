@@ -140,10 +140,10 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
 
             UserParamType.TYPE_AGE.type -> {
                 val list = mutableListOf<String>()
-                for (i in 18..70) {
+                for (i in 18..60) {
                     list.add(i.toString())
                 }
-                showSelectItemInfoPop(item, list,if (TextUtils.isEmpty(item.value)) "20" else item.value)
+                showSelectItemInfoPop(item, list,if (TextUtils.isEmpty(item.value)) "30" else item.value)
             }
 
             UserParamType.TYPE_EDUCATION.type -> {
@@ -185,10 +185,10 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
 
             UserParamType.TYPE_FRIEND_AGE.type -> {
                 val list = mutableListOf<String>()
-                for (i in 18..70) {
+                for (i in 18..60) {
                     list.add(i.toString())
                 }
-                showSelectItemInfoPop(item,list)
+                showSelectItemInfoPop(item,list,"30")
             }
 
             UserParamType.TYPE_FRIEND_ADDRESS.type -> {

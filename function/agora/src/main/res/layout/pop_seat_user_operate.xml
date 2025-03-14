@@ -66,8 +66,10 @@
 
             <LinearLayout
                 android:id="@+id/vg_guard"
-                android:layout_width="@dimen/dp_120"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_48"
+                android:paddingEnd="@dimen/dp_10"
+                android:minWidth="@dimen/dp_120"
                 android:background="@drawable/bg_gradient_guard_btn"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -92,20 +94,22 @@
 
             <LinearLayout
                 android:id="@+id/vg_lovers"
-                android:layout_width="@dimen/dp_120"
+                android:layout_width="wrap_content"
+                android:minWidth="@dimen/dp_120"
                 android:layout_height="@dimen/dp_48"
                 android:layout_marginStart="@dimen/dp_10"
-                android:background="@{userInfo.loverInfo.loversType==3?@drawable/bg_lovers3_tag:userInfo.loverInfo.loversType==2?@drawable/bg_lovers2_tag:@drawable/bg_lovers1_tag}"
+                android:paddingEnd="@dimen/dp_10"
+                android:background="@{userInfo.loverInfo.loversType==4?@drawable/bg_lovers4_tag:userInfo.loverInfo.loversType==3?@drawable/bg_lovers3_tag:userInfo.loverInfo.loversType==2?@drawable/bg_lovers2_tag:@drawable/bg_lovers1_tag}"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="@{userInfo.showLoverInfo?View.VISIBLE:View.GONE}"
                 tools:background="@drawable/bg_lovers1_tag">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/dp_28"
-                    android:layout_height="@dimen/dp_28"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
                     android:layout_marginStart="@dimen/dp_8"
-                    android:src="@{userInfo.loverInfo.loversType==3?@drawable/icon_lovers3:userInfo.loverInfo.loversType==2?@drawable/icon_lovers2:@drawable/icon_lovers1}"
+                    android:src="@{userInfo.loverInfo.loversType==3?@drawable/icon_lovers3:userInfo.loverInfo.loversType==2?@drawable/icon_lovers2:userInfo.loverInfo.loversType==4?@drawable/icon_lovers4:@drawable/icon_lovers1}"
                     tools:src="@drawable/icon_lovers2" />
 
                 <cn.yanhu.baselib.view.CustomFontTextView

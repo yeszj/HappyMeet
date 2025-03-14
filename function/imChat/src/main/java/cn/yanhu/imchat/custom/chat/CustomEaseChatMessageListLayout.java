@@ -192,7 +192,9 @@ public class CustomEaseChatMessageListLayout extends RelativeLayout implements I
 
         layoutManager = new LinearLayoutManager(getContext());
         rvList.setLayoutManager(layoutManager);
-
+        if (rvList.getItemAnimator() != null) {
+            rvList.getItemAnimator().setChangeDuration(0);
+        }
         baseAdapter = new ConcatAdapter();
         messageAdapter = new EaseMessageAdapter();
         baseAdapter.addAdapter(messageAdapter);

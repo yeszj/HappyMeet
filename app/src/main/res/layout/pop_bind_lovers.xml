@@ -32,11 +32,12 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_gift"
             android:layout_width="match_parent"
-            android:paddingStart="@dimen/dp_10"
+            android:paddingStart="@dimen/dp_55"
             android:paddingTop="@dimen/dp_14"
+            android:paddingEnd="@dimen/dp_45"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="3"
-            tools:itemCount="3"
+            app:spanCount="2"
+            tools:itemCount="4"
             tools:listitem="@layout/adapter_bind_lovers_gift_item"
             android:layout_height="wrap_content"/>
         <cn.yanhu.baselib.view.CustomFontTextView

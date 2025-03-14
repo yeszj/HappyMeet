@@ -92,10 +92,10 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_4"
-            android:background="@{msgInfo.sendUserInfo.loverInfo.loversType==1?@drawable/bg_lovers1_tag_r6:msgInfo.sendUserInfo.loverInfo.loversType==2?@drawable/bg_lovers2_tag_r6:@drawable/bg_lovers3_tag_r6}"
+            android:background="@{msgInfo.sendUserInfo.loverInfo.loversType==1?@drawable/bg_lovers1_tag_r6:msgInfo.sendUserInfo.loverInfo.loversType==2?@drawable/bg_lovers2_tag_r6:msgInfo.sendUserInfo.loverInfo.loversType==3?@drawable/bg_lovers3_tag_r6:@drawable/bg_lovers4_tag_r6}"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="@dimen/dp_4"
+            android:paddingStart="@dimen/dp_2"
             android:paddingEnd="@dimen/dp_6"
             android:visibility="@{msgInfo.sendUserInfo.loverInfo!=null &amp;&amp; msgInfo.sendUserInfo.showLoverInfo?View.VISIBLE:View.GONE}"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
@@ -103,9 +103,10 @@
             tools:background="@drawable/bg_lovers1_tag">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="@dimen/dp_14"
-                android:layout_height="@dimen/dp_14"
-                android:src="@{msgInfo.sendUserInfo.loverInfo.loversType==1?@drawable/icon_lovers1:msgInfo.sendUserInfo.loverInfo.loversType==2?@drawable/icon_lovers2:@drawable/icon_lovers3}" />
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                tools:src="@drawable/icon_lovers2"
+                android:src="@{msgInfo.sendUserInfo.loverInfo.loversType==1?@drawable/icon_lovers1:msgInfo.sendUserInfo.loverInfo.loversType==2?@drawable/icon_lovers2:msgInfo.sendUserInfo.loverInfo.loversType==3?@drawable/icon_lovers3:@drawable/icon_lovers4}" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"

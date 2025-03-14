@@ -34,8 +34,8 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
 ) {
     private val adapter by lazy { SameCityUserListAdapter() }
     private var page = 1
-    private var filterCity:String = ""
-    private var filterAge:String = ""
+    private var filterCity: String = ""
+    private var filterAge: String = ""
     override fun initData() {
         adapter.stateView = getEmptyView()
         val linearLayoutManager = LinearLayoutManager(context)
@@ -50,29 +50,45 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
     override fun requestData() {
         super.requestData()
         filterCity = AppCacheManager.province
-        mViewModel.getSameCityUserList(filterAge,filterCity,page)
+        mViewModel.getSameCityUserList(filterAge, filterCity, page)
     }
 
     override fun initListener() {
         super.initListener()
-        adapter.setOnDebouncedItemClick{ adapter, _, position ->
-            val item = adapter.getItem(position)?:return@setOnDebouncedItemClick
-            if (item.roomId>0){
-                LiveRoomManager.toLiveRoomPage(mContext,item.roomId.toString())
-            }else{
-                RouteIntent.lunchPersonHomePage(item)
-            }
+        adapter.setOnDebouncedItemClick { adapter, _, position ->
+            val item = adapter.getItem(position) ?: return@setOnDebouncedItemClick
+            RouteIntent.lunchPersonHomePage(item)
         }
-        adapter.addOnDebouncedChildClick(R.id.iv_accost,1000,object : BaseQuickAdapter.OnItemChildClickListener<SameCityUserInfo>{
-            override fun onItemClick(
-                adapter: BaseQuickAdapter<SameCityUserInfo, *>,
-                view: View,
-                position: Int
-            ) {
-                val item = adapter.getItem(position)?:return
-                ImChatActivity.lunch(mContext,item.userId)
-            }
-        })
+        adapter.addOnDebouncedChildClick(
+            R.id.vg_room,
+            1000,
+            object : BaseQuickAdapter.OnItemChildClickListener<SameCityUserInfo> {
+                override fun onItemClick(
+                    adapter: BaseQuickAdapter<SameCityUserInfo, *>,
+                    view: View,
+                    position: Int
+                ) {
+                    val item = adapter.getItem(position) ?: return
+                    if (item.roomId > 0) {
+                        LiveRoomManager.toLiveRoomPage(mContext, item.roomId.toString())
+                    }else{
+                        RouteIntent.lunchPersonHomePage(item)
+                    }
+                }
+            })
+        adapter.addOnDebouncedChildClick(
+            R.id.iv_accost,
+            1000,
+            object : BaseQuickAdapter.OnItemChildClickListener<SameCityUserInfo> {
+                override fun onItemClick(
+                    adapter: BaseQuickAdapter<SameCityUserInfo, *>,
+                    view: View,
+                    position: Int
+                ) {
+                    val item = adapter.getItem(position) ?: return
+                    ImChatActivity.lunch(mContext, item.userId)
+                }
+            })
         LiveEventBus.get<String>(EventBusKeyConfig.CLOSELIVEROOM).observe(this) {
             page = 1
             requestData()
@@ -81,17 +97,18 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
 
     override fun initRefresh() {
         super.initRefresh()
-        RefreshManager.getInstance().initRefresh(mContext,true,mBinding.refreshLayout,object : IRefreshCallBack{
-            override fun onRefresh() {
-                page = 1
-                requestData()
-            }
+        RefreshManager.getInstance()
+            .initRefresh(mContext, true, mBinding.refreshLayout, object : IRefreshCallBack {
+                override fun onRefresh() {
+                    page = 1
+                    requestData()
+                }
 
-            override fun onLoadMore() {
-                page++
-                requestData()
-            }
-        })
+                override fun onLoadMore() {
+                    page++
+                    requestData()
+                }
+            })
     }
 
     override fun registerNecessaryObserver() {
@@ -133,7 +150,7 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
         }
     }
 
-    companion object{
+    companion object {
         const val FILTER_CITY = "filterCity"
         const val FILTER_AGE = "filterAge"
     }

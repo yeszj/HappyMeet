@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -31,8 +32,8 @@ import cn.yanhu.agora.manager.BeautySDKManager
 import cn.yanhu.agora.manager.RtcEngineInit
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
+import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseActivity
-import cn.yanhu.baselib.base.BaseTabAdapter
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.logcom
@@ -53,6 +54,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
+import cn.zj.netrequest.status.ErrorCode
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.GsonUtils
@@ -99,9 +101,26 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         getGiftInfo()
         mViewModel.getMainTabInfo()
         initRtcEngine()
+        BaseApplication.clearTask()
+        checkOaId()
         checkInit()
         appStart()
         //startActivity(Intent(mContext,TestActivity::class.java))
+    }
+
+    private fun checkOaId() {
+        request({ rxApi.checkOaid() }, object : OnRequestResultListener<String?> {
+            override fun onSuccess(data: BaseBean<String?>) {
+            }
+            override fun onFail(code: Int?, msg: String?) {
+                if (code == ErrorCode.CHANGE_DEVICE && !TextUtils.isEmpty(msg)){
+                    logcom("checkOaid","addPopTask")
+                    BaseApplication.addPopTask(
+                        ChatConstant.ACTION_CHANGE_DEVICE, msg!!
+                    )
+                }
+            }
+        },isShowToast = false)
     }
 
     override fun getSavedInstanceState(savedInstanceState: Bundle?) {
@@ -109,9 +128,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         savedInstanceState?.apply {
             selectItem = this.getInt(IntentKeyConfig.POSITION,2)
         }
-
     }
-
 
     private fun appStart(){
         request({ rxApi.appStart() }, object : OnRequestResultListener<AppStartResponse> {
@@ -135,7 +152,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     val two = async { rxApi.checkIsOpenJuvenileMode() }
                     val three = async { rxApi.checkAuthTip() }
                     val four = async { rxApi.getToastInfo() }
-
                     val await = one.await()
                     val await1 = two.await()
                     checkAuthInfo = three.await()
@@ -143,7 +159,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     appVersionInfo = await.data
                     isOpen = await1.data == true
                 }
-            }.onFailure {}.onSuccess {
+            }.onFailure {
+            }.onSuccess {
                 if (appVersionInfo == null) {
                     if (isOpen) {
                         //跳转到青少年模式页面
@@ -202,7 +219,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             val bottomItem = mBinding.tabLayout.getBottomItem(tabMsgPosition)
             bottomItem.setUnreadNum(it)
         }
-
     }
 
     private var beautySdkDownloadProgress = 0
@@ -472,10 +488,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
 
     private fun bindTabToVp() {
-        val tabAdapter = BaseTabAdapter(supportFragmentManager, mFragmentList)
+        val tabAdapter = MyFragmentStateAdapter(mContext, mFragmentList)
         mBinding.viewPager.offscreenPageLimit = mFragmentList.size
         mBinding.viewPager.adapter = tabAdapter
-        mBinding.tabLayout.setViewPager(mBinding.viewPager)
+        mBinding.tabLayout.setViewPager2(mBinding.viewPager)
         mBinding.tabLayout.setOnItemSelectedListener { _, _, _ ->
             KeyboardUtils.hideSoftInput(
                 mContext

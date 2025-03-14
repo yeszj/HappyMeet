@@ -52,16 +52,22 @@ class FaceAuthActivity : BaseActivity<ActivityFaceAuthBinding, FaceAuthViewModel
 ) {
     private var completed:Boolean =false
     private lateinit var  faceAuthInfo:FaceAuthInfo
+    private var source:Int = 1
+    private var isConsumeGold:Boolean = false
     companion object{
-        fun lunch(context:Context,faceAuthInfo:FaceAuthInfo){
+        fun lunch(context:Context,faceAuthInfo:FaceAuthInfo,source:Int = 1,isConsumeGold:Boolean = false){
             val intent = Intent(context,FaceAuthActivity::class.java)
             intent.putExtra(IntentKeyConfig.DATA,faceAuthInfo)
+            intent.putExtra(IntentKeyConfig.SOURCE,source)
+            intent.putExtra("isConsumeGold",isConsumeGold)
             context.startActivity(intent)
         }
     }
     override fun initData() {
         setFullScreenStatusBar()
         setStatusBarStyle(false)
+        source = intent.getIntExtra(IntentKeyConfig.SOURCE,1)
+        isConsumeGold = intent.getBooleanExtra("isConsumeGold",false)
         faceAuthInfo = intent.getSerializableExtra(IntentKeyConfig.DATA) as FaceAuthInfo
         logcom("3.sessionId="+faceAuthInfo.sessionId)
         mViewModel.initialize(LabelId.FACE, faceAuthInfo.bizToken, AppCacheManager.userId, faceAuthInfo.sessionId)
@@ -140,7 +146,7 @@ class FaceAuthActivity : BaseActivity<ActivityFaceAuthBinding, FaceAuthViewModel
                         message = "不安全环境"
                     }
                     ErrorCode.CONNECTION_FAIL -> {
-                        message = "连接失败"
+                        message = "连接失败，请尝试更换下网络或设备"
                     }
                     ErrorCode.CONNECTION_AUTH_INVALID -> {
                         message = "连接鉴权失败"
@@ -161,7 +167,7 @@ class FaceAuthActivity : BaseActivity<ActivityFaceAuthBinding, FaceAuthViewModel
     }
 
     private fun checkFaceResult() {
-        mViewModel.checkFaceResult(faceAuthInfo.sessionId,object : OnRequestResultListener<String>{
+        mViewModel.checkFaceResult(faceAuthInfo.sessionId,source,isConsumeGold,object : OnRequestResultListener<String>{
             override fun onSuccess(data: BaseBean<String>) {
                 LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.FACE_RESULT, true)
                 finish()

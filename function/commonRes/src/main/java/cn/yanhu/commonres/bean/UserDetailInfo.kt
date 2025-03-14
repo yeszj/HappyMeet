@@ -63,8 +63,10 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
         }
 
     fun getRoomDesc():String{
-        return if (isPublicRoom() || isPrivateRoom()){
+        return if (isPublicRoom()){
             "相亲中"
+        }else if (isPrivateRoom()){
+            "专属中"
         }else{
             "交友中"
         }

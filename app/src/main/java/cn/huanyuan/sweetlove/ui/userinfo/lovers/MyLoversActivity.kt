@@ -25,7 +25,6 @@ import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.task.GiftPopAnimTask
 import cn.yanhu.imchat.manager.EmMsgManager
-import cn.yanhu.imchat.manager.ImUserManager
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.status.CustomException
@@ -182,17 +181,7 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
         showToast("绑定情侣成功～")
         requestData()
         bindLoversPop?.dismiss()
-        EmMsgManager.saveAlert(
-            "恭喜，你与${loversInfo?.viewInfo?.nickName}已成为情侣！",
-            "",
-            "", conversationId = viewUserId, event = ChatConstant.MSG_ALERT
-        )
         LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
-        EmMsgManager.sendCmdMessagePeople(
-            viewUserId,
-            "恭喜，你与${ImUserManager.getSelfUserInfo().nickName}已成为情侣！",
-            ChatConstant.ACTION_BIND_LOVERS_SUCCESS
-        )
     }
 
     private fun showCancelLoversPop(): BasePopupView {

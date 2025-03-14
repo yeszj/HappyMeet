@@ -15,6 +15,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.http.HttpResponseCache
 import android.os.Build
+import android.os.Bundle
 import android.os.Looper
 import android.text.TextUtils
 import android.view.Gravity
@@ -61,7 +62,6 @@ import cn.yanhu.imchat.custom.chat.EaseCommonUtils
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EMInitUtils
 import cn.yanhu.imchat.manager.EaseHelper.initEaseUI
-import cn.yanhu.imchat.manager.EmMsgManager
 import cn.zj.netrequest.RetrofitUtil
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.application.OnImLoginListener
@@ -109,15 +109,6 @@ import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
 import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
 import java.io.File
-import kotlin.Exception
-import kotlin.Int
-import kotlin.RuntimeException
-import kotlin.String
-import kotlin.Suppress
-import kotlin.Throwable
-import kotlin.apply
-import kotlin.arrayOfNulls
-import kotlin.toString
 
 
 @Suppress("DEPRECATION")
@@ -256,6 +247,11 @@ class BaseApplication : Application() {
     private fun initUm() {
         //设置LOG开关，默认为false
         UMConfigure.setLogEnabled(BuildConfig.DEBUG)
+        val bundle = Bundle()
+        bundle.putBoolean(UMCrash.KEY_ENABLE_NET, false)
+        bundle.putBoolean(UMCrash.KEY_ENABLE_POWER, false)
+        UMCrash.initConfig(bundle)
+        UMConfigure.enableWiFiMacCollection(false)
         UMConfigure.init(
             this,
             "6709deac667bfe33f3be884e",
@@ -267,7 +263,7 @@ class BaseApplication : Application() {
             BuildConfig.VERSION_NAME,
             if (BuildConfig.DEBUG) "debug" else "release",
             BuildConfig.VERSION_CODE.toString()
-        );
+        )
         // 微信设置
         PlatformConfig.setWeixin(SdkParamsManager.WX_APP_ID, SdkParamsManager.WX_APP_SECRET)
         PlatformConfig.setWXFileProvider(BuildConfig.APPLICATION_ID + ".fileprovider")
@@ -614,15 +610,6 @@ class BaseApplication : Application() {
                     ChatConstant.ACTION_NEW_YEAR_RED_PACKET,
                     data.optString("url")
                 )
-            }else if(source == ChatConstant.ACTION_BIND_LOVERS_SUCCESS){
-                val content =
-                    message.getStringAttribute(ChatConstant.CUSTOM_DATA, "")
-                EmMsgManager.saveAlert(
-                    content,
-                    "",
-                    "", conversationId = message.from, event = ChatConstant.MSG_ALERT
-                )
-                LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
             }else if(source == ChatConstant.ACTION_CANCEL_LOVERS){
                 LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
             }else if (source == ChatConstant.ACTION_USER_ONLINE) {
@@ -868,6 +855,11 @@ class BaseApplication : Application() {
 
         fun addPopTask(type: Int, content: String) {
             appPopTaskQueueManagerImpl.addTask(AppPopTask(type, content))
+        }
+
+        fun clearTask(){
+            appPopTaskQueueManagerImpl.clear()
+            globalTaskQueueManagerImpl.clear()
         }
 
         fun addGlobalPopTask(type: Int, content: String) {

@@ -86,4 +86,8 @@
         <attr format="color" name="line_color_default"/>
         <attr format="color" name="line_color_focus"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomFlowLayout">
+        <attr name="fl_verticalSpacing" format="dimension" />
+    </declare-styleable>
 </resources>

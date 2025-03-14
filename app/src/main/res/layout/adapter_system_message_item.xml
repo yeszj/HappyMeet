@@ -7,6 +7,8 @@
         <variable
             name="item"
             type="cn.yanhu.commonres.bean.SystemMessageInfo" />
+        <import type="android.view.View"/>
+        <import type="android.text.TextUtils"/>
     </data>
 
     <LinearLayout
@@ -18,7 +20,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_13"
+            android:layout_height="wrap_content"
             android:text="@{item.time}"
             android:layout_marginTop="@dimen/dp_10"
             android:textColor="@color/cl_common_opacity_60"
@@ -42,8 +44,7 @@
                 android:textSize="@dimen/sp_14"
                 tools:text = "亲爱的为爱交友用户：
 因系统维护，从6.16号22:00到6.20号0:00期间，平台将关闭基础资料修改，感谢您的理解与支持！"
-                android:textColor="@color/cl_common_opacity_60"
-                android:layout_marginTop="@dimen/dp_6"/>
+                android:textColor="@color/cl_common_opacity_60" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:id="@+id/btn_read"
@@ -53,8 +54,8 @@
                 android:layout_marginTop="@dimen/dp_18"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:visibility="gone"
-                tools:visibility="visible"
+                android:visibility="@{TextUtils.isEmpty(item.url)?View.GONE:View.VISIBLE}"
+                tools:visibility="gone"
                 android:backgroundTint="#1AF8459B"
                 android:background="@drawable/white_corner_10"
                 android:textSize="@dimen/sp_16"

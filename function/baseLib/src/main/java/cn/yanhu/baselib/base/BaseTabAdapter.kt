@@ -27,12 +27,12 @@ open class BaseTabAdapter(
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val fragment = super.instantiateItem(container, position) as Fragment
-        fragmentManager.beginTransaction().show(fragment).commitAllowingStateLoss()
-        return super.instantiateItem(container, position)
+        fragmentManager.beginTransaction().attach(fragment).commitAllowingStateLoss()
+        return fragment
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         val fragment = fragmentList[position]
-        fragmentManager.beginTransaction().hide(fragment).commitAllowingStateLoss()
+        fragmentManager.beginTransaction().detach(fragment).commitAllowingStateLoss()
     }
 }

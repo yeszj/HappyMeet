@@ -23,6 +23,7 @@ import cn.yanhu.commonres.config.CmdMsgTypeConfig
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.pop.CommonOperatePop
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
@@ -116,6 +117,9 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
             showOperatePop()
         }
         LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO).observe(this) {
+            requestData()
+        }
+        LiveEventBus.get<String>(LiveDataEventManager.REFRESH_USER_CACHE).observe(this) {
             requestData()
         }
     }

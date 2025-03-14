@@ -37,6 +37,7 @@ object AppCacheManager {
 
     var agoraAppId by ConfigPref("agoraAppId","301729ee939d4470b6b60a795e9ccc22")
 
+
     @JvmStatic
     fun isWoman():Boolean{
         return gender == 2

@@ -110,7 +110,7 @@ class WalletDetailActivity : BaseActivity<ActivityWalletDetailBinding, WalletVie
         mViewModel.getWalletRecord(filterId, type, page)
     }
 
-    var filterList = mutableListOf<FilterInfo>()
+    private var filterList = mutableListOf<FilterInfo>()
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
         mViewModel.walletRecordLivedata.observe(this) { it ->

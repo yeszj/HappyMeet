@@ -18,16 +18,16 @@
         app:layout_constraintStart_toStartOf="@+id/vg_parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <net.center.blurview.ShapeBlurView
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_48"
-            app:blur_mode="rectangle"
-            app:layout_constraintTop_toTopOf="@+id/vg_parent"
-            app:layout_constraintStart_toStartOf="@+id/vg_parent"
-            app:layout_constraintEnd_toEndOf="@+id/vg_parent"
-            app:blur_corner_radius_bottom_left="@dimen/dp_500"
-            app:blur_corner_radius_top_left="@dimen/dp_500"
-            app:blur_radius="@dimen/dp_20" />
+        <!--        <eightbitlab.com.blurview.BlurView-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="@dimen/dp_48"-->
+        <!--            app:blur_mode="rectangle"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/vg_parent"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/vg_parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/vg_parent"-->
+        <!--            app:blur_corner_radius_bottom_left="@dimen/dp_500"-->
+        <!--            app:blur_corner_radius_top_left="@dimen/dp_500"-->
+        <!--            app:blur_radius="@dimen/dp_20" />-->
 
         <LinearLayout
             android:id="@+id/vg_parent"
@@ -49,11 +49,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_5"
                 app:avatarSize="@dimen/dp_36"
+                app:isCanClick="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_oval="true"
-                app:isCanClick="false"
                 app:svgAvatarSize="@dimen/dp_36"
                 tools:src="@drawable/icon_portrait" />
 

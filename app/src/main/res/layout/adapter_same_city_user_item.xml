@@ -68,7 +68,7 @@
             android:layout_marginStart="@dimen/dp_m_5"
             android:layout_marginEnd="@dimen/dp_60"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/avatarView"
+            android:layout_marginTop="@dimen/dp_18"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/avatarView"
             app:layout_constraintTop_toTopOf="@+id/avatarView">
@@ -129,6 +129,7 @@
             tools:visibility="gone" />
 
         <LinearLayout
+            android:id="@+id/vg_room"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_26"
             android:background="@{userinfo.publicRoom?@drawable/bg_blinding_tag:(userinfo.privateRoom?@drawable/bg_private_tag:  @drawable/bg_friends_tag)}"

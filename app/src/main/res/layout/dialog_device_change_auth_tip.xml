@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_corner_15">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_20"
+            android:text="账号安全认证"
+            android:textColor="@color/colorMain"
+            android:textSize="@dimen/sp_20"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="账号安全认证" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_20"
+            android:text="为了您的账号安全\n更换设备后需进行人脸识别认证"
+            android:textColor="@color/cl_common"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            tools:text="为了您的账号安全\n更换设备后需进行人脸识别认证" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btn_exit"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_18"
+            android:layout_marginTop="@dimen/dp_25"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:background="@drawable/common_shape_click_bg"
+            android:backgroundTint="@color/blackAlpha96"
+            android:gravity="center"
+            android:text="退出登录"
+            android:textColor="@color/cl_common_opacity_60"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintEnd_toStartOf="@+id/btn_next"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btn_next"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_25"
+            android:layout_marginEnd="@dimen/dp_18"
+            android:background="@drawable/common_shape_click_bg"
+            android:gravity="center"
+            android:text="立即认证"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_exit"
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc"
+            tools:text="立即认证" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_12"
+            android:paddingBottom="@dimen/dp_16"
+            android:text="联系客服"
+            android:textColor="@color/cl_common_opacity_60"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintTop_toBottomOf="@+id/btn_next" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

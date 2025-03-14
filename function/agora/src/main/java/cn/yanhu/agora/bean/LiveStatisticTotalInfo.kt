@@ -1,6 +1,7 @@
 package cn.yanhu.agora.bean
 
 import cn.yanhu.commonres.bean.BaseUserInfo
+import cn.yanhu.commonres.bean.FilterInfo
 
 /**
  * @author: zhengjun
@@ -10,5 +11,6 @@ import cn.yanhu.commonres.bean.BaseUserInfo
 data class LiveStatisticTotalInfo(
     val userInfo: BaseUserInfo,
     val myData: MutableList<StatisticInfo>,
-    val apprenticeData: MutableList<StatisticInfo>
+    val apprenticeData: MutableList<StatisticInfo>,
+    val filterList: MutableList<FilterInfo>
 )

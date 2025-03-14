@@ -13,6 +13,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.TextViewDrawableUtils
+import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.commonres.R
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.SexManager
@@ -108,7 +109,8 @@ class UserTagView : LinearLayout {
             tvTag,
             ContextCompat.getDrawable(context, R.drawable.svg_location_white)
         )
-        tvTag.textSize = CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_11).toFloat()
+        ViewUtils.setPaddingHorizontal(tvTag,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_2),CommonUtils.getDimension(
+            com.zj.dimens.R.dimen.dp_4))
         tvTag.backgroundTintList =
             ColorStateList.valueOf(CommonUtils.getColor(cn.yanhu.baselib.R.color.locationTagColor))
         tvTag.text = province
@@ -127,7 +129,6 @@ class UserTagView : LinearLayout {
             tvTag,
             null
         )
-        tvTag.textSize = CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_11).toFloat()
         tvTag.backgroundTintList =
             ColorStateList.valueOf(CommonUtils.getColor(cn.yanhu.baselib.R.color.locationTagColor))
         tvTag.text = "老家$hometown"
@@ -150,6 +151,8 @@ class UserTagView : LinearLayout {
             tvTag.backgroundTintList =
                 ColorStateList.valueOf(CommonUtils.getColor(cn.yanhu.baselib.R.color.femaleColor))
         }
+        ViewUtils.setPaddingHorizontal(tvTag,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_2),CommonUtils.getDimension(
+            com.zj.dimens.R.dimen.dp_4))
         tvTag.text = age.toString()
     }
 

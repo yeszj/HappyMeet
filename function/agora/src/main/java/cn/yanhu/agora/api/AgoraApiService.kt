@@ -10,6 +10,7 @@ import cn.yanhu.agora.bean.LiveRecordResponse
 import cn.yanhu.agora.bean.LiveStatisticTotalInfo
 import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomExtraInfo
+import cn.yanhu.agora.bean.RoomGroupMemberRes
 import cn.yanhu.agora.bean.RoomLeaveResponse
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.bean.SongListResponse
@@ -158,6 +159,11 @@ interface AgoraApiService : CommonApiService {
     @GET("app/v1/user/getUserInfoByUserId")
     suspend fun getUserInfoByUserId(@Query("uId") userId: String): BaseBean<UserDetailInfo>
 
+    @POST("app/v1/fanClub/join")
+    suspend fun joinRoomGroup(@Query("leaderUserId") leaderUserId: String): BaseBean<String>
+
+    @GET("app/v1/fanClub/getUserList")
+    suspend fun getGroupMemberInfo(@Query("leaderUserId") userId: String): BaseBean<RoomGroupMemberRes>
 
     @GET("app/v1/room/getInviteList")
     suspend fun getInviteList(
@@ -229,7 +235,7 @@ interface AgoraApiService : CommonApiService {
 
 
     @GET("app/v1/matchmakerManage/getIndex")
-    suspend fun getLiveStatisticInfo(): BaseBean<LiveStatisticTotalInfo>
+    suspend fun getLiveStatisticInfo(@Query("filterId") filterId: String): BaseBean<LiveStatisticTotalInfo>
 
     @GET("app/v1/matchmakerManage/getKbData")
     suspend fun getMyLiveRecord(

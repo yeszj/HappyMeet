@@ -158,4 +158,8 @@ class LiveRoomViewModel : BaseViewModel() {
     fun getExtraInfo(roomId: String,onRequestResultListener: OnRequestResultListener<RoomExtraInfo>) {
         request({ agoraRxApi.getExtraInfo(roomId) }, onRequestResultListener)
     }
+
+    fun joinRoomGroup(userId: String,onRequestResultListener: OnRequestResultListener<String>) {
+        request({ agoraRxApi.joinRoomGroup(userId) }, onRequestResultListener,false)
+    }
 }

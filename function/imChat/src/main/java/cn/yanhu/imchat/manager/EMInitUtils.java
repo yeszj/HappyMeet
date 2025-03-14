@@ -26,6 +26,7 @@ import cn.yanhu.imchat.custom.message.chatgiftview.ChatGiftNewAdapterDelegate;
 import cn.yanhu.imchat.custom.message.chatimageview.ChatImageAdapterDelegate;
 import cn.yanhu.imchat.custom.message.chatphoneview.ChatPhoneNewAdapterDelegate;
 import cn.yanhu.imchat.custom.message.chattextview.ChatTextAdapterDelegate;
+import cn.yanhu.imchat.custom.message.chattipview.ChatTipAdapterDelegate;
 import cn.yanhu.imchat.custom.message.chatvideoview.ChatVideoAdapterDelegate;
 import cn.yanhu.imchat.custom.message.chatvoiceview.ChatVoiceAdapterDelegate;
 import cn.yanhu.imchat.custom.message.group.centerTipsView.CenterTipsViewAdapterDelegate;
@@ -87,6 +88,7 @@ public class EMInitUtils {
 
             //注册对话类型
             EaseMessageTypeSetManager.getInstance()
+                    .addMessageType(ChatTipAdapterDelegate.class)         //提示
                     .addMessageType(ChatRelationshipViewAdapterDelegate.class)
                     .addMessageType(InviteSendGiftViewAdapterDelegate.class)
                     .addMessageType(ChatGifEmojiNewAdapterDelegate.class)

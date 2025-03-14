@@ -57,7 +57,7 @@ class LiveRoomEndActivity : BaseActivity<ActivityLiveRoomEndBinding, LiveRoomVie
             mBinding.liveRoomEndTxtTwo.text = "专属房间所需玫瑰余额不足\n" + "私密约会已结束"
         } else if (type == LiveRoomManager.HOUSE_ADMINISTRATOR_OFF) {
             val roomId = extras.getString(IntentKeyConfig.ROOM_ID)
-            mBinding.liveRoomEndTxtTwo.text = "房间已被管理员强制关闭"
+            mBinding.liveRoomEndTxtTwo.text = "房间已关闭"
             roomId?.apply {
                 bindCloseReason(roomId)
             }

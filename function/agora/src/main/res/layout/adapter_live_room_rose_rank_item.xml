@@ -28,8 +28,9 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="0dp"
-            android:layout_height="@dimen/dp_12"
+            android:layout_height="wrap_content"
             android:background="@drawable/white_corner_20"
+            android:paddingVertical="@dimen/dp_0_5"
             android:backgroundTint="@color/colorMain"
             android:gravity="center"
             tools:text="1.31k"

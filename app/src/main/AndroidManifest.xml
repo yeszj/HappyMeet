@@ -52,6 +52,7 @@
             android:configChanges="orientation|screenSize|screenLayout"
             android:exported="true"
             android:launchMode="singleTop"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.LoginActivity"

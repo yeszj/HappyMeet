@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.databinding.AdapterHomepageHeadBinding
+import cn.huanyuan.sweetlove.ui.userinfo.GuardRankActivity
 import cn.yanhu.baselib.utils.DialogUtils
+import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.UserDetailInfo
+import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.view.IconTagInfoView
 import com.chad.library.adapter4.BaseQuickAdapter.OnItemClickListener
 import com.chad.library.adapter4.BaseSingleItemAdapter
@@ -24,7 +27,32 @@ class UserHomePageHeadAdapter :
 
     override fun onBindViewHolder(holder: VH, item: UserDetailInfo?) {
         holder.binding.apply {
-            userinfo = item
+            userinfo = item?:return
+            if (item.guardInfo==null){
+                ivGuardFrame.setImageResource(cn.yanhu.commonres.R.drawable.icon_no_guard)
+            }else{
+                GlideUtils.loadImage(context, item.guardInfo!!.avatarFrame, ivGuardFrame)
+            }
+            ivGuardFrame.setOnSingleClickListener {
+                GuardRankActivity.lunch(context, item.userId)
+            }
+            vgLovers.setOnSingleClickListener {
+               RouteIntent.lunchLoversPage(item.userId)
+            }
+            when (item.loverInfo?.loversType) {
+                4 -> {
+                    vgLovers.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_lovers4_tag)
+                }
+                3 -> {
+                    vgLovers.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_lovers3_tag)
+                }
+                2 -> {
+                    vgLovers.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_lovers2_tag)
+                }
+                else -> {
+                    vgLovers.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_lovers1_tag)
+                }
+            }
             bindAvatar(item)
             bindPersonInfoTag(item)
             bindConditioinTag(item)

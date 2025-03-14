@@ -179,10 +179,18 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             showAngleRankPop()
         }
         ivRule.setOnSingleClickListener {
-            PageIntentUtil.url2Page(mContext, WebUrlManager.SONG_ROOM_RULE)
+            if (roomSourceBean.isSongRoom()){
+                PageIntentUtil.url2Page(mContext, WebUrlManager.SONG_ROOM_RULE)
+            }else{
+                PageIntentUtil.url2Page(mContext, WebUrlManager.ANGLE_ROOM_RULE)
+            }
         }
         ivCrowned.setOnSingleClickListener {
-            showCrownedListPop(CrownedUserListPop.TYPE_SONG)
+            if (roomSourceBean.isSongRoom()){
+                showCrownedListPop(CrownedUserListPop.TYPE_SONG)
+            }else{
+                showCrownedListPop(CrownedUserListPop.TYPE_ANGLE)
+            }
         }
         vgGiftAudio.setOnSingleClickListener {
             if (AppCacheManager.isOpenGiftAudio) {

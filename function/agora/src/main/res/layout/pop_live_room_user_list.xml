@@ -76,6 +76,16 @@
                 android:textColor="@color/color_room_seat_tab"
                 android:background="@drawable/selector_room_seat_tab"
                 android:text="好友" />
+            <RadioButton
+                android:id="@+id/rb4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:button="@null"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/color_room_seat_tab"
+                android:background="@drawable/selector_room_seat_tab"
+                android:text="群成员" />
         </RadioGroup>
 
         <cn.yanhu.baselib.refresh.MyRefreshLayout

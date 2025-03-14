@@ -21,7 +21,7 @@ data class LoverInfo(val userId: String, val nickName: String, val loversType: I
                 "钻石情侣"
             }
             else -> {
-                ""
+                "永久情侣"
             }
         }
     }

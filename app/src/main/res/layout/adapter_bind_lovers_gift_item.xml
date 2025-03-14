@@ -27,7 +27,7 @@
             android:background="@drawable/white_bottom_corner_10"
             android:backgroundTint="@color/blackAlpha80"
             android:paddingHorizontal="@dimen/dp_8"
-            android:text='@{giftInfo.loversType==1?"黄金情侣":giftInfo.loversType==2?"水晶情侣":"钻石情侣"}'
+            android:text='@{giftInfo.loversDesc}'
             android:textColor="@color/white"
             android:textSize="@dimen/sp_11"
             app:fontType="@string/fontMedium"
@@ -42,24 +42,24 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_16"
             tools:background="@drawable/bg_lovers1_tag_gift"
-            android:background="@{giftInfo.loversType==1?@drawable/bg_lovers1_tag_gift:giftInfo.loversType==2?@drawable/bg_lovers2_tag_gift:@drawable/bg_lovers3_tag_gift}"
+            android:background="@{giftInfo.loversType==1?@drawable/bg_lovers1_tag_gift:giftInfo.loversType==2?@drawable/bg_lovers2_tag_gift:giftInfo.loversType==3?@drawable/bg_lovers3_tag_gift:@drawable/bg_lovers4_tag_gift}"
             android:gravity="center_vertical"
-            android:paddingStart="@dimen/dp_4"
+            android:paddingStart="@dimen/dp_2"
             android:paddingEnd="@dimen/dp_6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="@dimen/dp_14"
-                android:layout_height="@dimen/dp_14"
-                android:src="@{giftInfo.loversType==1?@drawable/icon_lovers1:giftInfo.loversType==2?@drawable/icon_lovers2:@drawable/icon_lovers3}"
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
+                android:src="@{giftInfo.loversType==1?@drawable/icon_lovers1:giftInfo.loversType==2?@drawable/icon_lovers2:giftInfo.loversType==3?@drawable/icon_lovers3:@drawable/icon_lovers4}"
                 tools:src="@drawable/icon_lovers1" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{giftInfo.loversType==1?"黄金情侣":giftInfo.loversType==2?"水晶情侣":"钻石情侣"}'
+                android:text='@{giftInfo.loversDesc}'
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_11"
                 app:fontType="@string/fontMedium"

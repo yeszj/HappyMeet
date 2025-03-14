@@ -8,6 +8,7 @@ package cn.yanhu.commonres.config
 object ChatConstant {
     const val CUSTOM_MSG = "custom_msg"
     const val MSG_ALERT = "msg_alert"
+    const val MSG_COMMON_TIP = "msg_common_tip"
 
     const val SOURCE = "source"
     const val CUSTOM_DATA = "data"
@@ -114,6 +115,8 @@ object ChatConstant {
     const val ACTION_EVENT_POP = 49//活动弹框
 
     const val ACTION_USER_ONLINE = 50//用户上线
+
+    const val ACTION_CHANGE_DEVICE = 51
 
 
     const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位

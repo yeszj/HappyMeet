@@ -81,7 +81,18 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         topTitleBinding.ivRoomCover.setOnSingleClickListener {
             showUserPop(roomSourceBean.ownerInfo!!.userId)
         }
+        topTitleBinding.tvGroupMember.setOnSingleClickListener {
+            showGroupMemberPop()
+        }
+        topTitleBinding.tvJoinGroup.setOnSingleClickListener {
+            showJoinGroupPop()
+        }
         mBinding.flTopView.addView(rankView)
+    }
+
+    override fun joinGroupSuccess() {
+        topTitleBinding.tvGroupMember.visibility = View.VISIBLE
+        topTitleBinding.tvJoinGroup.visibility = View.INVISIBLE
     }
 
     override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {
@@ -93,6 +104,13 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     override fun getRoomInfoSuccess() {
         super.getRoomInfoSuccess()
         topTitleBinding.roomInfo = roomSourceBean
+        if (roomSourceBean.ifClubMember || roomSourceBean.ownerInfo?.userId == AppCacheManager.userId){
+            topTitleBinding.tvGroupMember.visibility = View.VISIBLE
+            topTitleBinding.tvJoinGroup.visibility = View.INVISIBLE
+        }else{
+            topTitleBinding.tvGroupMember.visibility = View.INVISIBLE
+            topTitleBinding.tvJoinGroup.visibility = View.VISIBLE
+        }
     }
 
     private val childItemClickListener =
@@ -114,9 +132,10 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         if (localUserId.toString() == roomUserSeatInfo.userId) {
                             switchMikeAlert(!item.mikeUser, item.id)
                         } else if (isOwner) {
-                            ownerSwitchMikeAlert(!item.mikeUser, item.id,roomUserSeatInfo.userId)
+                            ownerSwitchMikeAlert(!item.mikeUser, item.id, roomUserSeatInfo.userId)
                         }
                     }
+
                     cn.yanhu.agora.R.id.tv_manApplyCount -> {
                         showUserList("1")
                     }
@@ -156,8 +175,8 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         }
                     }
 
-                    cn.yanhu.agora.R.id.iv_rose ->{
-                        val roomUserSeatInfo = item.roomUserSeatInfo?:return
+                    cn.yanhu.agora.R.id.iv_rose -> {
+                        val roomUserSeatInfo = item.roomUserSeatInfo ?: return
                         sendRose(roomUserSeatInfo)
                     }
                 }

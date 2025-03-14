@@ -36,8 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_10"
-            android:paddingTop="@dimen/dp_5"
             android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toTopOf="@+id/tagRole"
             app:fontType="@string/fontBold"
             android:text="@{incomeInfo.nickName}"
             app:layout_constraintStart_toEndOf="@+id/avatarView"
@@ -52,6 +52,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_4"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nickName"
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName" />
 
@@ -62,8 +64,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_4"
-            android:layout_marginBottom="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+            app:layout_constraintTop_toTopOf="@+id/tagRole"
+            app:layout_constraintBottom_toBottomOf="@+id/tagRole"
             app:layout_constraintStart_toEndOf="@+id/tagRole" />
 
         <LinearLayout

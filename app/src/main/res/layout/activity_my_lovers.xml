@@ -12,6 +12,7 @@
         <variable
             name="isSameSex"
             type="java.lang.Boolean" />
+
         <variable
             name="loversRes"
             type="cn.yanhu.commonres.bean.response.LoversResponse" />
@@ -79,7 +80,7 @@
             app:titleColor="@color/white"
             app:titleLeftIco="@drawable/svg_white_back"
             app:titleLeftName="我的情侣"
-            app:titleRightName="解除情侣"/>
+            app:titleRightName="解除情侣" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -124,19 +125,19 @@
 
                         <cn.yanhu.commonres.view.UserIdTagLayout
                             beautifulIdImg="@{loversRes.viewInfo.beautifulIdImg}"
-                            userId="@{loversRes.viewInfo.userId}"
                             tagBgColor="@{@color/blackAlpha80}"
                             tagTxtColor="@{@color/white}"
-                            android:layout_marginTop="@dimen/dp_4"
+                            userId="@{loversRes.viewInfo.userId}"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_4" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
                         android:layout_marginTop="@dimen/dp_21"
+                        android:gravity="center_horizontal"
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatImageView
@@ -147,32 +148,32 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/dp_16"
-                            tools:background="@drawable/bg_lovers1_tag_r6"
-                            android:background="@{loversRes.loversType==1?@drawable/bg_lovers1_tag_r6:loversRes.loversType==2?@drawable/bg_lovers2_tag_r6:@drawable/bg_lovers3_tag_r6}"
                             android:gravity="center_vertical"
-                            android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName)?View.GONE:View.VISIBLE}"
                             android:paddingStart="@dimen/dp_4"
                             android:paddingEnd="@dimen/dp_6"
+                            android:background="@{loversRes.loversType==1?@drawable/bg_lovers1_tag_r6:loversRes.loversType==2?@drawable/bg_lovers2_tag_r6:loversRes.loversType==3?@drawable/bg_lovers3_tag_r6:@drawable/bg_lovers4_tag_r6}"
+                            android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName)?View.GONE:View.VISIBLE}"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:background="@drawable/bg_lovers1_tag_r6">
 
                             <androidx.appcompat.widget.AppCompatImageView
-                                android:layout_width="@dimen/dp_14"
-                                android:layout_height="@dimen/dp_14"
-                                android:src="@{loversRes.loversType==1?@drawable/icon_lovers1:loversRes.loversType==2?@drawable/icon_lovers2:@drawable/icon_lovers3}"
+                                android:layout_width="@dimen/dp_20"
+                                android:layout_height="@dimen/dp_20"
+                                android:src="@{loversRes.loversType==1?@drawable/icon_lovers1:loversRes.loversType==2?@drawable/icon_lovers2:loversRes.loversType==3?@drawable/icon_lovers3:@drawable/icon_lovers4}"
                                 tools:src="@drawable/icon_lovers1" />
 
                             <cn.yanhu.baselib.view.CustomFontTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text='@{loversRes.loversType==1?"黄金情侣":loversRes.loversType==2?"水晶情侣":"钻石情侣"}'
+                                android:text='@{loversRes.loverDesc()}'
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_11"
                                 app:fontType="@string/fontMedium"
                                 tools:text="黄金情侣" />
                         </LinearLayout>
-                        
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -193,9 +194,9 @@
                         <cn.yanhu.baselib.view.CustomFontTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_m_10"
                             android:text="@{loversRes.loverInfo.nickName}"
                             android:textColor="@color/cl_common"
-                            android:layout_marginTop="@dimen/dp_m_10"
                             android:textSize="@dimen/sp_14"
                             android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName)?View.GONE:View.VISIBLE}"
                             tools:text="佊岸花开"
@@ -203,34 +204,34 @@
 
                         <cn.yanhu.commonres.view.UserIdTagLayout
                             beautifulIdImg="@{loversRes.loverInfo.beautifulIdImg}"
+                            tagBgColor="@{@color/blackAlpha80}"
+                            tagTxtColor="@{@color/white}"
                             userId="@{loversRes.loverInfo.userId}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            tagBgColor="@{@color/blackAlpha80}"
                             android:layout_marginTop="@dimen/dp_4"
-                            tagTxtColor="@{@color/white}"
                             android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName)?View.GONE:View.VISIBLE}" />
 
                         <cn.yanhu.baselib.view.CustomFontTextView
                             android:id="@+id/tv_bind"
                             android:layout_width="@dimen/dp_80"
                             android:layout_height="@dimen/dp_32"
+                            android:layout_marginTop="@dimen/dp_m_10"
                             android:background="@drawable/gradient_main_r16"
                             android:gravity="center"
                             android:text="绑定情侣"
-                            tools:visibility="gone"
-                            android:layout_marginTop="@dimen/dp_m_10"
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_14"
                             android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName) &amp;&amp; !isSelf &amp;&amp; !isSameSex?View.VISIBLE:View.GONE}"
-                            app:fontType="@string/fontMedium" />
+                            app:fontType="@string/fontMedium"
+                            tools:visibility="gone" />
 
                         <cn.yanhu.baselib.view.CustomFontTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_m_10"
                             android:gravity="center"
                             android:text="暂无情侣"
-                            android:layout_marginTop="@dimen/dp_m_10"
                             android:textColor="#888888"
                             android:textSize="@dimen/sp_14"
                             android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName) &amp;&amp; isSelf?View.VISIBLE:View.GONE}" />
@@ -248,10 +249,10 @@
                     android:textSize="@dimen/sp_13" />
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    drawableUrl="@{loversRes.ruleImg}"
                     android:layout_width="@dimen/dp_348"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_20"
-                    drawableUrl="@{loversRes.ruleImg}"
                     android:adjustViewBounds="true" />
             </LinearLayout>
 

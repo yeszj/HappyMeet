@@ -16,4 +16,21 @@ data class LoversResponse(
     val ruleImg: String,
     val giftList: MutableList<GiftInfo>,
     val cancalPrice:String
-)
+){
+    fun loverDesc():String{
+        return when (loversType) {
+            1 -> {
+                "黄金情侣"
+            }
+            2 -> {
+                "水晶情侣"
+            }
+            3 -> {
+                "钻石情侣"
+            }
+            else -> {
+                "永久情侣"
+            }
+        }
+    }
+}

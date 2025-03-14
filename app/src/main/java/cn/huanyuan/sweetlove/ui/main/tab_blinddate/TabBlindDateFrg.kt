@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.main.tab_blinddate
 
+import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgTabBlinddateBinding
@@ -24,6 +25,7 @@ import com.blankj.utilcode.util.GsonUtils
 import com.pcl.sdklib.bean.CheckFaceAuthResult
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
+
 /**
  * @author: zhengjun
  * created: 2024/2/4
@@ -33,8 +35,8 @@ class TabBlindDateFrg : BaseFragment<FrgTabBlinddateBinding, MainViewModel>(
     R.layout.frg_tab_blinddate,
     MainViewModel::class.java
 ) {
+    @SuppressLint("ClickableViewAccessibility")
     override fun initData() {
-        //mBinding.viewPager.desensitization()
         initTabLayout()
         initVpData()
     }

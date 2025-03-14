@@ -48,6 +48,49 @@ fun <T> request2(
 
 }
 
+
+@OptIn(DelicateCoroutinesApi::class)
+fun <T> request2(
+    block: suspend () -> BaseBean<T>,
+    listener: OnBooleanResultListener,
+    isShowToast: Boolean = true,
+) {
+    GlobalScope.launch {
+        kotlin.runCatching {
+            block()
+        }.onSuccess {
+            ThreadUtils.runOnUiThread {
+                if (it.code == ErrorCode.SUCCESS) {
+                    if (it.data is Boolean && it.data) {
+                        listener.onSuccess()
+                    } else {
+                        listener.onFail(ErrorCode.DATA_ERROR, it.msg)
+                        dealNetException(
+                            CustomException(ErrorCode.DATA_ERROR, it.msg),
+                            isShowToast
+                        )
+                    }
+                } else {
+                    listener.onFail(it.code, it.msg)
+                    dealNetException(CustomException(it.code, it.msg), isShowToast)
+                }
+            }
+        }.onFailure {
+            ThreadUtils.runOnUiThread {
+                if (it is CustomException) {
+                    listener.onFail(it.code, it.msg)
+                } else {
+                    listener.onFail(-1, it.message)
+                }
+                if (isShowToast && it !is CancellationException) {
+                    ToastUtils.show(it.message)
+                }
+            }
+        }
+    }
+
+}
+
 fun <T> request(
     block: suspend () -> BaseBean<T>,
     listener: OnRequestResultListener<T>,
@@ -131,39 +174,44 @@ fun <T> request(
     listener: OnBooleanResultListener,
     isShowToast: Boolean = true
 ) {
-    val activity = ActivityUtils.getTopActivity() as FragmentActivity?
-    activity?.apply {
-        activity.lifecycleScope.launch {
-            kotlin.runCatching {
-                block()
-            }.onSuccess {
-                ThreadUtils.runOnUiThread {
-                    if (it.code == ErrorCode.SUCCESS) {
-                        if (it.data is Boolean && it.data) {
-                            listener.onSuccess()
+    val activity = ActivityUtils.getTopActivity()
+    if (activity!=null && activity is FragmentActivity){
+        activity.apply {
+            activity.lifecycleScope.launch {
+                kotlin.runCatching {
+                    block()
+                }.onSuccess {
+                    ThreadUtils.runOnUiThread {
+                        if (it.code == ErrorCode.SUCCESS) {
+                            if (it.data is Boolean && it.data) {
+                                listener.onSuccess()
+                            } else {
+                                listener.onFail(ErrorCode.DATA_ERROR, it.msg)
+                                dealNetException(
+                                    CustomException(ErrorCode.DATA_ERROR, it.msg),
+                                    isShowToast
+                                )
+                            }
                         } else {
-                            listener.onFail(ErrorCode.DATA_ERROR, it.msg)
-                            dealNetException(
-                                CustomException(ErrorCode.DATA_ERROR, it.msg),
-                                isShowToast
-                            )
+                            listener.onFail(it.code, it.msg)
+                            dealNetException(CustomException(it.code, it.msg), isShowToast)
                         }
-                    } else {
-                        listener.onFail(it.code, it.msg)
-                        dealNetException(CustomException(it.code, it.msg), isShowToast)
                     }
-                }
-            }.onFailure {
-                ThreadUtils.runOnUiThread {
-                    Log.d(TAG, "request：bean:${it} errorMs:${it.message}")
-                    listener.onFail(-1, it.message)
-                    if (isShowToast && it !is CancellationException) {
-                        ToastUtils.show(it.message)
+                }.onFailure {
+                    ThreadUtils.runOnUiThread {
+                        Log.d(TAG, "request：bean:${it} errorMs:${it.message}")
+                        listener.onFail(-1, it.message)
+                        if (isShowToast && it !is CancellationException) {
+                            ToastUtils.show(it.message)
+                        }
                     }
                 }
             }
         }
+    }else{
+        request2(block, listener, isShowToast)
     }
+
 }
 
 

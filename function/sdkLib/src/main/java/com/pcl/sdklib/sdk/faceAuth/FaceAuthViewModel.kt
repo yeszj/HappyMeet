@@ -34,8 +34,8 @@ class FaceAuthViewModel : BaseViewModel() {
 
     private var sdkInitResult = 0
 
-    fun checkFaceResult(sessionId:String,onRequestResultListener: OnRequestResultListener<String>) {
-        val faceParamsBody = FaceParamsBody(sessionId)
+    fun checkFaceResult(sessionId:String,source:Int,isConsumeGold:Boolean,onRequestResultListener: OnRequestResultListener<String>) {
+        val faceParamsBody = FaceParamsBody(sessionId,source,isConsumeGold)
         request({ sdkRxApi.checkFaceAuthResult(faceParamsBody) }, onRequestResultListener,false)
     }
 

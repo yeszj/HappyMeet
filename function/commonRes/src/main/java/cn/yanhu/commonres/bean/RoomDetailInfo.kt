@@ -28,6 +28,7 @@ class RoomDetailInfo : RoomListBean(), Serializable, Observable {
     var admin: Int = 0
     var roomSeatResList: MutableList<RoomSeatInfo> = mutableListOf()
     var seatRoseNum:Int = 0
+    var ifClubMember:Boolean = false
 
     fun isAdmin():Boolean{
         return admin == 1

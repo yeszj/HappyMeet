@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -7,9 +8,10 @@
             type="cn.yanhu.commonres.bean.BaseUserInfo" />
     </data>
 
-    <LinearLayout
+    <cn.yanhu.baselib.widget.CustomFlowLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:fl_verticalSpacing = "@dimen/dp_4"
         android:orientation="horizontal">
 
         <cn.yanhu.commonres.view.UserLevelView
@@ -17,25 +19,25 @@
             userLevel="@{userinfo.level}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5" />
+            android:layout_marginEnd="@dimen/dp_4" />
 
         <cn.yanhu.commonres.view.UserTagView
             android:id="@+id/userAge"
             userAge="@{userinfo.age}"
             userGender="@{userinfo.gender}"
             android:layout_width="wrap_content"
+            android:layout_marginEnd="@dimen/dp_4"
             android:layout_height="wrap_content" />
 
         <cn.yanhu.commonres.view.UserTagView
             userProvince='@{userinfo.province}'
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5" />
+            android:layout_marginEnd="@dimen/dp_4" />
 
         <cn.yanhu.commonres.view.UserTagView
-            android:layout_marginStart="@dimen/dp_5"
             android:layout_width="wrap_content"
             userHomeTown="@{userinfo.hometown}"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </cn.yanhu.baselib.widget.CustomFlowLayout>
 </layout>

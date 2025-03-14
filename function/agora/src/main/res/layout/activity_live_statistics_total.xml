@@ -23,6 +23,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
+            app:titleRightColor="@color/fontTextColor"
+            app:titleRightIco="@drawable/icon_down_trangle"
+            app:titleRightDrawableLeft="false"
+            app:titleRightName="本月数据"
             app:titleLeftName="红娘后台" />
 
         <cn.yanhu.baselib.refresh.MyRefreshLayout
@@ -43,18 +47,19 @@
                     <View
                         android:id="@+id/viewTip"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_40"
+                        android:layout_height="@dimen/sp_40"
                         android:layout_marginHorizontal="@dimen/dp_10"
                         android:background="@drawable/white_corner_10"
                         android:backgroundTint="#1AFF8C00"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/svg_gantan_orange"
                         android:drawablePadding="@dimen/dp_4"
                         android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/dp_10"
                         android:text="红娘后台的数据非实时数据，存在一定时间延迟"
                         android:textColor="#FF8C00"
                         android:textSize="@dimen/sp_14"

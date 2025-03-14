@@ -101,7 +101,7 @@ interface ApiService : CommonApiService {
         @Query("ages") ages: String,
         @Query("province") province: String,
         @Query("page") page: Int,
-        @Query("pageSize") pageSize: Int
+        @Query("size") pageSize: Int
     ): BaseBean<SameCityUserResponse>
 
     @GET("app/v1/user/friendList")
@@ -313,6 +313,12 @@ interface ApiService : CommonApiService {
      */
     @GET("app/v1/home/initialize")
     suspend fun appStart(): BaseBean<AppStartResponse>
+
+    @GET("app/v1/user/checkOaid")
+    suspend fun checkOaid(): BaseBean<String?>
+
+    @GET("app/v1/home/getShangtangParams")
+    suspend fun getFaceAuthInfo(): BaseBean<FaceAuthInfo>
 
     /**
      * 搜索页面 搜索用户列表

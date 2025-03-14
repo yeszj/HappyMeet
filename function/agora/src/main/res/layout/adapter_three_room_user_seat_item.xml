@@ -147,24 +147,26 @@
                 tools:src="@color/customer_service_blue" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_nickName"
                 style="@style/common_white_shadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_m_2"
                 android:paddingStart="@dimen/dp_4"
                 android:text="@{seatInfo.roomUserSeatInfo.nickName}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_13"
                 app:fontType="@string/fontMedium"
+                app:layout_constraintBottom_toTopOf="@+id/tv_age"
                 app:layout_constraintStart_toEndOf="@+id/iv_avatar"
                 app:layout_constraintTop_toTopOf="@+id/iv_avatar"
                 tools:text="王地主" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_age"
                 style="@style/common_white_shadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_m_2"
+                app:layout_constraintTop_toBottomOf="@+id/tv_nickName"
                 android:paddingStart="@dimen/dp_4"
                 android:text="@{seatInfo.roomUserSeatInfo.strNoGenderInfo}"
                 android:textColor="@color/whiteAlpha30"

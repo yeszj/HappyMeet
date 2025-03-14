@@ -5,4 +5,4 @@ package com.pcl.sdklib.bean
  * created: 2025/2/21
  * desc:
  */
-data class FaceParamsBody (val sessionId:String)
+data class FaceParamsBody (val sessionId:String,val source:Int,val isConsumeGold:Boolean)

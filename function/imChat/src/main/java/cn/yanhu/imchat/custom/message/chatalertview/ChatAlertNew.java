@@ -196,6 +196,7 @@ public class ChatAlertNew extends BaseEaseChatRow {
             binding.executePendingBindings();
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

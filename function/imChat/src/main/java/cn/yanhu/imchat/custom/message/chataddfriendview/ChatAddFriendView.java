@@ -2,7 +2,6 @@ package cn.yanhu.imchat.custom.message.chataddfriendview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,9 +34,9 @@ public class ChatAddFriendView extends BaseEaseChatRow {
 
     @Override
     protected void onFindViewById() {
-        hintView = (TextView) findViewById(R.id.tv_alert);
-        easeAgree = (TextView) findViewById(R.id.ease_agree);
-        applyFriendLl = (LinearLayout) findViewById(R.id.apply_friend_ll);
+        hintView = findViewById(R.id.tv_alert);
+        easeAgree = findViewById(R.id.ease_agree);
+        applyFriendLl = findViewById(R.id.apply_friend_ll);
     }
 
     @SuppressLint("SetTextI18n")
@@ -69,7 +68,7 @@ public class ChatAddFriendView extends BaseEaseChatRow {
             }
 
         } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
+            e.printStackTrace();
         }
     }
 }

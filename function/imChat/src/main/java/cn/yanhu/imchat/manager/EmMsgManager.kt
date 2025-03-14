@@ -47,20 +47,6 @@ object EmMsgManager {
         )
     }
 
-    fun showSystemMsg(str: String, url: String, introduction: String, toUserId: String) {
-        val message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM)
-        val body = EMCustomMessageBody(ChatConstant.MSG_ALERT)
-        val params: MutableMap<String, String> = HashMap()
-        params["icon"] = url
-        params["content"] = str
-        params["introduction"] = introduction
-        body.params = params
-        message.body = body
-        message.to = toUserId
-        message.setStatus(EMMessage.Status.SUCCESS)
-        EMClient.getInstance().chatManager().saveMessage(message)
-    }
-
     @JvmStatic
     fun sendCmdMessagePeople(toUid: String, action: Int, params: Map<String, Any>?) {
         sendCmdMessagePeople(toUid, action, params, EMMessage.ChatType.Chat)
@@ -268,25 +254,6 @@ object EmMsgManager {
         LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_CHAT_LIST).post(true)
     }
 
-    fun sendRightIconAlert(
-        str: String,
-        url: String,
-        conversationId: String,
-        type: String,
-        isHide: Int
-    ) {
-        val message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM)
-        val body = EMCustomMessageBody(type)
-        val params: MutableMap<String, String> = java.util.HashMap()
-        params["rightIcon"] = url
-        params["content"] = str
-        body.params = params
-        message.body = body
-        message.to = conversationId
-        message.setStatus(EMMessage.Status.SUCCESS)
-        EMClient.getInstance().chatManager().saveMessage(message)
-    }
-
     /**
      * 发送自定义消息
      */
@@ -312,6 +279,16 @@ object EmMsgManager {
         val message = EMClient.getInstance().chatManager().getMessage(inviteSendGiftMsgId)
         message.setAttribute(ChatConstant.HAS_SEND_GIFT, true)
         EMClient.getInstance().chatManager().updateMessage(message)
+    }
+
+    @JvmStatic
+    fun sendCommonTipMsg(chatUserId: String, params: MutableMap<String, String>) {
+        val message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM)
+        val body = EMCustomMessageBody(ChatConstant.MSG_COMMON_TIP)
+        body.params = params
+        message.body = body
+        message.to = chatUserId
+        EMClient.getInstance().chatManager().sendMessage(message)
     }
 
 

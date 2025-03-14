@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="rankInfo"
+            type="cn.yanhu.commonres.bean.UserDetailInfo" />
+
+        <variable
+            name="type"
+            type="java.lang.Integer" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_user"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_68"
+        android:paddingEnd="@dimen/dp_14"
+        android:paddingStart="@dimen/dp_12"
+        tools:ignore="RtlSymmetry">
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/userAvatar"
+            imageUrl="@{rankInfo.portrait}"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true"
+            tools:src="@drawable/icon_portrait" />
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:paddingStart="@dimen/dp_10"
+            android:singleLine="true"
+            android:text="@{rankInfo.nickName}"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toTopOf="@+id/vg_tag"
+            app:layout_constraintStart_toEndOf="@id/userAvatar"
+            app:layout_constraintTop_toTopOf="@+id/userAvatar"
+            tools:text="Jasmine" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_auth"
+            android:layout_width="@dimen/dp_16"
+            app:layout_constraintBottom_toBottomOf="@+id/name"
+            app:layout_constraintTop_toTopOf="@+id/name"
+            app:layout_constraintStart_toEndOf="@+id/name"
+            android:layout_marginStart="@dimen/dp_2"
+            android:visibility="@{rankInfo.auth?View.VISIBLE:View.INVISIBLE}"
+            android:src="@drawable/icon_tag_has_auth"
+            android:layout_height="@dimen/dp_16"/>
+
+        <cn.yanhu.commonres.view.UserInfoTagLayout
+            android:id="@+id/vg_tag"
+            userInfo="@{rankInfo}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_3"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
+            app:layout_constraintStart_toEndOf="@id/userAvatar"  />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

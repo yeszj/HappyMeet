@@ -18,4 +18,6 @@ object IntentKeyConfig {
     const val IS_SHOW = "isShow"
     const val POSITION = "position"
     const val ACTIVITY_ID = "activityId"
+    const val SOURCE = "source"
+
 }
