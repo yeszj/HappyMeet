@@ -130,7 +130,7 @@
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
             app:layout_constraintTop_toBottomOf="@+id/vg_loverInfo">
 
-            <com.airbnb.lottie.LottieAnimationView
+            <cn.yanhu.commonres.view.CustomLottieAnimationView
                 android:id="@+id/item_live_room_msg_emoji"
                 android:layout_width="@dimen/dp_60"
                 android:layout_height="@dimen/dp_60"

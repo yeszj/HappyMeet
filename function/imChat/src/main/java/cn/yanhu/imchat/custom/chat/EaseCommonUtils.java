@@ -29,7 +29,6 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.blankj.utilcode.util.GsonUtils;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMConversation.EMConversationType;
@@ -56,6 +55,7 @@ import cn.yanhu.baselib.utils.CommonUtils;
 import cn.yanhu.commonres.bean.BaseUserInfo;
 import cn.yanhu.commonres.config.ChatConstant;
 import cn.yanhu.commonres.manager.AppCacheManager;
+import cn.yanhu.commonres.view.CustomLottieAnimationView;
 import cn.yanhu.imchat.bean.CallFinishRewardBean;
 import cn.yanhu.imchat.bean.GroupCenterTipMsgInfo;
 import cn.yanhu.imchat.bean.GroupChatUserInfo;
@@ -133,7 +133,7 @@ public class EaseCommonUtils {
                 if (value.startsWith("{") && value.endsWith("}") && value.contains("bigIconPath") && value.contains("iconPath")) {
                     try {
                         EaseEmojicon easeEmojicon = GsonUtils.fromJson(value, EaseEmojicon.class);
-                        LottieAnimationView lottieAnimationView = new LottieAnimationView(context);
+                        CustomLottieAnimationView lottieAnimationView = new CustomLottieAnimationView(context);
                         lottieAnimationView.loop(true);
                         lottieAnimationView.setLayoutParams(new FrameLayout.LayoutParams(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20), CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20)));
                         lottieAnimationView.setAnimationFromUrl(easeEmojicon.getBigIconPath());

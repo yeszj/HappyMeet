@@ -81,7 +81,7 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
 
 
     private fun startPhoneLogin(){
-        mViewModel.login(0)
+        mViewModel.login(LoginResultManager.SOURCE_EMS)
     }
 
     private fun checkInputListener() {

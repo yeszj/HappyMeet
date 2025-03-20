@@ -27,6 +27,8 @@ import com.umeng.analytics.MobclickAgent
  * desc:
  */
 object LoginResultManager {
+    const val SOURCE_EMS = 0
+    const val SOURCE_JIGUANG = 1
     fun loginSuccess(mContext: FragmentActivity, loginSuccessInfo: LoginSuccessInfo) {
         if (!TextUtils.isEmpty(loginSuccessInfo.phoneEndNum)) {
             AppCacheManager.phoneEndNum = loginSuccessInfo.phoneEndNum

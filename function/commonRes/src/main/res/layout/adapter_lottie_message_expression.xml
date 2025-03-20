@@ -15,7 +15,7 @@
         android:paddingTop="@dimen/dp_5"
         android:paddingBottom="@dimen/dp_10">
 
-        <com.airbnb.lottie.LottieAnimationView
+        <cn.yanhu.commonres.view.CustomLottieAnimationView
             android:id="@+id/anim_expression"
             android:layout_width="@dimen/dp_52"
             android:layout_height="@dimen/dp_52"

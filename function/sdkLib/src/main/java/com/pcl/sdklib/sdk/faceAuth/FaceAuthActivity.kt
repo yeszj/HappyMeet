@@ -19,6 +19,7 @@ import androidx.camera.view.transform.CoordinateTransform
 import androidx.camera.view.transform.ImageProxyTransformFactory
 import androidx.core.content.ContextCompat
 import cn.yanhu.baselib.base.BaseActivity
+import cn.yanhu.baselib.utils.TextFontStyleUtils
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.config.IntentKeyConfig
@@ -73,6 +74,7 @@ class FaceAuthActivity : BaseActivity<ActivityFaceAuthBinding, FaceAuthViewModel
         mViewModel.initialize(LabelId.FACE, faceAuthInfo.bizToken, AppCacheManager.userId, faceAuthInfo.sessionId)
         val permissions = ArrayList<String>()
         permissions.add(Manifest.permission.CAMERA)
+        TextFontStyleUtils
         PermissionXUtils.checkPermission(this,
             permissions,
             "${AppUtils.getAppName()}想访问您的摄像头权限，用于人脸认证",
@@ -119,9 +121,9 @@ class FaceAuthActivity : BaseActivity<ActivityFaceAuthBinding, FaceAuthViewModel
             } else {
                 when (code) {
                     ErrorCode.MULTIPLE_FACES -> mBinding.tips.text = "请保持检测框内只有一个人脸"
-                    ErrorCode.FACE_NOT_IN_ROI -> mBinding.tips.text = "请保持人脸在检测框内"
+                    ErrorCode.FACE_NOT_IN_ROI -> mBinding.tips.text = "请保持人脸完整置于检测框中，保持静止状态"
                     ErrorCode.FACE_TOO_SMALL -> mBinding.tips.text = "请靠近一点"
-                    ErrorCode.FACE_LOW_QUALITY -> mBinding.tips.text = "请保持不动"
+                    ErrorCode.FACE_LOW_QUALITY -> mBinding.tips.text = "检测中，请保持不动"
                     ErrorCode.FACE_OCCLUSION -> mBinding.tips.text = "请正视屏幕，勿遮挡面部"
                     ErrorCode.FACE_NOT_FORWARD -> mBinding.tips.text = "请正视屏幕"
                     else -> mBinding.tips.text = "请面向屏幕"
@@ -140,7 +142,7 @@ class FaceAuthActivity : BaseActivity<ActivityFaceAuthBinding, FaceAuthViewModel
             } else {
                 when (code) {
                     ErrorCode.DETECT_TIMEOUT -> {
-                        message = "检测超时"
+                        message = "活体检测已超时，请检查您的光线、设备或网络环境"
                     }
                     ErrorCode.UNSAFE_ENVIRONMENT -> {
                         message = "不安全环境"
@@ -159,6 +161,11 @@ class FaceAuthActivity : BaseActivity<ActivityFaceAuthBinding, FaceAuthViewModel
                     }
                     ErrorCode.NO_FACE -> {
                         message = "没检测到人脸"
+                    }
+                    else -> {
+                        if (message.contains("colorful liveness failed")) {
+                            message = "请调整光线，请移步至光线均匀的室内场所，避免强光直射"
+                        }
                     }
                 }
                 authFail(message)

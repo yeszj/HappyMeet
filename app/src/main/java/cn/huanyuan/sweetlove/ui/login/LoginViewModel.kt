@@ -3,6 +3,7 @@ package cn.huanyuan.sweetlove.ui.login
 import android.text.TextUtils
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import cn.huanyuan.sweetlove.func.manager.LoginResultManager
 import cn.huanyuan.sweetlove.net.rxApi
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.LoginSuccessInfo
@@ -45,7 +46,7 @@ class LoginViewModel : BaseViewModel() {
 
     fun jiGuangLogin(phone:String) {
         request(
-            { rxApi.login(phone, 1, codeExt.get().toString()) },
+            { rxApi.login(phone, LoginResultManager.SOURCE_JIGUANG, codeExt.get().toString()) },
             loginLivedata,
             true,
             loadingHasContent = true

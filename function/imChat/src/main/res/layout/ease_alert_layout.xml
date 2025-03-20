@@ -133,7 +133,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/ease_default_image" />
 
-                <com.airbnb.lottie.LottieAnimationView
+                <cn.yanhu.commonres.view.CustomLottieAnimationView
                     android:id="@+id/voiceLottie"
                     android:layout_width="@dimen/dp_16"
                     android:layout_height="@dimen/dp_12"

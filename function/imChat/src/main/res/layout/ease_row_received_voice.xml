@@ -33,7 +33,7 @@
             android:background="@drawable/ease_chat_bubble_receive_bg"
             android:minHeight="@dimen/dp_40">
 
-            <com.airbnb.lottie.LottieAnimationView
+            <cn.yanhu.commonres.view.CustomLottieAnimationView
                 android:id="@+id/iv_voice"
                 android:layout_width="@dimen/dp_22"
                 android:layout_height="@dimen/dp_22"
