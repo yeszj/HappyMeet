@@ -30,4 +30,7 @@ object ErrorCode {
     const val COMMON_TIP_POP = 353//通用弹框
     const val CHANGE_DEVICE = 318 //切换设备
 
+    const val COMMON_TIP_SKIP = 354 //被房主踢出过房间
+
+
 }

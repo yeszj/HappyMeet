@@ -4,5 +4,5 @@
     android:shape="rectangle"
     tools:ignore="MissingDefaultResource">
     <solid android:color="@color/color_white_black"/>
-    <corners android:radius= "@dimen/dp_6"/>
+    <corners android:radius= "@dimen/dp_4"/>
 </shape>

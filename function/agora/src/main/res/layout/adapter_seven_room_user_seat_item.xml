@@ -24,7 +24,8 @@
         <import type="android.view.View" />
 
         <import type="cn.yanhu.commonres.bean.RoomListBean" />
-        <import type="cn.yanhu.commonres.manager.AppCacheManager"/>
+
+        <import type="cn.yanhu.commonres.manager.AppCacheManager" />
     </data>
 
 
@@ -56,10 +57,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/dp_78"
+            android:layout_height="@dimen/dp_20"
             android:layout_gravity="center"
-            android:visibility="@{seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.ifNetDisConnect?View.VISIBLE:View.INVISIBLE,default = invisible}"
             android:src="@drawable/icon_net_error_seat"
-            android:layout_height="@dimen/dp_20"/>
+            android:visibility="@{seatInfo.roomUserSeatInfo!=null &amp;&amp; seatInfo.ifNetDisConnect?View.VISIBLE:View.INVISIBLE,default = invisible}" />
 
         <LinearLayout
             android:id="@+id/vg_emptySeat"
@@ -137,9 +138,10 @@
                 style="@style/common_white_shadow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_4"
+                android:layout_marginBottom="@dimen/dp_2"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:paddingStart="@dimen/dp_4"
                 android:text="@{seatInfo.roomUserSeatInfo.nickName}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_11"
@@ -149,14 +151,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="王地主" />
 
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_rose"
                 android:layout_width="@dimen/dp_14"
                 android:layout_height="@dimen/dp_14"
-                android:layout_marginStart="@dimen/dp_4"
-                android:layout_marginBottom="@dimen/dp_4"
+                android:layout_marginBottom="@dimen/dp_2"
                 android:src="@drawable/icon_rose_16"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/vg_insertQueue"
                 app:layout_constraintStart_toStartOf="@+id/tv_nickName" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
@@ -173,6 +175,7 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_rose"
                 app:layout_constraintTop_toTopOf="@+id/iv_rose"
                 tools:text="122" />
+
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_expand"
@@ -286,6 +289,44 @@
                 app:layout_constraintEnd_toEndOf="@id/iv_rank1"
                 app:layout_constraintStart_toStartOf="@+id/iv_rank3"
                 app:layout_constraintTop_toTopOf="@+id/iv_rank1" />
+
+            <LinearLayout
+                android:id="@+id/vg_insertQueue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_4"
+                android:orientation="horizontal"
+                android:visibility="@{(currentRoomType == RoomListBean.TYPE_SEVEN_SONG || currentRoomType == RoomListBean.TYPE_NINE_SONG) &amp;&amp; seatInfo.roomUserSeatInfo.songStatus!=0?View.VISIBLE:View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_15"
+                    tools:visibility="gone"
+                    android:visibility="@{seatInfo.roomUserSeatInfo.songStatus==1?View.VISIBLE:View.GONE}"
+                    android:src="@drawable/svg_next_song" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dp_22"
+                    android:layout_height="@dimen/dp_15"
+                    android:visibility="@{seatInfo.roomUserSeatInfo.songStatus==2?View.VISIBLE:View.GONE}"
+                    android:src="@drawable/svg_insert_queue" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_15"
+                    android:background="@drawable/white_right_corner_4"
+                    android:backgroundTint="@color/blackAlpha80"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/dp_2"
+                    android:visibility="@{seatInfo.roomUserSeatInfo.songStatus==2?View.VISIBLE:View.GONE}"
+                    android:text='@{"差"+seatInfo.roomUserSeatInfo.diffRoseNum+"玫瑰"}'
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_9"
+                    app:fontType="@string/fontMedium" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <cn.yanhu.baselib.view.CustomFontTextView

@@ -8,6 +8,7 @@
             name="roomInfo"
             type="cn.yanhu.commonres.bean.RoomDetailInfo" />
         <import type="android.view.View"/>
+        <import type="android.text.TextUtils"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,6 +40,8 @@
                 style="@style/common_white_shadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:text="@{roomInfo.ownerInfo.nickName}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14"
@@ -65,10 +68,21 @@
                 android:textColor="@color/whiteColorAlpha50"
                 android:textSize="@dimen/sp_12"
                 android:paddingTop="@dimen/dp_2"
+                android:visibility="@{TextUtils.isEmpty(roomInfo.ownerInfo.beautifulIdImg)?View.VISIBLE:View.INVISIBLE}"
                 app:fontType="@string/fontMedium"
                 app:layout_constraintTop_toBottomOf="@+id/tv_roomName"
                 app:layout_constraintStart_toStartOf="@+id/tv_roomName"
                 tools:text="ID 24082" />
+            <androidx.appcompat.widget.AppCompatImageView
+                drawableUrl="@{roomInfo.ownerInfo.beautifulIdImg}"
+                placeholderId="@{-1}"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_2"
+                android:adjustViewBounds="true"
+                android:visibility="@{TextUtils.isEmpty(roomInfo.ownerInfo.beautifulIdImg)?View.INVISIBLE:View.VISIBLE}"
+                app:layout_constraintTop_toBottomOf="@+id/tv_roomName"
+                app:layout_constraintStart_toStartOf="@+id/tv_roomName" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -84,13 +98,12 @@
             android:textColor="@color/white"
             android:gravity="center"
             android:layout_marginStart="@dimen/dp_12"
-            android:paddingVertical="@dimen/dp_6"
             android:paddingHorizontal="@dimen/dp_12"
             android:text="加团"
             android:visibility="invisible"
             tools:visibility="visible"
             app:fontType="@string/fontMedium"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/dp_28"/>
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_groupMember"
             android:layout_width="wrap_content"
@@ -100,19 +113,18 @@
             android:visibility="invisible"
             app:layout_constraintTop_toTopOf="@+id/iv_roomCover"
             app:layout_constraintBottom_toBottomOf="@+id/iv_roomCover"
-            app:layout_constraintStart_toEndOf="@+id/tv_privateTag"
+            app:layout_constraintStart_toEndOf="@+id/vg_roomInfo"
             android:textColor="@color/white"
             android:gravity="center"
             android:layout_marginStart="@dimen/dp_12"
-            android:paddingVertical="@dimen/dp_7"
             android:paddingHorizontal="@dimen/dp_8"
             android:text="群成员"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/dp_28"/>
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_onlineNum"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_28"
             android:layout_marginStart="@dimen/dp_4"
             android:background="@drawable/white_corner_20"
             android:paddingHorizontal="@dimen/dp_12"

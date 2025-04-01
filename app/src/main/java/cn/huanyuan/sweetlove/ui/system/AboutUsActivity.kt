@@ -28,8 +28,8 @@ class AboutUsActivity : BaseActivity<ActivityAboutUsBinding, SystemViewModel>(
         setStatusBarStyle(false)
         mBinding.tvVersion.text =
             "${CommonUtils.getString(R.string.app_name)}v${AppUtils.getAppVersionName()}-${AppUtils.getAppVersionCode()}-${BuildConfig.FLAVOR}"
-        mBinding.tvAgreement.setOnSingleClickListener {
-            PageIntentUtil.url2Page(mContext, WebUrlManager.PRIVACY_AGREEMENT)
+        mBinding.vgBeian.setOnSingleClickListener {
+            PageIntentUtil.url2Page(mContext, WebUrlManager.URL_BEIAN)
         }
         if (BuildConfig.FLAVOR == "huawei"){
             mBinding.tvUpdate.visibility = View.GONE

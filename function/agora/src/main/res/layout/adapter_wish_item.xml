@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="isOwner"
+            type="java.lang.Boolean" />
+
+        <variable
+            name="wishInfo"
+            type="cn.yanhu.commonres.bean.WishInfo" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="@dimen/dp_106"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:orientation="vertical"
+        tools:background="#161727">
+
+        <cn.yanhu.baselib.widget.GradientViewGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_9"
+            app:backgroundEndColor="#3d2232"
+            app:backgroundGradientOrientation="left_right"
+            app:backgroundStartColor="#3e2346"
+            app:borderGradientOrientation="left_right"
+            app:cornerRadius="@dimen/dp_8"
+            app:vg_borderEndColor="#1AF8459B"
+            app:vg_borderStartColor="#66F8459B"
+            app:vg_borderWidth="@dimen/dp_1">
+
+            <LinearLayout
+                android:id="@+id/vg_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="@{wishInfo.sunNum==0?View.VISIBLE:View.INVISIBLE}">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:src="@drawable/icon_wish_empty" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:text="添加心愿礼物"
+                    android:textColor="@color/whiteColorAlpha60"
+                    android:textSize="@dimen/sp_12" />
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/vg_wishGift"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{wishInfo.sunNum>0?View.VISIBLE:View.INVISIBLE}"
+                tools:visibility="invisible">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_gift"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_50"
+                    android:layout_marginTop="@dimen/dp_9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    imageUrl="@{wishInfo.giftIcon}"
+                    tools:src="@drawable/svg_gift" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/white_corner_10"
+                    android:backgroundTint="@color/black_alpha40"
+                    android:paddingHorizontal="@dimen/dp_8"
+                    android:paddingVertical="@dimen/dp_4"
+                    android:text="更换"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_gift"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_gift"
+                    app:layout_constraintStart_toStartOf="@+id/iv_gift"
+                    app:layout_constraintTop_toTopOf="@+id/iv_gift"
+                    tools:visibility="invisible" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_delete"
+                    android:layout_width="@dimen/dp_24"
+                    android:layout_height="@dimen/dp_24"
+                    android:padding="@dimen/dp_6"
+                    android:src="@drawable/svg_close"
+                    android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="invisible" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    tools:text="表白"
+                    android:text="@{wishInfo.name}"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_gift" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_4"
+                    tools:text="1玫瑰"
+                    android:text='@{wishInfo.price+"玫瑰"}'
+                    android:textColor="@color/whiteColorAlpha60"
+                    android:textSize="@dimen/sp_10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_avatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_24"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_price"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/adapter_wish_user_item" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    tools:text="1/2"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_avatar" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </cn.yanhu.baselib.widget.GradientViewGroup>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_send"
+            android:layout_width="@dimen/dp_110"
+            android:layout_height="@dimen/dp_56"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_20"
+            android:src="@drawable/btn_send_wish"
+            android:visibility="@{isOwner?View.GONE:View.VISIBLE}"
+            tools:visibility="gone" />
+    </LinearLayout>
+</layout>

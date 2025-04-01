@@ -47,7 +47,6 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
-import com.youth.banner.indicator.CircleIndicator
 import com.youth.banner.listener.OnBannerListener
 
 /**
@@ -385,7 +384,7 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
     private fun bindBanner(list: MutableList<BannerBean>) {
         mBinding.banner.addBannerLifecycleObserver(this)
         mBinding.banner.setAdapter(MyBannerImageAdapter(mBinding.banner, list))
-        mBinding.banner.indicator = CircleIndicator(context)
+      //  mBinding.banner.indicator = CircleIndicator(context)
         mBinding.banner.setOnBannerListener(object : OnBannerListener<BannerBean> {
             override fun OnBannerClick(data: BannerBean, position: Int) {
                 PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)

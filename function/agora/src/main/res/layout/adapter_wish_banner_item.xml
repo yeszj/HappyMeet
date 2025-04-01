@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_gift"
+            style="@style/constraintHorizonCenter"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_marginTop="@dimen/dp_14"
+            android:src="@drawable/icon_wish_empty"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_count"
+            style="@style/constraintHorizonCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_6"
+            android:text="0/0"
+            android:textColor="@color/whiteAlpha40"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintTop_toBottomOf="@+id/iv_gift"
+            tools:ignore="MissingConstraints" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

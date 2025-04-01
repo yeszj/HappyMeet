@@ -118,6 +118,16 @@ object ChatConstant {
 
     const val ACTION_CHANGE_DEVICE = 51
 
+    const val ACTION_SET_ADMIN = 52//设置管理员
+
+    const val ACTION_CANCEL_ADMIN = 53//取消管理员
+
+    const val ACTION_SKIP_ROOM = 54//踢出房间
+
+    const val ACTION_RESET_QUEUE_PRICE = 72//重置插队玫瑰数成功
+
+    const val ACTION_SET_WISH_SUCCESS = 73//房主设置心愿成功
+
 
     const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位
 

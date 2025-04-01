@@ -6,12 +6,12 @@ import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import cn.yanhu.agora.R
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.LiveRoomSeatBean
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
+import cn.yanhu.commonres.bean.response.WishResponse
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.agora.databinding.AdapterThreeRoomAnchorSeatItemBinding
@@ -47,22 +47,6 @@ class ThreeRoomSeatAdapter :
 
     var roomDetailInfo: RoomDetailInfo? = null
 
-    class EntityDiffCallback: DiffUtil.ItemCallback<RoomSeatInfo>() {
-        override fun areItemsTheSame(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Boolean {
-            // 判断是否是同一个 item（通常使用id字段判断）
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Boolean {
-            // 如果是同一个item，则判断item内的数据内容是否有变化
-            return oldItem.roomUserSeatInfo?.userId == newItem.roomUserSeatInfo?.userId
-        }
-
-        override fun getChangePayload(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Any? {
-            // 可选实现
-            return true
-        }
-    }
 
     init {
         bindAnchorSeatItem()
@@ -146,6 +130,7 @@ class ThreeRoomSeatAdapter :
                 if (payloads.isNotEmpty()) {
                     holder.binding.apply {
                         this.roomInfo = roomDetailInfo
+                        bindWishInfo()
                         setApplyInfo()
                     }
                 }
@@ -153,8 +138,12 @@ class ThreeRoomSeatAdapter :
 
             override fun onBind(holder: VH, position: Int, item: RoomSeatInfo?) {
                 holder.binding.apply {
+                    val owner = roomDetailInfo?.isOwner()==true
+
+                    bindWishInfo()
+
                     anchorSeatInfo.seatInfo = item
-                    this.isOwner = roomDetailInfo!!.ownerInfo!!.userId == AppCacheManager.userId
+                    this.isOwner = owner
                     this.roomInfo = roomDetailInfo
                     val tag = anchorSeatInfo.itemVideoSf.tag
                     if (tag == null || tag !is SurfaceView) {
@@ -188,6 +177,35 @@ class ThreeRoomSeatAdapter :
                 return true
             }
         })
+    }
+
+    private fun AdapterThreeRoomAnchorSeatItemBinding.bindWishInfo() {
+        val tag = banner.tag
+        val list = wishResponse?.list
+        if (tag==null){
+            val wishGiftBannerAdapter = WishGiftBannerAdapter(context, mutableListOf())
+            banner.tag = wishGiftBannerAdapter
+            banner.setAdapter(wishGiftBannerAdapter)
+            banner.setOnBannerListener{ _, _ ->
+                wishResponse?.apply {
+                    onRoomItemClickListener?.onClickWish()
+                }
+            }
+            wishGiftBannerAdapter.setDatas(list)
+        }else{
+            val wishGiftBannerAdapter = tag as WishGiftBannerAdapter
+            wishGiftBannerAdapter.setDatas(list)
+        }
+        val owner = roomDetailInfo?.isOwner() == true
+        if (!owner && wishResponse?.status == 0) {
+            vgWish.visibility = View.INVISIBLE
+        } else {
+            vgWish.visibility = View.VISIBLE
+        }
+        tvStatus.setOnSingleClickListener {
+            onRoomItemClickListener?.onClickWish()
+        }
+        tvStatus.text = wishResponse?.getStatusDesc()
     }
 
     private var surfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = mutableMapOf()
@@ -326,9 +344,16 @@ class ThreeRoomSeatAdapter :
         }
     }
 
+    private var wishResponse: WishResponse?=null
+    fun updateWishInfo(wishRes: WishResponse){
+        wishResponse = wishRes
+        notifyItemChanged(0,true)
+    }
+
+    var onRoomItemClickListener: OnRoomItemClickListener? = null
 
     interface OnRoomItemClickListener {
-        fun onClickRose(roomSeatInfo: RoomSeatInfo)
+        fun onClickWish()
     }
 
     companion object {

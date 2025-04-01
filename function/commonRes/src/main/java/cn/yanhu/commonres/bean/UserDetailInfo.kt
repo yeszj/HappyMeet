@@ -30,44 +30,74 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var colseMic: Boolean = false
     var sameSex: Boolean = false
     var seatNum: Int = 0
-    var addFriendWay:Int = 0
-    var seatId:Int = 0
-    var guardNickName:String = ""
-    var loverInfo:LoverInfo?=null
+    var addFriendWay: Int = 0
+    var seatId: Int = 0
+    var guardNickName: String = ""
+    var loverInfo: LoverInfo? = null
     var guardInfo: BaseUserInfo? = null
 
-    fun hideChatBtn():Boolean{
-        return userId==AppCacheManager.userId || (sameSex && gender==1)
+    @Bindable
+    var ifMute: Boolean = false //true:禁言了 false:未禁言
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.ifMute)
+        }
+    @Bindable
+    var roomAdmin: Boolean = false //true:房间管理员 false:非管理员
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.roomAdmin)
+        }
+    fun hideChatBtn(): Boolean {
+        return userId == AppCacheManager.userId || (sameSex && gender == 1)
     }
 
-    fun hideRoomBtn():Boolean{
-        return roomId == 0 || userId==AppCacheManager.userId
+    fun hideRoomBtn(): Boolean {
+        return roomId == 0 || userId == AppCacheManager.userId
     }
 
-    fun isShowLoverInfo():Boolean{
-        return loverInfo==null || loverInfo?.ifHide == false || (loverInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
+    fun isShowLoverInfo(): Boolean {
+        return loverInfo == null || loverInfo?.ifHide == false || (loverInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
     }
 
-    fun isShowGuardInfo():Boolean{
-        return guardInfo==null || guardInfo?.isIfHide == false || (guardInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
+    fun isShowGuardInfo(): Boolean {
+        return guardInfo == null || guardInfo?.isIfHide == false || (guardInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
     }
 
-    fun isShowMyGuardInfo():Boolean{
-        return myGuardedInfo==null || myGuardedInfo?.isIfHide == false || (myGuardedInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
+    fun isShowMyGuardInfo(): Boolean {
+        return myGuardedInfo == null || myGuardedInfo?.isIfHide == false || (myGuardedInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
     }
+
+    fun isSelf():Boolean{
+        return userId == AppCacheManager.userId
+    }
+
     @Bindable
     var roseNum: String = "0"
         set(value) {
             field = value
             notifyPropertyChanged(BR.roseNum)
         }
+    @Bindable
+    var diffRoseNum:Int = 0
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR._all)
+        }
 
-    fun getRoomDesc():String{
-        return if (isPublicRoom()){
+    @Bindable
+    var songStatus:Int = 0 //0:默认 1:即将演唱 2:插队
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR._all)
+        }
+
+    fun getRoomDesc(): String {
+        return if (isPublicRoom()) {
             "相亲中"
-        }else if (isPrivateRoom()){
+        } else if (isPrivateRoom()) {
             "专属中"
-        }else{
+        } else {
             "交友中"
         }
     }

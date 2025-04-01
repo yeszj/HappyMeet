@@ -16,6 +16,7 @@ import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.bean.SongListResponse
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.bean.request.CreateRoomRequest
+import cn.yanhu.agora.bean.request.CreateWishRequest
 import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.ExpressionInfo
@@ -24,6 +25,7 @@ import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.UserDetailInfo
+import cn.yanhu.commonres.bean.WishInfo
 import cn.yanhu.commonres.bean.response.FriendsResponse
 import cn.yanhu.commonres.bean.response.RoomListResponse
 import cn.zj.netrequest.status.BaseBean
@@ -35,6 +37,20 @@ import retrofit2.http.*
  * desc:
  */
 interface AgoraApiService : CommonApiService {
+    @POST("app/v1/room/kickOut")
+    suspend fun kickOut(
+        @Query("roomId") roomId: String, @Query("operatedUserId") operatedUserId: String
+    ): BaseBean<String>
+
+    @POST("app/v1/room/mute")
+    suspend fun setUserMute(
+        @Query("roomId") roomId: String, @Query("operatedUserId") operatedUserId: String,@Query("operate") operate: Int
+    ): BaseBean<String>
+
+    @POST("app/v1/room/setAdmin")
+    suspend fun setAdmin(
+        @Query("roomId") roomId: String, @Query("operatedUserId") operatedUserId: String,@Query("operate") operate: Int
+    ): BaseBean<String>
 
     @GET("app/v1/room/list")
     suspend fun getRoomList(
@@ -59,6 +75,12 @@ interface AgoraApiService : CommonApiService {
     suspend fun createRoom(
         @Body roomRequest: CreateRoomRequest
     ): BaseBean<RoomDetailInfo>
+
+    @POST("app/v1/room/setWishList")
+    suspend fun setWishList(
+        @Body roomRequest: CreateWishRequest
+    ): BaseBean<WishInfo>
+
 
     @GET("app/v1/room/getRoomDetail")
     suspend fun getRoomDetail(
@@ -259,6 +281,16 @@ interface AgoraApiService : CommonApiService {
     suspend fun getSongGiftInfo(
         @Query("roomId") roomId: String,
     ): BaseBean<GiftInfo>
+
+    @POST("app/v1/room/song/changeGift")
+    suspend fun changeSongGift(
+        @Query("roomId") roomId: String,@Query("giftId") giftId: String
+    ): BaseBean<String>
+
+    @POST("app/v1/room/song/resetQueuePrice")
+    suspend fun resetQueuePrice(
+        @Query("roomId") roomId: String,@Query("price") price: String
+    ): BaseBean<String>
 
     @POST("app/v1/room/song/click")
     suspend fun clickSong(

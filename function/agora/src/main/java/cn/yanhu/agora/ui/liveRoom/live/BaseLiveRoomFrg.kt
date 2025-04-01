@@ -34,6 +34,7 @@ import cn.yanhu.agora.databinding.FrgBaseLiveRoomBinding
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener
 import cn.yanhu.agora.listener.OnSendSeatInviteListener
 import cn.yanhu.agora.manager.AgoraManager
+import cn.yanhu.agora.manager.BeautySetManager
 import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.agora.manager.dbCache.InviteRecordCacheManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
@@ -50,7 +51,6 @@ import cn.yanhu.agora.pop.SeatUserOperatePop
 import cn.yanhu.agora.pop.SendMessagePop
 import cn.yanhu.agora.pop.ToolDialog
 import cn.yanhu.agora.queuetask.ApplySeatTask
-import cn.yanhu.agora.queuetask.FaceEffectTask
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.anim.AnimManager
 import cn.yanhu.baselib.base.BaseFragment
@@ -162,7 +162,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     private var nineSeatHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_360)
     private var nineSongSeatHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_80) * 5
     private var sevenSongSeatHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120) * 4
-
+    private var ifMute = false//是否被禁言
     protected var hasExpand = false
     override fun initData() {
         initPageData()
@@ -248,7 +248,20 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         mBinding.rvChat.adapter = chatRoomMsgAdapter
         roomId = roomSourceBean.roomId.toString()
         roomType = roomSourceBean.roomType
-        isOwner = roomSourceBean.ownerInfo?.userId == AppCacheManager.userId
+        isOwner = roomSourceBean.isOwner()
+        checkIfMute()
+    }
+
+    private fun checkIfMute() {
+        EMClient.getInstance().chatroomManager()
+            .asyncCheckIfInMuteList(roomSourceBean.uid, object : EMValueCallBack<Boolean> {
+                override fun onSuccess(inMuteList: Boolean) {
+                    ifMute = inMuteList
+                }
+
+                override fun onError(error: Int, errorMsg: String) {
+                }
+            })
     }
 
     private fun initSeatStatus() {
@@ -295,7 +308,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         onlineUserListPop?.refreshOnlineUser(onlineUserList)
                     }
                 }
-            })
+            },false)
     }
 
     open fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {}
@@ -1093,6 +1106,22 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 refreshSeatInfo()
             } else if (source == ChatConstant.ACTION_SEND_ROSE) {
                 mBinding.roseAnimView.addRose()
+            }else if (source == ChatConstant.ACTION_SET_ADMIN){
+                //设置管理员
+                showToast("你已被房主设为管理员")
+                roomSourceBean.roomAdmin = true
+                onlineUserListPop?.refreshRoomInfo(roomSourceBean)
+            }else if (source == ChatConstant.ACTION_CANCEL_ADMIN){
+                //取消管理员
+                showToast("你已被房主移除管理员")
+                roomSourceBean.roomAdmin = false
+                onlineUserListPop?.refreshRoomInfo(roomSourceBean)
+            }else if(source == ChatConstant.ACTION_SKIP_ROOM){
+                //踢出房间
+                val data: JSONObject = it.getJSONObjectAttribute("data")
+                val optString = data.optString("tip")
+                showToast(optString)
+                leaveRoomFinish()
             } else {
                 onReceiveCmdMsg(it)
             }
@@ -1461,7 +1490,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         startCountTime(chatRoomRoseGiftMsg!!)
         clickCount++
         targetRoseUser = roomUserSeatInfo
-        mBinding.tvNum.setStrokeText("x$clickCount")
+        mBinding.tvNum.setStrokeText(" x$clickCount ")
 
     }
 
@@ -1505,6 +1534,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     getRoseGift()
+                    refreshSeatRoseInfo()
                 }
 
                 override fun onFail(code: Int?, msg: String?) {
@@ -1533,6 +1563,10 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     open fun sendMessage(
         trim: String, sendType: Int, altUser: BaseUserInfo? = null
     ) {
+        if (ifMute){
+            showToast("你已被禁言")
+            return
+        }
         val message = EMMessage.createTextSendMessage(trim, roomSourceBean.uid)
         val selfUserInfo = ImUserManager.getSelfUserInfo()
         //附加值
@@ -1571,7 +1605,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         )
     }
 
-    private var faceEffectInfo: String = ""
 
     //播放动画
     private fun playSvga(giftMsgInfo: ChatRoomGiftMsg) {
@@ -1584,9 +1617,12 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
         showGiftSvgAnim(giftInfo)
         refreshSeatRoseInfo()
-
+        if (roomSourceBean.isPrivateRoom() || roomSourceBean.isPublicRoom()) {
+            getRoomDetail()
+        }
         playFaceGiftEffect(giftInfo, giftMsgInfo)
     }
+
 
     private fun showGiftFloatAnim(giftMsgInfo: ChatRoomGiftMsg) {
         giftMsgInfo.theGiftStay = 2000
@@ -1598,13 +1634,39 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     /**
      * 播放贴脸礼物特效
      */
-    private var faceEffectQueueTask: TaskQueueManagerImpl = TaskQueueManagerImpl()
+    //private var faceEffectQueueTask: TaskQueueManagerImpl = TaskQueueManagerImpl()
+    private var faceEffectInfo: String = ""
     private fun playFaceGiftEffect(
         giftInfo: GiftInfo, giftMsgInfo: ChatRoomGiftMsg
     ) {
         if (giftInfo.type == GiftInfo.TYPE_FACE && giftMsgInfo.targetUserInfo.userId == AppCacheManager.userId) {
-            faceEffectQueueTask.addTask(FaceEffectTask(giftInfo.svga))
+            //faceEffectQueueTask.addTask(FaceEffectTask(giftInfo.svga))
+            faceEffectCountDown?.cancel()
+            if (faceEffectInfo!=giftInfo.svga){
+                if(!TextUtils.isEmpty(faceEffectInfo)){
+                    BeautySetManager.getInstance().closeFaceEffect(faceEffectInfo)
+                }
+                faceEffectInfo = giftInfo.svga
+                BeautySetManager.getInstance().openFaceEffect(faceEffectInfo)
+            }
+            startFaceEffectTime()
         }
+    }
+
+    private var faceEffectCountDown:CoroutineScope?=null
+    private var faceRestTime:Int = 0
+    private fun startFaceEffectTime() {
+        mContext.countDown(faceRestTime+30, start = {
+            faceEffectCountDown = it
+        }, end = {
+            //倒计时结束
+            BeautySetManager.getInstance().closeFaceEffect(faceEffectInfo)
+            faceRestTime = 0
+            faceEffectInfo = ""
+            faceEffectCountDown = null
+        }, next = {
+            faceRestTime = it
+        }, cancel = {})
     }
 
     /*
@@ -1688,8 +1750,19 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     protected fun showJoinGroupPop(){
-        DialogUtils.showConfirmDialog("加入粉丝团", {
-            mViewModel.joinRoomGroup(roomSourceBean.ownerInfo!!.userId,object : OnRequestResultListener<String>{
+        if (AppCacheManager.isMan()){
+            DialogUtils.showConfirmDialog("加入粉丝团", {
+                joinRoomGroup()
+            }, {
+            }, "是否同意花费20玫瑰，加入粉丝团", confirm = "加入", cancel = "取消")
+        }else{
+            joinRoomGroup()
+        }
+    }
+
+    private fun joinRoomGroup() {
+        mViewModel.joinRoomGroup(roomSourceBean.ownerInfo!!.userId,
+            object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     showToast("加团成功")
                     joinGroupSuccess()
@@ -1700,8 +1773,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     showFailTips(code, msg)
                 }
             })
-        }, {
-        }, "是否同意花费20玫瑰，加入粉丝团", confirm = "加入", cancel = "取消")
     }
 
     protected open fun joinGroupSuccess(){}
@@ -1800,7 +1871,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         ApplicationProxy.instance.showRechargePop(mContext, true)
     }
 
-    private fun getRoomDetail() {
+    protected fun getRoomDetail() {
         mViewModel.getRoomDetail(roomId, roomType)
     }
 
@@ -1815,6 +1886,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 } else {
                     refreshSeatInfo(seatList, uid)
                 }
+                updateSeatRoseInfo()
             }
         })
     }
@@ -1822,7 +1894,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     /**
      * 更新麦位上用户的玫瑰数量
      */
-    private fun refreshSeatRoseInfo() {
+    protected fun refreshSeatRoseInfo() {
         getRoseRankList()
         mViewModel.getSeatList(roomId, object : OnRequestResultListener<MutableList<RoomSeatInfo>> {
             override fun onSuccess(data: BaseBean<MutableList<RoomSeatInfo>>) {
@@ -1872,6 +1944,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     roomSourceBean.roomSeatResList = seatList
                 }
                 isOwner = it.ownerInfo?.userId == AppCacheManager.userId
+
                 getRoomInfoSuccess()
             })
         }
@@ -2147,7 +2220,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 logcom("上麦请求$uid")
                 removeUserLeaveRecord(uid)
                 refreshSeatInfo(uid)
-
             } else if (type == AgoraManager.USER_SIT_DOWN) { //检测到有观众下麦，更新视图
                 logcom("下麦请求$uid")
                 updateUserLeaveView(uid)
@@ -2614,7 +2686,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
         for (mute in mutes!!) {
             if (mute == localUserId.toString()) {
-                showToast("你已被房主禁言，无法发言")
+                ifMute = true
+                showToast("你已被禁言")
             }
         }
     }
@@ -2626,7 +2699,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
         for (mute in mutes!!) {
             if (mute == localUserId.toString()) {
-                showToast("你已被房主取消禁言")
+                ifMute = false
+                showToast("你已被取消禁言")
             }
         }
     }

@@ -8,22 +8,31 @@ import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.ViewThreeRoomTopViewBinding
 import cn.yanhu.agora.pop.LiveRoomSeatManagerPop
+import cn.yanhu.agora.pop.RoomWishListPop
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.Spans
+import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.RoomSeatInfo
+import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.manager.EmMsgManager
+import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
+import cn.zj.netrequest.status.ErrorCode
+import com.blankj.utilcode.util.VibrateUtils
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager
+import com.hyphenate.chat.EMMessage
 
 /**
  * @author: zhengjun
@@ -35,6 +44,11 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         mBinding.rvSeat.layoutManager = QuickGridLayoutManager(mContext, 2)
         seatUserAdapter =
             ThreeRoomSeatAdapter()
+        (seatUserAdapter as ThreeRoomSeatAdapter).onRoomItemClickListener = object : ThreeRoomSeatAdapter.OnRoomItemClickListener{
+            override fun onClickWish() {
+                showWishListPop()
+            }
+        }
         addTopTitleView()
         super.initData()
         mBinding.rvSeat.adapter = seatUserAdapter
@@ -46,6 +60,70 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
 
 
     }
+
+    private var roomWishListPop:RoomWishListPop?=null
+    private fun showWishListPop() {
+        roomSourceBean.wishInfo?.apply {
+            if (CommonUtils.isPopShow(roomWishListPop)){
+                return
+            }
+            roomWishListPop = RoomWishListPop.showDialog(
+                mContext,
+                roomId,
+                this,
+                isOwner,
+                object : RoomWishListPop.OnSendGiftListener {
+                    override fun onSendGift(giftInfo: GiftInfo) {
+                        startSendGift(giftInfo)
+                    }
+                })
+        }
+    }
+
+
+
+
+    private fun startSendGift(item: GiftInfo) {
+        val sendGiftRequest = SendGiftRequest()
+        sendGiftRequest.roomId = roomId
+        sendGiftRequest.toUid = roomSourceBean.ownerInfo?.userId
+        sendGiftRequest.giftId = item.id
+        sendGiftRequest.num = 1
+        sendGiftRequest.source = SendGiftRequest.SOURCE_LIVE_ROOM
+        sendGiftRequest.callId = 0
+        sendGift(sendGiftRequest, item)
+    }
+
+    override fun onReceiveCmdMsg(it: EMMessage) {
+        val source = it.getIntAttribute("source", -1)
+         if(source == ChatConstant.ACTION_SET_WISH_SUCCESS){
+            getRoomDetail()
+        }
+    }
+
+    private fun sendGift(sendGiftRequest: SendGiftRequest, item: GiftInfo) {
+        request2({ imChatRxApi.sendGift(sendGiftRequest) },
+            object : OnRequestResultListener<String> {
+                override fun onSuccess(data: BaseBean<String>) {
+                    showToast("赠送成功")
+                    VibrateUtils.vibrate(50)
+                    val map = HashMap<String, Any>()
+                    map["giftName"] = item.name
+                    map["giftIcon"] = item.giftIcon
+                    map["num"] = sendGiftRequest.num
+                    map["svga"] = item.svga
+                    sendGiftSuccess(item,roomSourceBean.ownerInfo!!)
+                }
+
+                override fun onFail(code: Int?, msg: String?) {
+                    super.onFail(code, msg)
+                    if (code == ErrorCode.CODE_NO_BALANCE) {
+                        ApplicationProxy.instance.showRechargePop(mContext, true)
+                    }
+                }
+            })
+    }
+
 
 
     private var liveRoomUserListPop: LiveRoomSeatManagerPop? = null
@@ -104,10 +182,17 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     override fun getRoomInfoSuccess() {
         super.getRoomInfoSuccess()
         topTitleBinding.roomInfo = roomSourceBean
-        if (roomSourceBean.ifClubMember || roomSourceBean.ownerInfo?.userId == AppCacheManager.userId){
+        val wishInfo = roomSourceBean.wishInfo
+        if (wishInfo != null) {
+            (seatUserAdapter as ThreeRoomSeatAdapter).updateWishInfo(wishInfo)
+            if (CommonUtils.isPopShow(roomWishListPop)){
+                roomWishListPop?.refreshWishList(wishInfo)
+            }
+        }
+        if (roomSourceBean.ifClubMember || roomSourceBean.ownerInfo?.userId == AppCacheManager.userId) {
             topTitleBinding.tvGroupMember.visibility = View.VISIBLE
             topTitleBinding.tvJoinGroup.visibility = View.INVISIBLE
-        }else{
+        } else {
             topTitleBinding.tvGroupMember.visibility = View.INVISIBLE
             topTitleBinding.tvJoinGroup.visibility = View.VISIBLE
         }

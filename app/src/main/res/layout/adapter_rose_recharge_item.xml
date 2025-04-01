@@ -27,7 +27,7 @@
             android:id="@+id/tv_roseNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/icon_rose"
+            android:drawableEnd="@drawable/icon_rose_24"
             android:gravity="center_vertical"
             android:text="@{rechargeInfo.roseNum}"
             android:textColor="@color/fontTextColor"

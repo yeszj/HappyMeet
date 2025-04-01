@@ -26,4 +26,6 @@ object WebUrlManager {
 
     const val  SONG_ROOM_RULE = "https://video.chanyinet.com/agreement/k_room_rules.html"
 
+    const val URL_BEIAN = "https://beian.miit.gov.cn/"
+
 }

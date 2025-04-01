@@ -33,11 +33,22 @@
                 android:text="在线用户"
                 android:textColor="@color/color_222222"
                 android:textSize="@dimen/sp_16"
-                android:textStyle="bold"
+                app:fontType="@string/fontBold"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/iv_close" />
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_adminSet"
+                android:layout_width="wrap_content"
+                android:text="管理员设置"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/dp_12"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_8"
+                app:layout_constraintTop_toTopOf="@+id/iv_close"
+                android:layout_height="@dimen/dp_26"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <cn.yanhu.baselib.refresh.MyRefreshLayout
@@ -49,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_310"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/adapter_live_room_user_list_item" />
+                tools:listitem="@layout/adapter_live_room_online_user_item" />
         </cn.yanhu.baselib.refresh.MyRefreshLayout>
 
     </LinearLayout>

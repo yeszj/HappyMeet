@@ -11,6 +11,8 @@ import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
 
+import cn.yanhu.baselib.utils.CommonUtils;
+import cn.yanhu.baselib.widget.spans.Spans;
 import cn.yanhu.commonres.BR;
 import cn.yanhu.commonres.manager.AppCacheManager;
 
@@ -179,8 +181,23 @@ public class BaseUserInfo extends LitePalSupport implements Serializable, Observ
         isSelect = select;
     }
 
-    public String getStrUserInfo() {
-        return (gender == 1 ? "男" : "女") + " । " + age + "岁" + (TextUtils.isEmpty(province) ? "" : " । " + province) + (TextUtils.isEmpty(hometown) ? "" : " । 老家" + hometown);
+    public CharSequence getStrUserInfo() {
+        Spans.Builder builder = Spans.builder();
+        String sex = gender == 1? "男" : "女";
+        builder.text(sex).text(" । ")
+                .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor))
+                .text(age+"岁");
+        if (!TextUtils.isEmpty(province)){
+            builder.text(" । ")
+                    .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor));
+            builder.text(province);
+        }
+        if (!TextUtils.isEmpty(hometown)){
+            builder.text(" । ")
+                    .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor));
+            builder.text("老家"+hometown);
+        }
+        return builder.build();
     }
 
     public String getStrNoGenderInfo() {

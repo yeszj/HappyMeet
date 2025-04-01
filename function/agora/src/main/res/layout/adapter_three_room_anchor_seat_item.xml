@@ -4,10 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="isOwner"
             type="java.lang.Boolean" />
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="roomInfo"
             type="cn.yanhu.commonres.bean.RoomDetailInfo" />
@@ -31,41 +34,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_14"
-            android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@+id/anchorSeatInfo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.lihang.ShadowLayout
                 android:id="@+id/bg_wish"
+                style="@style/constraintHorizonCenter"
                 android:layout_width="@dimen/dp_56"
-                style="@style/constraintHorizonCenter"
-                app:hl_cornerRadius="@dimen/dp_8"
-                app:hl_strokeColor="@color/whiteColorAlpha80"
-                app:hl_layoutBackground="@color/blackAlpha90"
-                app:hl_strokeWith="@dimen/dp_1"
-                android:layout_marginTop="@dimen/dp_8"
-                app:layout_constraintTop_toTopOf="parent"
                 android:layout_height="@dimen/dp_72"
+                android:layout_marginTop="@dimen/dp_8"
+                app:hl_cornerRadius="@dimen/dp_8"
+                app:hl_layoutBackground="@color/blackAlpha90"
+                app:hl_strokeColor="@color/whiteColorAlpha80"
+                app:hl_strokeWith="@dimen/dp_1"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="MissingConstraints" />
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_gift"
-                android:layout_width="@dimen/dp_32"
-                app:layout_constraintTop_toTopOf="@+id/bg_wish"
-                style="@style/constraintHorizonCenter"
-                android:layout_marginTop="@dimen/dp_14"
-                android:layout_height="@dimen/dp_32"
-                tools:ignore="MissingConstraints" />
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:text="0/2"
-                android:paddingTop="@dimen/dp_6"
-                app:layout_constraintTop_toBottomOf="@+id/iv_gift"
-                style="@style/constraintHorizonCenter"
-                android:textColor="@color/whiteAlpha40"
-                android:textSize="@dimen/sp_12"
-                android:layout_height="wrap_content"
-                tools:ignore="MissingConstraints" />
+
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
+                android:layout_width="@dimen/dp_56"
+                android:layout_height="@dimen/dp_72"
+                app:layout_constraintEnd_toEndOf="@+id/bg_wish"
+                app:layout_constraintStart_toStartOf="@+id/bg_wish"
+                app:layout_constraintTop_toTopOf="@+id/bg_wish" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 style="@style/constraintHorizonCenter"
                 android:layout_width="@dimen/dp_56"
@@ -73,15 +66,20 @@
                 android:src="@drawable/icon_text_wish_list"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="MissingConstraints" />
+
             <cn.yanhu.baselib.view.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:text="未完成"
-                android:paddingTop="@dimen/dp_8"
-                app:layout_constraintTop_toBottomOf="@+id/bg_wish"
+                android:id="@+id/tv_status"
                 style="@style/constraintHorizonCenter"
+                android:layout_width="@dimen/dp_56"
+                android:layout_height="@dimen/dp_20"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/dp_4"
+                android:background="@drawable/white_corner_10"
+                android:backgroundTint="@color/blackAlpha90"
+                android:text="未完成"
                 android:textColor="@color/whiteAlpha40"
                 android:textSize="@dimen/sp_10"
-                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/bg_wish"
                 tools:ignore="MissingConstraints" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -95,16 +93,16 @@
             android:backgroundTint="@color/whiteColorAlpha80"
             android:drawableStart="@drawable/icon_swarp"
             android:drawablePadding="@dimen/dp_2"
-            android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
-            tools:visibility="visible"
             android:gravity="center"
             android:paddingHorizontal="@dimen/dp_6"
-            tools:text="转为专属"
             android:text='@{roomInfo.privateRoom?"转为大厅":"转为专属"}'
             android:textColor="@color/whiteAlpha40"
             android:textSize="@dimen/sp_12"
+            android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="转为专属"
+            tools:visibility="visible" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_manApplyCount"

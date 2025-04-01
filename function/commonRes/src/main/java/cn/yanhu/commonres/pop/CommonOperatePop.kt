@@ -10,6 +10,7 @@ import cn.yanhu.commonres.adapter.CommonOperateAdapter
 import cn.yanhu.commonres.bean.OperateInfo
 import cn.yanhu.commonres.databinding.PopCommonOperateBinding
 import com.chad.library.adapter4.BaseQuickAdapter
+import com.chad.library.adapter4.util.setOnDebouncedItemClick
 import com.lxj.xpopup.XPopup
 
 /**
@@ -34,7 +35,7 @@ class CommonOperatePop(
         mBiding = PopCommonOperateBinding.bind(popupImplView)
         mBiding.recyclerView.adapter = operateAdapter
         operateAdapter.submitList(list)
-        operateAdapter.setOnItemClickListener(object :
+        operateAdapter.setOnDebouncedItemClick(1000,object :
             BaseQuickAdapter.OnItemClickListener<OperateInfo> {
             override fun onClick(
                 adapter: BaseQuickAdapter<OperateInfo, *>,

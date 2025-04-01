@@ -10,6 +10,7 @@ import cn.yanhu.commonres.bean.FilterInfo
 data class InviteRecordResponse(
     val totalIncome: String,
     val totalInviteCount: Int,
+    val numDesc:String,
     val list: MutableList<InviteRecordInfo>,
     val filterList: MutableList<FilterInfo>
 

@@ -1,6 +1,7 @@
 package cn.yanhu.commonres.bean
 
 
+
 /**
  * @author: zhengjun
  * created: 2024/2/21

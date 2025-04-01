@@ -10,7 +10,15 @@
             type="cn.yanhu.commonres.bean.UserDetailInfo" />
 
         <variable
-            name="isOwner"
+            name="roomDetailInfo"
+            type="cn.yanhu.commonres.bean.RoomDetailInfo" />
+
+        <variable
+            name="isCanOperate"
+            type="java.lang.Boolean" />
+
+        <variable
+            name="isSetAdmin"
             type="java.lang.Boolean" />
 
         <import type="android.view.View" />
@@ -51,33 +59,115 @@
             app:layout_constraintTop_toTopOf="@+id/avatarView"
             tools:text="佊岸、花开" />
 
-        <cn.yanhu.commonres.view.UserInfoTagLayout
-            android:id="@+id/userTag"
-            userInfo="@{userinfo}"
+        <cn.yanhu.commonres.view.UserLevelView
+            android:id="@+id/userLevel"
+            userLevel="@{userinfo.level}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            app:layout_constraintBottom_toBottomOf="@+id/avatarView"
-            app:layout_constraintStart_toEndOf="@+id/avatarView" />
+            android:layout_marginStart="@dimen/dp_2"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
+            app:layout_constraintStart_toEndOf="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
 
+        <cn.yanhu.commonres.view.UserTagView
+            android:id="@+id/userIdentify"
+            tagColorId="@{userinfo.userId.equals(roomDetailInfo.ownerInfo.userId)?@color/bgOrangeColor:@color/bg_tag_blue}"
+            tagTextColorId="@{@color/white}"
+            tagValue='@{userinfo.userId.equals(roomDetailInfo.ownerInfo.userId)? "房主":"管理员"}'
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{(userinfo.userId.equals(roomDetailInfo.ownerInfo.userId) || userinfo.roomAdmin)?View.VISIBLE:View.INVISIBLE}"
+            android:layout_marginStart="@dimen/dp_2"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
+            app:layout_constraintStart_toEndOf="@+id/userLevel"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_invite"
+            android:id="@+id/userTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{userinfo.strUserInfo}"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            tools:text="女 । 32岁 । 浙江 । 老家安徽" />
+
+
+        <LinearLayout
+            android:id="@+id/vg_operate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="@{isSetAdmin  || userinfo.isSelf() || userinfo.userId.equals(roomDetailInfo.ownerInfo.userId)?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="invisible">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_skip"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_26"
+                android:layout_marginEnd="@dimen/dp_6"
+                android:background="@drawable/stroke_black_alpha20_corner_20"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="踢出"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/sp_12"
+                android:visibility="@{isCanOperate &amp;&amp; userinfo.seatNum&lt;=0?View.VISIBLE:View.GONE}"
+                app:fontType="@string/fontMedium"
+                tools:background="@drawable/stroke_black_alpha20_corner_20" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_forbidden"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_26"
+                android:background="@{userinfo.ifMute?@drawable/bg_black_alpha96_r20:@drawable/stroke_black_alpha20_corner_20}"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text='@{userinfo.ifMute?"禁言中":"禁言"}'
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/sp_12"
+                android:visibility="@{isCanOperate &amp;&amp; userinfo.seatNum&lt;=0?View.VISIBLE:View.GONE}"
+                app:fontType="@string/fontMedium"
+                tools:text="禁言" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_invite"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_26"
+                android:layout_marginStart="@dimen/dp_6"
+                android:background="@drawable/white_corner_20"
+                android:backgroundTint="@color/colorMain"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="下麦"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                android:visibility="@{isCanOperate &amp;&amp; userinfo.seatNum>0?View.VISIBLE:View.GONE}"
+                app:fontType="@string/fontMedium"
+                tools:visibility="gone" />
+        </LinearLayout>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_admin"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_26"
-            android:background="@drawable/white_corner_20"
-            android:backgroundTint="@color/colorMain"
+            android:layout_marginStart="@dimen/dp_6"
+            android:background="@{userinfo.roomAdmin?@drawable/main_color_stroke_corner_20:@drawable/stroke_black_alpha20_corner_20}"
             android:gravity="center"
             android:paddingHorizontal="@dimen/dp_10"
-            android:text='@{userinfo.seatNum>0?"下麦":"邀请"}'
-            android:textColor="@color/white"
+            android:text='@{userinfo.roomAdmin?"移除管理员":"设为管理员"}'
+            android:textColor="@{userinfo.roomAdmin?@color/colorMain:@color/color_666666}"
             android:textSize="@dimen/sp_12"
-            android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
+            android:visibility="@{isSetAdmin &amp;&amp; !userinfo.isSelf() &amp;&amp; !userinfo.userId.equals(roomDetailInfo.ownerInfo.userId) ?View.VISIBLE:View.GONE}"
             app:fontType="@string/fontMedium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="邀请" />
+            tools:text="设为管理员" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

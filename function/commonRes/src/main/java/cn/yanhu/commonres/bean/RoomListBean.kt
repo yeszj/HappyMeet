@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
+import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.BR
 import com.smart.adapter.interf.SmartFragmentTypeExEntity
 import java.io.Serializable
@@ -30,6 +31,9 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
     var roomPortraitList: List<String> = mutableListOf()
     var roomId: String? = ""
     val banners: MutableList<BannerBean> = mutableListOf()
+    fun isOwner():Boolean{
+        return AppCacheManager.userId == ownerInfo?.userId
+    }
     fun getRoomTypeName():String{
         return when (roomType) {
             0 -> {

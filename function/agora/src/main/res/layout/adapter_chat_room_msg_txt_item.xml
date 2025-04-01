@@ -7,6 +7,7 @@
 
         <import type="android.view.View" />
 
+        <import type="android.text.TextUtils" />
         <variable
             name="msgInfo"
             type="cn.yanhu.agora.bean.ChatRoomMsgInfo" />
@@ -35,7 +36,6 @@
             android:id="@+id/tv_nickName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_4"
             android:layout_marginTop="@dimen/dp_5"
             android:text="@{msgInfo.sendUserInfo.nickName}"
             android:textColor="@{msgInfo.sendUserInfo.gender==1?@color/manColor:@color/femaleColor}"
@@ -54,7 +54,17 @@
             android:layout_marginTop="@dimen/dp_4"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
             app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
-
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_beautifulImg"
+            drawableUrl="@{msgInfo.sendUserInfo.beautifulIdImg}"
+            placeholderId="@{-1}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_4"
+            android:adjustViewBounds="true"
+            android:visibility="@{TextUtils.isEmpty(msgInfo.sendUserInfo.beautifulIdImg)?View.GONE:View.VISIBLE}"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/userTag" />
         <LinearLayout
             android:id="@+id/vg_guard"
             android:layout_width="wrap_content"
@@ -65,7 +75,7 @@
             android:paddingHorizontal="@dimen/dp_5"
             android:visibility="@{msgInfo.sendUserInfo.myGuardedInfo!=null &amp;&amp; msgInfo.sendUserInfo.showMyGuardInfo?View.VISIBLE:View.GONE}"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-            app:layout_constraintTop_toBottomOf="@+id/userTag">
+            app:layout_constraintTop_toBottomOf="@+id/iv_beautifulImg">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/dp_10"

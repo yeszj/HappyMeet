@@ -56,11 +56,11 @@
             android:id="@+id/tv_update"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_50"
-            android:text="当前版本有问题？去更新"
-            android:drawableEnd="@drawable/svg_arrow_right"
             android:layout_marginTop="@dimen/dp_50"
+            android:drawableEnd="@drawable/svg_arrow_right"
             android:gravity="center"
             android:paddingHorizontal="@dimen/dp_20"
+            android:text="当前版本有问题？去更新"
             android:textColor="@color/fontGrayColor"
             android:textSize="@dimen/sp_14"
             app:fontType="@string/fontBold"
@@ -71,15 +71,26 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_agreement"
+        <LinearLayout
+            android:id="@+id/vg_beian"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_4"
             android:layout_marginBottom="@dimen/dp_40"
-            android:text="暖遇交友用户隐私协议"
-            android:textColor="@color/adminTagColor"
-            android:textSize="@dimen/sp_13"
-            app:fontType="@string/fontMedium" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
+                android:src="@mipmap/icon_beian" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/tv_agreement"
+                android:layout_width="@dimen/dp_168"
+                android:layout_height="@dimen/dp_20"
+                android:paddingStart="@dimen/dp_4"
+                android:src="@drawable/icon_app_record_number" />
+        </LinearLayout>
+
     </LinearLayout>
 </layout>

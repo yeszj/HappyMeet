@@ -77,7 +77,7 @@ dependencies {
     //https://github.com/chaychan/BottomBarLayout
     api("com.github.chaychan:BottomBarLayout:3.0.0")
 
-    api("com.guolindev.permissionx:permissionx:1.7.1")
+    api("com.guolindev.permissionx:permissionx:1.8.1")
 
     api("io.github.lucksiege:pictureselector:v3.11.2")
     // 图片压缩 (按需引入)

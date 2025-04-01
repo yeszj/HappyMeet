@@ -110,7 +110,7 @@
             android:layout_marginBottom="@dimen/dp_7"
             android:src="@drawable/icon_room_message"
             app:layout_constraintBottom_toBottomOf="@+id/bgInput"
-            app:layout_constraintEnd_toStartOf="@+id/iv_setting"
+            app:layout_constraintEnd_toStartOf="@+id/iv_songSet"
             app:layout_constraintTop_toTopOf="@+id/bgInput" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
@@ -129,6 +129,17 @@
             app:layout_constraintEnd_toEndOf="@+id/iv_message"
             app:layout_constraintTop_toTopOf="@+id/iv_message"
             tools:text="99" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_songSet"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:src="@drawable/icon_room_song_set"
+            android:visibility="@{roomInfo.owner &amp;&amp; roomInfo.songRoom?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/bgInput"
+            app:layout_constraintEnd_toStartOf="@+id/iv_setting"
+            app:layout_constraintTop_toTopOf="@+id/bgInput" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_setting"
@@ -283,7 +294,7 @@
                 android:clipToPadding="false"
                 android:orientation="vertical"
                 app:gift_item_layout="@layout/gift_animation_item"
-                app:max_gift="2"/>
+                app:max_gift="2" />
 
             <!--            <cn.yanhu.commonres.view.GiftFrameLayout-->
             <!--                android:id="@+id/call_gift_dialog_one"-->
@@ -343,22 +354,22 @@
             android:layout_width="@dimen/dp_81"
             android:layout_height="@dimen/dp_81"
             android:layout_marginEnd="@dimen/dp_10"
-            android:visibility="invisible"
-            tools:visibility="visible"
             android:layout_marginBottom="@dimen/dp_80"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible">
 
             <cn.yanhu.commonres.view.CircularCountdownTimer
                 android:id="@+id/progress"
                 android:layout_width="@dimen/dp_81"
                 android:layout_height="@dimen/dp_81"
-                app:stroke_width="@dimen/dp_3"
                 app:background_color="@color/transparent"
+                app:circle_progress_color="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:circle_progress_color="@color/white" />
+                app:stroke_width="@dimen/dp_3" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/dp_78"

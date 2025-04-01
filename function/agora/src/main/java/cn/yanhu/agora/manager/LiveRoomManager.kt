@@ -23,6 +23,7 @@ import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
+import cn.zj.netrequest.status.ErrorCode
 import com.pcl.sdklib.listener.OnPayResultListener
 import com.pcl.sdklib.manager.PayManager
 
@@ -144,10 +145,17 @@ object LiveRoomManager {
                             EventBusKeyConfig.CLOSELIVEROOM,
                             applyRoomId
                         )
+                    }else if (code == ErrorCode.COMMON_TIP_SKIP){
+                        DialogUtils.showConfirmDialog(msg!!,{
+                        },{
+
+                        }, cancel = "", confirm = "好吧", isHideCancel = true)
+                    }else{
+                        showToast(msg)
                     }
                 }
 
-            },
+            },isShowToast = false,
             activity = context
         )
 

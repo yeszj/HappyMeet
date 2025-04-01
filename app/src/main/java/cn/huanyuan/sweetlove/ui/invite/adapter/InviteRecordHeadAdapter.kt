@@ -2,7 +2,9 @@ package cn.huanyuan.sweetlove.ui.invite.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.bean.InviteRecordResponse
@@ -30,6 +32,12 @@ class InviteRecordHeadAdapter : BaseSingleItemAdapter<InviteRecordResponse, Invi
         holder.binding.apply {
             tvTotalCount.text = item.totalInviteCount.toString()
             tvTotalIncome.text = item.totalIncome
+            if (TextUtils.isEmpty(item.numDesc)){
+                tvNumDesc.visibility = View.INVISIBLE
+            }else{
+                tvNumDesc.visibility = View.VISIBLE
+                tvNumDesc.text = item.numDesc
+            }
         }
     }
 

@@ -14,7 +14,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_94"
+        android:layout_height="@dimen/dp_100"
         android:layout_marginTop="@dimen/dp_10"
         android:layout_marginHorizontal="@dimen/dp_10"
         android:background="@drawable/bg_invite_total"
@@ -38,10 +38,19 @@
                 app:fontType="@string/fontBold" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_numDesc"
+                android:layout_width="wrap_content"
+                android:background="@drawable/white_corner_5"
+                android:backgroundTint="@color/blackAlpha80"
+                android:text="9正常 1注销 2封号"
+                android:textSize="@dimen/sp_10"
+                android:paddingHorizontal="@dimen/dp_4"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"/>
+            <cn.yanhu.baselib.view.CustomFontTextView
                 android:id="@+id/tv_totalDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
                 android:text="累计邀请人数"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14"
@@ -66,8 +75,18 @@
 
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
+                android:background="@drawable/white_corner_5"
+                android:backgroundTint="@color/blackAlpha80"
+                android:text="9正常 1注销 2封号"
+                android:textSize="@dimen/sp_10"
+                android:visibility="invisible"
+                android:paddingHorizontal="@dimen/dp_4"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"/>
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
                 android:text="累计邀请收益(元)"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14"

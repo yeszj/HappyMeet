@@ -27,7 +27,7 @@
         android:id="@+id/vg_rank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/dp_10">
+        android:paddingBottom="@dimen/dp_10">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_rank"
@@ -45,13 +45,11 @@
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_onlineNum"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_28"
             android:backgroundTint="#1AFFFFFF"
-            android:drawableStart="@drawable/icon_online_user"
             android:gravity="center"
             android:background="@drawable/white_corner_20"
             android:paddingHorizontal="@dimen/dp_12"
-            android:paddingVertical="@dimen/dp_6"
             android:textSize="@dimen/sp_14"
             android:text="0"
             android:textColor="@color/white"

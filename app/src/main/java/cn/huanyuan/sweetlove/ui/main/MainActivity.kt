@@ -112,28 +112,29 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         request({ rxApi.checkOaid() }, object : OnRequestResultListener<String?> {
             override fun onSuccess(data: BaseBean<String?>) {
             }
+
             override fun onFail(code: Int?, msg: String?) {
-                if (code == ErrorCode.CHANGE_DEVICE && !TextUtils.isEmpty(msg)){
-                    logcom("checkOaid","addPopTask")
+                if (code == ErrorCode.CHANGE_DEVICE && !TextUtils.isEmpty(msg)) {
+                    logcom("checkOaid", "addPopTask")
                     BaseApplication.addPopTask(
                         ChatConstant.ACTION_CHANGE_DEVICE, msg!!
                     )
                 }
             }
-        },isShowToast = false)
+        }, isShowToast = false)
     }
 
     override fun getSavedInstanceState(savedInstanceState: Bundle?) {
         super.getSavedInstanceState(savedInstanceState)
         savedInstanceState?.apply {
-            selectItem = this.getInt(IntentKeyConfig.POSITION,2)
+            selectItem = this.getInt(IntentKeyConfig.POSITION, 2)
         }
     }
 
-    private fun appStart(){
+    private fun appStart() {
         request({ rxApi.appStart() }, object : OnRequestResultListener<AppStartResponse> {
             override fun onSuccess(data: BaseBean<AppStartResponse>) {
-                val appStartResponse = data.data?:return
+                val appStartResponse = data.data ?: return
                 AppCacheManager.agoraAppId = appStartResponse.agoraAppId
             }
 
@@ -141,7 +142,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private var checkAuthInfo: BaseBean<Int>? = null
-    private var appPopInfo:AppPopResponse?=null
+    private var appPopInfo: AppPopResponse? = null
     private fun checkInit() {
         mContext.lifecycleScope.launch {
             runCatching {
@@ -175,8 +176,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                             BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP, "")
                             AppCacheManager.hasShowTeenApp = true
                         }
-                        if (appPopInfo!=null && appPopInfo!!.common!=null){
-                            BaseApplication.addPopTask(ChatConstant.ACTION_EVENT_POP, GsonUtils.toJson(appPopInfo!!.common))
+                        if (appPopInfo != null && appPopInfo!!.common != null) {
+                            BaseApplication.addPopTask(
+                                ChatConstant.ACTION_EVENT_POP,
+                                GsonUtils.toJson(appPopInfo!!.common)
+                            )
                         }
                     }
                 } else {
@@ -394,40 +398,35 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     private fun initFrg() {
         val fragments = supportFragmentManager.fragments
-        if (fragments.size > 0) {
-            mFragmentList = fragments
-        }
         tabList.forEach {
-            if (fragments.size <= 0) {
-                when (it.id) {
-                    1 -> {
-                        mFragmentList.add(TabSameCityFrg())
-                    }
+            when (it.id) {
+                1 -> {
+                    mFragmentList.add(TabSameCityFrg())
+                }
 
-                    2 -> {
-                        mFragmentList.add(TabMessageFrg())
-                    }
+                2 -> {
+                    mFragmentList.add(TabMessageFrg())
+                }
 
-                    3 -> {
-                        mFragmentList.add(TabBlindDateFrg())
-                    }
+                3 -> {
+                    mFragmentList.add(TabBlindDateFrg())
+                }
 
-                    4 -> {
-                        mFragmentList.add(TabWalletFrg())
-                    }
+                4 -> {
+                    mFragmentList.add(TabWalletFrg())
+                }
 
-                    5 -> {
-                        mFragmentList.add(TabMineFrg())
-                    }
+                5 -> {
+                    mFragmentList.add(TabMineFrg())
                 }
             }
             mBinding.tabLayout.addItem(createBottomBarItem(it))
         }
         bindTabToVp()
-        if (fragments.size>0){
-            if (selectItem>0){
-                mBinding.tabLayout.currentItem = selectItem-1
-            }else{
+        if (fragments.size > 0) {
+            if (selectItem > 0) {
+                mBinding.tabLayout.currentItem = selectItem - 1
+            } else {
                 mBinding.tabLayout.currentItem = 1
             }
         }
@@ -501,7 +500,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun getTabSameCityPosition(): Int {
-        val fragments = supportFragmentManager.fragments
+        val fragments = mFragmentList
         for (i in 0..<fragments.size) {
             val fragment = fragments[i]
             if (fragment is TabSameCityFrg) {
@@ -512,7 +511,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun getTabMsgPosition(): Int {
-        val fragments = supportFragmentManager.fragments
+        val fragments = mFragmentList
         for (i in 0..<fragments.size) {
             val fragment = fragments[i]
             if (fragment is TabMessageFrg) {
@@ -537,7 +536,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(IntentKeyConfig.POSITION,mBinding.viewPager.currentItem)
+        outState.putInt(IntentKeyConfig.POSITION, mBinding.viewPager.currentItem)
         super.onSaveInstanceState(outState)
     }
 

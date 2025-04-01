@@ -17,7 +17,9 @@ import cn.yanhu.agora.databinding.ViewSevenRoomRankViewBinding
 import cn.yanhu.agora.pop.CrownedUserListPop
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.agora.pop.RoomAngleRankPop
+import cn.yanhu.agora.pop.song.ChangeClickSongGiftPop
 import cn.yanhu.agora.pop.song.ChooseSongPop
+import cn.yanhu.agora.pop.song.ModifyInsertQueueRosePop
 import cn.yanhu.agora.pop.song.SongListPop
 import cn.yanhu.agora.ui.liveRoom.view.NineSongRoomSeatView
 import cn.yanhu.agora.ui.liveRoom.view.OnClickSeatListener
@@ -26,12 +28,14 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.GiftInfo
+import cn.yanhu.commonres.bean.OperateInfo
 import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.bean.SeatUserInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.WebUrlManager
+import cn.yanhu.commonres.pop.CommonOperatePop
 import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.zj.netrequest.ext.OnRequestResultListener
@@ -62,7 +66,8 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             val textureView = TextureView(mContext)
             surfaceViewList[i] = LiveRoomSeatBean(
                 0,
-                textureView)
+                textureView
+            )
         }
         if (hasExpand) {
             initSongScaleView()
@@ -83,6 +88,32 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
         mBinding.vgSong.setOnSingleClickListener {
             showChooseSongPop(roomSourceBean.ownerInfo!!.userId)
         }
+        mBinding.ivSongSet.setOnSingleClickListener {
+            showSongSetPop()
+        }
+    }
+
+    private fun showSongSetPop(): CommonOperatePop {
+        val list = mutableListOf<OperateInfo>()
+        list.add(OperateInfo("更换点歌礼物", cn.yanhu.commonres.R.color.cl_common, 1))
+        list.add(OperateInfo("重置插队玫瑰数", cn.yanhu.commonres.R.color.cl_common, 2))
+        return CommonOperatePop.showDialog(
+            mContext,
+            list,
+            object : CommonOperatePop.OnClickItemListener {
+                override fun onClickItem(operateInfo: OperateInfo) {
+                    if (operateInfo.type == 1) {
+                        //更换点歌礼物
+                        ChangeClickSongGiftPop.showDialog(mContext, roomId)
+                    } else if (operateInfo.type == 2) {
+                        //重置插队玫瑰数
+                        ModifyInsertQueueRosePop.showDialog(
+                            mContext,
+                            roomId,
+                            roomSourceBean.queuePrice)
+                    }
+                }
+            })
     }
 
     private var chooseSongPop: ChooseSongPop? = null
@@ -179,16 +210,16 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             showAngleRankPop()
         }
         ivRule.setOnSingleClickListener {
-            if (roomSourceBean.isSongRoom()){
+            if (roomSourceBean.isSongRoom()) {
                 PageIntentUtil.url2Page(mContext, WebUrlManager.SONG_ROOM_RULE)
-            }else{
+            } else {
                 PageIntentUtil.url2Page(mContext, WebUrlManager.ANGLE_ROOM_RULE)
             }
         }
         ivCrowned.setOnSingleClickListener {
-            if (roomSourceBean.isSongRoom()){
+            if (roomSourceBean.isSongRoom()) {
                 showCrownedListPop(CrownedUserListPop.TYPE_SONG)
-            }else{
+            } else {
                 showCrownedListPop(CrownedUserListPop.TYPE_ANGLE)
             }
         }
@@ -243,33 +274,33 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
 
     override fun userVideoStatusChanged(uid: Int, isShowPreload: Boolean) {
-        if(isSevenSong()){
+        if (isSevenSong()) {
             if (hasExpand) {
-                sevenSongRoomScaleView?.userVideoStatusChanged(uid,isShowPreload,networkType)
+                sevenSongRoomScaleView?.userVideoStatusChanged(uid, isShowPreload, networkType)
             } else {
-                sevenSongRoomSeatView?.userVideoStatusChanged(uid,isShowPreload,networkType)
+                sevenSongRoomSeatView?.userVideoStatusChanged(uid, isShowPreload, networkType)
             }
-        }else{
+        } else {
             if (hasExpand) {
-                nineSongRoomScaleView?.userVideoStatusChanged(uid,isShowPreload,networkType)
+                nineSongRoomScaleView?.userVideoStatusChanged(uid, isShowPreload, networkType)
             } else {
-                nineSongRoomSeatView?.userVideoStatusChanged(uid,isShowPreload,networkType)
+                nineSongRoomSeatView?.userVideoStatusChanged(uid, isShowPreload, networkType)
             }
         }
     }
 
     override fun userNetChanged(uid: String, ifNetDisConnect: Boolean) {
-        if(isSevenSong()){
+        if (isSevenSong()) {
             if (hasExpand) {
-                sevenSongRoomScaleView?.userNetChanged(uid,ifNetDisConnect)
+                sevenSongRoomScaleView?.userNetChanged(uid, ifNetDisConnect)
             } else {
-                sevenSongRoomSeatView?.userNetChanged(uid,ifNetDisConnect)
+                sevenSongRoomSeatView?.userNetChanged(uid, ifNetDisConnect)
             }
-        }else{
+        } else {
             if (hasExpand) {
-                nineSongRoomScaleView?.userNetChanged(uid,ifNetDisConnect)
+                nineSongRoomScaleView?.userNetChanged(uid, ifNetDisConnect)
             } else {
-                nineSongRoomSeatView?.userNetChanged(uid,ifNetDisConnect)
+                nineSongRoomSeatView?.userNetChanged(uid, ifNetDisConnect)
             }
         }
     }
@@ -294,6 +325,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
         }
 
     }
+
 
     override fun refreshSeatInfo(it: MutableList<RoomSeatInfo>, uid: Int) {
         ThreadUtils.getMainHandler().post {
@@ -378,8 +410,9 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                         ChatConstant.ACTION_EXPAND_SEAT_ITEM
                     )
                 }
-                R.id.iv_sendRose ->{
-                    val roomUserSeatInfo = item.roomUserSeatInfo?:return
+
+                R.id.iv_sendRose -> {
+                    val roomUserSeatInfo = item.roomUserSeatInfo ?: return
                     sendRose(roomUserSeatInfo)
                 }
             }
@@ -415,6 +448,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                     }
                 }
             }
+            refreshSeatRoseInfo()
         }
     }
 
@@ -463,7 +497,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                 if (expandPosition != expandItem.id - 1) {
                     Collections.swap(seatList, expandPosition, originPosition)
                 }
-            }else{
+            } else {
                 seatList[position].isExpand = true
             }
 
@@ -534,6 +568,10 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             val position = it.getStringAttribute(ChatConstant.CUSTOM_DATA).toInt()
             val get = seatList[position]
             startExpandItem(get, position)
+        }else if(source == ChatConstant.ACTION_RESET_QUEUE_PRICE){
+            //更换插队玫瑰数成功
+            getRoomDetail()
+            refreshSeatRoseInfo()
         }
     }
 
@@ -554,8 +592,8 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     }
 
-    private fun clearSurfaceView(){
-        for (i in 0 until surfaceViewList.size){
+    private fun clearSurfaceView() {
+        for (i in 0 until surfaceViewList.size) {
             val liveRoomSeatBean = surfaceViewList[i]
             liveRoomSeatBean?.apply {
                 this.uid = 0

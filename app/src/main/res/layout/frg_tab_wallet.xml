@@ -154,13 +154,14 @@
                         android:background="@drawable/white_alpha60_r20"
                         android:text="提现"
                         android:textColor="@color/white"
+                        android:layout_marginStart="@dimen/dp_24"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontBold"
                         app:layout_constraintBottom_toTopOf="@+id/tv_monthIncome"
                         app:layout_constraintEnd_toStartOf="@+id/btn_exchange"
                         app:layout_constraintStart_toStartOf="@id/bgBalance" />
 
-                    <cn.yanhu.baselib.view.CustomFontButton
+                    <cn.yanhu.baselib.view.CustomFontTextView
                         android:id="@+id/btn_exchange"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_40"
@@ -169,9 +170,9 @@
                         android:layout_marginBottom="@dimen/dp_24"
                         android:background="@drawable/white_corner_20"
                         android:text="兑换玫瑰"
+                        android:gravity="center"
                         android:textColor="@color/colorMain"
                         android:textSize="@dimen/sp_14"
-                        android:visibility="gone"
                         app:fontType="@string/fontBold"
                         app:layout_constraintBottom_toTopOf="@+id/tv_monthIncome"
                         app:layout_constraintEnd_toEndOf="@id/bgBalance"

@@ -55,16 +55,26 @@
             app:layout_constraintTop_toTopOf="@+id/avatarView"
             tools:text="佊岸、花开" />
 
-        <cn.yanhu.commonres.view.UserInfoTagLayout
+        <cn.yanhu.commonres.view.UserLevelView
+            android:layout_width="wrap_content"
+            userLevel="@{userinfo.level}"
+            android:layout_marginStart="@dimen/dp_2"
+            app:layout_constraintStart_toEndOf="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
+            android:layout_height="wrap_content"/>
+
+        <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/userTag"
-            userInfo="@{userinfo}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
+            tools:text="女 । 32岁"
+            android:text="@{userinfo.strUserInfo}"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/color_666666"
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"
-            app:layout_constraintStart_toEndOf="@+id/avatarView"
-            />
-
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName" />
 
 
         <cn.yanhu.baselib.view.CustomFontTextView

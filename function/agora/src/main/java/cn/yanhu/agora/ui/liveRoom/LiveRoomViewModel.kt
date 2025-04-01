@@ -129,7 +129,7 @@ class LiveRoomViewModel : BaseViewModel() {
 
     val roseRankListObservable = MutableLiveData<ResultState<UserReceiveRoseInfo>>()
     fun getRoomRoseList(roomId: String) {
-        request({ agoraRxApi.getRoomRoseList(roomId) }, roseRankListObservable, false)
+        request({ agoraRxApi.getRoomRoseList(roomId) }, roseRankListObservable, false, isShowToast = false)
     }
 
     fun getRoomAngleRank(roomId: String,onRequestResultListener: OnRequestResultListener<List<AngleRankInfo>>) {

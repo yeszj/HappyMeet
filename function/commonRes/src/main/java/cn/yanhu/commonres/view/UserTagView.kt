@@ -109,8 +109,8 @@ class UserTagView : LinearLayout {
             tvTag,
             ContextCompat.getDrawable(context, R.drawable.svg_location_white)
         )
-        ViewUtils.setPaddingHorizontal(tvTag,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_2),CommonUtils.getDimension(
-            com.zj.dimens.R.dimen.dp_4))
+        ViewUtils.setPaddingHorizontal(tvTag,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_1),CommonUtils.getDimension(
+            com.zj.dimens.R.dimen.dp_3))
         tvTag.backgroundTintList =
             ColorStateList.valueOf(CommonUtils.getColor(cn.yanhu.baselib.R.color.locationTagColor))
         tvTag.text = province
@@ -151,8 +151,8 @@ class UserTagView : LinearLayout {
             tvTag.backgroundTintList =
                 ColorStateList.valueOf(CommonUtils.getColor(cn.yanhu.baselib.R.color.femaleColor))
         }
-        ViewUtils.setPaddingHorizontal(tvTag,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_2),CommonUtils.getDimension(
-            com.zj.dimens.R.dimen.dp_4))
+        ViewUtils.setPaddingHorizontal(tvTag,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_1),CommonUtils.getDimension(
+            com.zj.dimens.R.dimen.dp_3))
         tvTag.text = age.toString()
     }
 

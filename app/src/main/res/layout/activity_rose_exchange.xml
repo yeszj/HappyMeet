@@ -112,7 +112,7 @@
                         tools:itemCount="6"
                         tools:listitem="@layout/adapter_rose_recharge_item" />
 
-                    <cn.yanhu.baselib.view.CustomFontButton
+                    <cn.yanhu.baselib.view.CustomFontTextView
                         android:id="@+id/btn_exchange"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_50"
@@ -121,6 +121,7 @@
                         android:background="@drawable/white_corner_30"
                         android:backgroundTint="@color/colorMain"
                         android:text="立即兑换"
+                        android:gravity="center"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_17"
                         app:fontType="@string/fontBold"

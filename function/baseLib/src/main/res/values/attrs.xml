@@ -11,7 +11,7 @@
 
         <attr name="titleRightIco" format="reference" />
 
-        <attr name="titleRightDrawableLeft" format="boolean"/>
+        <attr name="titleRightDrawableLeft" format="boolean" />
 
         <attr name="titleLeftIco" format="reference" />
 
@@ -80,14 +80,97 @@
         <attr name="mhv_HeightDimen" format="reference|dimension" />
     </declare-styleable>
     <declare-styleable name="Verificationcode">
-        <attr format="color" name="code_text_color"/>
-        <attr format="dimension" name="code_text_size"/>
-        <attr format="integer" name="code_number"/>
-        <attr format="color" name="line_color_default"/>
-        <attr format="color" name="line_color_focus"/>
+        <attr name="code_text_color" format="color" />
+        <attr name="code_text_size" format="dimension" />
+        <attr name="code_number" format="integer" />
+        <attr name="line_color_default" format="color" />
+        <attr name="line_color_focus" format="color" />
     </declare-styleable>
 
     <declare-styleable name="CustomFlowLayout">
         <attr name="fl_verticalSpacing" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="GradientViewGroup">
+        <!-- 背景渐变起始颜色 -->
+        <attr name="backgroundStartColor" format="color" />
+        <!-- 背景渐变结束颜色 -->
+        <attr name="backgroundEndColor" format="color" />
+        <!-- 背景渐变方向 -->
+        <attr name="backgroundGradientOrientation">
+            <enum name="top_bottom" value="0" />
+            <enum name="left_right" value="1" />
+            <enum name="tr_bl" value="2" />
+            <enum name="tl_br" value="3" />
+        </attr>
+
+        <!-- 边框宽度 -->
+        <attr name="vg_borderWidth" format="dimension" />
+        <!-- 边框渐变起始颜色 -->
+        <attr name="vg_borderStartColor" format="color" />
+        <!-- 边框渐变结束颜色 -->
+        <attr name="vg_borderEndColor" format="color" />
+        <!-- 边框渐变方向 -->
+        <attr name="borderGradientOrientation">
+            <enum name="top_bottom" value="0" />
+            <enum name="left_right" value="1" />
+            <enum name="tr_bl" value="2" />
+            <enum name="tl_br" value="3" />
+        </attr>
+
+        <!-- 圆角半径 -->
+        <attr name="cornerRadius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="GradientTextView">
+        <!-- 背景渐变起始颜色 -->
+        <attr name="zj_tvStartColor" format="color" />
+        <!-- 背景渐变结束颜色 -->
+        <attr name="zj_tvEndColor" format="color" />
+        <!-- 背景渐变方向 -->
+        <attr name="zj_tvBgGradientOrientation">
+            <enum name="top_bottom" value="0" />
+            <enum name="left_right" value="1" />
+            <enum name="tr_bl" value="2" />
+            <enum name="tl_br" value="3" />
+        </attr>
+
+        <!-- 边框宽度 -->
+        <attr name="zj_tvBorderWidth" format="dimension" />
+        <!-- 边框渐变起始颜色 -->
+        <attr name="zj_tvBorderStartColor" format="color" />
+        <!-- 边框渐变结束颜色 -->
+        <attr name="zj_tvBorderEndColor" format="color" />
+        <!-- 边框渐变方向 -->
+        <attr name="zj_tvBorderGradientOrientation">
+            <enum name="top_bottom" value="0" />
+            <enum name="left_right" value="1" />
+            <enum name="tr_bl" value="2" />
+            <enum name="tl_br" value="3" />
+        </attr>
+
+        <!-- 圆角半径 -->
+        <attr name="zj_tvCornerRadius" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="FontWeightTextView">
+        <attr name="android:textFontWeight" format="integer" />
+        <attr name="textFontWeight" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="FontWeightValueTextView">
+        <attr name="fontWeightValue" format="enum">
+            <enum name="thin" value="100" />"
+            <enum name="extraLight" value="200" />"
+            <enum name="light" value="300" />"
+            <enum name="normal" value="400" />"
+            <enum name="medium" value="500" />"
+            <enum name="semiBold" value="600" />"
+            <enum name="bold" value="700" />"
+            <enum name="extraBold" value="800" />"
+            <enum name="black" value="900" />"
+        </attr>
     </declare-styleable>
 </resources>
