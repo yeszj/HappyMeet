@@ -45,7 +45,18 @@
             app:layout_constraintTop_toTopOf="@+id/userAvatar"
             tools:text="女性昵称"
             tools:textColor="@color/femaleColor" />
-
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_beautifulImg"
+            drawableUrl="@{userInfo.beautifulIdImg}"
+            placeholderId="@{-1}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_4"
+            android:adjustViewBounds="true"
+            android:visibility="@{TextUtils.isEmpty(userInfo.beautifulIdImg)?View.GONE:View.VISIBLE}"
+            app:layout_constraintStart_toEndOf="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"/>
         <cn.yanhu.commonres.view.UserInfoTagLayout
             android:id="@+id/userTag"
             userInfo="@{userInfo}"
@@ -54,17 +65,6 @@
             android:layout_marginTop="@dimen/dp_4"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
             app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_beautifulImg"
-            drawableUrl="@{userInfo.beautifulIdImg}"
-            placeholderId="@{-1}"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_4"
-            android:adjustViewBounds="true"
-            android:visibility="@{TextUtils.isEmpty(userInfo.beautifulIdImg)?View.GONE:View.VISIBLE}"
-            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-            app:layout_constraintTop_toBottomOf="@+id/userTag" />
         <LinearLayout
             android:id="@+id/vg_guard"
             android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
             android:paddingHorizontal="@dimen/dp_5"
             android:visibility="@{userInfo.myGuardedInfo!=null &amp;&amp; userInfo.showMyGuardInfo?View.VISIBLE:View.GONE}"
             app:layout_constraintStart_toStartOf="@+id/tv_nickName"
-            app:layout_constraintTop_toBottomOf="@+id/iv_beautifulImg">
+            app:layout_constraintTop_toBottomOf="@+id/userTag">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/dp_10"

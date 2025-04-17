@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.FragmentActivity
-import cn.yanhu.baselib.func.photo.ImageSelectUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -58,7 +57,6 @@ class CreateGroupPop(val context: FragmentActivity, val groupInfo: GroupDetailIn
                 ImageSelectManager.selectPic(
                     context,
                     true,
-                    type = ImageSelectUtils.TYPE_IMAGE,
                     call = object : OnResultCallbackListener<LocalMedia> {
                         override fun onResult(result: ArrayList<LocalMedia>?) {
                             if (!result.isNullOrEmpty()) {

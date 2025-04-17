@@ -222,7 +222,7 @@ interface ApiService : CommonApiService {
 
     @GET("app/v1/user/getMyInviteUser")
     suspend fun getMyInviteUser(
-        @Query("page") page: Int,@Query("filterId") filterId:String
+        @Query("page") page: Int,@Query("filterId") filterId:String,@Query("inviteFilterId") inviteFilterId:String
     ): BaseBean<InviteRecordResponse>
 
     @GET("app/v1/user/getInviteInfo")
@@ -305,6 +305,8 @@ interface ApiService : CommonApiService {
     @GET("app/v1/version/check")
     suspend fun checkVersion(): BaseBean<AppVersionInfo?>
 
+    @GET("app/v1/home/getDownloadUrl")
+    suspend fun getDownloadUrl(): BaseBean<String>
     /**
      * Api =====================================================================================================================
      */

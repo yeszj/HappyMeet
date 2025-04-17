@@ -162,4 +162,12 @@ class LiveRoomViewModel : BaseViewModel() {
     fun joinRoomGroup(userId: String,onRequestResultListener: OnRequestResultListener<String>) {
         request({ agoraRxApi.joinRoomGroup(userId) }, onRequestResultListener,false)
     }
+
+    fun clickIam(roomId: String) {
+        request({ agoraRxApi.clickIam(roomId) }, object : OnRequestResultListener<String>{
+            override fun onSuccess(data: BaseBean<String>) {
+
+            }
+        })
+    }
 }

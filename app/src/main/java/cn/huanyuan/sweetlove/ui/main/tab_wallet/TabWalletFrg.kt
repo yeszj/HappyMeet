@@ -1,6 +1,7 @@
 package cn.huanyuan.sweetlove.ui.main.tab_wallet
 
 import android.text.TextUtils
+import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.WalletInfo
 import cn.huanyuan.sweetlove.databinding.FrgTabWalletBinding
@@ -18,6 +19,7 @@ import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.adapter.CommonTxtBannerAdapter
 import cn.zj.netrequest.ext.parseState
 import com.blankj.utilcode.util.ClipboardUtils
 
@@ -34,6 +36,7 @@ class TabWalletFrg : BaseFragment<FrgTabWalletBinding, MainViewModel>(
     override fun initData() {
         val toFloat = CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_18).toFloat()
         mBinding.tvTitle.textSize = toFloat
+        bindRewardBanner()
         requestData()
     }
 
@@ -42,11 +45,23 @@ class TabWalletFrg : BaseFragment<FrgTabWalletBinding, MainViewModel>(
         mViewModel.getWalletInfo()
     }
 
+    private val rewardBannerAdapter by lazy { CommonTxtBannerAdapter(mContext, mutableListOf()) }
+    private fun bindRewardBanner() {
+        mBinding.rewardBanner.setAdapter(rewardBannerAdapter)
+        mBinding.rewardBanner.addBannerLifecycleObserver(context as FragmentActivity)
+        rewardBannerAdapter.setOnBannerListener { _, _ ->
+            MyInviteRecordActivity.lunch(
+                mContext
+            )
+        }
+    }
+
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
         mViewModel.walletObservable.observe(this) { it ->
             parseState(it, {
                 walletInfo = it
+                rewardBannerAdapter.setDatas(it.carouselList)
                 mBinding.walletInfo = it
             })
         }

@@ -1,6 +1,7 @@
 package cn.huanyuan.sweetlove.ui.login.profile
 
 import android.annotation.SuppressLint
+import android.text.TextUtils
 import android.view.View
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgEditAvatarAndNameBinding
@@ -32,6 +33,7 @@ class EditAvatarAndNameFrg : BaseFragment<FrgEditAvatarAndNameBinding, LoginView
         selfViewModel = (context as CompleteProfileActivity).mViewModel
         mBinding.viewModel = selfViewModel
         mBinding.tvTips2.text = "上传本人清晰头像有助于脱单哦\uD83D\uDE09"
+        mBinding.isShowInvite = TextUtils.isEmpty(AppCacheManager.inviteUserId)
         setDefaultNickName()
     }
 

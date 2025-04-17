@@ -128,6 +128,7 @@ object ChatConstant {
 
     const val ACTION_SET_WISH_SUCCESS = 73//房主设置心愿成功
 
+    const val ACTION_ROOM_CHECK = 74//房间检测
 
     const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位
 

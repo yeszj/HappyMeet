@@ -56,6 +56,10 @@ class CommonTipDialog(
         }
     }
 
+    fun setDesc(value:CharSequence){
+        mBinding?.tvDesc?.text = value
+    }
+
     interface OnClickBtnListener {
         fun onClickBtn()
         fun onClickCancel() {}

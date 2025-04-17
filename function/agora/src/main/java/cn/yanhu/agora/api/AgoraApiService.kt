@@ -320,4 +320,6 @@ interface AgoraApiService : CommonApiService {
         @Query("roomId") roomId: String,
     ): BaseBean<RoomExtraInfo>
 
+    @POST("/app/v1/room/clickIam")
+    suspend fun clickIam(@Query("roomId") roomId: String): BaseBean<String>
 }

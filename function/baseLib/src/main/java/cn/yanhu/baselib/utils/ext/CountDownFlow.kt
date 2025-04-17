@@ -16,10 +16,7 @@ import kotlinx.coroutines.launch
 /**
  * @author: witness
  * created: 2022/4/26
- * desc:
- */
-/**
- * 倒计时的实现
+ * desc:倒计时的实现
  */
 @ExperimentalCoroutinesApi
 fun FragmentActivity.countDown(

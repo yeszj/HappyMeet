@@ -68,7 +68,6 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import com.lxj.xpopup.core.BasePopupView
-import com.qiyukf.unicorn.mediaselect.MimeType
 import java.io.File
 import java.util.Timer
 
@@ -642,7 +641,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     private fun sendImageOrVideoMessage(localMedia: LocalMedia) {
         val type: String
         val mimeType = localMedia.mimeType
-        type = if (MimeType.isVideo(mimeType)) {
+        type = if (isVideo(mimeType)) {
             CHAT_TYPE_VIDEO
         } else {
             CHAT_TYPE_IMAGE
@@ -651,6 +650,9 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
             selectImagePop!!.dismiss()
         }
         sendVideoOrImageMsg(type, localMedia)
+    }
+    fun isVideo(var0: String?): Boolean {
+        return var0?.startsWith("video") ?: false
     }
 
     private fun sendVideoOrImageMsg(finalType: String, localMedia: LocalMedia) {

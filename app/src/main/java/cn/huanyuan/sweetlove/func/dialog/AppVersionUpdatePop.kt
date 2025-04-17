@@ -2,13 +2,18 @@ package cn.huanyuan.sweetlove.func.dialog
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.text.TextUtils
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.AppVersionInfo
 import cn.huanyuan.sweetlove.databinding.PopAppVersionUpdateBinding
 import cn.huanyuan.sweetlove.func.manager.ApkDownloadManager
+import cn.huanyuan.sweetlove.net.rxApi
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.utils.PermissionXUtils
+import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.status.BaseBean
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.CenterPopupView
 
@@ -40,8 +45,20 @@ class AppVersionUpdatePop(val context: FragmentActivity, val appVersionInfo: App
         mBinding.versionInfo = appVersionInfo
         mBinding.executePendingBindings()
         mBinding.progress.setOnSingleClickListener {
-            isUpDataApkPermission()
+            getDownloadUrl()
         }
+    }
+
+    private fun getDownloadUrl(){
+        request({ rxApi.getDownloadUrl()},object : OnRequestResultListener<String>{
+            override fun onSuccess(data: BaseBean<String>) {
+                val downloadUrl = data.data
+                if (!TextUtils.isEmpty(downloadUrl)){
+                    appVersionInfo.pageUrl = downloadUrl!!
+                }
+                isUpDataApkPermission()
+            }
+        })
     }
 
     private fun isUpDataApkPermission() {

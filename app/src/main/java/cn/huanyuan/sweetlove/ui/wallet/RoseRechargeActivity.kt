@@ -1,5 +1,7 @@
 package cn.huanyuan.sweetlove.ui.wallet
 
+import android.graphics.drawable.Drawable
+import android.text.TextUtils
 import android.view.View
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.ActivityRoseRechargeBinding
@@ -9,16 +11,22 @@ import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.GlideUtils.loadAsDrawable
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.baselib.widget.spans.CustomClickSpan
 import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.bean.RoseRechargeBean
+import cn.yanhu.commonres.bean.response.RoseRechargeResponse
 import cn.yanhu.commonres.manager.WebUrlManager
+import cn.yanhu.commonres.pop.RewardShowPop
+import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.ext.parseState
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.pcl.sdklib.listener.OnPayResultListener
 import com.pcl.sdklib.manager.PayManager
 
@@ -91,15 +99,45 @@ class RoseRechargeActivity : BaseActivity<ActivityRoseRechargeBinding, WalletVie
         onGetRechargeInfoResult()
         PayManager.registerPayResult(mContext, object : OnPayResultListener {
             override fun onPaySuccess() {
+                rewardInfo?.apply {
+                    this.title = "首充福利"
+                    this.btn = "立即领取"
+                    RewardShowPop.showDialog(mContext,this)
+                }
                 requestData()
             }
         })
     }
 
     private var rechargeAgreement: String = ""
+    private var rewardInfo:RoseRechargeResponse.RewardInfo?=null
     private fun onGetRechargeInfoResult() {
         mViewModel.rechargeInfoLivedata.observe(this) { it ->
             parseState(it, {
+                val bannerInfo = it.bannerBean
+                rewardInfo = it.rewardInfo
+                if (bannerInfo==null){
+                    mBinding.ivBanner.visibility = View.GONE
+                }else{
+                    mBinding.ivBanner.visibility = View.VISIBLE
+                    mBinding.ivBanner.setOnSingleClickListener {
+                        if (!TextUtils.isEmpty(bannerInfo.pageUrl)){
+                            PageIntentUtil.url2Page(mContext,bannerInfo.pageUrl)
+                        }
+                    }
+                    val img = bannerInfo.img
+                    loadAsDrawable(mContext,img, object :
+                        CustomTarget<Drawable>() {
+                        override fun onResourceReady(
+                            resource: Drawable,
+                            transition: Transition<in Drawable>?
+                        ) {
+                            mBinding.ivBanner.setImageDrawable(resource)
+                        }
+                        override fun onLoadCleared(placeholder: Drawable?) {
+                        }
+                    })
+                }
                 rechargeAgreement = it.rechargeAgreement
                 val list = it.list
                 selectItem = list[0]

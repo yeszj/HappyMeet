@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <com.lihang.ShadowLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:hl_cornerRadius="@dimen/dp_12">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/iv_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_loop="true" />
+    </com.lihang.ShadowLayout>
+
+</layout>

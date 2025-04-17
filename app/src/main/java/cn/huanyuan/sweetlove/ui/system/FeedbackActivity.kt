@@ -9,7 +9,6 @@ import cn.huanyuan.sweetlove.databinding.ActivityFeedbackBinding
 import cn.huanyuan.sweetlove.ui.main.tab_my.adapter.EditPhotoAdapter
 import cn.huanyuan.sweetlove.ui.system.adapter.ComplaintTypeAdapter
 import cn.yanhu.baselib.base.BaseActivity
-import cn.yanhu.baselib.func.photo.ImageSelectUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
@@ -156,7 +155,6 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
             mContext,
             isCrop = false,
             maxSelectNum = MAX_PIC_NUM - photoList.size,
-            type = ImageSelectUtils.TYPE_IMAGE,
             call = object : OnResultCallbackListener<LocalMedia> {
                 override fun onResult(result: java.util.ArrayList<LocalMedia>?) {
                     selectBgCallBack(result)

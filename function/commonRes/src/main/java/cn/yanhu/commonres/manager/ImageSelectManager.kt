@@ -4,6 +4,9 @@ import android.Manifest
 import android.os.Build
 import androidx.fragment.app.FragmentActivity
 import cn.yanhu.baselib.func.photo.ImageSelectUtils
+import cn.yanhu.commonres.R
+import cn.yanhu.commonres.bean.OperateInfo
+import cn.yanhu.commonres.pop.CommonOperatePop
 import cn.yanhu.commonres.utils.PermissionXUtils
 import com.blankj.utilcode.util.AppUtils
 import com.luck.picture.lib.config.SelectMimeType
@@ -26,7 +29,36 @@ object ImageSelectManager {
         maxSelectNum:Int = 1,
         call: OnResultCallbackListener<LocalMedia>
     ) {
-       checkPermission(mContext,isCrop,width,height,type,maxSelectNum,call)
+        checkPermission(mContext,isCrop,width,height,type,maxSelectNum,call)
+
+    }
+
+    fun selectPic(
+        mContext: FragmentActivity,
+        isCrop: Boolean = true,
+        width: Int = 180,
+        height: Int = 180,
+        maxSelectNum:Int = 1,
+        call: OnResultCallbackListener<LocalMedia>
+    ) {
+        val list = mutableListOf<OperateInfo>()
+        list.add(OperateInfo("拍照", R.color.cl_common, 1))
+        list.add(OperateInfo("打开相册", R.color.colorTextRed, 2))
+        CommonOperatePop.showDialog(
+            mContext,
+            list,
+            object : CommonOperatePop.OnClickItemListener {
+                override fun onClickItem(operateInfo: OperateInfo) {
+                    val operateType =  if (operateInfo.type == 1) {
+                        ImageSelectUtils.TYPE_CAMERA
+                    } else {
+                        ImageSelectUtils.TYPE_IMAGE
+                    }
+                    checkPermission(mContext,isCrop,width,height,operateType,maxSelectNum,call)
+
+                }
+            })
+
     }
 
     private fun checkPermission( mContext: FragmentActivity,
@@ -63,7 +95,7 @@ object ImageSelectManager {
             override fun onSuccess() {
                 when (type) {
                     ImageSelectUtils.TYPE_IMAGE -> {
-                        ImageSelectUtils.selectlePic(mContext,isCrop,width,height,maxSelectNum,call)
+                        ImageSelectUtils.selectPic(mContext,isCrop,width,height,maxSelectNum,call)
                     }
                     ImageSelectUtils.TYPE_VIDEO -> {
                         ImageSelectUtils.selectVideo(mContext,isCrop,width,height,maxSelectNum,call)

@@ -66,6 +66,7 @@ class SplashActivity : FragmentActivity(
             finish()
             return
         }
+        AppCacheManager.inviteUserId = ""
         setFullScreenStatusBar()
         if (AppCacheManager.isFirstOpenApp) {
             MainScope().launch {
@@ -147,6 +148,7 @@ class SplashActivity : FragmentActivity(
                         AppCacheManager.hasComplete = true
                         MainActivity.lunch(this@SplashActivity, intent.extras)
                     } else {
+                        AppCacheManager.inviteUserId = appStartResponse.inviteUserId
                         CompleteProfileActivity.lunch(this@SplashActivity)
                     }
                     finish()

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="rewardInfo"
+            type="cn.yanhu.commonres.bean.response.RoseRechargeResponse.RewardInfo" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_corner_20"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_20"
+        android:paddingBottom="@dimen/dp_20">
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/fontTextColor"
+            app:fontWeightValue="bold"
+            android:textSize="@dimen/sp_16"
+            android:text="@{rewardInfo.title}"
+            tools:text="首充福利" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_example"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
+            imageUrl="@{rewardInfo.rewardIcon}"
+            android:layout_marginTop="@dimen/dp_20" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color6"
+            android:textSize="@dimen/sp_14"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="@{rewardInfo.rewardDesc}"
+            tools:text="花瓣飞机(座驾) x30天" />
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_sure"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@drawable/white_corner_30"
+            android:backgroundTint="@color/colorMain"
+            android:gravity="center"
+            android:text="@{rewardInfo.btn}"
+            tools:text="立即领取"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontType="@string/fontBold" />
+    </LinearLayout>
+</layout>

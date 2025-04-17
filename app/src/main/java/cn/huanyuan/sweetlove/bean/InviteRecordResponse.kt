@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.bean
 
+import cn.yanhu.commonres.bean.BannerBean
 import cn.yanhu.commonres.bean.FilterInfo
 
 /**
@@ -12,6 +13,8 @@ data class InviteRecordResponse(
     val totalInviteCount: Int,
     val numDesc:String,
     val list: MutableList<InviteRecordInfo>,
-    val filterList: MutableList<FilterInfo>
+    val filterList: MutableList<FilterInfo>,
+    val bannerList:MutableList<BannerBean>,
+    val inviteFilterList:MutableList<FilterInfo>
 
 )

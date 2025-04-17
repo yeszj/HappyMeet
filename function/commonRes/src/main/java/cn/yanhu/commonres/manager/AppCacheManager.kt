@@ -18,7 +18,7 @@ object AppCacheManager {
     var userId by UserPref(Constants.USER_ID, "")
     var gender by UserPref(Constants.GENDER, 1)
     var userInfo by UserPref(Constants.USER_INFO, "")
-
+    var inviteUserId by UserPref(Constants.INVITE_USERID, "")
     var isFirstOpenApp by ConfigPref(Constants.IS_FIRST_OPEN_APP, true)
     var isAdmin by ConfigPref(Constants.IS_ADMIN, false)
     var beautySdkInfo by ConfigPref(Constants.BEAUTYSDKINFO, "")

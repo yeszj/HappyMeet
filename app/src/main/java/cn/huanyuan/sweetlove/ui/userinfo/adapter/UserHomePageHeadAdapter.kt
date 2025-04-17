@@ -1,6 +1,7 @@
 package cn.huanyuan.sweetlove.ui.userinfo.adapter
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,8 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.view.IconTagInfoView
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.chad.library.adapter4.BaseQuickAdapter.OnItemClickListener
 import com.chad.library.adapter4.BaseSingleItemAdapter
 
@@ -31,7 +34,17 @@ class UserHomePageHeadAdapter :
             if (item.guardInfo==null){
                 ivGuardFrame.setImageResource(cn.yanhu.commonres.R.drawable.icon_no_guard)
             }else{
-                GlideUtils.loadImage(context, item.guardInfo!!.avatarFrame, ivGuardFrame)
+                GlideUtils.loadAsDrawable(context, item.guardInfo!!.avatarFrame, object :
+                    CustomTarget<Drawable>() {
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        ivGuardFrame.setImageDrawable(resource)
+                    }
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                    }
+                })
             }
             ivGuardFrame.setOnSingleClickListener {
                 GuardRankActivity.lunch(context, item.userId)
@@ -59,7 +72,6 @@ class UserHomePageHeadAdapter :
             executePendingBindings()
         }
     }
-
 
 
     private fun AdapterHomepageHeadBinding.bindPersonInfoTag(item: UserDetailInfo?) {

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.FragmentActivity
-import cn.yanhu.baselib.func.photo.ImageSelectUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
@@ -115,7 +114,6 @@ class AvatarAndNickNameEditPop(
         ImageSelectManager.selectPic(
             context,
             isCrop = true,
-            type = ImageSelectUtils.TYPE_IMAGE,
             call = object : OnResultCallbackListener<LocalMedia> {
                 override fun onResult(result: ArrayList<LocalMedia>?) {
                     if (!result.isNullOrEmpty()) {

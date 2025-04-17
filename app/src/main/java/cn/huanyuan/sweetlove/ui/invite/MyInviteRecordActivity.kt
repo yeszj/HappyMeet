@@ -29,11 +29,13 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
     R.layout.activity_my_invite_record,
     InviteViewModel::class.java
 ) {
-    private val recordHeadAdapter by lazy { InviteRecordHeadAdapter() }
+    private val recordHeadAdapter by lazy { InviteRecordHeadAdapter(mContext) }
     private val recordAdapter by lazy { InviteRecordAdapter() }
     private lateinit var helper: QuickAdapterHelper
     private var page = 1
     private var filterId: String = ""
+    private var filterTimeId: String = ""
+
     override fun initData() {
         setFullScreenStatusBar()
         setStatusBarStyle(false)
@@ -52,6 +54,31 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
         }
         recordHeadAdapter.addOnItemChildClickListener(R.id.tv_filter
         ) { _, _, _ -> showFilterPop() }
+        recordHeadAdapter.addOnItemChildClickListener(R.id.tv_filterTime
+        ) { _, _, _ -> showFilterTimePop() }
+    }
+
+
+    private var filterTimePop: CommonTypeFilterPop? = null
+    private var filterTimeList = mutableListOf<FilterInfo>()
+    private fun showFilterTimePop() {
+        if (filterTimePop != null) {
+            filterTimePop?.show()
+        } else {
+            filterTimePop = CommonTypeFilterPop.showPop(
+                mContext,
+                filterTimeList,
+                object : CommonTypeFilterPop.OnFilterListener {
+                    override fun onSelectFilter(filterInfo: FilterInfo?) {
+                        filterTimeId = filterInfo?.id.toString()
+                        val filterName = filterInfo?.name.toString()
+                        recordHeadAdapter.filterTimeName = filterName
+                        recordHeadAdapter.notifyItemChanged(0,true)
+                        page = 1
+                        requestData()
+                    }
+                })
+        }
     }
 
     private var filterPop: CommonTypeFilterPop? = null
@@ -95,7 +122,7 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
 
     override fun requestData() {
         super.requestData()
-        mViewModel.getMyInviteUser(page,filterId)
+        mViewModel.getMyInviteUser(page,filterId,filterTimeId)
     }
 
     override fun registerNecessaryObserver() {
@@ -104,6 +131,7 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
             parseState(it, {
                 val list = it.list
                 filterList = it.filterList
+                filterTimeList = it.inviteFilterList
                 if (page == 1) {
                     if (list.size<=0){
                         mBinding.emptyView.visibility = View.VISIBLE

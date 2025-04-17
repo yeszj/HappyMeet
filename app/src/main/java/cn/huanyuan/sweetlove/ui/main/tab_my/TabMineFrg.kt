@@ -12,7 +12,6 @@ import cn.huanyuan.sweetlove.ui.main.tab_my.adapter.MineMenuAdapter
 import cn.huanyuan.sweetlove.ui.userinfo.UserViewModel
 import cn.huanyuan.sweetlove.ui.userinfo.edit.UserParamType
 import cn.yanhu.baselib.base.BaseFragment
-import cn.yanhu.baselib.func.photo.ImageSelectUtils
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.utils.CommonUtils
@@ -337,7 +336,6 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
             mContext,
             isCrop = false,
             maxSelectNum = MAX_PIC_NUM - photoList.size,
-            type = ImageSelectUtils.TYPE_IMAGE,
             call = object : OnResultCallbackListener<LocalMedia> {
                 override fun onResult(result: java.util.ArrayList<LocalMedia>?) {
                     selectBgCallBack(result)

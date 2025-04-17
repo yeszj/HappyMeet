@@ -1,5 +1,6 @@
 package cn.yanhu.commonres.bean.response
 
+import cn.yanhu.commonres.bean.BannerBean
 import cn.yanhu.commonres.bean.RoseRechargeBean
 
 /**
@@ -10,7 +11,11 @@ import cn.yanhu.commonres.bean.RoseRechargeBean
 data class RoseRechargeResponse(
     val roseBalance: String,
     val isFirstRecharge: Boolean,
-    val rechargeAgreement:String,
-    val defaultSelect:Int,
-    val list: MutableList<RoseRechargeBean>
-)
+    val rechargeAgreement: String,
+    val defaultSelect: Int,
+    val list: MutableList<RoseRechargeBean>,
+    val bannerBean: BannerBean?,
+    val rewardInfo: RewardInfo?
+) {
+    data class RewardInfo(val rewardIcon: String, val rewardDesc: String, var title:String, var btn:String)
+}

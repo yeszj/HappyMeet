@@ -121,7 +121,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_guardFrame"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:layout_marginEnd="@dimen/dp_5"
             android:visibility="@{userinfo.showGuardInfo ?View.VISIBLE:View.INVISIBLE}"

@@ -35,7 +35,7 @@ class WalletDetailActivity : BaseActivity<ActivityWalletDetailBinding, WalletVie
         setStatusBarStyle(false)
         type = intent.getIntExtra(IntentKeyConfig.TYPE, TYPE_ROSE_DETAIL)
         if (type == TYPE_COIN_DETAIL) {
-            mBinding.titleBar.setLeftTitleName("金币明细")
+            mBinding.titleBar.setLeftTitleName("账户明细")
         }
         val emptyView = getEmptyView()
         emptyView.setFootText("暂无明细")

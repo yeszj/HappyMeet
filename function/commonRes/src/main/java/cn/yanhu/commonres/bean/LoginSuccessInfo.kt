@@ -14,5 +14,6 @@ data class LoginSuccessInfo(
     val isRegister: Boolean,
     val phoneEndNum: String,
     val baseInfoFinish: Boolean,
-    val province: String
+    val province: String,
+    val inviteUserId:String
 ) : Serializable

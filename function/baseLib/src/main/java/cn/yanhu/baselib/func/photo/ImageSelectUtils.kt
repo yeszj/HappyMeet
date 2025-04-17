@@ -28,8 +28,9 @@ object ImageSelectUtils {
     const val TYPE_CAMERA_VIDEO = 5
 
 
+
     @SuppressLint("SourceLockedOrientationActivity")
-    fun selectlePic(
+    fun selectPic(
         mContext: Activity,
         isCrop: Boolean = true,
         width: Int = 180,
@@ -41,6 +42,7 @@ object ImageSelectUtils {
             .openGallery(SelectMimeType.ofImage())
             .setImageEngine(GlideEngine.createGlideEngine())
             .setSandboxFileEngine(MeSandboxFileEngine())
+            .isDisplayCamera(false)
             .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             .setSelectionMode(if (maxSelectNum==1) SelectModeConfig.SINGLE else SelectModeConfig.MULTIPLE)
             .setMaxSelectNum(maxSelectNum)

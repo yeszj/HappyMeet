@@ -4,8 +4,8 @@ import android.Manifest
 import android.os.Build
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import cn.yanhu.commonres.pop.CommonPermissionPop
-import cn.yanhu.commonres.pop.CommonPermissionPop.Companion.showDialog
+import cn.yanhu.baselib.pop.CommonPermissionPop
+import cn.yanhu.baselib.pop.CommonPermissionPop.Companion.showDialog
 import cn.yanhu.commonres.pop.SystemAlertPermissionDialog
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils

@@ -9,6 +9,6 @@ data class AppVersionInfo(
     val title: String,
     var content: String,
     val versionNum: String,
-    val pageUrl: String,
+    var pageUrl: String,
     val forceUpdates: Int
 )

@@ -45,6 +45,7 @@ object LoginResultManager {
                     ActivityUtils.finishActivity(LoginActivity::class.java)
                     MainActivity.lunch(mContext)
                 } else {
+                    AppCacheManager.inviteUserId = loginSuccessInfo.inviteUserId
                     CompleteProfileActivity.lunch(mContext)
                 }
                 HMSPushHelper.getInstance().getHMSToken(mContext)

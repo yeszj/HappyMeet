@@ -24,8 +24,8 @@ class InviteViewModel:BaseViewModel() {
         request({ rxApi.getInviteMyUser() }, userInfoObservable, true)
     }
 
-    fun getMyInviteUser(page:Int,filterId:String) {
-        request({ rxApi.getMyInviteUser(page,filterId) }, myInviteInfoObservable, true)
+    fun getMyInviteUser(page:Int,filterId:String,inviteFilterId:String) {
+        request({ rxApi.getMyInviteUser(page,filterId,inviteFilterId) }, myInviteInfoObservable, true)
     }
 
     fun getInviteInfo() {

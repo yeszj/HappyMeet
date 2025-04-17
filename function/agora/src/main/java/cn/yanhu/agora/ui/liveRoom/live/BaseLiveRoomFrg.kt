@@ -67,6 +67,7 @@ import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.adapter.GiftAnimAdapter
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.ChatRoomGiftMsg
+import cn.yanhu.commonres.bean.CommonTipsInfo
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.GiftSendModel
 import cn.yanhu.commonres.bean.RoomDetailInfo
@@ -85,6 +86,7 @@ import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.manager.ServiceConfigKeyManager
+import cn.yanhu.commonres.pop.CommonTipDialog
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.task.GiftPopAnimTask
 import cn.yanhu.commonres.utils.PermissionXUtils
@@ -1122,6 +1124,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 val optString = data.optString("tip")
                 showToast(optString)
                 leaveRoomFinish()
+            }else if (source == ChatConstant.ACTION_ROOM_CHECK){
+                showContinueLivePop()
             } else {
                 onReceiveCmdMsg(it)
             }
@@ -2743,5 +2747,69 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     )
                 }
             })
+    }
+
+
+
+    /**
+     * 直播见检测提示弹框
+     * 1. 当房间只有主持1人时，开播后每隔15-30分弹窗让主持人在60s内点“我在”，没点则关闭房间），
+     * 关房原因“长时间未点击确认弹窗”。如果进入观众，则等观众离开房间后重新开始计时
+     * 2.专属直播间10分钟房间内没有男嘉宾上麦，弹窗提示“请尽快邀请男嘉宾上麦，若5分钟内还没有男嘉宾加入，
+     * 系统将自动关闭当前专属房”。关房原因“专属房15分钟没有男嘉宾上麦”
+     * 3.主播点击“我在”3次，当前房间不再弹出
+     * 以上逻辑全部服务端处理 服务端发送透传后前端展示一个提示弹框
+     */
+    private var commonTipDialog: CommonTipDialog? = null
+    private var roomCheckCountDown:CoroutineScope?=null
+    private fun showContinueLivePop() {
+        if (CommonUtils.isPopShow(commonTipDialog)) {
+            return
+        }
+        val build: Spans = if (!roomSourceBean.isPrivateRoom()) {
+            getSpans(60)
+        } else {
+            Spans.builder()
+                .text("请尽快邀请男嘉宾上麦，若5分钟内还没有男嘉宾加入，系统将自动关闭当前专属房")
+                .build()
+        }
+        val commonTipsInfo = CommonTipsInfo(
+            "温馨提示",
+            build,
+            if (!roomSourceBean.isPrivateRoom()) "继续直播" else "我知道了",
+            true,
+            0,
+            false
+        )
+        commonTipDialog =
+            CommonTipDialog.showDialog(mContext, commonTipsInfo, object : CommonTipDialog.OnClickBtnListener {
+                override fun onClickBtn() {
+                    if (!roomSourceBean.isPrivateRoom()) {
+                        mViewModel.clickIam(roomId)
+                        roomCheckCountDown?.cancel()
+                    }
+                }
+            }, null)
+        if (!roomSourceBean.isPrivateRoom()) {
+            mContext.countDown(60,  start = {
+                roomCheckCountDown = it
+            }, end = {
+                //倒计时结束
+                BeautySetManager.getInstance().closeFaceEffect(faceEffectInfo)
+                faceRestTime = 0
+                faceEffectInfo = ""
+                faceEffectCountDown = null
+            }, next = {
+                commonTipDialog?.setDesc(getSpans(it))
+            }, cancel = {})
+        }
+    }
+
+      private fun getSpans(second: Int): Spans {
+        return Spans.builder()
+            .text("系统检测到你长时间未操作\n").color(CommonUtils.getColor(cn.yanhu.baselib.R.color.color6))
+            .text("请点击“继续直播”，\n否则" + second + "秒后将关闭房间")
+            .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.colorMain))
+            .build()
     }
 }

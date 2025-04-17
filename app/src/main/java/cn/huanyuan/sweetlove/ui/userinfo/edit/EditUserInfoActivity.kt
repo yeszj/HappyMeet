@@ -12,7 +12,6 @@ import cn.huanyuan.sweetlove.ui.userinfo.adapter.EditUserInfoAdapter
 import cn.huanyuan.sweetlove.ui.userinfo.adapter.EditUserInfoHeadAdapter
 import cn.huanyuan.sweetlove.ui.userinfo.adapter.EditUserItemAdapter
 import cn.yanhu.baselib.base.BaseActivity
-import cn.yanhu.baselib.func.photo.ImageSelectUtils
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.EditIUserItemInfo
 import cn.yanhu.commonres.bean.EditUserInfo
@@ -238,7 +237,6 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
         ) { _, _, _ ->
             ImageSelectManager.selectPic(
                 mContext,
-                type = ImageSelectUtils.TYPE_IMAGE,
                 call = object : OnResultCallbackListener<LocalMedia> {
                     override fun onResult(result: ArrayList<LocalMedia>?) {
                         result?.apply {

@@ -64,7 +64,7 @@ dependencies {
     implementation("com.huawei.hms:push:6.12.0.300")
     api("commons-codec:commons-codec:1.15")
     //七鱼客服
-    implementation("com.qiyukf.unicorn:unicorn:9.1.0")
+    //implementation("com.qiyukf.unicorn:unicorn:9.1.0")
     implementation(project(mapOf("path" to ":function:localRepo:mi_push_aar")))
     implementation(project(mapOf("path" to ":function:localRepo:oppo_push_aar")))
 

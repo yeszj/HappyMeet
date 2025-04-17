@@ -41,52 +41,56 @@ class GiftPopAnimTask(
 ) :
     BaseQueueTask() {
     override fun doTask() {
-        var randomGift: GiftInfo? = null
+       try {
+           var randomGift: GiftInfo? = null
 
-        if (!TextUtils.isEmpty(giftInfo.randomBoxGiftInfo)) {
-            randomGift =
-                GsonUtils.fromJson(giftInfo.randomBoxGiftInfo, GiftInfo::class.java)
+           if (!TextUtils.isEmpty(giftInfo.randomBoxGiftInfo)) {
+               randomGift =
+                   GsonUtils.fromJson(giftInfo.randomBoxGiftInfo, GiftInfo::class.java)
 
-            SVGAUtils.loadCustomSVGAAnim(giftInfo.svga, object : SVGAParser.ParseCompletion {
-                override fun onComplete(videoItem: SVGAVideoEntity) {
-                    val dynamicItem = SVGADynamicEntity()
-                    val drawable = SVGADrawable(videoItem, dynamicItem)
-                    dynamicItem.setDynamicImage(randomGift!!.giftIcon, "01")
-                    svgaImageView.setImageDrawable(drawable)
-                    svgaImageView.tag = videoItem
-                    svgaImageView.startAnimation()
-                }
-                override fun onError() {
-                    doNextTask()
-                }
-            })
-        } else {
-            playSvga(giftInfo)
-        }
+               SVGAUtils.loadCustomSVGAAnim(giftInfo.svga, object : SVGAParser.ParseCompletion {
+                   override fun onComplete(videoItem: SVGAVideoEntity) {
+                       val dynamicItem = SVGADynamicEntity()
+                       val drawable = SVGADrawable(videoItem, dynamicItem)
+                       dynamicItem.setDynamicImage(randomGift!!.giftIcon, "01")
+                       svgaImageView.setImageDrawable(drawable)
+                       svgaImageView.tag = videoItem
+                       svgaImageView.startAnimation()
+                   }
+                   override fun onError() {
+                       doNextTask()
+                   }
+               })
+           } else {
+               playSvga(giftInfo)
+           }
 
-        svgaImageView.callback = object : SVGACallback {
-            override fun onFinished() {
-                val tag = svgaImageView.tag
-                if (tag!=null && tag is SVGAVideoEntity){
-                    tag.clear()
-                }
-                if (randomGift != null) {
-                    playSvga(randomGift!!)
-                    randomGift = null
-                } else {
-                    doNextTask()
-                }
-            }
+           svgaImageView.callback = object : SVGACallback {
+               override fun onFinished() {
+                   val tag = svgaImageView.tag
+                   if (tag!=null && tag is SVGAVideoEntity){
+                       tag.clear()
+                   }
+                   if (randomGift != null) {
+                       playSvga(randomGift!!)
+                       randomGift = null
+                   } else {
+                       doNextTask()
+                   }
+               }
 
-            override fun onPause() {
-            }
+               override fun onPause() {
+               }
 
-            override fun onRepeat() {
-            }
+               override fun onRepeat() {
+               }
 
-            override fun onStep(frame: Int, percentage: Double) {
-            }
-        }
+               override fun onStep(frame: Int, percentage: Double) {
+               }
+           }
+       }catch (e:Exception){
+           e.printStackTrace()
+       }
     }
 
     private fun playSvga(giftInfo: GiftInfo) {

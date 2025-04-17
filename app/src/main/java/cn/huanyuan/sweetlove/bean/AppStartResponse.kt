@@ -5,4 +5,4 @@ package cn.huanyuan.sweetlove.bean
  * created: 2024/10/12
  * desc:
  */
-data class AppStartResponse(val baseInfoFinish: Boolean,val agoraAppId:String)
+data class AppStartResponse(val baseInfoFinish: Boolean,val agoraAppId:String,val inviteUserId:String)

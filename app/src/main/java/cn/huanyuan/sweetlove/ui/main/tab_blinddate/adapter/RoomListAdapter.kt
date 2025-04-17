@@ -132,11 +132,11 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
         addItemType(TYPE_BANNER, object : OnMultiItemAdapterListener<RoomListBean, VH2> {
             override fun onBind(holder: VH2, position: Int, item: RoomListBean?) {
                 holder.binding.apply {
-                    val myBannerImageAdapter = MyBannerImageAdapter(banner, item!!.banners)
                     val tag = banner.tag as MyBannerImageAdapter?
                     if (tag!=null){
-                        tag.setDatas(item.banners)
+                        tag.setDatas(item!!.banners)
                     }else{
+                        val myBannerImageAdapter = MyBannerImageAdapter(banner, item!!.banners)
                         banner.addBannerLifecycleObserver(context)
                         banner.setAdapter(myBannerImageAdapter)
                         banner.tag = myBannerImageAdapter

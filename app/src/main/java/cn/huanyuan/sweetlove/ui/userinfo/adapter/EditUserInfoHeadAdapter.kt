@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.databinding.AdapterEditUserInfoHeadBinding
 import cn.huanyuan.sweetlove.ui.main.tab_my.adapter.EditPhotoAdapter
 import cn.huanyuan.sweetlove.ui.userinfo.edit.EditUserInfoActivity
-import cn.yanhu.baselib.func.photo.ImageSelectUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.showToast
@@ -150,11 +149,11 @@ class EditUserInfoHeadAdapter(var activity: EditUserInfoActivity) :
     }
 
     private fun toSelectImage(editPhotoAdapter: EditPhotoAdapter) {
+
         ImageSelectManager.selectPic(
             context as FragmentActivity,
             isCrop = false,
             maxSelectNum = MAX_PIC_NUM - photoList.size,
-            type = ImageSelectUtils.TYPE_IMAGE,
             call = object : OnResultCallbackListener<LocalMedia> {
                 override fun onResult(result: java.util.ArrayList<LocalMedia>?) {
                     selectBgCallBack(result, editPhotoAdapter)
@@ -162,9 +161,10 @@ class EditUserInfoHeadAdapter(var activity: EditUserInfoActivity) :
 
                 override fun onCancel() {
                 }
-
             }
         )
+
+
     }
 
     @SuppressLint("SetTextI18n")

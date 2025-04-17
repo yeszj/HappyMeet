@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="isShowInvite"
+            type="java.lang.Boolean" />
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="cn.huanyuan.sweetlove.ui.login.LoginViewModel" />
@@ -47,6 +50,7 @@
                 android:layout_height="@dimen/dp_120"
                 android:layout_marginTop="@dimen/dp_40"
                 app:riv_oval="false"
+                imageUrl="@{}"
                 android:src="@drawable/icon_click_avatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -112,6 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
                 android:layout_marginHorizontal="@dimen/dp_16"
+                android:visibility="@{isShowInvite?View.VISIBLE:View.INVISIBLE}"
                 app:layout_constraintTop_toBottomOf="@+id/bgName"
                 android:layout_marginTop="@dimen/dp_20"
                 android:background="@drawable/common_shape_input_bg"/>
@@ -120,6 +125,8 @@
                 android:layout_width="wrap_content"
                 android:text="邀请码"
                 android:textSize="@dimen/sp_15"
+                android:visibility="@{isShowInvite?View.VISIBLE:View.INVISIBLE}"
+
                 app:fontType="@string/fontMedium"
                 android:textColor="@color/fontTextColor"
                 android:paddingStart="@dimen/dp_16"
@@ -131,6 +138,7 @@
             <cn.yanhu.baselib.view.CustomFontEditText
                 android:id="@+id/et_inviteCode"
                 android:layout_width="0dp"
+                android:visibility="@{isShowInvite?View.VISIBLE:View.INVISIBLE}"
                 android:layout_height="0dp"
                 android:background="@color/transparent"
                 android:paddingStart="@dimen/dp_15"

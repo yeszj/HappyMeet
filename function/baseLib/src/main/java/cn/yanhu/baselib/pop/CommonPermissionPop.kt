@@ -1,16 +1,15 @@
-package cn.yanhu.commonres.pop
+package cn.yanhu.baselib.pop
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
-import cn.yanhu.commonres.R
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.animator.PopupAnimator
 import com.lxj.xpopup.animator.TranslateAnimator
 import com.lxj.xpopup.core.PositionPopupView
 import com.lxj.xpopup.enums.PopupAnimation
-
+import cn.yanhu.baselib.R
 /**
  * @author: zhengjun
  * desc:权限弹框
