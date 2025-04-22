@@ -5,6 +5,7 @@ import cn.yanhu.agora.manager.AgoraSdkDownloadManager.getSoPath
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.manager.AppCacheManager
+import io.agora.rtc2.Constants
 import io.agora.rtc2.IMediaExtensionObserver
 import io.agora.rtc2.IRtcEngineEventHandler
 import io.agora.rtc2.RtcEngineConfig
@@ -64,6 +65,7 @@ object RtcEngineInit {
             mRtcEngine = RtcEngineEx.create(config) as RtcEngineEx
             // 启用插件
             mRtcEngine!!.enableExtension("FaceUnity", "Effect", true)
+            mRtcEngine!!.setAudioScenario(Constants.AudioScenario.getValue(Constants.AudioScenario.GAME_STREAMING))
             return mRtcEngine
         } catch (e: Exception) {
             // TraceUtils.getInstance().onEventObject("app_agora_fail", e.getMessage());

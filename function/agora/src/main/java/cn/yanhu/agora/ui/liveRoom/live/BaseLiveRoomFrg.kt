@@ -2795,10 +2795,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 roomCheckCountDown = it
             }, end = {
                 //倒计时结束
-                BeautySetManager.getInstance().closeFaceEffect(faceEffectInfo)
-                faceRestTime = 0
-                faceEffectInfo = ""
-                faceEffectCountDown = null
+                commonTipDialog?.dismiss()
             }, next = {
                 commonTipDialog?.setDesc(getSpans(it))
             }, cancel = {})

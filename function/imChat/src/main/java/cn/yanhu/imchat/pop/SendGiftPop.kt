@@ -81,10 +81,12 @@ class SendGiftPop(
 
     fun showAddFriendsBtn(userInfo: UserDetailInfo){
         this.sendUserInfo = userInfo
-        if (sendUserInfo.isFriend || (sendUserInfo.isSameGender && AppCacheManager.isMan())){
-            mBinding.tvAddFriend.visibility = View.INVISIBLE
-        }else{
-            mBinding.tvAddFriend.visibility = View.VISIBLE
+        if (::mBinding.isInitialized){
+            if (sendUserInfo.isFriend || (sendUserInfo.isSameGender && AppCacheManager.isMan())){
+                mBinding.tvAddFriend.visibility = View.INVISIBLE
+            }else{
+                mBinding.tvAddFriend.visibility = View.VISIBLE
+            }
         }
     }
 
