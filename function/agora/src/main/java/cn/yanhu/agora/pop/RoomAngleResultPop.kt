@@ -42,6 +42,7 @@ class RoomAngleResultPop(
                 val dynamicItem = SVGADynamicEntity()
                 val drawable = SVGADrawable(videoItem, dynamicItem)
                 angleUser?.apply {
+                    R.drawable.angel_1
                     val drawableIdByName = if (type == CrownedUserListPop.TYPE_ANGLE) {
                         ResourceUtils.getDrawableIdByName("angel_" + angleUser.level)
                     } else {

@@ -58,11 +58,11 @@ class ChatPriceSetActivity : BaseActivity<ActivityChatPriceSetBinding, SettingVi
                 override fun onSelectValue(value: String) {
                     var selectId = 0
                     item.list.forEach {
-                        if (it.desc == selectValue) {
-                            it.selected = false
-                        } else if (it.desc == value) {
+                        if (it.desc == value) {
                             it.selected = true
                             selectId = it.id
+                        } else {
+                            it.selected = false
                         }
                     }
                     mViewModel.setPrice(0, item.type, selectId)

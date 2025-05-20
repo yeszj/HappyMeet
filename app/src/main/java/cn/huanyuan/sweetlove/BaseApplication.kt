@@ -58,6 +58,7 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.AppManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouteIntent
+import cn.yanhu.commonres.utils.svga.CachedSVGAFileDownloader
 import cn.yanhu.imchat.custom.chat.EaseCommonUtils
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EMInitUtils
@@ -239,6 +240,7 @@ class BaseApplication : Application() {
         initUm()
         SVGASoundManager.init()
         SVGAParser.shareParser().init(this)
+        SVGAParser.shareParser().fileDownloader  = CachedSVGAFileDownloader(this)
     }
 
     /*

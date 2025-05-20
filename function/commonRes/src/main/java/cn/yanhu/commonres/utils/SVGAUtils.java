@@ -85,6 +85,9 @@ public class SVGAUtils {
 
                 }
             }, null);
+        }catch ( OutOfMemoryError e) {
+            // 1. 清理内存
+            System.gc();
         } catch (Exception e) {
             e.printStackTrace();
         }

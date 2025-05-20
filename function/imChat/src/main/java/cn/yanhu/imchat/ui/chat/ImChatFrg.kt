@@ -87,6 +87,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         mBinding.svgGiftAnim.clearsAfterDetached = true
         mBinding.svgGiftAnim.stopAnimation(true)
         mBinding.svgGiftAnim.clear()
+        mBinding.videoGiftAnimView.stopPlay()
     }
 
     /**
