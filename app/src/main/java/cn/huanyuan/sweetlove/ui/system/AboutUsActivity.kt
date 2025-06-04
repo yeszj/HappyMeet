@@ -7,9 +7,9 @@ import cn.yanhu.baselib.base.BaseActivity
 import cn.huanyuan.sweetlove.R
 import cn.yanhu.baselib.utils.CommonUtils
 import com.blankj.utilcode.util.AppUtils
-import cn.huanyuan.sweetlove.BuildConfig
 import cn.huanyuan.sweetlove.bean.AppVersionInfo
 import cn.huanyuan.sweetlove.func.dialog.AppVersionUpdatePop
+import cn.huanyuan.sweetlove.func.manager.ChannelUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.PageIntentUtil
@@ -26,12 +26,13 @@ class AboutUsActivity : BaseActivity<ActivityAboutUsBinding, SystemViewModel>(
     @SuppressLint("SetTextI18n")
     override fun initData() {
         setStatusBarStyle(false)
+        val channel = ChannelUtils.getChannel()
         mBinding.tvVersion.text =
-            "${CommonUtils.getString(R.string.app_name)}v${AppUtils.getAppVersionName()}-${AppUtils.getAppVersionCode()}-${BuildConfig.FLAVOR}"
+            "${CommonUtils.getString(R.string.app_name)}v${AppUtils.getAppVersionName()}-${AppUtils.getAppVersionCode()}-${channel}"
         mBinding.vgBeian.setOnSingleClickListener {
             PageIntentUtil.url2Page(mContext, WebUrlManager.URL_BEIAN)
         }
-        if (BuildConfig.FLAVOR == "huawei"){
+        if (channel == "huawei"){
             mBinding.tvUpdate.visibility = View.GONE
         }else{
             mBinding.tvUpdate.visibility = View.VISIBLE

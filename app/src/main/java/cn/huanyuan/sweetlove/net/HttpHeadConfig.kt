@@ -2,6 +2,7 @@ package cn.huanyuan.sweetlove.net
 
 import android.text.TextUtils
 import cn.huanyuan.sweetlove.BuildConfig
+import cn.huanyuan.sweetlove.func.manager.ChannelUtils
 import cn.yanhu.baselib.utils.ImeiUtils
 import cn.yanhu.baselib.utils.SystemUtils
 import cn.yanhu.commonres.manager.AppCacheManager
@@ -48,7 +49,7 @@ object HttpHeadConfig {
             map["oaid"] = clientId
         }
         map["os"] = "1"
-        map["channel"] = BuildConfig.FLAVOR
+        map["channel"] = ChannelUtils.getChannel()
         map["packagename"] = BuildConfig.APPLICATION_ID
         map["appversion"] = BuildConfig.VERSION_NAME
 

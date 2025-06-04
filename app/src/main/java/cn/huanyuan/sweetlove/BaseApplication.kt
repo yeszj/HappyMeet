@@ -23,6 +23,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.func.ApplicationRouterImpl
+import cn.huanyuan.sweetlove.func.manager.ChannelUtils
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
 import cn.huanyuan.sweetlove.func.task.AppPopTask
 import cn.huanyuan.sweetlove.func.task.ImChatMsgNotifyTask
@@ -58,7 +59,6 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.AppManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouteIntent
-import cn.yanhu.commonres.utils.svga.CachedSVGAFileDownloader
 import cn.yanhu.imchat.custom.chat.EaseCommonUtils
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EMInitUtils
@@ -212,7 +212,7 @@ class BaseApplication : Application() {
         UMConfigure.preInit(
             this,
             "6709deac667bfe33f3be884e",
-            BuildConfig.FLAVOR
+            ChannelUtils.getChannel()
         )
         ARouterWrapper.init(this)
         initRetrofit()
@@ -240,7 +240,7 @@ class BaseApplication : Application() {
         initUm()
         SVGASoundManager.init()
         SVGAParser.shareParser().init(this)
-        SVGAParser.shareParser().fileDownloader  = CachedSVGAFileDownloader(this)
+       // SVGAParser.shareParser().fileDownloader  = CachedSVGAFileDownloader(this)
     }
 
     /*
@@ -257,7 +257,7 @@ class BaseApplication : Application() {
         UMConfigure.init(
             this,
             "6709deac667bfe33f3be884e",
-            BuildConfig.FLAVOR,
+            ChannelUtils.getChannel(),
             UMConfigure.DEVICE_TYPE_PHONE,
             ""
         )
