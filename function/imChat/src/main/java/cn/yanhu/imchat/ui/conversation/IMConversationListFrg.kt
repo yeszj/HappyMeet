@@ -578,12 +578,12 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
         }
         try {
 
-            val intent = ImChatActivity.getImChatIntent(mContext, conversationId)
+            val intent = ImChatActivity.getImChatIntent(mContext!!, conversationId)
             val isPop = requireArguments().getBoolean(IntentKeyConfig.IS_SHOW, false)
             if (isPop) {
                 showChatDialog(intent)
             } else {
-                mContext.startActivity(intent)
+                mContext?.startActivity(intent)
             }
 
         } catch (e: Exception) {

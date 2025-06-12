@@ -107,7 +107,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium"
-                tools:text="相亲中" />
+                tools:text="交友中" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

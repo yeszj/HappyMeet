@@ -94,7 +94,7 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
 
     fun getRoomDesc(): String {
         return if (isPublicRoom()) {
-            "相亲中"
+            "交友中"
         } else if (isPrivateRoom()) {
             "专属中"
         } else {

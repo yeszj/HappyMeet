@@ -129,7 +129,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/sp_11"
             app:fontType="@string/fontMedium"
-            tools:text="相亲中"
+            tools:text="交友中"
             android:paddingVertical="@dimen/dp_2"
             android:visibility="@{userinfo.roomId == 0? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="@+id/avatarView"

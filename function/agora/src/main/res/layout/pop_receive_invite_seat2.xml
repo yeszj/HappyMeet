@@ -74,7 +74,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/statuBg"
             app:layout_constraintStart_toEndOf="@+id/iv_status"
             app:layout_constraintTop_toTopOf="@+id/statuBg"
-            tools:text="专属相亲" />
+            tools:text="专属交友" />
 
 
         <androidx.appcompat.widget.AppCompatImageView

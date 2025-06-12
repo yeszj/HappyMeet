@@ -20,7 +20,7 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
     var roomName: String = ""
 
     @Bindable
-    var roomType = 0 //1-视频相亲-大厅 2-专属交友 0-用户 3-7人交友 4-7人天使 5-9人房
+    var roomType = 0 //1-视频交友-大厅 2-专属交友 0-用户 3-7人交友 4-7人天使 5-9人房
         set(value) {
             field = value
             notifyPropertyChanged(BR._all)
@@ -40,7 +40,7 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
                 "对方在线"
             }
             TYPE_PRIVATE,TYPE_ROBOT_ROOM -> {
-                "专属相亲"
+                "专属交友"
             }
             TYPE_SEVEN_FRIEND -> {
                 "七人交友"
@@ -61,7 +61,7 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
                 "九人K歌"
             }
             else -> {
-                "视频相亲"
+                "视频交友"
             }
         }
     }
