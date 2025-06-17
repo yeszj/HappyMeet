@@ -8,4 +8,5 @@ package cn.yanhu.agora.listener
 interface OnDownloadProgressListener {
     fun onProgress(progress: Int)
     fun onDownLoadFail()
+    fun onInitRtc(){}
 }

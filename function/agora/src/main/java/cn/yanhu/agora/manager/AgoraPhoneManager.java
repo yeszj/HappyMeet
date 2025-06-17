@@ -3,10 +3,12 @@ package cn.yanhu.agora.manager;
 import static cn.yanhu.baselib.utils.ext.LogExtKt.logcom;
 import static io.agora.rtc2.Constants.VIDEO_SOURCE_CAMERA_PRIMARY;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.SurfaceView;
 
 
+import cn.yanhu.agora.ui.beautifyFace.agora.AgoraBeautySDK;
 import cn.yanhu.commonres.bean.ChatCallResponseInfo;
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener;
 import io.agora.rtc2.ChannelMediaOptions;
@@ -15,6 +17,7 @@ import io.agora.rtc2.Constants;
 import io.agora.rtc2.IMediaExtensionObserver;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.video.CameraCapturerConfiguration;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 
@@ -67,16 +70,16 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
         mRtcEngine.switchCamera();
     }
 
-    public void init(Context baseContext,boolean isVideo) {
+    public void init(Context baseContext, boolean isVideo) {
         mRtcEngine = RtcEngineInit.INSTANCE.getMRtcEngine();
-        if (mRtcEngine==null){
+        if (mRtcEngine == null) {
             RtcEngine.destroy();
             mRtcEngine = RtcEngineInit.INSTANCE.initRtcEngine(baseContext);
-            if (mRtcEngine==null){
+            if (mRtcEngine == null) {
                 return;
             }
         }
-        if (iRtcEngineEventHandlerListener!=null){
+        if (iRtcEngineEventHandlerListener != null) {
             mRtcEngine.addHandler(mRtcEventHandler);
         }
 
@@ -88,18 +91,20 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
         mRtcEngine.adjustPlaybackSignalVolume(128);
         mRtcEngine.adjustRecordingSignalVolume(128);
         mRtcEngine.enableLocalAudio(true);
-        if(isVideo){
+        if (isVideo) {
             // SDK 默认关闭视频。调用 enableVideo 开启视频
-            setVideoEncoderConfiguration(720,1280);
+            setVideoEncoderConfiguration(720, 1280);
             mRtcEngine.enableVideo();
-            BeautySetManager.getInstance().initExtension(mRtcEngine);
-
+            // BeautySetManager.getInstance().initExtension(mRtcEngine);
+            AgoraBeautySDK.initBeautySDK(baseContext, mRtcEngine,true);
         }
     }
 
-    public void setVideoEncoderConfiguration(int width,int height){
+    public void setVideoEncoderConfiguration(int width, int height) {
         VideoEncoderConfiguration videoEncoderConfiguration = new VideoEncoderConfiguration();
-        videoEncoderConfiguration.dimensions =new VideoEncoderConfiguration.VideoDimensions(width,height);
+        videoEncoderConfiguration.dimensions = new VideoEncoderConfiguration.VideoDimensions(width, height);
+        CameraCapturerConfiguration cameraCapturerConfiguration = new CameraCapturerConfiguration(new CameraCapturerConfiguration.CaptureFormat(width, height, VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15.getValue()));
+        mRtcEngine.setCameraCapturerConfiguration(cameraCapturerConfiguration);
         mRtcEngine.setVideoEncoderConfiguration(videoEncoderConfiguration);
     }
 
@@ -122,17 +127,17 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
         // 开启本地视频预览。
         mRtcEngine.startPreview();
         mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
-        BeautySetManager.getInstance().enableBeauty(true);
+        // BeautySetManager.getInstance().enableBeauty(true);
 
     }
 
     //连接远端用户
     public void setupRemoteVideo(int uid, SurfaceView surfaceView) {
         logcom("连接远端用户，视频用户信息:" + uid);
-        if (surfaceView==null){
+        if (surfaceView == null) {
             return;
         }
-        if (mRtcEngine!=null){
+        if (mRtcEngine != null) {
             mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
         }
 
@@ -162,7 +167,7 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
 
     //用户已加入频道，调用 renewToken 重新生成 token
     public void renewToken(String token) {
-        if (mRtcEngine!=null){
+        if (mRtcEngine != null) {
             mRtcEngine.renewToken(token);
         }
     }
@@ -248,6 +253,7 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
         }
 
         //本地摄像头状态监听
+        @SuppressLint("DefaultLocale")
         @Override
         public void onLocalVideoStateChanged(Constants.VideoSourceType source, int state, int error) {
             super.onLocalVideoStateChanged(source, state, error);
@@ -272,7 +278,7 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
     };
 
 
-    public void onDestory() {
+    public void onDestroy() {
         if (mRtcEngine != null) {
             logcom("离开");
             mRtcEngine.enableLocalAudio(false);
@@ -284,33 +290,10 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
             mRtcEngine.removeHandler(mRtcEventHandler);
             iRtcEngineEventHandlerListener = null;
             mRtcEngine.leaveChannel();
-           // mRtcEngine = null;
-           // RtcEngine.destroy();
+            AgoraBeautySDK.unInitBeautySDK();
+            RtcEngine.destroy();
+            RtcEngineInit.INSTANCE.setMRtcEngine(null);
         }
-    }
-
-    @Override
-    public void onEvent(String provider, String extension, String key, String value) {
-        logcom("agora-onEvent", provider + "——————" + extension + "————————" + key + "————————" + value + "————————");
-
-    }
-
-    @Override
-    public void onStarted(String provider, String extension) {
-        logcom("agora-onStarted", provider + "——————" + extension);
-
-    }
-
-    @Override
-    public void onStopped(String provider, String extension) {
-        logcom("agora-onStopped", provider + "——————" + extension);
-
-    }
-
-    @Override
-    public void onError(String provider, String extension, int error, String message) {
-        logcom("agora-onError", provider + "——————" + extension + "————————" + error + "————————" + message + "————————");
-
     }
 
 }

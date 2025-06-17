@@ -30,11 +30,9 @@ import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.chad.library.adapter4.BaseQuickAdapter
 
-
 /**
- * 美颜设置页面
+ * 相芯美颜设置页面
  */
-@Route(path = RouterPath.ROUTER_BEAUTIFUL_FACE)
 class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoomViewModel>(
     R.layout.activity_beauty_face_set, LiveRoomViewModel::class.java
 ) {
@@ -347,7 +345,7 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
 
         PermissionXUtils.checkBeautyPermission(mContext,object : PermissionXUtils.PermissionListener {
             override fun onSuccess() {
-                AgoraManager.getInstance().init(mContext, 1, mBinding.beautySetSf)
+                AgoraManager.getInstance().init(mContext, 1, mBinding.beautySetSf,true)
                 AgoraManager.getInstance().setVideoEncoderConfiguration(3840, 2160)
                 getSkinFilterList()
             }
@@ -366,7 +364,7 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
 
     override fun exactDestroy() {
         super.exactDestroy()
-        AgoraManager.getInstance().onDestory()
+        AgoraManager.getInstance().onDestroy()
     }
 
 }

@@ -793,7 +793,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         AgoraManager.isVideoCall = false
         AgoraManager.isLiveRoom = false
         if (AgoraPhoneManager.getInstance().isInit) {
-            AgoraPhoneManager.getInstance().onDestory()
+            AgoraPhoneManager.getInstance().onDestroy()
         }
         if (floatView != null) {
             floatView!!.destory()

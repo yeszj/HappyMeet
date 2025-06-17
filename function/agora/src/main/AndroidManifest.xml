@@ -21,6 +21,11 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.beautifyFace.agora.AgoraFaceBeautySetActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.imphone.FromWaitPhoneActivity"
             android:configChanges="orientation|screenSize|screenLayout"
             android:exported="false"

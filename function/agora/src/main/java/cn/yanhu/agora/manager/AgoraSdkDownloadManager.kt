@@ -54,7 +54,10 @@ object AgoraSdkDownloadManager {
                         val soPath = getSoPath()
                         val length = FileUtils.getLength(soPath)
                         if (hasNewVersion || length <= 0 || length.toString() != agoraSdkInfo.fileSize) {
+                            AgoraSdkCacheManager.clearAgoraSdk()
                             downloadSdkInfo(downloadProgressListener)
+                        }else{
+                            downloadProgressListener.onInitRtc()
                         }
                     } else {
                         downloadSdkInfo(downloadProgressListener)
@@ -110,6 +113,7 @@ object AgoraSdkDownloadManager {
                        // val downLoadTimeSecond = (System.currentTimeMillis() - startTime) / 1000
                         downloadProgressListener.onProgress(100)
                         saveAgoraSdkToCache()
+                        downloadProgressListener.onInitRtc()
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()

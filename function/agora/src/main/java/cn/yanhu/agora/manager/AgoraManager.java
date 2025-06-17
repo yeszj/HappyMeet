@@ -14,6 +14,7 @@ import com.blankj.utilcode.util.ThreadUtils;
 
 
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener;
+import cn.yanhu.agora.ui.beautifyFace.agora.AgoraBeautySDK;
 import cn.yanhu.commonres.manager.AppCacheManager;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.ClientRoleOptions;
@@ -74,7 +75,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         this.iRtcEngineEventHandlerListener = iRtcEngineEventHandlerListener;
     }
 
-    public void init(Activity baseContext, Integer userRole, View surfaceView) {
+    public void init(Activity baseContext, Integer userRole, View surfaceView,boolean isInit) {
         mRtcEngine = RtcEngineInit.INSTANCE.getMRtcEngine();
         if (mRtcEngine==null){
             RtcEngine.destroy();
@@ -98,13 +99,14 @@ public class AgoraManager implements IMediaExtensionObserver {
         setupLocalAudio(true);
         // 根据实际情况，设置用户角色为 BROADCASTER 或 AUDIENCE
         mRtcEngine.setClientRole(userRole != 0 ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE);
-        BeautySetManager.getInstance().initExtension(mRtcEngine);
+        //BeautySetManager.getInstance().initExtension(mRtcEngine);
         if (userRole == 1) {
             // 开启本地视频预览。
             mRtcEngine.startPreview();
-            BeautySetManager.getInstance().enableBeauty(true);
+           // BeautySetManager.getInstance().enableBeauty(true);
             mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
         }
+        AgoraBeautySDK.initBeautySDK(baseContext, mRtcEngine,isInit);
     }
 
 
@@ -146,13 +148,13 @@ public class AgoraManager implements IMediaExtensionObserver {
     }
 
     public void preloadChannel(FragmentActivity context, String roomID, String token) {
-        init(context, 0, null);
+        init(context, 0, null,true);
         logcom("preloadChannel:" + roomID);
         currentRoomID = roomID;
         ThreadUtils.executeByIo(new ThreadUtils.SimpleTask<Integer>() {
             @Override
             public Integer doInBackground() {
-                return mRtcEngine.preloadChannel(token, roomID, AppCacheManager.INSTANCE.getUserId());
+                return mRtcEngine.preloadChannel(token, roomID,Integer.parseInt( AppCacheManager.INSTANCE.getUserId()));
             }
             @Override
             public void onSuccess(Integer result) {
@@ -222,7 +224,7 @@ public class AgoraManager implements IMediaExtensionObserver {
             if (isLocal) {
                 // 开启本地视频预览。
                 mRtcEngine.startPreview();
-                BeautySetManager.getInstance().enableBeauty(true);
+               // BeautySetManager.getInstance().enableBeauty(true);
                 mRtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
                 setupLocalVideo(true);
                 mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
@@ -495,7 +497,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         }
     };
 
-    public void onDestory() {
+    public void onDestroy() {
         logcom("离开");
         isLiveRoom = false;
         if (mRtcEngine != null) {
@@ -505,7 +507,9 @@ public class AgoraManager implements IMediaExtensionObserver {
             mRtcEngine.leaveChannel();
             mRtcEngine.stopPreview();
             mRtcEngine.disableVideo();
-            //RtcEngine.destroy();
+            AgoraBeautySDK.unInitBeautySDK();
+            RtcEngine.destroy();
+            RtcEngineInit.INSTANCE.setMRtcEngine(null);
         }
        // mRtcEngine = null;
         isInitSuccess = false;
@@ -513,28 +517,4 @@ public class AgoraManager implements IMediaExtensionObserver {
     }
 
 
-    @Override
-    public void onEvent(String provider, String extension, String key, String value) {
-        logcom("agora-onEvent", provider + "——————" + extension + "————————" + key + "————————" + value + "————————");
-    }
-
-
-    @Override
-    public void onStarted(String provider, String extension) {
-        logcom("agora-onStarted", provider + "——————" + extension);
-
-    }
-
-    @Override
-    public void onStopped(String provider, String extension) {
-        logcom("agora-onStopped", provider + "——————" + extension);
-
-    }
-
-    @Override
-    public void onError(String provider, String extension, int error, String message) {
-        logcom("agora-onError", provider + "——————" + extension + "————————" + error + "————————" + message + "————————");
-
-
-    }
 }

@@ -2097,7 +2097,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
 
     private fun preJoinRoom(): Int {
-        AgoraManager.getInstance().init(mContext, 0, null)
+        AgoraManager.getInstance().init(mContext, 0, null,true)
         logcom(LiveRoomActivity.LIVE_ROOM_TAG, "加载房间---roomId${roomId}")
         //声网初始化
         AgoraManager.getInstance().setVideoEncoderConfiguration(250, 280)
@@ -2135,7 +2135,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     private fun clearAgora() {
         AgoraManager.getInstance().clearRtcConnection()
-        AgoraManager.getInstance().onDestory()
+        AgoraManager.getInstance().onDestroy()
     }
 
     private fun pauseAnimView() {

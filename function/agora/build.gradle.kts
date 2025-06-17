@@ -62,5 +62,7 @@ dependencies {
     implementation(project(mapOf("path" to ":function:sdkLib")))
     implementation(project(mapOf("path" to ":function:imChat")))
     implementation(project(mapOf("path" to ":function:localRepo:extension_aar")))
+    implementation(project(mapOf("path" to ":function:beautyFace")))
+
 
 }

@@ -140,7 +140,7 @@ class FromWaitPhoneActivity : BaseActivity<ActivityFromWaitPhoneBinding, ImPhone
     override fun exactDestroy() {
         super.exactDestroy()
         if (!isAgree){
-            AgoraPhoneManager.getInstance().onDestory()
+            AgoraPhoneManager.getInstance().onDestroy()
         }
         mediaPlayerRing?.stop()
         mediaPlayerRing?.release()

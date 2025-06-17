@@ -95,12 +95,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         AppManager.setAppState(
             AppManager.STATE_FOREGROUND, PermissionX.areNotificationsEnabled(mContext)
         )
-        downloadBeautySdk()
+        //downloadBeautySdk()
         downloadAgoraSdk()
         getRechargeInfo()
         getGiftInfo()
         mViewModel.getMainTabInfo()
-        initRtcEngine()
         BaseApplication.clearTask()
         checkOaId()
         checkInit()
@@ -193,7 +192,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun initRtcEngine() {
-        if (AgoraSdkCacheManager.hasLoadAgoraSdk() && BeautyCacheManager.hasLoadBeautySdk()) {
+        if (AgoraSdkCacheManager.hasLoadAgoraSdk()) {
             ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
                 override fun doInBackground(): Boolean {
                     RtcEngineInit.initRtcEngine(mContext)
@@ -214,10 +213,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     sdkDownloadProgress
                 )
             }
-        LiveEventBus.get<Boolean>(EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS)
-            .observe(this) {
-                showDownloadBeautySdkProgressPop(beautySdkDownloadProgress)
-            }
+//        LiveEventBus.get<Boolean>(EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS)
+//            .observe(this) {
+//               // showDownloadBeautySdkProgressPop(beautySdkDownloadProgress)
+//            }
         LiveEventBus.get<Int>(EventBusKeyConfig.UNREAD_COUNT).observe(this) {
             val tabMsgPosition = getTabMsgPosition()
             val bottomItem = mBinding.tabLayout.getBottomItem(tabMsgPosition)
@@ -271,6 +270,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                         downloadProgressPop?.setProgress(sdkDownloadProgress)
                     }
                 }
+            }
+
+            override fun onInitRtc() {
+                initRtcEngine()
             }
 
             override fun onDownLoadFail() {

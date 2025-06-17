@@ -109,9 +109,9 @@ class SendGiftPop(
             giftShowView.registerClickSendListener(sendGiftListener)
             giftViewsList.add(giftShowView)
             if (SendGiftRequest.SOURCE_LIVE_ROOM== source){
-                val faceGiftShowView = GiftShowView(context,source,GiftShowView.TYPE_FACE)
-                giftViewsList.add(faceGiftShowView)
-                faceGiftShowView.registerClickSendListener(sendGiftListener)
+//                val faceGiftShowView = GiftShowView(context,source,GiftShowView.TYPE_FACE)
+//                giftViewsList.add(faceGiftShowView)
+//                faceGiftShowView.registerClickSendListener(sendGiftListener)
                 if (!sendUserInfo.isSameGender){
                     val loversGiftShowView = GiftShowView(context,source,GiftShowView.TYPE_LOVER)
                     giftViewsList.add(loversGiftShowView)
@@ -120,7 +120,7 @@ class SendGiftPop(
                     mBinding.tvLovers.visibility = View.INVISIBLE
                 }
             }else{
-                mBinding.tvFace.visibility = View.INVISIBLE
+             //   mBinding.tvFace.visibility = View.INVISIBLE
                 mBinding.tvLovers.visibility = View.INVISIBLE
             }
 
@@ -130,11 +130,11 @@ class SendGiftPop(
                     R.id.tv_gift -> {
                         setCurrentItem(0)
                     }
-                    R.id.tv_face -> {
-                        setCurrentItem(1)
-                    }
+//                    R.id.tv_face -> {
+//                        setCurrentItem(1)
+//                    }
                     R.id.tv_lovers -> {
-                        setCurrentItem(2)
+                        setCurrentItem(1)
                     }
                 }
             }

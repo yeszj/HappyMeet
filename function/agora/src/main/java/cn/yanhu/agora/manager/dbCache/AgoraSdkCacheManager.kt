@@ -15,7 +15,7 @@ object AgoraSdkCacheManager {
                 LitePal.limit(1).find(
                     AgoraSdkCacheInfo::class.java
                 )
-            if (pokeInfo.size > 0) {
+            if (pokeInfo.isNotEmpty()) {
                 return pokeInfo[0]
             }
         }catch (e:Exception){
@@ -26,5 +26,9 @@ object AgoraSdkCacheManager {
 
     fun hasLoadAgoraSdk(): Boolean {
         return getAgoraSdk() != null
+    }
+
+    fun clearAgoraSdk(){
+        LitePal.deleteAll(AgoraSdkCacheInfo::class.java)
     }
 }

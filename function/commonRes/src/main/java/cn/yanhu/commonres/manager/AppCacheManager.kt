@@ -37,6 +37,14 @@ object AppCacheManager {
 
     var agoraAppId by ConfigPref("agoraAppId","301729ee939d4470b6b60a795e9ccc22")
 
+    @JvmStatic
+    var beautyConfigCache by ConfigPref("beautyConfigCache","")
+
+    @JvmStatic
+    var beautyBundleSize by ConfigPref("beautyBundleSize",0L)
+
+    @JvmStatic
+    var beautyBg by ConfigPref("beautyBg","")
 
     @JvmStatic
     fun isWoman():Boolean{

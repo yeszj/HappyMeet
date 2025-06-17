@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="show_beauty_group_beauty">美颜</string>
+    <string name="show_beauty_item_none">无</string>
+    <string name="show_beauty_item_beauty_smooth">磨皮</string>
+    <string name="show_beauty_item_beauty_whiten">美白</string>
+    <string name="show_beauty_item_beauty_overall">瘦脸</string>
+    <string name="show_beauty_item_beauty_narrowFace">窄脸</string>
+    <string name="show_beauty_item_beauty_facelength">长脸</string>
+    <string name="show_beauty_item_beauty_headsscale">小头</string>
+
+    <string name="show_beauty_item_beauty_cheekbone">瘦颧骨</string>
+    <string name="show_beauty_item_beauty_eye">大眼</string>
+    <string name="show_beauty_item_beauty_nose">瘦鼻</string>
+    <string name="show_beauty_item_beauty_chin">下巴</string>
+    <string name="show_beauty_item_beauty_jawbone">下颌骨</string>
+    <string name="show_beauty_item_beauty_forehead">额头</string>
+    <string name="show_beauty_item_beauty_mouth">嘴型</string>
+    <string name="show_beauty_item_beauty_teeth">美牙</string>
+    <string name="show_beauty_item_beauty_long_nose">长鼻</string>
+    <string name="show_beauty_item_beauty_xiahexian">下颌线</string>
+    <string name="show_beauty_item_filter_gentleman_face">绅士脸</string>
+    <string name="show_beauty_item_filter_lady_face">淑女脸</string>
+    <string name="show_beauty_group_filter">滤镜</string>
+    <string name="show_beauty_group_effect">风格妆</string>
+    <string name="show_beauty_group_sticker">贴纸</string>
+    <string name="show_beauty_item_filter_cream">奶油</string>
+    <string name="show_beauty_item_filter_mokalong">马卡龙</string>
+    <string name="show_beauty_item_filter_oxgen">氧气</string>
+    <string name="show_beauty_item_filter_wuyu">物语</string>
+    <string name="show_beauty_item_filter_po9">海边人物</string>
+    <string name="show_beauty_item_filter_lolita">洛丽塔</string>
+    <string name="show_beauty_item_filter_mitao">蜜桃</string>
+    <string name="show_beauty_item_filter_yinhua">樱花</string>
+    <string name="show_beauty_item_filter_beihaidao">北海道</string>
+    <string name="show_beauty_item_filter_s3">旅途</string>
+    <string name="show_beauty_item_filter_original">原生</string>
+    <string name="show_beauty_item_filter_whitening">嫩白</string>
+    <string name="show_beauty_item_filter_cool_white">冷白</string>
+
+    <string name="show_beauty_item_filter_nuannan">暖男</string>
+    <string name="show_beauty_item_filter_qise">气色</string>
+    <string name="show_beauty_item_filter_qizhi">气质</string>
+    <string name="show_beauty_item_filter_yuanqi">元气</string>
+
+    <string name="show_beauty_item_effect_baixi">白皙</string>
+    <string name="show_beauty_item_effect_tianmei">甜美</string>
+    <string name="show_beauty_item_adjust_contrast">对比度</string>
+    <string name="show_beauty_item_adjust_saturation">饱和度</string>
+    <string name="show_beauty_item_adjust_sharpen">锐化</string>
+    <string name="show_beauty_item_adjust_clarity">清晰度</string>
+    <string name="show_beauty_item_beauty_redden">红润</string>
+    <string name="show_beauty_item_beauty_bright_eye">亮眼</string>
+    <string name="show_beauty_item_beauty_remove_dark_circles">去黑眼圈</string>
+    <string name="show_beauty_item_beauty_remove_nasolabial_folds">去法令纹</string>
+    <string name="show_beauty_group_virtual_bg">背景</string>
+    <string name="show_beauty_green_screen">绿幕</string>
+    <string name="show_beauty_strength">强度</string>
+    <string name="show_beauty_item_virtual_bg_blur">虚化</string>
+    <string name="show_beauty_item_virtual_bg_mitao">蜜桃</string>
+    <string name="show_beauty_group_face_shape">美形</string>
+
+    <string name="show_beauty_item_effect_diadiatu">嗲嗲兔</string>
+    <string name="show_beauty_item_beauty_fajixian">发际线</string>
+    <string name="show_beauty_item_beauty_white_teeth">白牙</string>
+    <string name="show_beauty_item_sticker_zhaocaimao">招财猫</string>
+
+    <string name="show_beauty_item_beauty_face_three">五官立体</string>
+    <string name="show_beauty_item_beauty_teeth2">白牙</string>
+    <string name="show_beauty_item_effect_oumei">精致</string>
+    <string name="show_beauty_item_effect_hunxue">混血</string>
+    <string name="show_beauty_item_effect3">清透</string>
+    <string name="show_beauty_item_effect4">元气</string>
+    <string name="show_beauty_item_effect5">淡颜</string>
+
+
+
+    <string name="show_live_prepare_setting">设置</string>
+    <string name="show_beauty_group_adjust">调整</string>
+</resources>

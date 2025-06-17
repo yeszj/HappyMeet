@@ -6,6 +6,7 @@ import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.manager.AppCacheManager
 import io.agora.rtc2.Constants
+import io.agora.rtc2.ExtensionContext
 import io.agora.rtc2.IMediaExtensionObserver
 import io.agora.rtc2.IRtcEngineEventHandler
 import io.agora.rtc2.RtcEngineConfig
@@ -26,45 +27,49 @@ object RtcEngineInit {
             config.mEventHandler = object : IRtcEngineEventHandler() {
             }
             config.mExtensionObserver = object : IMediaExtensionObserver{
-                override fun onEvent(
-                    provider: String?,
-                    extension: String?,
+                override fun onEventWithContext(
+                    extContext: ExtensionContext?,
                     key: String?,
                     value: String?
                 ) {
                     logcom(
-                        "agora-onEvent",
-                        "$provider——————$extension————————$key————————$value————————"
+                        "onEventWithContext",
+                        "${extContext?.providerName}——————${extContext?.extensionName}————————$key————————$value————————"
                     )
                 }
 
-                override fun onStarted(provider: String?, extension: String?) {
-                    logcom("agora-onStarted", "$provider——————$extension")
+                override fun onStartedWithContext(extContext: ExtensionContext?) {
+                    logcom(
+                        "onStartedWithContext",
+                        "${extContext?.providerName}——————${extContext?.extensionName}"
+                    )
                 }
 
-                override fun onStopped(provider: String?, extension: String?) {
-                    logcom("agora-onStopped", "$provider——————$extension")
+                override fun onStoppedWithContext(extContext: ExtensionContext?) {
+                    logcom(
+                        "onStartedWithContext",
+                        "${extContext?.providerName}——————${extContext?.extensionName}"
+                    )
                 }
 
-                override fun onError(
-                    provider: String?,
-                    extension: String?,
+                override fun onErrorWithContext(
+                    extContext: ExtensionContext?,
                     error: Int,
                     message: String?
                 ) {
                     logcom(
-                        "agora-onError",
-                        "$provider——————$extension————————$error————————$message————————"
+                        "onStartedWithContext",
+                        "${extContext?.providerName}——————${extContext?.extensionName}————————$error————————$message————————"
                     )
                 }
 
             }
             // 添加美颜插件
-            config.addExtension("AgoraFaceUnityExtension")
+          //  config.addExtension("AgoraFaceUnityExtension")
             config.mNativeLibPath = getSoPath()
             mRtcEngine = RtcEngineEx.create(config) as RtcEngineEx
             // 启用插件
-            mRtcEngine!!.enableExtension("FaceUnity", "Effect", true)
+          //  mRtcEngine!!.enableExtension("FaceUnity", "Effect", true)
             mRtcEngine!!.setAudioScenario(Constants.AudioScenario.getValue(Constants.AudioScenario.GAME_STREAMING))
             return mRtcEngine
         } catch (e: Exception) {
