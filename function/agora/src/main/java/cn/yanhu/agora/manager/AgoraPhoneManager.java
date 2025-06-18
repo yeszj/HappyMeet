@@ -103,6 +103,7 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
     public void setVideoEncoderConfiguration(int width, int height) {
         VideoEncoderConfiguration videoEncoderConfiguration = new VideoEncoderConfiguration();
         videoEncoderConfiguration.dimensions = new VideoEncoderConfiguration.VideoDimensions(width, height);
+        videoEncoderConfiguration.orientationMode = VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT;
         CameraCapturerConfiguration cameraCapturerConfiguration = new CameraCapturerConfiguration(new CameraCapturerConfiguration.CaptureFormat(width, height, VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15.getValue()));
         mRtcEngine.setCameraCapturerConfiguration(cameraCapturerConfiguration);
         mRtcEngine.setVideoEncoderConfiguration(videoEncoderConfiguration);
