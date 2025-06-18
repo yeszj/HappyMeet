@@ -32,6 +32,7 @@ import cn.yanhu.agora.manager.BeautySDKManager
 import cn.yanhu.agora.manager.RtcEngineInit
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
+import cn.yanhu.agora.ui.beautifyFace.agora.BeautyConfigManager
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
@@ -104,6 +105,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         checkOaId()
         checkInit()
         appStart()
+        BeautyConfigManager.getNetBeautyConfig()
         //startActivity(Intent(mContext,TestActivity::class.java))
     }
 

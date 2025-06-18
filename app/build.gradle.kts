@@ -19,12 +19,12 @@ android {
         applicationId = "cn.huanyuan.sweetlove"
         minSdk = cfg["minSdkVersion"] as Int
         targetSdk = cfg["targetSdkVersion"] as Int
-        versionCode = 19
-        versionName = "1.1.8"
+        versionCode = 20
+        versionName = "1.1.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
-            //abiFilters.add("armeabi-v7a")
+            abiFilters.add("armeabi-v7a")
             abiFilters.add("arm64-v8a")
         }
         // resourceConfigurations.add("zh")

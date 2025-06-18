@@ -1,11 +1,8 @@
 package cn.yanhu.agora.ui.beautifyFace.agora
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.core.view.isVisible
-import cn.happy.beautyface.databinding.ShowWidgetBeautyMultiDialogVirtualBgBinding
-import cn.happy.beautyface.ui.FileUtils
 import cn.happy.beautyface.ui.widget.BaseControllerView
 import cn.yanhu.agora.ui.beautifyFace.BeautyViewModel
 import cn.yanhu.agora.R
@@ -13,6 +10,7 @@ import cn.yanhu.agora.databinding.ActivityAgoraFaceBeautySetBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.RtcEngineInit
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager.hasLoadAgoraSdk
+import cn.yanhu.agora.ui.beautifyFace.agora.BeautyConfigManager.OnLoadDefaultBeautyListener
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -23,8 +21,6 @@ import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.utils.PermissionXUtils
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.jeremyliao.liveeventbus.LiveEventBus
-import io.agora.rtc2.video.SegmentationProperty
-import io.agora.rtc2.video.VirtualBackgroundSource
 import kotlin.jvm.java
 
 /**
@@ -116,11 +112,11 @@ class AgoraFaceBeautySetActivity : BaseActivity<ActivityAgoraFaceBeautySetBindin
     }
 
     private fun setupControllerView(controllerView: BaseControllerView) {
-        val virtualBgBinding =
-            ShowWidgetBeautyMultiDialogVirtualBgBinding.inflate(LayoutInflater.from(mContext))
-        controllerView.viewBinding.topCustomView.addView(virtualBgBinding.root)
-        virtualBgBinding.mSwitchMaterial.isChecked =
-            AgoraBeautySDK.virtualBackgroundSegmentation.modelType == SegmentationProperty.SEG_MODEL_GREEN
+//        val virtualBgBinding =
+//            ShowWidgetBeautyMultiDialogVirtualBgBinding.inflate(LayoutInflater.from(mContext))
+        //controllerView.viewBinding.topCustomView.addView(virtualBgBinding.root)
+//        virtualBgBinding.mSwitchMaterial.isChecked =
+//            AgoraBeautySDK.virtualBackgroundSegmentation.modelType == SegmentationProperty.SEG_MODEL_GREEN
         // Beauty switch
         controllerView.beautyOpenIsActivated = false
         controllerView.beautyOpenClickListener =
@@ -128,116 +124,129 @@ class AgoraFaceBeautySetActivity : BaseActivity<ActivityAgoraFaceBeautySetBindin
                 AgoraBeautySDK.enable(!AgoraBeautySDK.isEnable)
                 it.isActivated = AgoraBeautySDK.isEnable
             }
-
+        controllerView.beautyDefaultClickListener =
+            OnClickListener {
+                DialogUtils.showLoading()
+                BeautyConfigManager.getNetBeautyConfig(object : OnLoadDefaultBeautyListener {
+                    override fun onLoadResult(isSuccess: Boolean) {
+                        DialogUtils.dismissLoading()
+                        AgoraBeautySDK.setDefaultConfig(mContext)
+                        //virtualBgBinding.mSwitchMaterial.isChecked = false
+                        controllerView.viewBinding.ivCompare.isVisible = false
+                       // resetVirtualDefault(controllerView, virtualBgBinding)
+                        controllerView.resetPageList()
+                    }
+                })
+            }
         // Virtual background configuration
-        controllerView.pageList = ArrayList(controllerView.pageList).apply {
-            add(
-                BaseControllerView.PageInfo(
-                    cn.happy.beautyface.R.string.show_beauty_group_virtual_bg,
-                    listOf(
-                        BaseControllerView.ItemInfo(
-                            cn.happy.beautyface.R.string.show_beauty_item_none,
-                            cn.happy.beautyface.R.mipmap.show_beauty_ic_none,
-                            isSelected = AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType == VirtualBackgroundSource.BACKGROUND_COLOR,
-                            onValueChanged = { _ ->
-                                AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType =
-                                    VirtualBackgroundSource.BACKGROUND_COLOR
-                                AgoraBeautySDK.virtualBackgroundSegmentation.modelType =
-                                    SegmentationProperty.SEG_MODEL_AI
-                                AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity = 0.5f
-                                controllerView.updateItemInfo {
-                                    if (it.name == cn.happy.beautyface.R.string.show_beauty_item_virtual_bg_mitao
-                                        || it.name == cn.happy.beautyface.R.string.show_beauty_item_virtual_bg_blur
-                                    ) {
-                                        it.value = 0.5f
-                                    }
-                                    false
-                                }
-                                source = ""
-                                virtualBgBinding.mSwitchMaterial.isChecked = false
-                                RtcEngineInit.mRtcEngine?.enableVirtualBackground(
-                                    false,
-                                    AgoraBeautySDK.virtualBackgroundSource,
-                                    AgoraBeautySDK.virtualBackgroundSegmentation
-                                )
-                            }
-                        ),
-                        BaseControllerView.ItemInfo(
-                            cn.happy.beautyface.R.string.show_beauty_item_virtual_bg_blur,
-                            cn.happy.beautyface.R.mipmap.show_beauty_ic_virtual_bg_blur,
-                            value = AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity,
-                            isSelected = AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType == VirtualBackgroundSource.BACKGROUND_BLUR,
-                            onValueChanged = { value ->
-                                AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType =
-                                    VirtualBackgroundSource.BACKGROUND_BLUR
-                                AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity =
-                                    value
-                                source = ""
-                                AgoraBeautySDK.rtcEngine?.enableVirtualBackground(
-                                    true,
-                                    AgoraBeautySDK.virtualBackgroundSource,
-                                    AgoraBeautySDK.virtualBackgroundSegmentation
-                                )
-                            }
-                        ),
-                        BaseControllerView.ItemInfo(
-                            cn.happy.beautyface.R.string.show_beauty_item_virtual_bg_mitao,
-                            cn.happy.beautyface.R.mipmap.show_beauty_ic_virtual_bg_mitao,
-                            value = AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity,
-                            isSelected = AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType == VirtualBackgroundSource.BACKGROUND_IMG,
-                            onValueChanged = { value ->
-                                AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType =
-                                    VirtualBackgroundSource.BACKGROUND_IMG
-                                AgoraBeautySDK.virtualBackgroundSource.source =
-                                    FileUtils.copyFileFromAssets(
-                                        mContext,
-                                        "virtualbackgroud_mitao.jpg",
-                                        mContext.externalCacheDir!!.absolutePath
-                                    )
-                                source = "virtualbackgroud_mitao.jpg"
-                                AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity =
-                                    value
-                                AgoraBeautySDK.rtcEngine?.enableVirtualBackground(
-                                    true,
-                                    AgoraBeautySDK.virtualBackgroundSource,
-                                    AgoraBeautySDK.virtualBackgroundSegmentation
-                                )
-                            }
-                        )
-                    )
-                )
-            )
-        }
+//        controllerView.pageList = ArrayList(controllerView.pageList).apply {
+//            add(
+//                BaseControllerView.PageInfo(
+//                    cn.happy.beautyface.R.string.show_beauty_group_virtual_bg,
+//                    listOf(
+//                        BaseControllerView.ItemInfo(
+//                            cn.happy.beautyface.R.string.show_beauty_item_none,
+//                            cn.happy.beautyface.R.mipmap.show_beauty_ic_none,
+//                            isSelected = AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType == VirtualBackgroundSource.BACKGROUND_COLOR,
+//                            onValueChanged = { _ ->
+//                                AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType =
+//                                    VirtualBackgroundSource.BACKGROUND_COLOR
+//                                AgoraBeautySDK.virtualBackgroundSegmentation.modelType =
+//                                    SegmentationProperty.SEG_MODEL_AI
+//                                AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity = 0.5f
+//                                controllerView.updateItemInfo {
+//                                    if (it.name == cn.happy.beautyface.R.string.show_beauty_item_virtual_bg_mitao
+//                                        || it.name == cn.happy.beautyface.R.string.show_beauty_item_virtual_bg_blur
+//                                    ) {
+//                                        it.value = 0.5f
+//                                    }
+//                                    false
+//                                }
+//                                source = ""
+//                                virtualBgBinding.mSwitchMaterial.isChecked = false
+//                                RtcEngineInit.mRtcEngine?.enableVirtualBackground(
+//                                    false,
+//                                    AgoraBeautySDK.virtualBackgroundSource,
+//                                    AgoraBeautySDK.virtualBackgroundSegmentation
+//                                )
+//                            }
+//                        ),
+//                        BaseControllerView.ItemInfo(
+//                            cn.happy.beautyface.R.string.show_beauty_item_virtual_bg_blur,
+//                            cn.happy.beautyface.R.mipmap.show_beauty_ic_virtual_bg_blur,
+//                            value = AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity,
+//                            isSelected = AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType == VirtualBackgroundSource.BACKGROUND_BLUR,
+//                            onValueChanged = { value ->
+//                                AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType =
+//                                    VirtualBackgroundSource.BACKGROUND_BLUR
+//                                AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity =
+//                                    value
+//                                source = ""
+//                                AgoraBeautySDK.rtcEngine?.enableVirtualBackground(
+//                                    true,
+//                                    AgoraBeautySDK.virtualBackgroundSource,
+//                                    AgoraBeautySDK.virtualBackgroundSegmentation
+//                                )
+//                            }
+//                        ),
+//                        BaseControllerView.ItemInfo(
+//                            cn.happy.beautyface.R.string.show_beauty_item_virtual_bg_mitao,
+//                            cn.happy.beautyface.R.mipmap.show_beauty_ic_virtual_bg_mitao,
+//                            value = AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity,
+//                            isSelected = AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType == VirtualBackgroundSource.BACKGROUND_IMG,
+//                            onValueChanged = { value ->
+//                                AgoraBeautySDK.virtualBackgroundSource.backgroundSourceType =
+//                                    VirtualBackgroundSource.BACKGROUND_IMG
+//                                AgoraBeautySDK.virtualBackgroundSource.source =
+//                                    FileUtils.copyFileFromAssets(
+//                                        mContext,
+//                                        "virtualbackgroud_mitao.jpg",
+//                                        mContext.externalCacheDir!!.absolutePath
+//                                    )
+//                                source = "virtualbackgroud_mitao.jpg"
+//                                AgoraBeautySDK.virtualBackgroundSegmentation.greenCapacity =
+//                                    value
+//                                AgoraBeautySDK.rtcEngine?.enableVirtualBackground(
+//                                    true,
+//                                    AgoraBeautySDK.virtualBackgroundSource,
+//                                    AgoraBeautySDK.virtualBackgroundSegmentation
+//                                )
+//                            }
+//                        )
+//                    )
+//                )
+//            )
+//        }
 
-        virtualBgBinding.mSwitchMaterial.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                controllerView.viewBinding.slider.visibility = View.VISIBLE
-                changeVirtualBGMode(SegmentationProperty.SEG_MODEL_GREEN)
-                return@setOnCheckedChangeListener
-            } else {
-                controllerView.viewBinding.slider.visibility = View.INVISIBLE
-                changeVirtualBGMode(SegmentationProperty.SEG_MODEL_AI)
-            }
-        }
+//        virtualBgBinding.mSwitchMaterial.setOnCheckedChangeListener { _, isChecked ->
+//            if (isChecked) {
+//                controllerView.viewBinding.slider.visibility = View.VISIBLE
+//                changeVirtualBGMode(SegmentationProperty.SEG_MODEL_GREEN)
+//                return@setOnCheckedChangeListener
+//            } else {
+//                controllerView.viewBinding.slider.visibility = View.INVISIBLE
+//                changeVirtualBGMode(SegmentationProperty.SEG_MODEL_AI)
+//            }
+//        }
 
-        controllerView.onSelectedChangeListener = { pageIndex, itemIndex ->
-            val pageInfo = controllerView.pageList[pageIndex]
-            val itemInfo = pageInfo.itemList[itemIndex]
-            if (pageInfo.name == cn.happy.beautyface.R.string.show_beauty_group_virtual_bg) {
-                controllerView.viewBinding.ivCompare.isVisible = false
-                if (itemInfo.name == cn.happy.beautyface.R.string.show_beauty_item_none) {
-                    controllerView.viewBinding.topCustomView.isVisible = false
-                    controllerView.viewBinding.slider.visibility = View.INVISIBLE
-                } else {
-                    controllerView.viewBinding.topCustomView.isVisible = true
-                    controllerView.viewBinding.slider.visibility =
-                        if (virtualBgBinding.mSwitchMaterial.isChecked) View.VISIBLE else View.INVISIBLE
-                }
-            } else {
-                controllerView.viewBinding.topCustomView.isVisible = false
-                controllerView.viewBinding.ivCompare.isVisible = true
-            }
-        }
+//        controllerView.onSelectedChangeListener = { pageIndex, itemIndex ->
+//            val pageInfo = controllerView.pageList[pageIndex]
+//            val itemInfo = pageInfo.itemList[itemIndex]
+//            if (pageInfo.name == cn.happy.beautyface.R.string.show_beauty_group_virtual_bg) {
+//                controllerView.viewBinding.ivCompare.isVisible = false
+//                if (itemInfo.name == cn.happy.beautyface.R.string.show_beauty_item_none) {
+//                    controllerView.viewBinding.topCustomView.isVisible = false
+//                    controllerView.viewBinding.slider.visibility = View.INVISIBLE
+//                } else {
+//                    controllerView.viewBinding.topCustomView.isVisible = true
+//                    controllerView.viewBinding.slider.visibility =
+//                        if (virtualBgBinding.mSwitchMaterial.isChecked) View.VISIBLE else View.INVISIBLE
+//                }
+//            } else {
+//                controllerView.viewBinding.topCustomView.isVisible = false
+//                controllerView.viewBinding.ivCompare.isVisible = true
+//            }
+//        }
     }
 
     private fun changeVirtualBGMode(modelType: Int) {

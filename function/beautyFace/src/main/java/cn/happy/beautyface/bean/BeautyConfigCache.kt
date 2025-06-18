@@ -35,5 +35,7 @@ data class BeautyConfigCache(
     var makeupType: Int = if (AppCacheManager.isWoman()) 4 else 0,
     var makeupStrength: Float = 0.5f,
     var headScale: Int = 30,//小头
-    var narrowFace:Int =30//窄脸
+    var narrowFace:Int =30,//窄脸
+    var mandible:Int = 50//v脸
+
 )

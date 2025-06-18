@@ -23,10 +23,6 @@ import kotlin.getValue
 
 open class BaseControllerView : FrameLayout {
 
-
-    private val itemAdapterList =
-        mutableListOf<BaseQuickAdapter<ItemInfo, VH>>()
-
     class PAGE_VH(
         parent: ViewGroup,
         val binding: ShowWidgetBeautyDialogPageBinding = ShowWidgetBeautyDialogPageBinding.inflate(
@@ -44,7 +40,6 @@ open class BaseControllerView : FrameLayout {
                 val pageInfo = getItem(position) ?: return
                 val itemAdapter = createItemAdapter(position)
                 itemAdapter.submitList(pageInfo.itemList)
-                itemAdapterList.add(position, itemAdapter)
                 (context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager)?.defaultDisplay?.width?.let {
                     holder.binding.recycleView.layoutParams =
                         holder.binding.recycleView.layoutParams.apply {
@@ -67,6 +62,7 @@ open class BaseControllerView : FrameLayout {
             }
         }
     }
+    open fun resetPageList(){}
 
     val viewBinding by lazy {
         ShowWidgetBeautyBaseLayoutBinding.inflate(LayoutInflater.from(context))
@@ -76,7 +72,6 @@ open class BaseControllerView : FrameLayout {
         set(value) {
             field = value
             pageAdapter.submitList(value)
-            itemAdapterList.clear()
             viewBinding.tabLayout.removeAllTabs()
             value.forEach {
                 val tab = viewBinding.tabLayout.newTab().setText(it.name)
@@ -91,6 +86,12 @@ open class BaseControllerView : FrameLayout {
         set(value) {
             field = value
             viewBinding.ivCompare.setOnClickListener((value))
+        }
+
+    var beautyDefaultClickListener: OnClickListener? = null
+        set(value) {
+            field = value
+            viewBinding.tvDefault.setOnClickListener((value))
         }
 
     var beautyOpenIsActivated: Boolean? = null

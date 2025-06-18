@@ -36,7 +36,8 @@ object AppCacheManager {
     var isOpenGiftAudio by ConfigPref("roomGiftAudio", true)
 
     var agoraAppId by ConfigPref("agoraAppId","301729ee939d4470b6b60a795e9ccc22")
-
+    @JvmStatic
+    var beautyDefaultConfig by ConfigPref("beautyDefaultConfig","")
     @JvmStatic
     var beautyConfigCache by ConfigPref("beautyConfigCache","")
 

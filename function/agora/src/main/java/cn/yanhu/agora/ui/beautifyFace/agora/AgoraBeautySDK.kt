@@ -35,7 +35,21 @@ object AgoraBeautySDK {
 
     // 美颜配置
     lateinit var beautyConfig: BeautyConfig
-    var beautyConfigCache: BeautyConfigCache = BeautyConfigCache()
+    var beautyConfigCache: BeautyConfigCache = getDefaultConfig()
+
+    fun setDefaultConfig(context: Context) {
+        beautyConfigCache = getDefaultConfig()
+        AppCacheManager.beautyBg = ""
+        beautyConfig = BeautyConfig()
+        //  resetVirtualBackground(context)
+        beautyConfig.resume()
+    }
+
+    fun getDefaultConfig(): BeautyConfigCache {
+        return if (TextUtils.isEmpty(AppCacheManager.beautyDefaultConfig)) BeautyConfigCache() else GsonUtils.fromJson(
+            AppCacheManager.beautyDefaultConfig, BeautyConfigCache::class.java
+        )
+    }
 
     fun isInitBeautyConfig(): Boolean {
         return ::beautyConfig.isInitialized
@@ -71,7 +85,7 @@ object AgoraBeautySDK {
         }
         // The private parameter is not supported, use VideoFrameObserver#getMirrorApplied instead
         // rtcEngine.setParameters("{\"rtc.camera_capture_mirror_mode\":0}")
-        resetVirtualBackground(context)
+        //  resetVirtualBackground(context)
         beautyConfig.resume()
         return true
     }
@@ -291,9 +305,6 @@ object AgoraBeautySDK {
         // 滤镜
         var filterType = getFilerType()
             set(value) {
-                if (field == value) {
-                    return
-                }
                 beautyConfigCache.filterType = value.name
                 field = value
                 when (value) {
@@ -501,6 +512,17 @@ object AgoraBeautySDK {
                 rtcEngine?.setFaceShapeAreaOptions(areaOption)
             }
 
+        //v脸
+        var mandible = beautyConfigCache.mandible
+            set(value) {
+                faceShape = true
+                field = value
+                beautyConfigCache.mandible = value
+                val areaOption =
+                    FaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_MANDIBLE, value);
+                rtcEngine?.setFaceShapeAreaOptions(areaOption)
+            }
+
         // 美妆素材
         var makeupType = beautyConfigCache.makeupType
             set(value) {
@@ -526,7 +548,7 @@ object AgoraBeautySDK {
                         beautyConfig.makeupOption.mMakeUpEnable = true
                         beautyConfig.makeupOption.mBrowType = 2
                         beautyConfig.makeupOption.mBrowColor = 2
-                        beautyConfig.makeupOption.mLashType = 3
+                        beautyConfig.makeupOption.mLashType = 5
                         beautyConfig.makeupOption.mLashColor = 1
                         beautyConfig.makeupOption.mShadowType = 6
                         beautyConfig.makeupOption.mPupilType = 2
@@ -541,7 +563,7 @@ object AgoraBeautySDK {
                         beautyConfig.makeupOption.mMakeUpEnable = true
                         beautyConfig.makeupOption.mBrowType = 3 //眉毛
                         beautyConfig.makeupOption.mBrowColor = 2
-                        beautyConfig.makeupOption.mLashType = 3 //眼睫毛
+                        beautyConfig.makeupOption.mLashType = 5 //眼睫毛
                         beautyConfig.makeupOption.mLashColor = 1
                         beautyConfig.makeupOption.mShadowType = 6 //眼影
                         beautyConfig.makeupOption.mPupilType = 2
@@ -556,13 +578,14 @@ object AgoraBeautySDK {
                         beautyConfig.makeupOption.mMakeUpEnable = true
                         beautyConfig.makeupOption.mBrowType = 1 //眉毛
                         beautyConfig.makeupOption.mBrowColor = 2
-                        beautyConfig.makeupOption.mLashType = 3 //眼睫毛
-                        beautyConfig.makeupOption.mLashColor = 2
+                        beautyConfig.makeupOption.mLashType = 0 //眼睫毛
+                        beautyConfig.makeupOption.mLashColor = 0
                         beautyConfig.makeupOption.mShadowType = 0 //眼影
                         beautyConfig.makeupOption.mPupilType = 0
                         beautyConfig.makeupOption.mBlushType = 1 //腮红
                         beautyConfig.makeupOption.mBlushColor = 1
                         beautyConfig.makeupOption.mLipType = 3 //唇彩
+                        beautyConfig.makeupOption.mFacialType = 5
                         makeupOption.mLipColor = 3
                         enableMakeup(true)
                     }
@@ -571,7 +594,7 @@ object AgoraBeautySDK {
                         beautyConfig.makeupOption.mMakeUpEnable = true
                         beautyConfig.makeupOption.mBrowType = 2 //眉毛
                         beautyConfig.makeupOption.mBrowColor = 2
-                        beautyConfig.makeupOption.mLashType = 3 //眼睫毛
+                        beautyConfig.makeupOption.mLashType = 5 //眼睫毛
                         beautyConfig.makeupOption.mLashColor = 2
                         beautyConfig.makeupOption.mShadowType = 0 //眼影
                         beautyConfig.makeupOption.mPupilType = 0
@@ -667,6 +690,7 @@ object AgoraBeautySDK {
             shrinkCheekbone = shrinkCheekbone
             longNose = longNose
             narrowNose = narrowNose
+            mandible = mandible
             mouthSize = mouthSize
             shrinkJawbone = shrinkJawbone
             hairlineHeight = hairlineHeight

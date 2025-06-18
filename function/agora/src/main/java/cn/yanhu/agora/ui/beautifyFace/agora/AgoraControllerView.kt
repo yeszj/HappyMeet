@@ -11,6 +11,7 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import com.blankj.utilcode.util.GsonUtils
 import kotlin.compareTo
 import kotlin.text.toFloat
+import kotlin.text.toInt
 
 class AgoraControllerView : BaseControllerView {
 
@@ -21,6 +22,10 @@ class AgoraControllerView : BaseControllerView {
         attrs,
         defStyleAttr
     )
+
+    override fun resetPageList() {
+        pageList = onPageListCreate()
+    }
 
     override fun onPageListCreate(): List<PageInfo> {
 
@@ -146,6 +151,15 @@ class AgoraControllerView : BaseControllerView {
                         beautyConfig.narrowFace.toFloat(),
                         onValueChanged = { value ->
                             beautyConfig.narrowFace = value.toInt()
+                        },
+                        valueRange = 0f..100f
+                    ),
+                    ItemInfo(
+                        R.string.show_beauty_item_beauty_vFace,
+                        R.drawable.svg_narrow_face,
+                        beautyConfig.mandible.toFloat(),
+                        onValueChanged = { value ->
+                            beautyConfig.mandible = value.toInt()
                         },
                         valueRange = 0f..100f
                     ),
