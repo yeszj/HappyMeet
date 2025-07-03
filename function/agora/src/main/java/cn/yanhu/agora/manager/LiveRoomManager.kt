@@ -181,7 +181,7 @@ object LiveRoomManager {
                     )
                 ).build()
         DialogUtils.showConfirmDialog(
-            "申请专属私密约会",
+            "申请专属房",
             {
 
                 if (data.roomInfo.roomType == RoomListBean.TYPE_ROBOT_ROOM) {

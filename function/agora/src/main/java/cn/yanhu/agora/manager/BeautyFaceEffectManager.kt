@@ -26,6 +26,7 @@ import java.net.URL
  * 美颜贴脸特效文件管理
  */
 class BeautyFaceEffectManager {
+    var stickerDir = "sticker_face_shape"
     fun downloadBundle(downloadProgressListener: OnDownloadProgressListener) {
         val beautyCache = BeautyFaceEffectCacheManager.getBeautyCache()
         val beautyVersion = beautyCache?.version ?: 0
@@ -40,9 +41,15 @@ class BeautyFaceEffectManager {
                             this.hasNewVersion = true
                         }
                         if (beautyCache != null) {
-                            val destFile = getAssetsFile()
+                            val destFile = File(
+                                getAssetsFile(), stickerDir
+                            )
                             val length = FileUtils.getLength(destFile)
-                            if (hasNewVersion || length <= 0) {
+                            if (hasNewVersion || length <= 0 || length.toString() != beautyCache.fileMd5) {
+                                BeautyFaceEffectCacheManager.clearFaceEffectSdk()
+                                if (FileUtils.isFileExists(destFile)) {
+                                    FileUtils.delete(destFile)
+                                }
                                 downloadSdkInfo(downloadProgressListener)
                             }
                         } else {
@@ -69,8 +76,8 @@ class BeautyFaceEffectManager {
             InputParameter.Builder(
                 baseUrl,
                 relativeUrl,
-                "beautyBundle",
-                "faceEffect.zip"
+                stickerDir,
+                "${stickerDir}.zip"
             ).setCallbackOnUiThread(true).build(), object :
                 FileDownloadListener {
                 override fun onProgress(
@@ -90,15 +97,18 @@ class BeautyFaceEffectManager {
                     try {
                         val destFile = getAssetsFile()
                         val unzipFile = ZipUtils.unzipFile(file!!, destFile)
-                        if (unzipFile.size > 0) {
+                        if (unzipFile.isNotEmpty()) {
+                            val stickerFile = File(
+                                destFile, stickerDir
+                            )
                             var beautyCache = BeautyFaceEffectCacheManager.getBeautyCache()
                             if (beautyCache == null) {
                                 beautyCache = BeautyFileCacheInfo(
-                                    FileUtils.getLength(destFile).toString(),
+                                    FileUtils.getLength(stickerFile).toString(),
                                     version
                                 )
                             } else {
-                                beautyCache.fileMd5 = FileUtils.getLength(destFile).toString()
+                                beautyCache.fileMd5 = FileUtils.getLength(stickerFile).toString()
                                 beautyCache.version = version
                             }
                             BeautyFaceEffectCacheManager.saveBeautySdkInfo(beautyCache)

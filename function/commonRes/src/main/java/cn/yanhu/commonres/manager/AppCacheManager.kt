@@ -39,7 +39,7 @@ object AppCacheManager {
     @JvmStatic
     var beautyDefaultConfig by ConfigPref("beautyDefaultConfig","")
     @JvmStatic
-    var beautyConfigCache by ConfigPref("beautyConfigCache","")
+    var beautyConfigCache by ConfigPref("senseTimeBeautyConfigCache","")
 
     @JvmStatic
     var beautyBundleSize by ConfigPref("beautyBundleSize",0L)

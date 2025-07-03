@@ -115,6 +115,31 @@
             android:textSize="@dimen/sp_17"
             app:fontType="@string/fontBold"
             app:layout_constraintTop_toBottomOf="@+id/bg_code" />
+        <LinearLayout
+            android:id="@+id/connected_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dp_30"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+            <cn.yanhu.baselib.widget.FontWeightValueTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="联系客服"
+                android:textColor="@color/fontTextColor"
+                android:textSize="@dimen/sp_14" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:tint="@color/fontTextColor"
+                android:src="@drawable/ic_service_icon" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

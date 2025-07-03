@@ -76,13 +76,13 @@ class ImChatActivity : BaseActivity<ActivityImChatBinding, ImChatViewModel>(
         }
         val leftTop = intArrayOf(0, 0)
         //获取输入框当前的location位置
-        imChatFrg.chatFragment.customEaseChatPrimaryMenu!!.buttonSend.getLocationInWindow(leftTop)
+        imChatFrg.chatFragment.customEaseChatPrimaryMenu!!.buttonSend?.getLocationInWindow(leftTop)
         val left = leftTop[0]
         val top = leftTop[1]
         val bottom: Int =
-            top + imChatFrg.chatFragment.customEaseChatPrimaryMenu!!.buttonSend.getHeight()
+            top + imChatFrg.chatFragment.customEaseChatPrimaryMenu!!.buttonSend!!.height
         val right: Int =
-            left + imChatFrg.chatFragment.customEaseChatPrimaryMenu!!.buttonSend.getWidth()
+            left + imChatFrg.chatFragment.customEaseChatPrimaryMenu!!.buttonSend!!.width
         val x = event.x.toInt()
         val y = event.y.toInt()
         return if (x in (left + 1)..<right && y > top && y < bottom) {
@@ -120,8 +120,8 @@ class ImChatActivity : BaseActivity<ActivityImChatBinding, ImChatViewModel>(
             v.getLocationInWindow(leftTop)
             val left = leftTop[0]
             val top = leftTop[1]
-            val bottom = top + v.getHeight()
-            val right = left + v.getWidth()
+            val bottom = top + v.height
+            val right = left + v.width
             return if (event.x > left && event.x < right && event.y > top && event.y < bottom) {
                 // 点击的是输入框区域，保留点击EditText的事件
                 false

@@ -14,6 +14,7 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.SimpleTextWatcher
 import cn.yanhu.commonres.config.IntentKeyConfig
+import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
@@ -50,6 +51,9 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
         }
         mBinding.btnNext.setOnSingleClickListener {
             startPhoneLogin()
+        }
+        mBinding.connectedService.setOnSingleClickListener {
+            ApplicationProxy.instance.askCustomer()
         }
     }
 

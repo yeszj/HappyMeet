@@ -28,7 +28,7 @@ class AboutUsActivity : BaseActivity<ActivityAboutUsBinding, SystemViewModel>(
         setStatusBarStyle(false)
         val channel = ChannelUtils.getChannel()
         mBinding.tvVersion.text =
-            "${CommonUtils.getString(R.string.app_name)}v${AppUtils.getAppVersionName()}-${AppUtils.getAppVersionCode()}-${channel}"
+            "${CommonUtils.getString(R.string.app_name)}v${AppUtils.getAppVersionName()}-${channel}"
         mBinding.vgBeian.setOnSingleClickListener {
             PageIntentUtil.url2Page(mContext, WebUrlManager.URL_BEIAN)
         }
@@ -53,7 +53,7 @@ class AboutUsActivity : BaseActivity<ActivityAboutUsBinding, SystemViewModel>(
             title = "下载新版本",
             content = "修复已知bug",
             versionNum = "",
-            pageUrl = "https://thread.tcjhz.com/package/sweetlove/sweetlove.apk",
+            pageUrl = "https://thread.grecocount.com/package/sweetlove/sweetlove.apk",
             forceUpdates = 0
         )
         if (CommonUtils.isPopShow(appVersionUpdatePop)) {

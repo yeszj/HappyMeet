@@ -13,8 +13,8 @@ import androidx.fragment.app.FragmentActivity;
 import com.blankj.utilcode.util.ThreadUtils;
 
 
+import cn.happy.beautyface.ui.utils.BeautyManager;
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener;
-import cn.yanhu.agora.ui.beautifyFace.agora.AgoraBeautySDK;
 import cn.yanhu.commonres.manager.AppCacheManager;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.ClientRoleOptions;
@@ -75,7 +75,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         this.iRtcEngineEventHandlerListener = iRtcEngineEventHandlerListener;
     }
 
-    public void init(Activity baseContext, Integer userRole, View surfaceView,boolean isInit) {
+    public void init(Activity baseContext, Integer userRole, View surfaceView) {
         mRtcEngine = RtcEngineInit.INSTANCE.getMRtcEngine();
         if (mRtcEngine==null){
             RtcEngine.destroy();
@@ -100,15 +100,17 @@ public class AgoraManager implements IMediaExtensionObserver {
         // 根据实际情况，设置用户角色为 BROADCASTER 或 AUDIENCE
         mRtcEngine.setClientRole(userRole != 0 ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE);
         //BeautySetManager.getInstance().initExtension(mRtcEngine);
-        if (userRole == 1) {
-            // 开启本地视频预览。
-            mRtcEngine.startPreview();
-           // BeautySetManager.getInstance().enableBeauty(true);
-            mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+        BeautyManager.initialize(baseContext, mRtcEngine);
+        if (surfaceView != null) {
+            setupLocalVideo(surfaceView);
         }
-        AgoraBeautySDK.initBeautySDK(baseContext, mRtcEngine,isInit);
     }
-
+    private void setupLocalVideo(View surfaceView) {
+        mRtcEngine.startPreview();
+        // BeautySetManager.getInstance().enableBeauty(true);
+        BeautyManager.setupLocalVideo(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN);
+        // mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+    }
 
     public void writeRtcLog(String format, Object... value) {
         if (mRtcEngine != null) {
@@ -149,7 +151,7 @@ public class AgoraManager implements IMediaExtensionObserver {
     }
 
     public void preloadChannel(FragmentActivity context, String roomID, String token) {
-        init(context, 0, null,true);
+        init(context, 0, null);
         logcom("preloadChannel:" + roomID);
         currentRoomID = roomID;
         ThreadUtils.executeByIo(new ThreadUtils.SimpleTask<Integer>() {
@@ -223,12 +225,9 @@ public class AgoraManager implements IMediaExtensionObserver {
         if (mRtcEngine != null) {
             //判断哪个座位上麦，麦位是否有人，是否麦位上的人重新连接麦位,防止一个麦位同时存在多人
             if (isLocal) {
-                // 开启本地视频预览。
-                mRtcEngine.startPreview();
-               // BeautySetManager.getInstance().enableBeauty(true);
                 mRtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
-                setupLocalVideo(true);
-                mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+                setupLocalVideo(surfaceView);
+                enableLocalVideo(true);
                 publishPkVideo();
             } else {
                 mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
@@ -271,8 +270,8 @@ public class AgoraManager implements IMediaExtensionObserver {
         if (mRtcEngine != null) {
             if (isLocal) {
                 mRtcEngine.setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
-                setupLocalVideo(false);
-                mRtcEngine.setupLocalVideo(new VideoCanvas(null, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+                enableLocalVideo(false);
+                BeautyManager.setupLocalVideo(null, VideoCanvas.RENDER_MODE_HIDDEN);
                 cancelPublishPkVideo();
             } else {
                 mRtcEngine.setupRemoteVideo(new VideoCanvas(null, VideoCanvas.RENDER_MODE_HIDDEN, uid));
@@ -303,7 +302,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         }
     }
 
-    public void setupLocalVideo(boolean isOpen) {
+    public void enableLocalVideo(boolean isOpen) {
         if (mRtcEngine != null) {
             mRtcEngine.enableLocalVideo(isOpen);
         }
@@ -504,13 +503,11 @@ public class AgoraManager implements IMediaExtensionObserver {
         if (mRtcEngine != null) {
             removeHandler();
             setupLocalAudio(false);
-            setupLocalVideo(false);
+            enableLocalVideo(false);
             mRtcEngine.leaveChannel();
             mRtcEngine.stopPreview();
             mRtcEngine.disableVideo();
-            AgoraBeautySDK.unInitBeautySDK();
-            RtcEngine.destroy();
-            RtcEngineInit.INSTANCE.setMRtcEngine(null);
+            BeautyManager.INSTANCE.destroy();
         }
        // mRtcEngine = null;
         isInitSuccess = false;

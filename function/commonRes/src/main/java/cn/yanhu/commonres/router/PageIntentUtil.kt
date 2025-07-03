@@ -20,7 +20,7 @@ object PageIntentUtil {
 
     const val TYPE_CONTACT_UNION = "happyMeet/?page=1"
     const val PAGE_BLACK_LIST = "{clsPath:cn.huanyuan.sweetlove.ui.system.UserBlackListActivity}"
-    const val PAGE_BEAUTY_SET = "{clsPath:cn.yanhu.agora.ui.beautifyFace.agora.AgoraFaceBeautySetActivity}"
+    const val PAGE_BEAUTY_SET = "{clsPath:cn.yanhu.agora.ui.beautifyFace.sensetime.SenseTimeBeautySetActivity}"
     const val PAGE_PRICE_SET = "{clsPath:cn.huanyuan.sweetlove.ui.setting.ChatPriceSetActivity}"
     const val PAGE_SECURITY_CENTER =
         "{clsPath:cn.huanyuan.sweetlove.ui.system.SecurityCenterActivity}"

@@ -24,7 +24,9 @@ object BeautyCacheManager {
     }
 
     fun hasLoadBeautySdk():Boolean{
-        return true
+        return getBeautyCache()!=null
     }
-
+    fun clearBeautySdk(){
+        AppCacheManager.beautySdkInfo = ""
+    }
 }

@@ -136,6 +136,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import org.json.JSONObject
 import java.math.BigDecimal
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import cn.happy.beautyface.ui.utils.BeautyManager
+import cn.happy.beautyface.ui.utils.SenseTimeBeautySDK
+import cn.yanhu.agora.manager.BeautySDKManager
 
 
 /**
@@ -1149,7 +1154,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
 
     private fun showSwitchTypeConfirmDialog(roomId: Int, price: Int) {
-        val content = Spans.builder().text("红娘申请转为专属房间进行私密约\n")
+        val content = Spans.builder().text("主持申请转为专属房进行视频交友\n")
             .text("专属房间需消耗${price}玫瑰/分钟，是否同意？").color(
                 CommonUtils.getColor(
                     cn.yanhu.baselib.R.color.colorMain
@@ -1157,7 +1162,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             ).build()
 
         DialogUtils.showConfirmDialog(
-            "专属私密约会",
+            "专属房申请",
             {
                 mViewModel.switchTypeConfirm(
                     roomId.toString(),
@@ -1592,6 +1597,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
             override fun onError(code: Int, error: String) {
                 logcom("code=" + code + "error=" + error)
+                showToast(error)
             }
         })
         EMClient.getInstance().chatManager().sendMessage(message)
@@ -1648,10 +1654,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             faceEffectCountDown?.cancel()
             if (faceEffectInfo!=giftInfo.svga){
                 if(!TextUtils.isEmpty(faceEffectInfo)){
-                    BeautySetManager.getInstance().closeFaceEffect(faceEffectInfo)
+                    BeautyManager.setStickerItem(null)
                 }
                 faceEffectInfo = giftInfo.svga
-                BeautySetManager.getInstance().openFaceEffect(faceEffectInfo)
+                val stickerItem = SenseTimeBeautySDK.StickerItem(mContext,faceEffectInfo)
+                BeautyManager.setStickerItem(stickerItem)
             }
             startFaceEffectTime()
         }
@@ -1659,12 +1666,13 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     private var faceEffectCountDown:CoroutineScope?=null
     private var faceRestTime:Int = 0
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun startFaceEffectTime() {
         mContext.countDown(faceRestTime+30, start = {
             faceEffectCountDown = it
         }, end = {
             //倒计时结束
-            BeautySetManager.getInstance().closeFaceEffect(faceEffectInfo)
+            BeautyManager.setStickerItem(null)
             faceRestTime = 0
             faceEffectInfo = ""
             faceEffectCountDown = null
@@ -2060,12 +2068,12 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             val maxTop: Int = getMaxTopHeight()
             val minTop: Int = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20)
             if (isShow) {
-                if (mBinding.viewMask.visibility == View.INVISIBLE) {
+                if (mBinding.viewMask.isInvisible) {
                     mBinding.viewMask.visibility = View.VISIBLE
                     AnimManager.showMarginTopAnimator(mBinding.rvChat, maxTop, minTop, 300)
                 }
             } else {
-                if (mBinding.viewMask.visibility == View.VISIBLE) {
+                if (mBinding.viewMask.isVisible) {
                     mBinding.viewMask.visibility = View.INVISIBLE
                     AnimManager.showMarginTopAnimator(mBinding.rvChat, minTop, maxTop, 200)
                 } else {
@@ -2097,7 +2105,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
 
     private fun preJoinRoom(): Int {
-        AgoraManager.getInstance().init(mContext, 0, null,true)
+        AgoraManager.getInstance().init(mContext, 0, null)
         logcom(LiveRoomActivity.LIVE_ROOM_TAG, "加载房间---roomId${roomId}")
         //声网初始化
         AgoraManager.getInstance().setVideoEncoderConfiguration(250, 280)

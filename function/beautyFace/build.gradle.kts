@@ -47,7 +47,6 @@ android {
 
 dependencies {
     api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar","*.aar"))))
-    //noinspection GradleDependency
     implementation("androidx.core:core-ktx:${cfg["ktxVersion"]}")
     implementation("androidx.appcompat:appcompat:${cfg["appcompatVersion"]}")
     implementation("com.google.android.material:material:${cfg["materialVersion"]}")

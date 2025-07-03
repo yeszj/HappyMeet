@@ -29,4 +29,8 @@ object BeautyFaceEffectCacheManager {
         return getBeautyCache() !=null
     }
 
+    fun clearFaceEffectSdk(){
+        AppCacheManager.faceEffectSdkInfo = ""
+    }
+
 }

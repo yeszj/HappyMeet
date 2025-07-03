@@ -152,7 +152,8 @@ object DialogUtils {
         isAutoDismiss: Boolean = true,
         confirmBg: Int = R.drawable.shape_common_btn_r30,
         cancelBg: Int = R.drawable.shape_cancel_btn_r30,
-        context: Context = ActivityUtils.getTopActivity()
+        context: Context = ActivityUtils.getTopActivity(),
+        gravity: Int = Gravity.CENTER
     ): BasePopupView {
         val asConfirm = XPopup.Builder(context)
             .autoDismiss(isAutoDismiss)
@@ -170,6 +171,7 @@ object DialogUtils {
         if (!TextUtils.isEmpty(content)){
             TextFontStyleUtils.setTextFontStyle(asConfirm.titleTextView,context.getString(R.string.fontBold))
         }
+        asConfirm.contentTextView.gravity = gravity
         asConfirm.cancelTextView.setBackgroundResource(cancelBg)
         asConfirm.confirmTextView.setBackgroundResource(confirmBg)
         return asConfirm.show()

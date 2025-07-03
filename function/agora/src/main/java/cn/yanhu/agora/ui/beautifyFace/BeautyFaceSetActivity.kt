@@ -345,7 +345,7 @@ class BeautyFaceSetActivity : BaseActivity<ActivityBeautyFaceSetBinding, LiveRoo
 
         PermissionXUtils.checkBeautyPermission(mContext,object : PermissionXUtils.PermissionListener {
             override fun onSuccess() {
-                AgoraManager.getInstance().init(mContext, 1, mBinding.beautySetSf,true)
+                AgoraManager.getInstance().init(mContext, 1, mBinding.beautySetSf)
                 AgoraManager.getInstance().setVideoEncoderConfiguration(3840, 2160)
                 getSkinFilterList()
             }

@@ -12,7 +12,7 @@ import java.io.Serializable
  * desc:
  */
 open class UserDetailInfo : BaseUserInfo(), Serializable {
-    var isMatchmaker = false ////是否是月老/红娘
+    var isMatchmaker = false ////是否是月老/主持
     var banners: MutableList<BannerBean> = mutableListOf()
     var needUploadPortrait = false
     var needEditNickName = false

@@ -27,7 +27,7 @@
             app:titleRightIco="@drawable/icon_down_trangle"
             app:titleRightDrawableLeft="false"
             app:titleRightName="本月数据"
-            app:titleLeftName="红娘后台" />
+            app:titleLeftName="主持后台" />
 
         <cn.yanhu.baselib.refresh.MyRefreshLayout
             android:id="@+id/refresh"
@@ -60,7 +60,7 @@
                         android:drawablePadding="@dimen/dp_4"
                         android:gravity="center_vertical"
                         android:paddingHorizontal="@dimen/dp_10"
-                        android:text="红娘后台的数据非实时数据，存在一定时间延迟"
+                        android:text="主持后台的数据非实时数据，存在一定时间延迟"
                         android:textColor="#FF8C00"
                         android:textSize="@dimen/sp_14"
                         app:layout_constraintBottom_toBottomOf="@+id/viewTip"

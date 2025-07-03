@@ -8,7 +8,7 @@ import android.content.Context;
 import android.view.SurfaceView;
 
 
-import cn.yanhu.agora.ui.beautifyFace.agora.AgoraBeautySDK;
+import cn.happy.beautyface.ui.utils.BeautyManager;
 import cn.yanhu.commonres.bean.ChatCallResponseInfo;
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener;
 import io.agora.rtc2.ChannelMediaOptions;
@@ -96,7 +96,7 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
             setVideoEncoderConfiguration(720, 1280);
             mRtcEngine.enableVideo();
             // BeautySetManager.getInstance().initExtension(mRtcEngine);
-            AgoraBeautySDK.initBeautySDK(baseContext, mRtcEngine,true);
+            BeautyManager.initialize(baseContext, mRtcEngine);
         }
     }
 
@@ -127,7 +127,7 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
         logcom("视频用户信息:" + 0);
         // 开启本地视频预览。
         mRtcEngine.startPreview();
-        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+        BeautyManager.setupLocalVideo(surfaceView,VideoCanvas.RENDER_MODE_HIDDEN);
         // BeautySetManager.getInstance().enableBeauty(true);
 
     }
@@ -291,9 +291,7 @@ public class AgoraPhoneManager implements IMediaExtensionObserver {
             mRtcEngine.removeHandler(mRtcEventHandler);
             iRtcEngineEventHandlerListener = null;
             mRtcEngine.leaveChannel();
-            AgoraBeautySDK.unInitBeautySDK();
-            RtcEngine.destroy();
-            RtcEngineInit.INSTANCE.setMRtcEngine(null);
+            BeautyManager.INSTANCE.destroy();
         }
     }
 

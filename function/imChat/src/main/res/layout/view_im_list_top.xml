@@ -109,7 +109,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/im_system_msg_icon"
                 app:layout_constraintEnd_toStartOf="@+id/tv_unReadSystemMsg"
                 app:layout_constraintStart_toStartOf="@+id/im_system_msg_title"
-                tools:text="严禁红娘以承诺见面、交换微信、做女朋友等理由" />
+                tools:text="严禁主持以承诺见面、交换微信、做女朋友等理由" />
 
             <TextView
                 android:id="@+id/im_system_msg_time"

@@ -22,6 +22,7 @@ import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
+import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ActivityUtils

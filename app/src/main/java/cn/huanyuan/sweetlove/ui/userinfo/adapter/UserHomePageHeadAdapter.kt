@@ -1,7 +1,9 @@
 package cn.huanyuan.sweetlove.ui.userinfo.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -28,23 +30,27 @@ class UserHomePageHeadAdapter :
     BaseSingleItemAdapter<UserDetailInfo, UserHomePageHeadAdapter.VH>() {
     class VH(var binding: AdapterHomepageHeadBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onBindViewHolder(holder: VH, item: UserDetailInfo?) {
+    override fun onBindViewHolder(holder: VH, @SuppressLint("RecyclerView") item: UserDetailInfo?) {
         holder.binding.apply {
             userinfo = item?:return
             if (item.guardInfo==null){
                 ivGuardFrame.setImageResource(cn.yanhu.commonres.R.drawable.icon_no_guard)
             }else{
-                GlideUtils.loadAsDrawable(context, item.guardInfo!!.avatarFrame, object :
-                    CustomTarget<Drawable>() {
-                    override fun onResourceReady(
-                        resource: Drawable,
-                        transition: Transition<in Drawable>?
-                    ) {
-                        ivGuardFrame.setImageDrawable(resource)
-                    }
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-                })
+                if (TextUtils.isEmpty(item.guardInfo?.nickName)){
+                    ivGuardFrame.setImageResource(cn.yanhu.commonres.R.drawable.icon_no_guard)
+                }else{
+                    GlideUtils.loadAsDrawable(context, item.guardInfo!!.avatarFrame, object :
+                        CustomTarget<Drawable>() {
+                        override fun onResourceReady(
+                            resource: Drawable,
+                            transition: Transition<in Drawable>?
+                        ) {
+                            ivGuardFrame.setImageDrawable(resource)
+                        }
+                        override fun onLoadCleared(placeholder: Drawable?) {
+                        }
+                    })
+                }
             }
             ivGuardFrame.setOnSingleClickListener {
                 GuardRankActivity.lunch(context, item.userId)

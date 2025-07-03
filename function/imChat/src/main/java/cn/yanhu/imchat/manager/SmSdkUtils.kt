@@ -99,7 +99,7 @@ object SmSdkUtils {
                 super.onFail(code, msg)
                 onSmCheckResultListener.onCheckFail(code,msg)
             }
-        })
+        },isShowToast = false)
     }
 
     interface OnSmCheckResultListener {

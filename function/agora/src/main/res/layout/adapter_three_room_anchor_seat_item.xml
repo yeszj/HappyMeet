@@ -98,7 +98,7 @@
             android:text='@{roomInfo.privateRoom?"转为大厅":"转为专属"}'
             android:textColor="@color/whiteAlpha40"
             android:textSize="@dimen/sp_12"
-            android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="转为专属"

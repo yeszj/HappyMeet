@@ -1,1 +1,3 @@
 -keep class  cn.happy.beautyface.bean.** { *; }
+-keep class com.softsugar.stmobile.* { *;}
+-keep class com.softsugar.stmobile.model.* { *;}

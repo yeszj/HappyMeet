@@ -3,6 +3,7 @@ package cn.yanhu.agora.ui.liveRoom.create
 import android.Manifest
 import android.annotation.SuppressLint
 import android.text.TextUtils
+import android.view.Gravity
 import android.view.View
 import cn.yanhu.agora.R
 import cn.yanhu.agora.adapter.RoomTypeSelectAdapter
@@ -15,6 +16,7 @@ import cn.yanhu.agora.pop.BuyLiveTimePop
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.CustomClickSpan
@@ -190,12 +192,25 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
             "您拒绝授权相关权限，无法使用部分功能",
             object : PermissionXUtils.PermissionListener {
                 override fun onSuccess() {
-                    mViewModel.createRoom(createRoomRequest)
+                    showCreateRoomTip()
                 }
-
                 override fun onFail() {
                 }
             })
+    }
+
+    private fun showCreateRoomTip() {
+        DialogUtils.showConfirmDialog(
+            "直播规范提醒",
+            {
+                mViewModel.createRoom(createRoomRequest)
+            },
+            {
+            },
+            content = "1.杜绝涉黄内容（低俗衣着、语言暗示、色情动作等）\n2.禁止涉政敏感话题（不当言论、歪曲政策、恶意解读等）。\n3.内容合规性：未成年人不得出镜，不得传播虚假信息、暴力内容、封建迷信或诱导不良价值观的行为。",
+            cancel = "稍后再播",
+            "我已知晓", gravity = Gravity.START
+        )
     }
 
     private fun showBuyLiveTimePop() {

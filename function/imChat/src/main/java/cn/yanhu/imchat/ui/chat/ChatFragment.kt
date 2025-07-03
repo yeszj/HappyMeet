@@ -87,7 +87,9 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     @SuppressLint("NotifyDataSetChanged")
     fun setUserInfo(userInfo: UserDetailInfo?) {
         userDetailInfo = userInfo
-        customEaseChatPrimaryMenu?.setUserInfo(userInfo)
+        userInfo?.apply {
+            customEaseChatPrimaryMenu?.setUserInfo(this)
+        }
     }
 
     override fun initView() {
@@ -189,6 +191,10 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         }
     }
 
+    override fun onChatError(code: Int, errorMsg: String) {
+        showFailTips(errorMsg, code)
+    }
+
     private fun listener() {
         chatLayout.setSendMsgListener(this)
     }
@@ -197,7 +203,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
      * 设置布局样式
      * */
     private fun initLayout() {
-        customEaseChatPrimaryMenu = CustomEaseChatPrimaryMenu(context)
+        customEaseChatPrimaryMenu = CustomEaseChatPrimaryMenu(mContext)
         customEaseChatPrimaryMenu!!.registerMenuClickListener(this)
         chatLayout.chatInputMenu.setCustomPrimaryMenu(customEaseChatPrimaryMenu)
         // 获取到扩展功能控件
@@ -288,23 +294,6 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         } else { //发送文本
             val content = map["content"] as String?
             if (!TextUtils.isEmpty(content)) {
-//                val conversation =
-//                    EMClient.getInstance().chatManager().getConversation(conversationId)
-//                val lastMessage = conversation.lastMessage
-//                val startTime = getYestodyStr(-7, "yyyy-MM-dd")
- //               val timeMillis =
-  //                  TimeUtils.date2Millis(TimeUtils.string2Date(startTime, "yyyy-MM-dd"))
- //               val firstSend = isFirstSend
-//                if (isWoman() && content!!.length < 5 && (firstSend || lastMessage == null || lastMessage.msgTime < timeMillis || ImConversationMsgFilterManager.isLoveQianXianMsg(
-//                        lastMessage
-//                    ))
-//                ) {
-//                    //女性用户 首次发送/或者7天内没有聊天/或者回复的消息是缘分牵线不能少于5个字
-//                    ToastUtils.show("不能少于5个字")
-//                    customEaseChatPrimaryMenu!!.editText.setText(content)
-//                    customEaseChatPrimaryMenu!!.editText.setSelection(content.length)
-//                    return
-//                }
                 sendTxtMessage(content)
             }
         }
@@ -320,9 +309,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     }
 
     private fun sendEmoji(emjicon: EaseEmojicon) {
-        if (isWoman()) {
-            if (waitReplyTips()) return
-        }
+        if (waitReplyTips()) return
         val emMessage = EMMessage.createSendMessage(EMMessage.Type.CUSTOM)
         val body = EMCustomMessageBody(ChatConstant.MSG_CUSTOM_GIF_EMOJI)
         emMessage.body = body
@@ -456,7 +443,8 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         chatLayout.chatInputMenu.showEmojiconMenu(show)
     }
 
-    override fun onSendCustomEmoji(url: String) {
+
+    override fun onSendCustomEmoji(url: String?) {
         //发送
     }
 
@@ -472,7 +460,8 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         val sendUserInfo = UserDetailInfo()
         sendUserInfo.userId = conversationId
         sendUserInfo.roomId = conversationId.toInt()
-        sendGiftPop = SendGiftPop.showDialog(mContext as FragmentActivity,
+        sendGiftPop = SendGiftPop.showDialog(
+            mContext as FragmentActivity,
             sendUserInfo, SendGiftRequest.SOURCE_CHAT, 0,
             object : SendGiftPop.OnSendGiftListener {
                 override fun onSendGift(item: GiftInfo) {
@@ -489,11 +478,12 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         showRechargeListDialog()
     }
 
-    private var onAddFriendTipsListener:OnAddFriendTipsListener?=null
-     fun setAddFriendListener(onAddFriendTipsListener: OnAddFriendTipsListener){
+    private var onAddFriendTipsListener: OnAddFriendTipsListener? = null
+    fun setAddFriendListener(onAddFriendTipsListener: OnAddFriendTipsListener) {
         this.onAddFriendTipsListener = onAddFriendTipsListener
     }
-     interface OnAddFriendTipsListener{
+
+    interface OnAddFriendTipsListener {
         fun onAddFriend()
     }
 
@@ -507,7 +497,8 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     private fun checkVoicePermission() {
         val permissions = ArrayList<String>()
         permissions.add(Manifest.permission.RECORD_AUDIO)
-        checkPermission(this,
+        checkPermission(
+            this,
             permissions,
             "${AppUtils.getAppName()}想访问您的麦克风权限，用于提供语音相关的功能或服务",
             "您拒绝授权麦克风权限，无法使用语音相关的功能或服务",
@@ -633,6 +624,9 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         super.addMsgAttrsBeforeSend(message)
         val myUserInfo = getSelfUserInfo()
         message.setAttribute(ChatConstant.CUSTOM_SEND_USER_INFO, GsonUtils.toJson(myUserInfo))
+        val head = ApplicationProxy.instance.getHead()
+        message.setAttribute(ChatConstant.DEVICE_INFO, GsonUtils.toJson(head))
+
     }
 
     /*
@@ -651,6 +645,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         }
         sendVideoOrImageMsg(type, localMedia)
     }
+
     fun isVideo(var0: String?): Boolean {
         return var0?.startsWith("video") ?: false
     }
@@ -689,14 +684,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
      */
     private fun smCheckBeforeSend(message: EMMessage, source: Int, content: String?) {
         //消息先保存到本地 聊天列表中则可暂时显示发送中的样式
-//        if (isWoman()) {
-//            val replyQianXianCount = chatLayout.chatMessageListLayout.replyQianXianCount
-//            if (replyQianXianCount == 0 && source == SmSdkUtils.SOURCE_TXT && content!!.length < 5 && message.type == EMMessage.Type.TXT) {
-//                ToastUtils.show("不能少于5个字")
-//                return
-//            }
-//            if (waitReplyTips()) return
-//        }
+        if (waitReplyTips()) return
         saveMsgToLocal(message)
         startSendCheck(message, source, content!!)
     }
@@ -708,7 +696,12 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                 lastMessage
             )
         ) {
-            if (chatLayout.chatMessageListLayout.replyQianXianCount >= 3) {
+//            if (chatLayout.chatMessageListLayout.replyQianXianCount >= 3) {
+//                ToastUtils.show("请等待对方回复")
+//                return true
+//            }
+            if (chatLayout.chatMessageListLayout.replyCount >= 3 && userDetailInfo?.isFriend == false) {
+                //非好友主动发消息，最多连续3条
                 ToastUtils.show("请等待对方回复")
                 return true
             }
@@ -732,7 +725,8 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         sendCheck("0", type, object : CallBackListener {
             override fun onSuccess() {
                 //满足发送消息条件
-                SmSdkUtils.smCheckBeforeSend(content,
+                SmSdkUtils.smCheckBeforeSend(
+                    content,
                     conversationId,
                     SmSdkUtils.TYPE_MESSAGE,
                     source,

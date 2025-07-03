@@ -128,11 +128,21 @@ class ThreeRoomSeatAdapter :
                 payloads: List<Any>
             ) {
                 if (payloads.isNotEmpty()) {
-                    holder.binding.apply {
-                        this.roomInfo = roomDetailInfo
-                        bindWishInfo()
-                        setApplyInfo()
+                    if ( payloads[0] is String){
+                        val switch = payloads[0]
+                        if (switch == "0"){
+                            holder.binding.tvSwitch.visibility = View.INVISIBLE
+                        }else{
+                            holder.binding.tvSwitch.visibility = View.VISIBLE
+                        }
+                    }else{
+                        holder.binding.apply {
+                            this.roomInfo = roomDetailInfo
+                            bindWishInfo()
+                            setApplyInfo()
+                        }
                     }
+
                 }
             }
 
@@ -144,6 +154,7 @@ class ThreeRoomSeatAdapter :
 
                     anchorSeatInfo.seatInfo = item
                     this.isOwner = owner
+
                     this.roomInfo = roomDetailInfo
                     val tag = anchorSeatInfo.itemVideoSf.tag
                     if (tag == null || tag !is SurfaceView) {

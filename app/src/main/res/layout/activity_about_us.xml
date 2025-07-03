@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_60"
             android:paddingHorizontal="@dimen/dp_30"
-            android:text="暖遇交友平台是专注于婚恋交友的正规婚恋服务平台，致力于营造一个安全、真实、互相尊重的社交环境，让每一位用户都能在这里找到属于自己的幸福。"
+            android:text="@string/app_introduction"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_14" />
 

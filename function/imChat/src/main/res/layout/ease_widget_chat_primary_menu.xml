@@ -220,16 +220,16 @@
                 android:id="@+id/btn_more"
                 android:layout_width="@dimen/ease_chat_primary_menu_more_icon_size"
                 android:layout_height="@dimen/ease_chat_primary_menu_more_icon_size"
-                android:layout_marginRight="@dimen/ease_chat_primary_margin_right"
                 android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/ease_chat_primary_margin_right"
                 android:background="@drawable/ease_type_select_btn"
                 android:button="@null"
                 android:visibility="gone" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
 
                 <Button
                     android:id="@+id/btn_send"
@@ -260,20 +260,29 @@
             <ImageView
                 android:id="@+id/im_extend_emoji"
                 android:layout_width="0dp"
-                android:paddingTop="@dimen/dp_10"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:paddingTop="@dimen/dp_10"
                 android:src="@drawable/svg_icon_emoji" />
 
             <ImageView
                 android:id="@+id/im_extend_photo"
                 android:layout_width="0dp"
-                android:paddingTop="@dimen/dp_10"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:paddingTop="@dimen/dp_10"
                 android:src="@drawable/svg_icon_photo" />
 
+            <ImageView
+                android:id="@+id/im_extend_recharge"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="@dimen/dp_10"
+                android:src="@drawable/icon_chat_recharge" />
+
             <RelativeLayout
+                android:id="@+id/vg_videoChat"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -281,15 +290,15 @@
                 <ImageView
                     android:id="@+id/im_extend_phone"
                     android:layout_width="match_parent"
-                    android:paddingTop="@dimen/dp_10"
                     android:layout_height="match_parent"
+                    android:paddingTop="@dimen/dp_10"
                     android:src="@drawable/svg_icon_phone" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_freeTag"
                     android:layout_width="@dimen/dp_38"
-                    android:layout_centerHorizontal="true"
                     android:layout_height="@dimen/dp_14"
+                    android:layout_centerHorizontal="true"
                     android:visibility="invisible"
                     tools:visibility="visible" />
             </RelativeLayout>
@@ -298,18 +307,10 @@
             <ImageView
                 android:id="@+id/im_extend_gift"
                 android:layout_width="0dp"
-                android:paddingTop="@dimen/dp_10"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:paddingTop="@dimen/dp_10"
                 android:src="@drawable/icon_chat_gift" />
-
-            <ImageView
-                android:id="@+id/im_extend_recharge"
-                android:layout_width="0dp"
-                android:paddingTop="@dimen/dp_10"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/icon_chat_recharge" />
 
 
         </LinearLayout>

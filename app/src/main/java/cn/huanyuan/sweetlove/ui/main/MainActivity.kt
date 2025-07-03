@@ -10,6 +10,7 @@ import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
+import cn.happy.beautyface.ui.utils.BeautyConfigManager
 import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.AppStartResponse
@@ -32,7 +33,6 @@ import cn.yanhu.agora.manager.BeautySDKManager
 import cn.yanhu.agora.manager.RtcEngineInit
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
-import cn.yanhu.agora.ui.beautifyFace.agora.BeautyConfigManager
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
@@ -96,7 +96,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         AppManager.setAppState(
             AppManager.STATE_FOREGROUND, PermissionX.areNotificationsEnabled(mContext)
         )
-        //downloadBeautySdk()
+        downloadBeautySdk()
         downloadAgoraSdk()
         getRechargeInfo()
         getGiftInfo()
@@ -215,10 +215,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     sdkDownloadProgress
                 )
             }
-//        LiveEventBus.get<Boolean>(EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS)
-//            .observe(this) {
-//               // showDownloadBeautySdkProgressPop(beautySdkDownloadProgress)
-//            }
+        LiveEventBus.get<Boolean>(EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS)
+            .observe(this) {
+                showDownloadBeautySdkProgressPop(beautySdkDownloadProgress)
+            }
         LiveEventBus.get<Int>(EventBusKeyConfig.UNREAD_COUNT).observe(this) {
             val tabMsgPosition = getTabMsgPosition()
             val bottomItem = mBinding.tabLayout.getBottomItem(tabMsgPosition)

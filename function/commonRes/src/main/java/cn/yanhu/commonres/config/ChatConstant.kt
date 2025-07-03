@@ -22,6 +22,8 @@ object ChatConstant {
 
     const val MSG_CUSTOM_GIF_EMOJI = "msg_custom_gif_emoji" //自定义动态表情消息
     const val CUSTOM_SEND_USER_INFO = "send_user_info"
+    const val DEVICE_INFO = "deviceInfo"
+
     const val MSG_INVITE_SEND_GIFT = "msg_invite_send_gift" //女方邀请对方赠送礼物成为好友消息
     const val CUSTOM_SEND_ATYPE = "sendType"
 

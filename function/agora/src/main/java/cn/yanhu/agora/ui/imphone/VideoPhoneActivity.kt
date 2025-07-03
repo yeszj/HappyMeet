@@ -20,9 +20,9 @@ import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.AgoraPhoneManager
 import cn.yanhu.agora.manager.LiveRoomManager
-import cn.yanhu.agora.miniwindow.MiniWindowManager
 import cn.yanhu.agora.manager.PermissionManager
 import cn.yanhu.agora.miniwindow.EaseCallFloatWindow
+import cn.yanhu.agora.miniwindow.MiniWindowManager
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.utils.DateUtils
@@ -52,6 +52,7 @@ import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.utils.TextUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.hyphenate.chat.EMMessage
 import com.hyphenate.exceptions.HyphenateException
 import com.jeremyliao.liveeventbus.LiveEventBus
@@ -476,7 +477,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         if (isLocal == floatView!!.isLocal) {
             floatView?.isShowVideo(isClose)
         } else {
-            mBinding.callToVideoSf.visibility = if (isClose) View.INVISIBLE else View.VISIBLE
+          //  mBinding.callToVideoSf.visibility = if (isClose) View.INVISIBLE else View.VISIBLE
             mBinding.toBgPreload.visibility = if (isClose) View.VISIBLE else View.GONE
             mBinding.callToUserPortrait.visibility = if (isClose) View.VISIBLE else View.GONE
         }
@@ -578,11 +579,15 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
                 }
                 showSelfVideoView()
                 isCallUserConnect = true
-                mBinding.vgWaiting.visibility = View.INVISIBLE
                 startCallTime()
+                mBinding.callToVideoSf.setVisibility(View.INVISIBLE)
                 AgoraPhoneManager.getInstance().setupRemoteVideo(
                     chatUserId, mBinding.callToVideoSf
                 )
+                ThreadUtils.getMainHandler().postDelayed(Runnable {
+                    mBinding.vgWaiting.visibility = View.INVISIBLE
+                    mBinding.callToVideoSf.setVisibility(View.VISIBLE)
+                }, 2000)
             } else if (type == AgoraPhoneManager.TO_USER_OFFLINE_QUIT) { //用户结束了通话
                 if (!isFinish) {
                     isFinish = true

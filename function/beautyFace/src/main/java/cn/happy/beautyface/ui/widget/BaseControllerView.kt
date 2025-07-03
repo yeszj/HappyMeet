@@ -1,6 +1,8 @@
 package cn.happy.beautyface.ui.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.happy.beautyface.databinding.ShowWidgetBeautyBaseLayoutBinding
 import cn.happy.beautyface.databinding.ShowWidgetBeautyDialogItemBinding
 import cn.happy.beautyface.databinding.ShowWidgetBeautyDialogPageBinding
-import cn.yanhu.commonres.view.svg.GlideApp
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -22,6 +24,7 @@ import com.zj.dimens.R
 import kotlin.getValue
 
 open class BaseControllerView : FrameLayout {
+
 
     class PAGE_VH(
         parent: ViewGroup,
@@ -62,11 +65,12 @@ open class BaseControllerView : FrameLayout {
             }
         }
     }
-    open fun resetPageList(){}
 
     val viewBinding by lazy {
         ShowWidgetBeautyBaseLayoutBinding.inflate(LayoutInflater.from(context))
     }
+
+    open fun resetPageList() {}
 
     var pageList = listOf<PageInfo>()
         set(value) {
@@ -174,12 +178,22 @@ open class BaseControllerView : FrameLayout {
                 holder.binding.ivIcon.setImageDrawable(null)
 
                 holder.binding.ivIcon.isActivated = itemInfo.isSelected
-                GlideApp.with(holder.binding.ivIcon)
-                    .load(itemInfo.icon)
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(holder.binding.ivIcon)
+                if (TextUtils.isEmpty(itemInfo.iconPath)){
+                    Glide.with(holder.binding.ivIcon)
+                        .load(itemInfo.icon)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(holder.binding.ivIcon)
+                }else{
+                    Glide.with(holder.binding.ivIcon)
+                        .load(itemInfo.iconPath)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(holder.binding.ivIcon)
+                }
+
                 if (itemInfo.withPadding) {
                     val padding =
                         holder.binding.ivIcon.context.resources.getDimensionPixelSize(R.dimen.dp_8)
@@ -189,7 +203,11 @@ open class BaseControllerView : FrameLayout {
                         holder.binding.ivIcon.context.resources.getDimensionPixelSize(R.dimen.dp_1)
                     holder.binding.ivIcon.setPadding(padding, padding, padding, padding)
                 }
-                holder.binding.tvName.setText(itemInfo.name)
+                if (TextUtils.isEmpty(itemInfo.name)) {
+                    holder.binding.tvName.setText(itemInfo.nameId)
+                } else {
+                    holder.binding.tvName.text = itemInfo.name
+                }
                 if (itemInfo.isSelected) {
                     selectedHolder = holder
                     if (pageList[pageIndex].isSelected) {
@@ -222,6 +240,7 @@ open class BaseControllerView : FrameLayout {
 
     protected open fun onPageListCreate() = listOf<PageInfo>()
 
+    @SuppressLint("DefaultLocale")
     protected open fun onSelectedChanged(pageIndex: Int, itemIndex: Int) {
         val pageInfo = pageList[pageIndex]
         val itemInfo = pageInfo.itemList[itemIndex]
@@ -275,12 +294,15 @@ open class BaseControllerView : FrameLayout {
     )
 
     data class ItemInfo(
-        @StringRes val name: Int,
+        @StringRes val nameId: Int,
         @DrawableRes val icon: Int,
         var value: Float = 0.0f,
         val onValueChanged: (value: Float) -> Unit,
         var isSelected: Boolean = false,
         var withPadding: Boolean = true,
-        val valueRange: ClosedFloatingPointRange<Float> = 0.0f..1.0f
+        val valueRange: ClosedFloatingPointRange<Float> = 0.0f..1.0f,
+        var iconPath: String? = "",
+        var filterModel: String? = "",
+        val name: String = "",
     )
 }

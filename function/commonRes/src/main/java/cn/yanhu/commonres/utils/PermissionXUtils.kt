@@ -182,7 +182,6 @@ object PermissionXUtils {
     fun checkBeautyPermission(mContext: FragmentActivity,permissionListener: PermissionListener){
         val permissions = ArrayList<String>()
         permissions.add(Manifest.permission.CAMERA)
-        permissions.add(Manifest.permission.RECORD_AUDIO)
         checkPermission(mContext,
             permissions,
             "${AppUtils.getAppName()}想访问您的以下权限，用于美颜设置",

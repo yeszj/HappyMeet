@@ -15,6 +15,7 @@ import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.Spans
+import cn.yanhu.commonres.api.commonRxApi
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
@@ -30,6 +31,7 @@ import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
 import com.blankj.utilcode.util.VibrateUtils
+import com.chad.library.adapter4.BaseMultiItemAdapter
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager
 import com.hyphenate.chat.EMMessage
@@ -58,7 +60,16 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
             mBinding.vgAutoSeat.visibility = View.INVISIBLE
         }
 
+    }
 
+    private fun checkExclusiveSwitch() {
+        request({ commonRxApi.getConfigInfo("exclusive_room_switch") },
+            object : OnRequestResultListener<String> {
+                override fun onSuccess(data: BaseBean<String>) {
+                    val switch = data.data ?: return
+                    seatUserAdapter.notifyItemChanged(0, switch)
+                }
+            })
     }
 
     private var roomWishListPop:RoomWishListPop?=null
@@ -196,6 +207,9 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
             topTitleBinding.tvGroupMember.visibility = View.INVISIBLE
             topTitleBinding.tvJoinGroup.visibility = View.VISIBLE
         }
+        if (isOwner){
+            checkExclusiveSwitch()
+        }
     }
 
     private val childItemClickListener =
@@ -299,8 +313,9 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
 
     private fun showSwitchRoomTypePop() {
         val content = Spans.builder()
-            .text(if (roomSourceBean.isPrivateRoom()) "确定要转为大厅直播吗？" else "转为专属房间后只保留麦上的男女嘉宾，确认要转换吗？\n\n")
-            .text(if (roomSourceBean.isPrivateRoom()) "" else "温馨提示：专属房间需要付费，男嘉宾同意后才可转换成功")
+            .text(if (roomSourceBean.isPrivateRoom()) "确定要转为大厅直播吗？" else "转为专属房间后只保留麦上的男女嘉宾，确认要转换吗？\n\n").size(
+                CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_14))
+            .text(if (roomSourceBean.isPrivateRoom()) "" else "专属房需付费，男嘉宾同意才可转换，房间内禁止涉黄、涉政等违规行为").size(CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_13))
             .color(
                 CommonUtils.getColor(
                     R.color.colorMain

@@ -3,9 +3,19 @@
     <string name="show_beauty_group_beauty">美颜</string>
     <string name="show_beauty_item_none">无</string>
     <string name="show_beauty_item_beauty_smooth">磨皮</string>
+    <string name="show_beauty_item_beauty_skin_smooth">身体磨皮</string>
     <string name="show_beauty_item_beauty_whiten">美白</string>
     <string name="show_beauty_item_beauty_overall">瘦脸</string>
+    <string name="show_beauty_item_beauty_small_face">小脸</string>
     <string name="show_beauty_item_beauty_narrowFace">窄脸</string>
+    <string name="show_beauty_item_beauty_circle_eye">圆眼</string>
+    <string name="show_beauty_item_beauty_round_face">圆脸瘦脸</string>
+    <string name="show_beauty_item_beauty_long_face">长脸瘦脸</string>
+    <string name="show_beauty_item_beauty_lady_face">女神瘦脸</string>
+    <string name="show_beauty_item_beauty_natural_face">自然瘦脸</string>
+    <string name="show_beauty_item_beauty_thine_face">瘦脸型</string>
+
+
     <string name="show_beauty_item_beauty_vFace">V脸</string>
     <string name="show_beauty_item_beauty_facelength">长脸</string>
     <string name="show_beauty_item_beauty_headsscale">小头</string>
@@ -13,7 +23,15 @@
     <string name="show_beauty_item_beauty_cheekbone">瘦颧骨</string>
     <string name="show_beauty_item_beauty_eye">大眼</string>
     <string name="show_beauty_item_beauty_nose">瘦鼻</string>
+    <string name="show_beauty_item_beauty_nose_tip">瘦鼻头</string>
+    <string name="show_beauty_item_beauty_nose_long">长鼻</string>
+    <string name="show_beauty_item_beauty_open_canthus">开眼角</string>
+    <string name="show_beauty_item_beauty_open_external_canthus">开外眼角</string>
+
+
     <string name="show_beauty_item_beauty_chin">下巴</string>
+    <string name="show_beauty_item_beauty_vChin">V下巴</string>
+
     <string name="show_beauty_item_beauty_jawbone">下颌骨</string>
     <string name="show_beauty_item_beauty_forehead">额头</string>
     <string name="show_beauty_item_beauty_mouth">嘴型</string>
@@ -60,6 +78,7 @@
     <string name="show_beauty_item_virtual_bg_blur">虚化</string>
     <string name="show_beauty_item_virtual_bg_mitao">蜜桃</string>
     <string name="show_beauty_group_face_shape">美形</string>
+    <string name="show_beauty_group_face_little_shape">微整形</string>
 
     <string name="show_beauty_item_effect_diadiatu">嗲嗲兔</string>
     <string name="show_beauty_item_beauty_fajixian">发际线</string>

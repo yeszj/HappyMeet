@@ -36,9 +36,15 @@ class BeautySDKManager {
                     configSdkVersion?.apply {
                         val beautyCache = BeautyCacheManager.getBeautyCache()
                         if (beautyCache != null) {
-                            val destFile = getAssetsFile()
+                            val destFile = File(
+                                getAssetsFile(), "beauty_sensetime"
+                            )
                             val length = FileUtils.getLength(destFile)
-                            if ( hasNewVersion|| length<=0) {
+                            if (hasNewVersion || length <= 0 || length.toString() != beautyCache.fileMd5) {
+                                BeautyCacheManager.clearBeautySdk()
+                                if (FileUtils.isFileExists(destFile)) {
+                                    FileUtils.delete(destFile)
+                                }
                                 downloadSdkInfo(downloadProgressListener)
                             }
                         } else {
@@ -65,8 +71,8 @@ class BeautySDKManager {
             InputParameter.Builder(
                 baseUrl,
                 relativeUrl,
-                "beautyBundle",
-                "assets.zip"
+                "beauty_sensetime",
+                "beauty_sensetime.zip"
             ).setCallbackOnUiThread(true).build(), object :
                 FileDownloadListener {
                 override fun onProgress(
@@ -90,12 +96,18 @@ class BeautySDKManager {
 //                            FileUtils.delete(destFile)
 //                        }
                         val unzipFile = ZipUtils.unzipFile(file!!, destFile)
-                        if (unzipFile.size > 0) {
+                        if (unzipFile.isNotEmpty()) {
+                            val beautyFile = File(
+                                destFile, "beauty_sensetime"
+                            )
                             var beautyCache = BeautyCacheManager.getBeautyCache()
                             if (beautyCache == null) {
-                                beautyCache = BeautyFileCacheInfo(FileUtils.getLength(destFile).toString(),version)
+                                beautyCache = BeautyFileCacheInfo(
+                                    FileUtils.getLength(beautyFile).toString(),
+                                    version
+                                )
                             } else {
-                                beautyCache.fileMd5 =  FileUtils.getLength(destFile).toString()
+                                beautyCache.fileMd5 = FileUtils.getLength(beautyFile).toString()
                                 beautyCache.version = version
                             }
                             BeautyCacheManager.saveBeautySdkInfo(beautyCache)

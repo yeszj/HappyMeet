@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/title_bar" />
 
-        <cn.yanhu.agora.ui.beautifyFace.agora.AgoraControllerView
+        <cn.happy.beautyface.ui.widget.SenseTimeControllerView
             android:id="@+id/controllerContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
