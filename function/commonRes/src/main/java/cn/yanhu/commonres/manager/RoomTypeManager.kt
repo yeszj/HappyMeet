@@ -21,4 +21,5 @@ object RoomTypeManager {
         return roomType == RoomListBean.TYPE_SEVEN_ANGLE || roomType == RoomListBean.TYPE_SEVEN_FRIEND
     }
 
+
 }

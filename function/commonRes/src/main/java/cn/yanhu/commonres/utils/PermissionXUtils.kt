@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import cn.yanhu.baselib.pop.CommonPermissionPop
 import cn.yanhu.baselib.pop.CommonPermissionPop.Companion.showDialog
+import cn.yanhu.commonres.pop.SystemAlertPermission2Dialog
 import cn.yanhu.commonres.pop.SystemAlertPermissionDialog
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
@@ -140,6 +141,34 @@ object PermissionXUtils {
                 } else {
                     permissionListener.onFail()
                     ToastUtils.show("您拒绝授权权限，将无法体验部分功能")
+                }
+            }
+    }
+
+
+
+    fun checkAlertPermission2(
+        fragmentActivity: FragmentActivity?,
+        tips: String,
+        permissionListener: OnAlertPermissionListener
+    ) {
+        PermissionX.init(fragmentActivity!!)
+            .permissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
+            .explainReasonBeforeRequest()
+            .onExplainRequestReason { scope: ExplainScope, _: List<String?>? ->
+                val systemAlertPermissionDialog = SystemAlertPermission2Dialog(
+                    fragmentActivity,tips, object : SystemAlertPermission2Dialog.OnClickCloseListener {
+                        override fun onClose() {
+                            permissionListener.onClose()
+                        }
+                    })
+                scope.showRequestReasonDialog(systemAlertPermissionDialog)
+            }
+            .request { allGranted: Boolean, _: List<String>, _: List<String> ->
+                if (allGranted) {
+                    permissionListener.onSuccess()
+                } else {
+                    permissionListener.onFail()
                 }
             }
     }

@@ -1,8 +1,11 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
 }
+val cfg = rootProject.ext
 
 android {
     namespace = "cn.yanhu.baselib"
@@ -37,18 +40,17 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.core:core-ktx:${cfg["ktxVersion"]}")
+    implementation("androidx.appcompat:appcompat:${cfg["appcompatVersion"]}")
+    implementation("com.google.android.material:material:${cfg["materialVersion"]}")
     api(project(mapOf("path" to ":netRequest")))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    api("com.kingja.loadsir:loadsir:${rootProject.ext.get("loadsir")}")
+    api("com.kingja.loadsir:loadsir:${cfg.get("loadsir")}")
     api("com.github.yyued:SVGAPlayer-Android:2.6.1")
     api(project(mapOf("path" to ":dimens")))
-    val smartRefreshVersion = rootProject.ext.get("smartRefresh")
+    val smartRefreshVersion = cfg.get("smartRefresh")
     //https://github.com/scwang90/SmartRefreshLayout
     api("io.github.scwang90:refresh-layout-kernel:${smartRefreshVersion}")      //核心必须依赖
     // api("io.github.scwang90:refresh-header-classics:${smartRefreshVersion}")    //经典刷新头
@@ -69,20 +71,27 @@ dependencies {
     api("com.github.lihangleo2:ShadowLayout:3.4.0")
 
     //https://gitcode.com/youth5201314/banner/overview
-    api("io.github.youth5201314:banner:2.2.2")
+    api("io.github.youth5201314:banner:2.2.3"){
+        exclude("androidx.viewpager2","viewpager2")
+    }
 
     //https://github.com/hackware1993/MagicIndicator/tree/1.7.0
-    api("com.github.hackware1993:MagicIndicator:1.7.0")
+    api("com.github.hackware1993:MagicIndicator:1.7.0"){
+        exclude("androidx.viewpager2","viewpager2")
+    }
 
     //https://github.com/chaychan/BottomBarLayout
-    api("com.github.chaychan:BottomBarLayout:3.0.0")
+    api("com.github.chaychan:BottomBarLayout:3.0.0"){
+        exclude("androidx.viewpager2","viewpager2")
+    }
+    api ("androidx.viewpager2:viewpager2:1.1.0")
 
     api("com.guolindev.permissionx:permissionx:1.8.1")
 
-    api("io.github.lucksiege:pictureselector:v3.11.2")
+    api("io.github.lucksiege:pictureselector:v3.11.3")
     // 图片压缩 (按需引入)
-    implementation("io.github.lucksiege:compress:v3.11.1")
-    api("io.github.lucksiege:ucrop:v3.11.1")
+    implementation("io.github.lucksiege:compress:v3.11.3")
+    api("io.github.lucksiege:ucrop:v3.11.3")
 
     api("androidx.core:core-splashscreen:1.1.0-alpha02")
     api("com.github.getActivity:ToastUtils:10.5")
@@ -91,7 +100,7 @@ dependencies {
     api("com.makeramen:roundedimageview:2.3.0")
 
 
-    api("pl.droidsonroids.gif:android-gif-drawable:1.2.27")
+    api("pl.droidsonroids.gif:android-gif-drawable:1.2.29")
 
     api("io.github.jeremyliao:live-event-bus-x:1.8.0")
 

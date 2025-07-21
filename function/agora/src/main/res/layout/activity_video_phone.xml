@@ -57,6 +57,7 @@
             android:id="@+id/to_bg_preload"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            imageUrl="@{chatUserInfo.portrait}"
             android:scaleType="centerCrop" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -296,35 +297,37 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/call_gift"
-            android:layout_width="@dimen/dp_48"
-            android:layout_height="@dimen/dp_48"
-            android:layout_marginStart="@dimen/dp_20"
+        <LinearLayout
+            android:id="@+id/vg_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_30"
-            android:src="@drawable/svg_call_gift"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/call_finish" />
-
-        <ImageView
-            android:id="@+id/call_video"
-            android:layout_width="@dimen/dp_48"
-            android:layout_height="@dimen/dp_48"
-            android:layout_marginEnd="@dimen/dp_20"
-            android:layout_marginBottom="@dimen/dp_30"
-            android:src="@drawable/svg_call_switch"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/call_finish" />
-
-        <ImageView
-            android:id="@+id/call_finish"
-            android:layout_width="@dimen/dp_48"
-            android:layout_height="@dimen/dp_48"
-            android:layout_marginBottom="@dimen/dp_30"
-            android:src="@drawable/svg_phone_hangup"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+
+
+            <ImageView
+                android:id="@+id/call_video"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:layout_marginEnd="@dimen/dp_20"
+                android:src="@drawable/svg_call_switch" />
+
+            <ImageView
+                android:id="@+id/call_finish"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:src="@drawable/svg_phone_hangup" />
+            <ImageView
+                android:id="@+id/call_gift"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:layout_marginStart="@dimen/dp_20"
+                android:src="@drawable/svg_call_gift" />
+        </LinearLayout>
+
 
         <com.opensource.svgaplayer.SVGAImageView
             android:id="@+id/call_svga_view"
@@ -357,7 +360,7 @@
             android:layout_marginStart="@dimen/dp_10"
             android:layout_marginBottom="@dimen/dp_20"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/call_gift" />
+            app:layout_constraintBottom_toTopOf="@+id/vg_bottom" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vg_waiting"

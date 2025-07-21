@@ -65,6 +65,7 @@ public class AgoraManager implements IMediaExtensionObserver {
 
     public static boolean isLiveRoom = false;
     public static boolean isVideoCall = false;
+    public static int callType = 1;
 
     public RtcEngineEx mRtcEngine;
     public boolean isInitSuccess = false;

@@ -120,7 +120,7 @@ class InviteMainActivity : BaseActivity<ActivityInviteMainBinding, InviteViewMod
         val inviteUrl = mBinding.inviteInfo!!.inviteUrl
         val contentShare = ContentShare(mContext)
         contentShare.setShareContent(
-            "给你介绍一个对象，快速脱单！", inviteContent, inviteUrl
+            "你的好友邀请你来一起视频交友", inviteContent, inviteUrl
         )
         contentShare.shareToWeiXin()
     }

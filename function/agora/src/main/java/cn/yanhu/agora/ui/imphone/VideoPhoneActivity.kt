@@ -12,6 +12,9 @@ import android.os.Message
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.WindowManager
 import cn.yanhu.agora.R
 import cn.yanhu.agora.bean.CheckCallBalanceRes
@@ -32,6 +35,7 @@ import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.api.commonRxApi
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.GiftSendModel
@@ -49,7 +53,10 @@ import cn.yanhu.imchat.manager.ChatCallStatusConfig
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.yanhu.imchat.pop.SendGiftPop
 import cn.zj.netrequest.application.ApplicationProxy
+import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.parseState
+import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.status.BaseBean
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.utils.TextUtils
 import com.blankj.utilcode.util.ThreadUtils
@@ -59,14 +66,17 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.pcl.sdklib.listener.OnPayResultListener
 import com.pcl.sdklib.manager.PayManager
 import io.agora.rtc2.IRtcEngineEventHandler
+import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
+import androidx.core.view.isVisible
 
 /**
  * @author: zhengjun
  * created: 2024/10/14
  * desc:
  */
+@Suppress("DEPRECATION")
 @Route(path = RouterPath.ROUTER_VIDEO_PHONE)
 class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewModel>(
     R.layout.activity_video_phone, ImPhoneViewModel::class.java
@@ -113,6 +123,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
     override fun initData() {
         try {
             AgoraManager.isLiveRoom = true
+            AgoraManager.callType = 4
             setFullScreenStatusBar(false)
             setTitleMarginTop(mBinding.topCl)
             callInfo = intent.getSerializableExtra(IntentKeyConfig.DATA) as ChatCallResponseInfo
@@ -125,14 +136,31 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
             mBinding.chatUserInfo = chatUser
             AgoraPhoneManager.getInstance().userInfo = callInfo
             getCallInfo()
-
+            checkGiftSwitch()
         } catch (e: Exception) {
             showToast("视频通话初始化异常，请重试")
+            e.printStackTrace()
             leave()
         }
         //设置圆角
         ViewUtils.setViewCorner(mBinding.callToVideoSf, 40)
 
+    }
+
+    private fun checkGiftSwitch() {
+        request(
+            { commonRxApi.getConfigInfo("phone_call_gift_switch") },
+            object : OnRequestResultListener<String> {
+                override fun onSuccess(data: BaseBean<String>) {
+                    val result = data.data ?: return
+                    if (result == "0") {
+                        mBinding.callGift.visibility = VISIBLE
+                    } else {
+                        mBinding.callGift.visibility = GONE
+                    }
+                }
+
+            })
     }
 
     override fun initListener() {
@@ -156,7 +184,8 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         mBinding.callGift.setOnSingleClickListener {
             val sendUserInfo = UserDetailInfo()
             sendUserInfo.userId = chatUserId.toString()
-            SendGiftPop.showDialog(mContext,
+            SendGiftPop.showDialog(
+                mContext,
                 sendUserInfo,
                 SendGiftRequest.SOURCE_CALL,
                 callInfo!!.id,
@@ -251,7 +280,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         val remainTime = mBinding.remainTime!!
         if (remainTime > 0) {
             mBinding.remainTime = remainTime - 1
-        } else if (mBinding.remainTimer.visibility == View.VISIBLE) {
+        } else if (mBinding.remainTimer.isVisible) {
             showUserInfo()
         }
     }
@@ -260,8 +289,8 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         val freeTime = mBinding.freeTime!!
         if (freeTime > 0) {
             mBinding.freeTime = freeTime - 1
-        } else if (mBinding.freeTimer.visibility == View.VISIBLE) {
-            mBinding.freeTimer.visibility = View.GONE
+        } else if (mBinding.freeTimer.isVisible) {
+            mBinding.freeTimer.visibility = GONE
         }
     }
 
@@ -318,8 +347,8 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
 
     //判断是否授权必要权限
     private fun isRequestPermission() {
-        PermissionManager.checkVideoPermission(mContext,
-            object : PermissionXUtils.PermissionListener {
+        PermissionManager.checkVideoPermission(
+            mContext, object : PermissionXUtils.PermissionListener {
                 override fun onSuccess() {
                     sdkInit()
                 }
@@ -405,6 +434,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
                 leave()
             }
         } catch (e: java.lang.Exception) {
+            e.printStackTrace()
             showToast("通话异常终止")
             leave()
         }
@@ -458,7 +488,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         PayManager.registerPayResult(mContext, object : OnPayResultListener {
             override fun onPaySuccess() {
                 checkCallBalanceRes?.ifBalanceEnough = true
-                if (mBinding.remainTimer.visibility == View.VISIBLE) {
+                if (mBinding.remainTimer.isVisible) {
                     mBinding.remainTime = 0
                     showUserInfo()
                 }
@@ -477,7 +507,6 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         if (isLocal == floatView!!.isLocal) {
             floatView?.isShowVideo(isClose)
         } else {
-          //  mBinding.callToVideoSf.visibility = if (isClose) View.INVISIBLE else View.VISIBLE
             mBinding.toBgPreload.visibility = if (isClose) View.VISIBLE else View.GONE
             mBinding.callToUserPortrait.visibility = if (isClose) View.VISIBLE else View.GONE
         }
@@ -549,7 +578,8 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
             return
         }
         val second = (timer * 0.001).toInt()
-        mViewModel.finishCall(java.lang.String.valueOf(callInfo!!.chatUser.id),
+        mViewModel.finishCall(
+            java.lang.String.valueOf(callInfo!!.chatUser.id),
             "0",
             if (isCallUserConnect) "4" else "5",
             callInfo!!.uid,
@@ -621,11 +651,11 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
     }
 
     private fun startCallTime() {
-        mBinding.tvTime.visibility = View.VISIBLE
+        mBinding.tvTime.visibility = VISIBLE
         //注册通话计时器，开始计时通话时长
         mBinding.timer = "00:00:00"
         callTimer = Timer()
-        callTimer?.scheduleAtFixedRate(object : TimerTask() {
+        callTimer?.schedule(object : TimerTask() {
             override fun run() {
                 if (!isFinishing) {
                     val obtain = Message.obtain()
@@ -653,7 +683,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
                     chatUserId, mBinding.callToVideoSf
                 )
                 floatView?.updataView(this@VideoPhoneActivity, callInfo!!.user, true)
-                isShowVideo(false,callInfo!!.chatUser.colseVideo)
+                isShowVideo(false, callInfo!!.chatUser.colseVideo)
                 bgBlur(callInfo!!.chatUser.portrait)
             }
         }
@@ -664,8 +694,8 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
      * 背景模糊
      * */
     private fun bgBlur(portrait: String) {
-
-        GlideUtils.loadBlurTransPic(mContext, portrait, imageView = mBinding.callToUserPortrait)
+        GlideUtils.loadImage(mContext, portrait, imageView = mBinding.callToUserPortrait)
+        GlideUtils.loadBlurTransPic(mContext, portrait, imageView = mBinding.toBgPreload)
     }
 
     /*
@@ -704,13 +734,11 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
 
 
     //获取悬浮窗权限
-    private fun showFloatWindow() {
+    private fun showFloatWindow(type: Int = 1) {
         PermissionXUtils.checkAlertPermission(
-            this,
-            "关闭房间",
-            object : PermissionXUtils.OnAlertPermissionListener {
+            this, "关闭房间", object : PermissionXUtils.OnAlertPermissionListener {
                 override fun onSuccess() {
-                    doShowFloatWindow()
+                    doShowFloatWindow(type)
                 }
 
                 override fun onFail() {}
@@ -719,14 +747,16 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
             })
     }
 
-    private fun doShowFloatWindow() {
+    private fun doShowFloatWindow(type: Int) {
         if (isDestroyed || callInfo == null) {
             return
         }
         val chatUser = callInfo!!.chatUser
         EaseCallFloatWindow.getInstance().initFloatWindow(applicationContext, 1)
         EaseCallFloatWindow.getInstance().show(chatUser.id.toInt())
-        MiniWindowManager.switchLiveToMiniFloat(mContext)
+        if (type != 2) {
+            MiniWindowManager.switchLiveToMiniFloat(mContext)
+        }
     }
 
     private fun closeFloatWidow() {
@@ -783,8 +813,10 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         super.onStop()
         var isFloatPermission = true
         isFloatPermission = Settings.canDrawOverlays(this)
-        if (!isFinish && isFloatPermission) {
-            showFloatWindow()
+        if (!isFinish) {
+            if (isFloatPermission) {
+                showFloatWindow(2)
+            }
         } else {
             AgoraManager.isLiveRoom = false
             AgoraManager.isVideoCall = false
@@ -797,6 +829,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         logcom("onDestroy：通话结束")
         AgoraManager.isVideoCall = false
         AgoraManager.isLiveRoom = false
+        giftAnimTaskManager.clear()
         if (AgoraPhoneManager.getInstance().isInit) {
             AgoraPhoneManager.getInstance().onDestroy()
         }

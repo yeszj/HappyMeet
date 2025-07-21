@@ -59,7 +59,9 @@ abstract class BaseQueueTask : IQueueTask {
         TaskQueueManagerImpl.currRunningTask = null
         Log.d(TaskQueueManagerImpl.TAG, "tryToHandlerTask finish，removeTask -> ${getTaskName()}")
         TaskQueueManager.removeTask(this)
-        TaskQueueManagerImpl.cacheTaskNameList.remove(getTaskName())
+        if (TaskQueueManagerImpl.cacheTaskNameList.isNotEmpty()){
+            TaskQueueManagerImpl.cacheTaskNameList.remove(getTaskName())
+        }
         deferred?.add(1)
         deferred = null
     }

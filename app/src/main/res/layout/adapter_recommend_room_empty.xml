@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <cn.yanhu.baselib.view.CustomFontTextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_168"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/dp_12"
+        android:textColor="@color/color_888888"
+        android:textSize="@dimen/sp_12"
+        tools:text="暂无好友在线..." />
+</layout>

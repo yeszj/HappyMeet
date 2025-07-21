@@ -10,8 +10,10 @@ import cn.huanyuan.sweetlove.bean.ErrorLogInfo
 import cn.huanyuan.sweetlove.bean.GuardRankResponse
 import cn.huanyuan.sweetlove.bean.InviteInfo
 import cn.huanyuan.sweetlove.bean.InviteRecordResponse
+import cn.huanyuan.sweetlove.bean.LiveFloatInfo
 import cn.huanyuan.sweetlove.bean.NewYearInfo
 import cn.huanyuan.sweetlove.bean.NewYearRankResponse
+import cn.huanyuan.sweetlove.bean.RecommendRoomResponse
 import cn.huanyuan.sweetlove.bean.RedPacketRewardInfo
 import cn.huanyuan.sweetlove.bean.SecurityInfo
 import cn.huanyuan.sweetlove.bean.SwitchConfigInfo
@@ -42,6 +44,7 @@ import cn.yanhu.commonres.bean.response.RoseRechargeResponse
 import cn.yanhu.commonres.bean.response.SameCityUserResponse
 import cn.yanhu.commonres.bean.response.SeenMeHistoryResponse
 import cn.yanhu.commonres.bean.response.WithdrawResponse
+import cn.yanhu.imchat.bean.SystemMsgUnReadInfo
 import cn.zj.netrequest.status.BaseBean
 import com.pcl.sdklib.bean.CheckFaceAuthResult
 import com.pcl.sdklib.bean.FaceAuthInfo
@@ -381,4 +384,12 @@ interface ApiService : CommonApiService {
 
     @POST("app/v1/exception/report")
     suspend fun uploadLog(@Body logInfo: ErrorLogInfo): BaseBean<String>
+
+
+    @GET("app/v1/home/floating")
+    suspend fun getRecommendLiveFloating(): BaseBean<LiveFloatInfo>
+
+
+    @GET("app/v1/home/getRecommendIndex")
+    suspend fun getRecommendRoom(): BaseBean<RecommendRoomResponse>
 }

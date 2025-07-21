@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+
+
     <application>
         <activity
             android:name=".ui.liveRoom.create.CreateLiveRoomActivity"
@@ -68,5 +70,6 @@
             android:configChanges="orientation|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
+
     </application>
 </manifest>

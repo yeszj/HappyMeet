@@ -19,8 +19,8 @@ android {
         applicationId = "cn.huanyuan.sweetlove"
         minSdk = cfg["minSdkVersion"] as Int
         targetSdk = cfg["targetSdkVersion"] as Int
-        versionCode = 21
-        versionName = "1.2.0"
+        versionCode = 23
+        versionName = "1.2.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
@@ -108,7 +108,11 @@ android {
         }
     }
 }
-
+configurations.configureEach {
+    resolutionStrategy {
+        force("androidx.viewpager2:viewpager2:1.1.0")
+    }
+}
 dependencies {
     api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
     implementation("androidx.core:core-ktx:${cfg["ktxVersion"]}")

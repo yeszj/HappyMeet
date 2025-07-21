@@ -2,6 +2,8 @@ package cn.yanhu.agora.ui.liveRoom.live
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.adapter.liveRoom.ThreeRoomSeatAdapter
 import cn.yanhu.agora.api.agoraRxApi
@@ -35,6 +37,7 @@ import com.chad.library.adapter4.BaseMultiItemAdapter
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager
 import com.hyphenate.chat.EMMessage
+import org.json.JSONObject
 
 /**
  * @author: zhengjun
@@ -207,6 +210,11 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
             topTitleBinding.tvGroupMember.visibility = View.INVISIBLE
             topTitleBinding.tvJoinGroup.visibility = View.VISIBLE
         }
+        if (roomSourceBean.isPrivateRoom()){
+            checkGiftSwitch()
+        }else{
+            mBinding.ivSendGift.visibility = View.VISIBLE
+        }
         if (isOwner){
             checkExclusiveSwitch()
         }
@@ -346,6 +354,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         EmMsgManager.sendCmdMessageToChatRoom(
                             roomSourceBean.uid, "", ChatConstant.ACTION_MSG_SWITCH_TYPE_PLAZA
                         )
+                        mBinding.ivSendGift.visibility = VISIBLE
                         showToast("房间已切换为大厅")
                     } else {
                         showToast("已发送消息至男嘉宾，男嘉宾同意后可转至专属房间")
@@ -354,4 +363,19 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
             })
     }
 
+    private fun checkGiftSwitch() {
+        request(
+            { commonRxApi.getConfigInfo("private_room_gift_switch") },
+            object : OnRequestResultListener<String> {
+                override fun onSuccess(data: BaseBean<String>) {
+                    val result = data.data ?: return
+                    if (result == "0") {
+                        mBinding.ivSendGift.visibility = VISIBLE
+                    } else {
+                        mBinding.ivSendGift.visibility = GONE
+                    }
+                }
+
+            })
+    }
 }

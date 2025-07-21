@@ -80,6 +80,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
 
     override fun onDestroyView() {
         super.onDestroyView()
+        giftAnimTaskManager.clear()
         clearAnimView()
     }
 

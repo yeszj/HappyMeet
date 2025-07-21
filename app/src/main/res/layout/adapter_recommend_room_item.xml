@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="cn.yanhu.commonres.manager.ImageThumbUtils"/>
+        <variable
+            name="userInfo"
+            type="cn.yanhu.commonres.bean.UserDetailInfo" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dp_12">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            app:riv_oval="true"
+            imageUrl="@{ImageThumbUtils.getThumbUrl(userInfo.portrait)}"
+            android:src="@drawable/ease_default_avatar" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="@dimen/dp_10"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_14"
+            android:text="@{userInfo.nickName}"
+            app:fontType="@string/fontBold"
+            tools:text="找个真心的人" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:background="@{userInfo.publicRoom?@drawable/bg_blinding_tag:(userInfo.privateRoom?@drawable/bg_private_tag:  @drawable/bg_friends_tag)}"
+            tools:background="@drawable/bg_private_tag"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_6" >
+
+        <com.opensource.svgaplayer.SVGAImageView
+            android:id="@+id/svga_loading"
+            android:layout_width="@dimen/dp_14"
+            android:layout_height="@dimen/dp_14"
+            app:autoPlay="true"
+            app:loopCount="-1"
+            app:source="play_white.svga" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fontType="@string/fontMedium"
+            tools:text="专属交友中"
+            android:text="@{userInfo.recommendRoomDesc}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

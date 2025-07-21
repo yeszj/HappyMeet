@@ -220,6 +220,11 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
                     getData()
                 }
             }
+
+            override fun onFail(code: Int?, msg: String?) {
+                super.onFail(code, msg)
+                DialogUtils.dismissLoading()
+            }
         })
     }
 
@@ -243,6 +248,7 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
                 }
 
                 override fun onUploadFail(msg: String) {
+                    DialogUtils.dismissLoading()
                     showToast(msg)
                 }
             })
@@ -379,15 +385,21 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
     }
 
 
+    private var bannerImageAdapter: MyBannerImageAdapter?=null
     private fun bindBanner(list: MutableList<BannerBean>) {
-        mBinding.banner.addBannerLifecycleObserver(this)
-        mBinding.banner.setAdapter(MyBannerImageAdapter(mBinding.banner, list))
-      //  mBinding.banner.indicator = CircleIndicator(context)
-        mBinding.banner.setOnBannerListener(object : OnBannerListener<BannerBean> {
-            override fun OnBannerClick(data: BannerBean, position: Int) {
-                PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)
-            }
-        })
+        if (bannerImageAdapter==null){
+            mBinding.banner.addBannerLifecycleObserver(this)
+            bannerImageAdapter = MyBannerImageAdapter(mBinding.banner, list)
+            mBinding.banner.setAdapter(bannerImageAdapter)
+            mBinding.banner.setOnBannerListener(object : OnBannerListener<BannerBean> {
+                override fun OnBannerClick(data: BannerBean, position: Int) {
+                    PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)
+                }
+            })
+        }else{
+            bannerImageAdapter?.setDatas(list)
+        }
+
     }
 
 

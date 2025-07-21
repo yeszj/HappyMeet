@@ -12,9 +12,11 @@ import cn.yanhu.agora.databinding.AdapterChatRoomMsgNoticeItemBinding
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgTxtItemBinding
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgWelcomeItemBinding
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.widget.spans.Spans
 import com.blankj.utilcode.util.GsonUtils
 import com.chad.library.adapter4.BaseMultiItemAdapter
+import com.zj.dimens.R
 
 /**
  * @author: zhengjun
@@ -47,7 +49,8 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
     ) : RecyclerView.ViewHolder(binding.root)
 
     init {
-        addItemType(ChatRoomMsgInfo.ITEM_NEW_ADD_TYPE,
+        addItemType(
+            ChatRoomMsgInfo.ITEM_NEW_ADD_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH6> {
                 override fun onBind(holder: VH6, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.tvNotice.text = "此版本暂不支持此消息"
@@ -61,7 +64,8 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
                     return VH6(binding)
                 }
             })
-        addItemType(ChatRoomMsgInfo.ITEM_WELCOME_TYPE,
+        addItemType(
+            ChatRoomMsgInfo.ITEM_WELCOME_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH5> {
                 override fun onBind(holder: VH5, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.apply {
@@ -82,7 +86,8 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
                     return true
                 }
             })
-        addItemType(ChatRoomMsgInfo.ITEM_GIFT_TYPE,
+        addItemType(
+            ChatRoomMsgInfo.ITEM_GIFT_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH4> {
                 override fun onBind(holder: VH4, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.apply {
@@ -107,14 +112,15 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
                 }
             })
 
-        addItemType(ChatRoomMsgInfo.ITEM_EMOJI_TYPE,
+        addItemType(
+            ChatRoomMsgInfo.ITEM_EMOJI_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH3> {
                 override fun onBind(holder: VH3, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.apply {
                         try {
                             itemLiveRoomMsgEmoji.setAnimationFromUrl(item?.content)
                             itemLiveRoomMsgEmoji.playAnimation()
-                        }catch (e:Exception){
+                        } catch (e: Exception) {
                             e.printStackTrace()
                         }
                         userInfo = item?.sendUserInfo
@@ -136,9 +142,17 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
                 }
             })
 
-        addItemType(ChatRoomMsgInfo.ITEM_SYSTEM_TYPE,
+        addItemType(
+            ChatRoomMsgInfo.ITEM_SYSTEM_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH> {
                 override fun onBind(holder: VH, position: Int, item: ChatRoomMsgInfo?) {
+                    if (position == 0) {
+                        ViewUtils.setMarginTop(
+                            holder.binding.vgNotice, CommonUtils.getDimension(R.dimen.dp_10)
+                        )
+                    } else {
+                        ViewUtils.setMarginTop(holder.binding.vgNotice, 0)
+                    }
                     holder.binding.tvNotice.text = item?.content
                 }
 
@@ -150,7 +164,8 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
                     return VH(binding)
                 }
             })
-        addItemType(ChatRoomMsgInfo.ITEM_DEFAULT_TYPE,
+        addItemType(
+            ChatRoomMsgInfo.ITEM_DEFAULT_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH2> {
                 override fun onBind(holder: VH2, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.apply {

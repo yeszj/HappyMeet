@@ -218,4 +218,9 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
             cancelBg = cn.yanhu.baselib.R.drawable.shape_cancel_btn_r30
         )
     }
+
+    override fun exactDestroy() {
+        super.exactDestroy()
+        giftAnimTaskManager.clear()
+    }
 }

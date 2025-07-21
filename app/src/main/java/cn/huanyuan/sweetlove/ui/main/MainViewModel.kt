@@ -2,6 +2,7 @@ package cn.huanyuan.sweetlove.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import cn.huanyuan.sweetlove.bean.AppVersionInfo
+import cn.huanyuan.sweetlove.bean.LiveFloatInfo
 import cn.huanyuan.sweetlove.bean.TabEntity
 import cn.huanyuan.sweetlove.bean.WalletInfo
 import cn.huanyuan.sweetlove.net.rxApi
@@ -65,5 +66,9 @@ class MainViewModel : BaseViewModel() {
      val requestFriendObservable = MutableLiveData<ResultState<FriendsResponse>>()
     fun getRequestList(page:Int) {
         request({ rxApi.getRequestList(page) }, requestFriendObservable, false)
+    }
+
+    fun getRecommendLiveFloating(onRequestResultListener: OnRequestResultListener<LiveFloatInfo>) {
+        request({ rxApi.getRecommendLiveFloating() }, onRequestResultListener,isShowToast = false)
     }
 }

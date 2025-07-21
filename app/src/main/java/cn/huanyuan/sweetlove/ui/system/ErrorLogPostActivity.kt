@@ -9,6 +9,7 @@ import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.ErrorLogInfo
 import cn.huanyuan.sweetlove.databinding.ActivityErrorLogPostBinding
 import cn.huanyuan.sweetlove.func.dialog.ErrorLogTimeSelectPop
+import cn.huanyuan.sweetlove.func.manager.AppLogManager
 import cn.huanyuan.sweetlove.ui.system.adapter.ErrorTypeAdapter
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
@@ -114,6 +115,7 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
                 DialogUtils.dismissLoading()
             }
         })
+        AppLogManager.uploadLog()
     }
 
     private fun uploadLog(url: String?) {

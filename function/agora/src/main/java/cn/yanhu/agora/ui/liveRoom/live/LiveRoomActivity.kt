@@ -7,6 +7,7 @@ import cn.yanhu.agora.databinding.ActivityLiveRoomBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.base.BaseActivity
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.zj.netrequest.OnRoomLeaveListener
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomListBean
@@ -53,6 +54,7 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
             addFragment(upgradeTipFrg)
         }
         setFullScreenStatusBar(true)
+        AgoraManager.callType = 1
         AgoraManager.isLiveRoom = true
     }
 
@@ -85,6 +87,12 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
         liveRoomFrg?.exitRoom()
         AgoraManager.isLiveRoom = false
     }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        logComToFile(LIVE_ROOM_TAG, "roomId="+liveRoomFrg?.roomId+"-----手机内存不足")
+    }
+
 
     fun roomLeave(onRoomLeaveListener: OnRoomLeaveListener) {
         liveRoomFrg?.roomLeave(onRoomLeaveListener)

@@ -14,7 +14,6 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/tab_layout" />
 
-
         <com.chaychan.library.BottomBarLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
@@ -28,5 +27,55 @@
             app:textColorNormal="@color/color_666666"
             app:textColorSelected="@color/colorMain"
             app:unreadTextColor="@color/white" />
+
+        <cn.yanhu.baselib.widget.DragConstraintLayout
+            android:id="@+id/vg_liveFloat"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_48"
+            android:layout_above="@+id/tab_layout"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/dp_80"
+            android:background="@drawable/bg_gradient_live_float"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <com.youth.banner.Banner
+                android:id="@+id/live_banner"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_36"
+                app:banner_auto_loop="true"
+                app:banner_orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_8"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/live_banner"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="与你匹配的"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_floatLiveCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:text="20人正在直播"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_11" />
+            </LinearLayout>
+        </cn.yanhu.baselib.widget.DragConstraintLayout>
+
+
     </RelativeLayout>
 </layout>

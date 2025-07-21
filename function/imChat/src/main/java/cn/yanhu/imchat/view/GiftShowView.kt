@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.response.GiftResponse
@@ -62,6 +63,10 @@ class GiftShowView : LinearLayout {
                 giftInfo = data.data
                 removeRandomBoxGift()
                 setGiftInfo()
+            }
+
+            override fun onFail(code: Int?, msg: String?) {
+                super.onFail(code, msg)
             }
         })
     }

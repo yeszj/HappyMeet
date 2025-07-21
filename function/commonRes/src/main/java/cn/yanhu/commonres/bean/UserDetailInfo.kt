@@ -42,12 +42,14 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
             field = value
             notifyPropertyChanged(BR.ifMute)
         }
+
     @Bindable
     var roomAdmin: Boolean = false //true:房间管理员 false:非管理员
         set(value) {
             field = value
             notifyPropertyChanged(BR.roomAdmin)
         }
+
     fun hideChatBtn(): Boolean {
         return userId == AppCacheManager.userId || (sameSex && gender == 1)
     }
@@ -68,7 +70,7 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
         return myGuardedInfo == null || myGuardedInfo?.isIfHide == false || (myGuardedInfo?.userId == AppCacheManager.userId || AppCacheManager.userId == userId)
     }
 
-    fun isSelf():Boolean{
+    fun isSelf(): Boolean {
         return userId == AppCacheManager.userId
     }
 
@@ -78,15 +80,16 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
             field = value
             notifyPropertyChanged(BR.roseNum)
         }
+
     @Bindable
-    var diffRoseNum:Int = 0
+    var diffRoseNum: Int = 0
         set(value) {
             field = value
             notifyPropertyChanged(BR._all)
         }
 
     @Bindable
-    var songStatus:Int = 0 //0:默认 1:即将演唱 2:插队
+    var songStatus: Int = 0 //0:默认 1:即将演唱 2:插队
         set(value) {
             field = value
             notifyPropertyChanged(BR._all)
@@ -99,6 +102,28 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
             "专属中"
         } else {
             "交友中"
+        }
+    }
+
+    fun getRecommendRoomDesc(): String {
+        return if (isPublicRoom()) {
+            "视频交友中"
+        } else if (isPrivateRoom()) {
+            "专属交友中"
+        } else if (roomType == RoomListBean.TYPE_SEVEN_FRIEND) {
+            "七人交友中"
+        } else if (roomType == RoomListBean.TYPE_SEVEN_ANGLE) {
+            "七人天使中"
+        } else if (roomType == RoomListBean.TYPE_SEVEN_SONG) {
+            "七人K歌中"
+        } else if (roomType == RoomListBean.TYPE_NINE_FRIEND) {
+            "九人交友中"
+        } else if (roomType == RoomListBean.TYPE_NINE_ANGLE) {
+            "九人天使中"
+        } else if (roomType == RoomListBean.TYPE_NINE_SONG) {
+            "九人K歌中"
+        } else {
+            "视频交友中"
         }
     }
 

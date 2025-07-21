@@ -34,7 +34,6 @@ import cn.yanhu.agora.databinding.FrgBaseLiveRoomBinding
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener
 import cn.yanhu.agora.listener.OnSendSeatInviteListener
 import cn.yanhu.agora.manager.AgoraManager
-import cn.yanhu.agora.manager.BeautySetManager
 import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.agora.manager.dbCache.InviteRecordCacheManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
@@ -140,7 +139,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import cn.happy.beautyface.ui.utils.BeautyManager
 import cn.happy.beautyface.ui.utils.SenseTimeBeautySDK
-import cn.yanhu.agora.manager.BeautySDKManager
+import cn.yanhu.baselib.utils.ext.logComToFile
 
 
 /**
@@ -152,7 +151,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     R.layout.frg_base_live_room, LiveRoomViewModel::class.java
 ), IRtcEngineEventHandlerListener, EMChatRoomChangeListener {
 
-    protected var roomId: String = ""
+     var roomId: String = ""
     protected var roomType: Int = 0
     private val chatRoomMsgAdapter by lazy { LiveRoomChatMessageAdapter() }
     private var messageDialog: SendMessagePop? = null
@@ -636,7 +635,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             request({ agoraRxApi.getUserInfoByUserId(roomUserSeatInfo.userId) },
                 object : OnRequestResultListener<UserDetailInfo> {
                     override fun onSuccess(data: BaseBean<UserDetailInfo>) {
-                        if (CommonUtils.isPopShow(sendGiftPop)) {
+                        if (sendGiftPop?.isVisible == true) {
                             sendGiftPop?.showAddFriendsBtn(data.data!!)
                         }
                     }
@@ -646,7 +645,10 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun showGiftPop(roomUserSeatInfo: UserDetailInfo, isGetUser: Boolean = true) {
-        if (CommonUtils.isPopShow(sendGiftPop)) {
+        logcom("showGiftPop = click")
+        if (sendGiftPop?.isVisible == true) {
+            logcom("showGiftPop = return")
+            DialogUtils.dismissLoading()
             return
         }
         roomUserSeatInfo.roomId = roomId.toInt()
@@ -669,7 +671,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
                 override fun onShowFriendBtn() {
                     if (!isGetUser) {
-                        if (CommonUtils.isPopShow(sendGiftPop)) {
+                        if (sendGiftPop?.isVisible == true) {
                             sendGiftPop?.showAddFriendsBtn(roomUserSeatInfo)
                         }
                     }
@@ -786,6 +788,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (type == 1 && !isInSeatByUserId(AppCacheManager.userId.toInt())) {
             //如果是点击关闭或者物理键盘返回且不在麦位上直接关闭房间
             DialogUtils.showConfirmDialog("退出房间", {}, {
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "手动点击退出房间")
                 closeRoom()
             }, "是否退出房间？", "确认退出", "再等等")
         } else {
@@ -798,6 +801,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
                     override fun onFail() {}
                     override fun onClose() {
+                        logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "手动点击退出房间")
                         closeRoom()
                     }
                 })
@@ -815,7 +819,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         val angleUser = angleResultInfo.angelInfo
         val guardUser = angleResultInfo.guardInfo
         if (angleUser == null && guardUser == null) {
-            leave()
+           // leave()
         } else {
             if (CommonUtils.isPopShow(roomAngleResultPop)) {
                 angelAnimList.add(angleResultInfo)
@@ -966,6 +970,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 return
             }
             val source = it.getIntAttribute("source", -1)
+            logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "source=${source}---roomId=${roomId}")
             if (source == ChatConstant.ACTION_MSG_APPLY_SET_UP) { //申请上麦
                 logcom("有人申请上麦")
                 runOnUiThread {
@@ -995,6 +1000,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 showToast("玫瑰余额用尽")
                 LiveRoomEndActivity.lunch(mContext, LiveRoomManager.HOUSE_NOT_FUNDS, "", roomId)
                 AgoraManager.getInstance().setDownVideo(localUserId, true)
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "收到透传source=$source，专属房间余额不足 退出房间")
                 leaveRoomFinish()
             } else if (source == ChatConstant.ACTION_MSG_SERVICE_SIT_DOWN) { //服务端强制下麦
                 runOnUiThread {
@@ -1030,6 +1036,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             } else if (source == ChatConstant.OPERATE_LEAVE) { //服务端发送强制离开
                 runOnUiThread {
                     isLeave = true
+                    logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "收到透传source=$source，服务端发送强制离开")
                     leaveRoomFinish()
                 }
             } else if (source == ChatConstant.ACTION_MSG_SIT_DOWN) {
@@ -1087,6 +1094,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         LiveRoomEndActivity.lunch(
                             mContext, LiveRoomManager.HOUSE_CUT_EXTRA_KICK, "", roomId
                         )
+                        logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "收到透传source=$source，切换专属被踢出房间")
                         leaveRoomFinish()
                     }
                 }
@@ -1125,12 +1133,23 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 onlineUserListPop?.refreshRoomInfo(roomSourceBean)
             }else if(source == ChatConstant.ACTION_SKIP_ROOM){
                 //踢出房间
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "收到透传source=$source，被踢出房间")
                 val data: JSONObject = it.getJSONObjectAttribute("data")
                 val optString = data.optString("tip")
                 showToast(optString)
                 leaveRoomFinish()
             }else if (source == ChatConstant.ACTION_ROOM_CHECK){
                 showContinueLivePop()
+            }else if (source == ChatConstant.ACTION_ROOM_USER_OFFLINE_LEAVE){
+                runOnUiThread {
+                    val data: JSONObject = it.getJSONObjectAttribute("data")
+                    val desc = data.optString("desc","")
+                    if (!TextUtils.isEmpty(desc)){
+                        val chatRoomMsgInfo = ChatRoomMsgInfo(ChatRoomMsgInfo.ITEM_SYSTEM_TYPE, desc, null)
+                        chatRoomMsgAdapter.add(chatRoomMsgInfo)
+                        scrollChatToBottom(50)
+                    }
+                }
             } else {
                 onReceiveCmdMsg(it)
             }
@@ -1986,6 +2005,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         reLoginIm()
                     } else {
                         showToast("直播间异常，请重新尝试进入直播间")
+                        logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "加入聊天室失败$error————msg$errorMsg---退出直播间")
                         leaveRoomFinish()
                     }
                 }
@@ -2001,6 +2021,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             }
 
             override fun onError(code: Int, error: String?) {
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "加入聊天室失败$error————msg$error---退出直播间")
                 leaveRoomFinish()
             }
         })
@@ -2108,7 +2129,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         AgoraManager.getInstance().init(mContext, 0, null)
         logcom(LiveRoomActivity.LIVE_ROOM_TAG, "加载房间---roomId${roomId}")
         //声网初始化
-        AgoraManager.getInstance().setVideoEncoderConfiguration(250, 280)
+        if (roomSourceBean.getFragmentType() == RoomListBean.FRG_THREE_ROOM){
+            AgoraManager.getInstance().setVideoEncoderConfiguration(500, 560)
+        }else{
+            AgoraManager.getInstance().setVideoEncoderConfiguration(250, 280)
+        }
         return AgoraManager.getInstance()
             .joinChannel(AppCacheManager.userId.toInt(), roomId, roomSourceBean.agoraToken)
 
@@ -2195,8 +2220,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     fun exitRoom() {
-        logcom(LiveRoomActivity.LIVE_ROOM_TAG, "onDestroyView---roomId${roomId}")
         if (!isLeave) {
+            logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "触发exactDestroy关闭房间---roomId${roomId}")
             request2(
                 { agoraRxApi.roomLeave(roomId, roomSourceBean.uuid) },
                 object : OnRequestResultListener<RoomLeaveResponse> {
@@ -2296,7 +2321,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         return false
     }
 
-    //嘉宾离线超时1分钟，强制踢出房间
+    //嘉宾离线超时2分钟，强制踢出房间
     protected fun operateLeave(operatedUserId: Int) {
         logcom("强制下麦：$operatedUserId")
         mViewModel.operateLeave(roomId,
@@ -2321,6 +2346,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 val downUserId = msg.obj as Int
                 if (isOwner && removeUserLeaveRecord(downUserId)) {
                     //判断是否在离开倒计时集合，为true直接强制踢出房间
+                    logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"离线2分钟，强制下麦")
                     logcom("downWheet：强制下麦成功")
                     operateLeave(downUserId)
                 }
@@ -2352,7 +2378,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         obtain.obj = leaveUserId
                         handler.sendMessage(obtain)
                     }
-                    if (millisecond >= 60000) {
+                    if (millisecond >= 60000 * 2) {
                         val obtain = Message.obtain()
                         obtain.what = 2
                         obtain.obj = leaveUserId
@@ -2576,6 +2602,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 mContext, LiveRoomManager.HOUSE_OFF, "", this@BaseLiveRoomFrg.roomId
             )
         }
+        logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "解散聊天室roomId=${roomId}---退出直播间")
         isLeave = true
         leaveRoomFinish()
     }
@@ -2816,5 +2843,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             .text("请点击“继续直播”，\n否则" + second + "秒后将关闭房间")
             .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.colorMain))
             .build()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        applyQueueTask.clear()
+        giftAnimTaskManager.clear()
     }
 }

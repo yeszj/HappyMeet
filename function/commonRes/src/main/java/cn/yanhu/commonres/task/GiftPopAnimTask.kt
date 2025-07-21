@@ -35,7 +35,7 @@ import java.net.URL
  */
 class GiftPopAnimTask(
     private val giftInfo: GiftInfo,
-    private val svgaImageView: SVGAImageView,
+    private val svgaImageView: SVGAImageView?,
     private val videoAnimView: AnimView?=null,
     val type: Int = 1
 ) :
@@ -50,12 +50,15 @@ class GiftPopAnimTask(
 
                SVGAUtils.loadCustomSVGAAnim(giftInfo.svga, object : SVGAParser.ParseCompletion {
                    override fun onComplete(videoItem: SVGAVideoEntity) {
-                       val dynamicItem = SVGADynamicEntity()
-                       val drawable = SVGADrawable(videoItem, dynamicItem)
-                       dynamicItem.setDynamicImage(randomGift!!.giftIcon, "01")
-                       svgaImageView.setImageDrawable(drawable)
-                       svgaImageView.tag = videoItem
-                       svgaImageView.startAnimation()
+                       svgaImageView?.apply {
+                           val dynamicItem = SVGADynamicEntity()
+                           val drawable = SVGADrawable(videoItem, dynamicItem)
+                           dynamicItem.setDynamicImage(randomGift!!.giftIcon, "01")
+                           svgaImageView.setImageDrawable(drawable)
+                           svgaImageView.tag = videoItem
+                           svgaImageView.startAnimation()
+                       }
+
                    }
                    override fun onError() {
                        doNextTask()
@@ -65,7 +68,7 @@ class GiftPopAnimTask(
                playSvga(giftInfo)
            }
 
-           svgaImageView.callback = object : SVGACallback {
+           svgaImageView?.callback = object : SVGACallback {
                override fun onFinished() {
                    val tag = svgaImageView.tag
                    if (tag!=null && tag is SVGAVideoEntity){
@@ -142,9 +145,12 @@ class GiftPopAnimTask(
                 svga,
                 object : SVGAParser.ParseCompletion {
                     override fun onComplete(videoItem: SVGAVideoEntity) {
-                        svgaImageView.setVideoItem(videoItem)
-                        svgaImageView.startAnimation()
-                        svgaImageView.tag = videoItem
+                        svgaImageView?.apply {
+                            svgaImageView.setVideoItem(videoItem)
+                            svgaImageView.startAnimation()
+                            svgaImageView.tag = videoItem
+                        }
+
                     }
 
                     override fun onError() {

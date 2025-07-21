@@ -168,7 +168,6 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
                 }
 
                 override fun onLoadFailed(errorDrawable: Drawable?) {
-                    super.onLoadFailed(errorDrawable)
                     doNextTask()
                 }
             })

@@ -48,6 +48,9 @@ object AppCacheManager {
     var beautyBg by ConfigPref("beautyBg","")
 
     @JvmStatic
+    var alertCheckCount by ConfigPref("alertCheckCount",0)
+
+    @JvmStatic
     fun isWoman():Boolean{
         return gender == 2
     }

@@ -132,6 +132,9 @@ object ChatConstant {
 
     const val ACTION_ROOM_CHECK = 74//房间检测
 
+    const val ACTION_ROOM_USER_OFFLINE_LEAVE = 75//离线下麦
+
+
     const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位
 
 

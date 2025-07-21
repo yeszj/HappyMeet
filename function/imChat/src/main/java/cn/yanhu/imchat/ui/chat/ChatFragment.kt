@@ -454,7 +454,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
 
     private var sendGiftPop: SendGiftPop? = null
     private fun showSendGiftPop() {
-        if (isPopShow(sendGiftPop)) {
+        if (sendGiftPop?.isVisible == true) {
             return
         }
         val sendUserInfo = UserDetailInfo()

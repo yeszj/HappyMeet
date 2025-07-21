@@ -17,6 +17,7 @@ import android.net.http.HttpResponseCache
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.provider.Settings
 import android.text.TextUtils
 import android.view.Gravity
 import androidx.core.app.NotificationCompat
@@ -25,6 +26,7 @@ import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.func.ApplicationRouterImpl
 import cn.huanyuan.sweetlove.func.manager.ChannelUtils
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
+import cn.huanyuan.sweetlove.func.service.LocalRecordingService
 import cn.huanyuan.sweetlove.func.task.AppPopTask
 import cn.huanyuan.sweetlove.func.task.ImChatMsgNotifyTask
 import cn.huanyuan.sweetlove.net.HttpHeadInterceptor
@@ -59,6 +61,7 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.AppManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouteIntent
+import cn.yanhu.commonres.utils.PermissionXUtils
 import cn.yanhu.imchat.custom.chat.EaseCommonUtils
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EMInitUtils
@@ -143,6 +146,9 @@ class BaseApplication : Application() {
                     )
                     reInitImSdk()
                 }
+                val intent = Intent(activity, LocalRecordingService::class.java)
+                activity.stopService(intent)
+                checkAlertPermission(activity)
             }
 
             override fun onBackground(activity: Activity) {
@@ -152,8 +158,43 @@ class BaseApplication : Application() {
                         PermissionX.areNotificationsEnabled(activity)
                     )
                 }
+                if (AgoraManager.isLiveRoom) {
+                    val intent = Intent(activity, LocalRecordingService::class.java)
+                    intent.putExtra("type", AgoraManager.callType)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        activity.startForegroundService(intent)
+                    } else {
+                        activity.startService(intent)
+                    }
+                }
             }
         })
+    }
+
+    private fun checkAlertPermission(activity: Activity) {
+        val isFloatPermission = Settings.canDrawOverlays(this)
+        if ((activity is VideoPhoneActivity || activity is LiveRoomActivity) && !isFloatPermission && AppCacheManager.alertCheckCount<2) {
+            val tips = if (activity is VideoPhoneActivity) {
+                "开启悬浮窗播放功能，退出通话界面也能继续保持通话"
+            } else {
+                "开启悬浮窗播放功能，退出直播间也能继续观看精彩直播"
+            }
+            PermissionXUtils.checkAlertPermission2(
+                activity as FragmentActivity,
+                tips,
+                object : PermissionXUtils.OnAlertPermissionListener {
+                    override fun onSuccess() {
+                        showToast("悬浮窗权限已打开")
+                    }
+
+                    override fun onFail() {
+                    }
+
+                    override fun onClose() {
+                    }
+
+                })
+        }
     }
 
     private fun registerActivityLifecycleCallBack() {

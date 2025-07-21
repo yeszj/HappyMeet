@@ -7,14 +7,17 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.KeyEvent
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import cn.happy.beautyface.ui.utils.BeautyConfigManager
 import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.AppStartResponse
 import cn.huanyuan.sweetlove.bean.AppVersionInfo
+import cn.huanyuan.sweetlove.bean.LiveFloatInfo
 import cn.huanyuan.sweetlove.bean.TabEntity
 import cn.huanyuan.sweetlove.databinding.ActivityMainBinding
 import cn.huanyuan.sweetlove.func.dialog.AppVersionUpdatePop
@@ -25,6 +28,7 @@ import cn.huanyuan.sweetlove.ui.main.tab_msg.TabMessageFrg
 import cn.huanyuan.sweetlove.ui.main.tab_my.TabMineFrg
 import cn.huanyuan.sweetlove.ui.main.tab_samecity.TabSameCityFrg
 import cn.huanyuan.sweetlove.ui.main.tab_wallet.TabWalletFrg
+import cn.huanyuan.sweetlove.ui.recommend.RecommendRoomActivity
 import cn.huanyuan.sweetlove.ui.teenage.TeenAgeModeActivity
 import cn.yanhu.agora.listener.OnDownloadProgressListener
 import cn.yanhu.agora.manager.AgoraSdkDownloadManager
@@ -38,7 +42,11 @@ import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.logcom
+import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
+import cn.yanhu.commonres.adapter.CircleBannerImageAdapter
+import cn.yanhu.commonres.adapter.MyBannerImageAdapter
 import cn.yanhu.commonres.bean.AppPopResponse
+import cn.yanhu.commonres.bean.BannerBean
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.bean.response.RoseRechargeResponse
 import cn.yanhu.commonres.config.ChatConstant
@@ -47,6 +55,7 @@ import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.loading.MainLoadingCallBack
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.AppManager
+import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.task.AppPopTypeManager
 import cn.yanhu.imchat.api.imChatRxApi
@@ -69,6 +78,8 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
 import com.permissionx.guolindev.PermissionX
+import com.youth.banner.adapter.BannerImageAdapter
+import com.youth.banner.listener.OnBannerListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -107,6 +118,49 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         appStart()
         BeautyConfigManager.getNetBeautyConfig()
         //startActivity(Intent(mContext,TestActivity::class.java))
+    }
+
+    private fun getRecommendLiveFloat() {
+        mViewModel.getRecommendLiveFloating(object : OnRequestResultListener<LiveFloatInfo> {
+            @SuppressLint("SetTextI18n")
+            override fun onSuccess(data: BaseBean<LiveFloatInfo>) {
+                val response = data.data
+                if (response==null){
+                    mBinding.vgLiveFloat.visibility = View.GONE
+                }else{
+                    val portraitList = response.portraitList
+                    if (portraitList.isNotEmpty()){
+                        mBinding.vgLiveFloat.visibility = View.VISIBLE
+                        mBinding.tvFloatLiveCount.text = "${response.count}人正在直播"
+                        bindBanner(portraitList)
+                    }else{
+                        mBinding.vgLiveFloat.visibility = View.GONE
+                    }
+                }
+
+            }
+
+        })
+    }
+
+    private var bannerAdapter: CircleBannerImageAdapter?=null
+    private fun bindBanner(list: MutableList<String>) {
+        if (bannerAdapter==null){
+            mBinding.liveBanner.addBannerLifecycleObserver(this)
+            bannerAdapter = CircleBannerImageAdapter(mBinding.liveBanner,list)
+            mBinding.liveBanner.setAdapter(bannerAdapter)
+            mBinding.vgLiveFloat.setOnSingleClickListener {
+                startActivity(Intent(mContext, RecommendRoomActivity::class.java))
+            }
+            //  mBinding.banner.indicator = CircleIndicator(context)
+            mBinding.liveBanner.setOnBannerListener(object : OnBannerListener<String> {
+                override fun OnBannerClick(data: String, position: Int) {
+                    startActivity(Intent(mContext, RecommendRoomActivity::class.java))
+                }
+            })
+        }else{
+            bannerAdapter?.setDatas( list)
+        }
     }
 
     private fun checkOaId() {
@@ -548,6 +602,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         (application as BaseApplication).reInitImSdk()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getRecommendLiveFloat()
     }
 
     companion object {

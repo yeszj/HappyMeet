@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <cn.yanhu.baselib.view.CustomFontTextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        tools:text="好友"
+        android:gravity="center_vertical"
+        android:background="@color/blackAlpha96"
+        android:paddingHorizontal="@dimen/dp_12"
+        android:textSize="@dimen/sp_13"
+        android:textColor="@color/color_888888"
+        android:layout_height="@dimen/dp_39" />
+</layout>

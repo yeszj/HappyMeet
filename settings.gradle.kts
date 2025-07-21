@@ -24,6 +24,8 @@ dependencyResolutionManagement {
         maven("https://maven.aliyun.com/repository/public/")
         maven("https://developer.hihonor.com/repo")
         maven("https://artifact.bytedance.com/repository/Volcengine/")
+        maven ("https://maven.aliyun.com/repository/google")
+        maven ("https://maven.aliyun.com/repository/gradle-plugin")
     }
 }
 
