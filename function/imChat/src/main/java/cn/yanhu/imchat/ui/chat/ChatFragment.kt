@@ -192,7 +192,9 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     }
 
     override fun onChatError(code: Int, errorMsg: String) {
-        showFailTips(errorMsg, code)
+        if (code == -2) {
+            showFailTips(errorMsg, code)
+        }
     }
 
     private fun listener() {
@@ -267,12 +269,9 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         //设置头像形状：0 为默认，1 为圆形，2 为方形
         messageListLayout.setAvatarShapeType(1)
         GlideUtils.loadAsDrawable(
-            mContext,
-            getSelfUserInfo().portrait,
-            object : CustomTarget<Drawable>() {
+            mContext, getSelfUserInfo().portrait, object : CustomTarget<Drawable>() {
                 override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
+                    resource: Drawable, transition: Transition<in Drawable>?
                 ) {
                     chatLayout.chatMessageListLayout.setAvatarDefaultSrc(resource)
                 }
@@ -462,7 +461,9 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         sendUserInfo.roomId = conversationId.toInt()
         sendGiftPop = SendGiftPop.showDialog(
             mContext as FragmentActivity,
-            sendUserInfo, SendGiftRequest.SOURCE_CHAT, 0,
+            sendUserInfo,
+            SendGiftRequest.SOURCE_CHAT,
+            0,
             object : SendGiftPop.OnSendGiftListener {
                 override fun onSendGift(item: GiftInfo) {
                     EmMsgManager.sendGiftMessage(item, conversationId, chatLayout)

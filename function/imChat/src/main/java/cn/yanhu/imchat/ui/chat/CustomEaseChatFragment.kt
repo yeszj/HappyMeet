@@ -217,6 +217,7 @@ open class CustomEaseChatFragment : EaseBaseFragment(), OnChatLayoutListener, On
         }
     }
 
+
     override fun onQuoteClick(message: EMMessage): Boolean {
         return false
     }

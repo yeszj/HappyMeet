@@ -2,6 +2,7 @@ package cn.yanhu.imchat.ui.chat
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import cn.yanhu.baselib.base.BaseFragment
@@ -48,12 +49,12 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
     private var userId: String = ""
     private var isPop: Boolean = false
     override fun initData() {
-        userId = requireArguments().getString(EaseConstant.EXTRA_CONVERSATION_ID).toString()
-        if (TextUtils.isEmpty(userId)) {
+        userId = arguments?.getString(EaseConstant.EXTRA_CONVERSATION_ID).toString()
+        if (TextUtils.isEmpty(userId) || arguments==null) {
             finishPage()
             return
         }
-        isPop = requireArguments().getBoolean("isPop", false)
+        isPop = arguments?.getBoolean("isPop", false) == true
         chatFragment = ChatFragment()
         chatFragment.arguments = arguments
         addFragment(chatFragment)
@@ -291,6 +292,13 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
 
     fun onNewIntent(intent: Intent?) {
         //chatFragment!!.onNewIntent(intent)
+    }
+    companion object{
+        fun newInstance(args: Bundle): ImChatFrg {
+            val fragment = ImChatFrg()
+            fragment.arguments = args
+            return fragment
+        }
     }
 
 }

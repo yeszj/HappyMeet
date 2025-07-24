@@ -46,9 +46,10 @@ public class ImChatDialog extends BaseSheetDialog<DialogImChatBinding> {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ViewUtils.INSTANCE.setViewHeight(getBinding().dgChatListFg, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_600)+CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20));
-        ImChatFrg chatFrg = new ImChatFrg();
+
         extras.putBoolean("isPop",true);
-        chatFrg.setArguments(extras);
+        ImChatFrg chatFrg = ImChatFrg.Companion.newInstance(extras);
+
         getChildFragmentManager().beginTransaction().replace(R.id.dg_chat_list_fg, chatFrg, "chat_im").commit();
         LiveEventBus.get(EventBusKeyConfig.CLOSECHATDIALOG).observe(this, new Observer<Object>() {
             @Override

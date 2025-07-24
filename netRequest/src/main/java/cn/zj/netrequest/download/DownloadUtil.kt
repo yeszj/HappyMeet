@@ -1,34 +1,26 @@
-package cn.zj.netrequest.download;
+package cn.zj.netrequest.download
 
-import android.util.Log;
-
-import com.blankj.utilcode.util.ActivityUtils;
-import com.blankj.utilcode.util.ThreadUtils;
-
-import java.io.File;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import android.util.Log
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.ThreadUtils
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 /**
  * @author: zhengjun
  * created: 2023/7/10
  * desc:
  */
-public class DownloadUtil {
-    private static final String TAG = "DownloadUtil";
-    private static final int DEFAULT_TIMEOUT = 15;
-    private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
-    private OkHttpClient.Builder mBuilder;
+class DownloadUtil {
+    private val mExecutorService: ExecutorService = Executors.newSingleThreadExecutor()
+    private var mBuilder: OkHttpClient.Builder? = null
 
 
-    public void initConfig(OkHttpClient.Builder builder) {
-        this.mBuilder = builder;
+    fun initConfig(builder: OkHttpClient.Builder?) {
+        this.mBuilder = builder
     }
 
     /**
@@ -36,43 +28,60 @@ public class DownloadUtil {
      *
      * @param listener
      */
-    public void downloadFile(InputParameter inputParam, final FileDownloadListener listener) {
-
-        FileDownloadInterceptor interceptor = new FileDownloadInterceptor(listener);
+    fun downloadFile(inputParam: InputParameter, listener: FileDownloadListener?) {
+        val interceptor = FileDownloadInterceptor(listener)
         if (mBuilder != null) {
-            mBuilder.addInterceptor(interceptor);
+            mBuilder!!.addInterceptor(interceptor)
         } else {
-            mBuilder = new OkHttpClient.Builder()
-                    .addInterceptor(interceptor)
-                    .retryOnConnectionFailure(true)
-                    .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+            mBuilder = OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .retryOnConnectionFailure(true)
+                .connectTimeout(DEFAULT_TIMEOUT.toLong(), TimeUnit.SECONDS)
         }
-        final DownloadService api = new Retrofit.Builder()
-                .client(mBuilder.build())
-                .baseUrl(inputParam.getBaseUrl())
-                .build()
-                .create(DownloadService.class);
-        mExecutorService.execute(() -> {
+        val api = Retrofit.Builder()
+            .client(mBuilder!!.build())
+            .baseUrl(inputParam.baseUrl)
+            .build()
+            .create<DownloadService>(DownloadService::class.java)
+        mExecutorService.execute(Runnable {
             try {
-                Response<ResponseBody> result = api.downloadWithDynamicUrl(inputParam.getRelativeUrl()).execute();
-                File file = new FileUtil(ActivityUtils.getTopActivity()).write2SDFromInput(inputParam.getLoadedFilePath(), inputParam.getDir(),result.body().byteStream());
-                if (listener != null) {
-                    if (inputParam.isCallbackOnUiThread()) {
-                        ThreadUtils.getMainHandler().post(() -> listener.onFinish(file));
+                val result = api.downloadWithDynamicUrl(inputParam.relativeUrl).execute()
+                val body = result.body()
+                if (body == null) {
+                    if (inputParam.isCallbackOnUiThread) {
+                        ThreadUtils.getMainHandler().post(Runnable { listener!!.onFailed("") })
                     } else {
-                        listener.onFinish(file);
+                        listener!!.onFailed("")
+                    }
+                    return@Runnable
+                }
+                val file = FileUtil(ActivityUtils.getTopActivity()).write2SDFromInput(
+                    inputParam.loadedFilePath,
+                    inputParam.dir,
+                    body.byteStream()
+                )
+                if (listener != null) {
+                    if (inputParam.isCallbackOnUiThread) {
+                        ThreadUtils.getMainHandler().post(Runnable { listener.onFinish(file) })
+                    } else {
+                        listener.onFinish(file)
                     }
                 }
-            } catch (Exception e) {
+            } catch (e: Exception) {
                 if (listener != null) {
-                    if (inputParam.isCallbackOnUiThread()) {
-                        ThreadUtils.getMainHandler().post(() -> listener.onFailed(e.getMessage()));
+                    if (inputParam.isCallbackOnUiThread) {
+                        ThreadUtils.getMainHandler().post(Runnable { listener.onFailed(e.message) })
                     } else {
-                        listener.onFailed(e.getMessage());
+                        listener.onFailed(e.message)
                     }
                 }
-                Log.e(TAG, e.getMessage(), e);
+                Log.e(TAG, e.message, e)
             }
-        });
+        })
+    }
+
+    companion object {
+        private const val TAG = "DownloadUtil"
+        private const val DEFAULT_TIMEOUT = 15
     }
 }

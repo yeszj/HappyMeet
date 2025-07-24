@@ -28,6 +28,7 @@ import cn.yanhu.baselib.refresh.NoMoreDataFootView
 import cn.yanhu.baselib.utils.DisplayUtils
 import cn.yanhu.baselib.utils.StatusBarUtil
 import cn.yanhu.baselib.utils.ViewUtils
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.view.TitleBar
 import cn.zj.netrequest.BaseViewModel
 import com.blankj.utilcode.util.LanguageUtils
@@ -102,7 +103,10 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
             callback
         )
     }
-
+    override fun onLowMemory() {
+        super.onLowMemory()
+        logComToFile("onLowMemory", "手机内存不足-----"+this.localClassName)
+    }
 
     open fun setOrientation() {
         if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {

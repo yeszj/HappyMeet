@@ -39,11 +39,11 @@
 
                 <com.opensource.svgaplayer.SVGAImageView
                     android:id="@+id/iv_goods"
-                    app:loopCount="-1"
                     android:layout_width="@dimen/dp_108"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:adjustViewBounds="true" />
+                    android:adjustViewBounds="true"
+                    app:loopCount="-1" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_read"
@@ -87,6 +87,7 @@
                 <cn.yanhu.baselib.view.CustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/dp_4"
                     android:background="@drawable/white_corner_5"
                     android:backgroundTint="@color/whiteColorAlpha70"
@@ -97,7 +98,6 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_12"
                     android:visibility="@{itemInfo.have?View.VISIBLE:View.GONE}"
-                    android:layout_gravity="center_vertical"
                     tools:backgroundTint="@color/color_alpha40_ff003d"
                     tools:text="最新" />
 
@@ -105,10 +105,10 @@
                     drawableUrl="@{itemInfo.tag}"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dp_18"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/dp_4"
                     android:adjustViewBounds="true"
                     android:gravity="center"
-                    android:layout_gravity="center_vertical"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_12"
                     android:visibility="@{(!itemInfo.have&amp;&amp;!TextUtils.isEmpty(itemInfo.tag))?View.VISIBLE:View.INVISIBLE,default = invisible}"
@@ -179,8 +179,13 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             app:autoPlay="true"
-            app:loopCount="1"
             app:clearsAfterStop="true"
-            app:fillMode="Backward" />
+            app:fillMode="Backward"
+            app:loopCount="1" />
+
+        <com.tencent.qgame.animplayer.AnimView
+            android:id="@+id/animView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

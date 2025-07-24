@@ -955,7 +955,7 @@ public class CustomEaseChatLayout extends RelativeLayout implements CustomIChatL
         //刷新条目
         refreshMessage(message);
         if (listener != null) {
-            listener.onChatError(code, error);
+            listener.onChatError(-2, error);
         }
     }
 

@@ -35,19 +35,17 @@
         <!--腾讯定位配置-end-->
 
         <activity
-            android:name=".sdk.baiduFace.VerifyFailureActivity"
-            android:configChanges="orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="cn.huanyuan.sweetlove.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:taskAffinity="cn.huanyuan.sweetlove"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 微信支付验证界面 -->
         <activity
             android:name="cn.huanyuan.sweetlove.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
+            android:taskAffinity="cn.huanyuan.sweetlove"
             android:screenOrientation="portrait" />
 
         <activity

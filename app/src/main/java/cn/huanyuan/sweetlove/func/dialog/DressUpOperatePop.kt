@@ -18,6 +18,7 @@ import cn.yanhu.commonres.bean.DressUpInfo
 import cn.yanhu.commonres.bean.request.DressUpRequest
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.utils.SVGAUtils
+import cn.yanhu.commonres.utils.VideoAnimUtils
 import cn.zj.netrequest.ext.OnBooleanResultListener
 import cn.zj.netrequest.ext.request
 import com.bumptech.glide.request.target.CustomTarget
@@ -51,8 +52,6 @@ class DressUpOperatePop(
         mBinding?.apply {
             itemInfo = item
             val svga = item.svgUrl
-
-
             if (!TextUtils.isEmpty(svga)) {
                 if (type != DressUpFrg.TYPE_CAR) {
                     if (type == DressUpFrg.TYPE_USER_FLOAT) {
@@ -69,7 +68,11 @@ class DressUpOperatePop(
                 } else {
                     tvRead.visibility = View.VISIBLE
                     vgPic.setOnSingleClickListener {
-                        SVGAUtils.loadSVGAAnim(svgaImageView, svga)
+                        if (svga!!.contains(".mp4")){
+                            VideoAnimUtils.loadNetVideoAnim(context,svga,this.animView,null)
+                        }else{
+                            SVGAUtils.loadSVGAAnim(svgaImageView, svga)
+                        }
                     }
                     // 设置回调
                     svgaImageView.callback = object : SVGACallback {

@@ -20,6 +20,7 @@ import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.config.ChatConstant
+import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.imchat.R
@@ -33,6 +34,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
+import com.blankj.utilcode.util.SnackbarUtils.dismiss
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -40,6 +42,7 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.BottomPopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
+import okio.`-DeprecatedOkio`.source
 import java.math.BigDecimal
 
 /**
@@ -48,13 +51,7 @@ import java.math.BigDecimal
  * desc:
  */
 @SuppressLint("ViewConstructor")
-class SendGiftPop(
-    val context: FragmentActivity,
-    private var sendUserInfo: UserDetailInfo,
-    private val source: Int,
-    private val callId: Int,
-    val onSendGiftListener: OnSendGiftListener
-) : BaseSheetDialog<PopSendGiftBinding>() {
+class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -65,33 +62,42 @@ class SendGiftPop(
 
 
     private var giftInfo: GiftResponse? = null
+    private var source: Int = 0
+    private var callId: Int = 0
+    private var sendUserInfo: UserDetailInfo = UserDetailInfo()
+    private var onSendGiftListener: OnSendGiftListener?=null
+
     @SuppressLint("CommitTransaction")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
+            sendUserInfo =
+                requireArguments().getSerializable(IntentKeyConfig.DATA) as UserDetailInfo
+            source = requireArguments().getInt("source")
+            callId = requireArguments().getInt("callId")
             this.userInfo = sendUserInfo
             this.executePendingBindings()
             logcom("showGiftPop = show")
 
             initTabLayout()
             this.tvAddFriend.setOnSingleClickListener {
-                onSendGiftListener.onAddFriend()
+                onSendGiftListener?.onAddFriend()
             }
             this.tvRecharge.setOnSingleClickListener {
-                ApplicationProxy.instance.showRechargePop(context, true)
+                ApplicationProxy.instance.showRechargePop(requireActivity(), true)
             }
             this.tvUserDetail.setOnSingleClickListener {
-                onSendGiftListener.onShowUserInfo(sendUserInfo.userId)
+                onSendGiftListener?.onShowUserInfo(sendUserInfo.userId)
             }
             this.ivAvatar.setOnSingleClickListener {
-                onSendGiftListener.onShowUserInfo(sendUserInfo.userId)
+                onSendGiftListener?.onShowUserInfo(sendUserInfo.userId)
             }
             if (SendGiftRequest.SOURCE_LIVE_ROOM == source) {
-                onSendGiftListener.onShowFriendBtn()
+                onSendGiftListener?.onShowFriendBtn()
             }
         }
 
-        LiveEventBus.get<Boolean>(LiveDataEventManager.PAY_RESULT).observe(context) {
+        LiveEventBus.get<Boolean>(LiveDataEventManager.PAY_RESULT).observe(this) {
             if (it) {
                 giftViewsList[0].getGiftInfo()
             }
@@ -100,7 +106,7 @@ class SendGiftPop(
 
     fun showAddFriendsBtn(userInfo: UserDetailInfo) {
         this.sendUserInfo = userInfo
-        if (binding!=null) {
+        if (binding != null) {
             if (sendUserInfo.isFriend || (sendUserInfo.isSameGender && AppCacheManager.isMan())) {
                 binding!!.tvAddFriend.visibility = View.INVISIBLE
             } else {
@@ -125,15 +131,15 @@ class SendGiftPop(
     private val giftViewsList = mutableListOf<GiftShowView>()
     private fun initTabLayout() {
         binding?.apply {
-            val giftShowView = GiftShowView(context, source, GiftShowView.TYPE_GIFT)
+            val giftShowView = GiftShowView(requireContext(), source, GiftShowView.TYPE_GIFT)
             giftShowView.registerClickSendListener(sendGiftListener)
             giftViewsList.add(giftShowView)
             if (SendGiftRequest.SOURCE_LIVE_ROOM == source) {
-                val faceGiftShowView = GiftShowView(context, source, GiftShowView.TYPE_FACE)
+                val faceGiftShowView = GiftShowView(requireContext(), source, GiftShowView.TYPE_FACE)
                 giftViewsList.add(faceGiftShowView)
                 faceGiftShowView.registerClickSendListener(sendGiftListener)
                 if (!sendUserInfo.isSameGender) {
-                    val loversGiftShowView = GiftShowView(context, source, GiftShowView.TYPE_LOVER)
+                    val loversGiftShowView = GiftShowView(requireContext(), source, GiftShowView.TYPE_LOVER)
                     giftViewsList.add(loversGiftShowView)
                     loversGiftShowView.registerClickSendListener(sendGiftListener)
                 } else {
@@ -206,7 +212,7 @@ class SendGiftPop(
             { imChatRxApi.sendGift(sendGiftRequest) },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
-                    if (!this@SendGiftPop.isVisible || binding==null){
+                    if (!this@SendGiftPop.isVisible || binding == null) {
                         return
                     }
                     giftInfo?.roseNum = BigDecimal(
@@ -233,22 +239,18 @@ class SendGiftPop(
                     if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
                         item.randomBoxGiftInfo = data.data
                     }
-                    onSendGiftListener.onSendGift(item)
+                    onSendGiftListener?.onSendGift(item)
                 }
 
                 override fun onFail(code: Int?, msg: String?) {
                     super.onFail(code, msg)
                     if (code == ErrorCode.CODE_NO_BALANCE) {
-                        ApplicationProxy.instance.showRechargePop(context, true)
+                        ApplicationProxy.instance.showRechargePop(requireActivity(), true)
                         dismiss()
                     }
                 }
             })
     }
-
-
-
-
 
 
     fun hideFriendBtn() {
@@ -270,10 +272,16 @@ class SendGiftPop(
             source: Int,
             callId: Int,
             onSendGiftListener: OnSendGiftListener
-            ): SendGiftPop {
+        ): SendGiftPop {
             val createGroupPop =
-                SendGiftPop(context, sendUserInfo, source, callId, onSendGiftListener)
-            createGroupPop.showNow(context.supportFragmentManager,"sendGiftPop")
+                SendGiftPop()
+            val arguments = Bundle()
+            arguments.putInt("source", source)
+            arguments.putInt("callId", callId)
+            arguments.putSerializable(IntentKeyConfig.DATA, sendUserInfo)
+            createGroupPop.onSendGiftListener = onSendGiftListener
+            createGroupPop.arguments = arguments
+            createGroupPop.showNow(context.supportFragmentManager, "sendGiftPop")
             return createGroupPop
         }
     }

@@ -84,14 +84,16 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
 
     override fun exactDestroy() {
         super.exactDestroy()
+        if (liveRoomFrg?.isFinish == true){
+            logComToFile(LIVE_ROOM_TAG,"用户主动退出")
+        }else{
+            logComToFile(LIVE_ROOM_TAG,"系统回收销毁")
+        }
         liveRoomFrg?.exitRoom()
         AgoraManager.isLiveRoom = false
     }
 
-    override fun onLowMemory() {
-        super.onLowMemory()
-        logComToFile(LIVE_ROOM_TAG, "roomId="+liveRoomFrg?.roomId+"-----手机内存不足")
-    }
+
 
 
     fun roomLeave(onRoomLeaveListener: OnRoomLeaveListener) {

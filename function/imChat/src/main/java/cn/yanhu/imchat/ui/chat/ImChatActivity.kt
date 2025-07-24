@@ -35,8 +35,7 @@ class ImChatActivity : BaseActivity<ActivityImChatBinding, ImChatViewModel>(
     override fun initData() {
         conversationId = intent.getStringExtra(EaseConstant.EXTRA_CONVERSATION_ID).toString()
         setStatusBarStyle(false)
-        imChatFrg  = ImChatFrg()
-        imChatFrg.arguments = intent.extras
+        imChatFrg  = ImChatFrg.newInstance(intent.extras!!)
         addFragment(imChatFrg)
         val chatActivity: Activity? = getChatActivity()
         (chatActivity as? ImChatActivity)?.finish()
@@ -45,7 +44,7 @@ class ImChatActivity : BaseActivity<ActivityImChatBinding, ImChatViewModel>(
     private fun getChatActivity(): Activity? {
         val activityList: MutableList<Activity> = ActivityUtils.getActivityList().toMutableList()
         activityList.removeAt(0)
-        if (activityList.size > 0) {
+        if (activityList.isNotEmpty()) {
             activityList.forEach {
                 if (it is ImChatActivity) {
                     return it

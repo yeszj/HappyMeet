@@ -27,6 +27,7 @@ import cn.yanhu.commonres.bean.response.FriendsResponse
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.utils.SVGAUtils
+import cn.yanhu.commonres.utils.VideoAnimUtils
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
@@ -81,7 +82,11 @@ class DressGoodsBuyPop(
                 } else {
                     tvRead.visibility = View.VISIBLE
                     vgPic.setOnSingleClickListener {
-                        SVGAUtils.loadSVGAAnim(svgaImageView, svga)
+                        if (svga!!.contains(".mp4")){
+                            VideoAnimUtils.loadNetVideoAnim(context,svga,this.animView,null)
+                        }else{
+                            SVGAUtils.loadSVGAAnim(svgaImageView, svga)
+                        }
                     }
                     // 设置回调
                     svgaImageView.callback = object : SVGACallback {

@@ -40,7 +40,7 @@ public class RewardLayout extends LinearLayout {
     public final String TAG = this.getClass().getSimpleName();
 
     public static final int MAX_COUNT_DEFAULT = 3;
-    public static final int MAX_THREAD = 1;
+    public static final int MAX_THREAD = 2;
     public static final int MIN_CLEAR_TIME = 50;
     private int MIN_TAKE_TIME = 200;
     private int MAX_GIFT_COUNT;
@@ -917,7 +917,7 @@ public class RewardLayout extends LinearLayout {
         BlockingQueue<GiftIdentify> queue;
 
         public GiftBasket() {
-            queue = new LinkedBlockingQueue<>(10);
+            queue = new LinkedBlockingQueue<>(100);
         }
 
         /**
@@ -938,7 +938,7 @@ public class RewardLayout extends LinearLayout {
          */
         public GiftIdentify takeGift() throws InterruptedException {
             //检索并移除队列头部元素，如果队列为空,线程进入等待，直到有新的数据加入继续消费
-            GiftIdentify bean = queue.take();
+            GiftIdentify bean = queue.poll(3, TimeUnit.SECONDS);
             Log.d(TAG, "taked size:" + queue.size());
             //检索并删除队列头部元素，如果队列为空，抛出异常，退出消费模式
 //        GiftIdentify bean = queue.remove();

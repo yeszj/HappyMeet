@@ -23,6 +23,7 @@ import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.status.BaseBean
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.StringUtils
 import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
 
@@ -75,7 +76,8 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
     override fun initListener() {
         super.initListener()
         mBinding.tvTime.setOnSingleClickListener {
-            ErrorLogTimeSelectPop.showDialog(mContext,
+            ErrorLogTimeSelectPop.showDialog(
+                mContext,
                 object : ErrorLogTimeSelectPop.OnSelectTimeListener {
                     override fun onSelect(time: String) {
                         mBinding.tvTime.text = time
@@ -106,20 +108,34 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
         DialogUtils.showLoading("正在上传...")
         val logPath =
             "/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/agorasdk.log"
-        mViewModel.uploadFile(logPath,2,object : OnRequestResultListener<String>{
-            override fun onSuccess(data: BaseBean<String>) {
-                uploadLog(data.data)
+
+        val copyLogPath =
+            "/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/agorasdkCopy.log"
+        if (FileUtils.isFileExists(logPath)) {
+            val isSuccess = FileUtils.copy(logPath, copyLogPath)
+            val path = if (isSuccess) {
+                copyLogPath
+            } else {
+                logPath
             }
-            override fun onFail(code: Int?, msg: String?) {
-                super.onFail(code, msg)
-                DialogUtils.dismissLoading()
-            }
-        })
+            mViewModel.uploadFile(path, 2, object : OnRequestResultListener<String> {
+                override fun onSuccess(data: BaseBean<String>) {
+                    FileUtils.delete(copyLogPath)
+                    uploadLog(data.data)
+                }
+
+                override fun onFail(code: Int?, msg: String?) {
+                    super.onFail(code, msg)
+                    DialogUtils.dismissLoading()
+                }
+            })
+        }
+
         AppLogManager.uploadLog()
     }
 
     private fun uploadLog(url: String?) {
-        if (TextUtils.isEmpty(url)){
+        if (TextUtils.isEmpty(url)) {
             DialogUtils.dismissLoading()
             return
         }

@@ -113,6 +113,8 @@ import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
 import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
 import java.io.File
+import androidx.core.graphics.toColorInt
+import com.scwang.smart.refresh.footer.ClassicsFooter
 
 
 @Suppress("DEPRECATION")
@@ -146,6 +148,7 @@ class BaseApplication : Application() {
                     )
                     reInitImSdk()
                 }
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"App切换到前台")
                 val intent = Intent(activity, LocalRecordingService::class.java)
                 activity.stopService(intent)
                 checkAlertPermission(activity)
@@ -158,6 +161,7 @@ class BaseApplication : Application() {
                         PermissionX.areNotificationsEnabled(activity)
                     )
                 }
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"App切换到后台")
                 if (AgoraManager.isLiveRoom) {
                     val intent = Intent(activity, LocalRecordingService::class.java)
                     intent.putExtra("type", AgoraManager.callType)
@@ -166,6 +170,7 @@ class BaseApplication : Application() {
                     } else {
                         activity.startService(intent)
                     }
+                    logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"App切换到后台----开启前台服务")
                 }
             }
         })
@@ -213,7 +218,7 @@ class BaseApplication : Application() {
             override fun onUncaughtExceptionHappened(thread: Thread, throwable: Throwable) {
                 logComToFile(
                     "AndroidRuntime",
-                    "--->onUncaughtExceptionHappened:$thread<---${throwable.printStackTrace()}"
+                    "--->onUncaughtExceptionHappened:$thread<---${throwable.message}"
                 )
             }
 
@@ -230,7 +235,7 @@ class BaseApplication : Application() {
                 val thread = Looper.getMainLooper().thread
                 logcom(
                     "AndroidRuntime",
-                    "--->onUncaughtExceptionHappened:$thread<---${e?.printStackTrace()}"
+                    "--->onUncaughtExceptionHappened:$thread<---${e?.message}"
                 )
                 //黑屏时建议直接杀死app
                 sysExcepHandler?.uncaughtException(thread, RuntimeException("black screen"))
@@ -823,8 +828,8 @@ class BaseApplication : Application() {
 
     private fun initToastStyle() {
         ToastUtils.getDefaultMaker().setGravity(Gravity.CENTER, 0, 0)
-        ToastUtils.getDefaultMaker().setBgColor(Color.parseColor("#29282D"))
-        ToastUtils.getDefaultMaker().setTextColor(Color.parseColor("#ffffff"))
+        ToastUtils.getDefaultMaker().setBgColor("#29282D".toColorInt())
+        ToastUtils.getDefaultMaker().setTextColor("#ffffff".toColorInt())
         com.hjq.toast.ToastUtils.init(this, BlackToastStyle())
     }
 

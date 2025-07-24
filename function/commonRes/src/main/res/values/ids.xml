@@ -13,4 +13,8 @@
 
     <item type="id" name="tag_drawable"/>
     <item type="id" name="tag_url"/>
+    <item type="id" name="tag_callback"/>
+    <item type="id" name="tag_fetchResource"/>
+    <item type="id" name="tag_animListener"/>
+
 </resources>

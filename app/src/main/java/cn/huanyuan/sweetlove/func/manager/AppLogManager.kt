@@ -9,6 +9,7 @@ import cn.yanhu.baselib.utils.ext.logcom
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
+import com.blankj.utilcode.util.ActivityUtils
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -25,29 +26,36 @@ object AppLogManager {
     @SuppressLint("CheckResult")
     fun uploadLog() {
         try {
+            val absolutePath = ActivityUtils.getTopActivity()
+                .getExternalFilesDir(null)?.absolutePath
             val currentLogFilePath = LogUtils.getCurrentLogFilePath()
-
+            val copyLogPath = "$absolutePath/" + System.currentTimeMillis() + "-happyMeet.log"
             if (FileUtils.isFileExists(currentLogFilePath)) {
-                val file = File(currentLogFilePath)
-                val requestBody: RequestBody =
-                    file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                val body: MultipartBody.Part =
-                    MultipartBody.Part.createFormData("file", file.name, requestBody)
-                request2(
-                    { rxApi.uploadFile(body, 2) },
-                    object : OnRequestResultListener<String> {
-                        override fun onSuccess(data: BaseBean<String>) {
-                            FileUtils.delete(currentLogFilePath)
-                            val url = data.data
-                            logcom("EaseIM", "上传本地log日志成功，url=$url")
-                            updateLog(url)
-                        }
-                        override fun onFail(code: Int?, msg: String?) {
-                            super.onFail(code, msg)
-                            logcom("EaseIM", "上传本地log日志失败")
-                        }
+                val isSuccess = FileUtils.copy(currentLogFilePath, copyLogPath)
+                if (isSuccess){
+                    val file = File(copyLogPath)
+                    val requestBody: RequestBody =
+                        file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    val body: MultipartBody.Part =
+                        MultipartBody.Part.createFormData("file", file.name, requestBody)
+                    request2(
+                        { rxApi.uploadFile(body, 2) },
+                        object : OnRequestResultListener<String> {
+                            override fun onSuccess(data: BaseBean<String>) {
+                                FileUtils.delete(copyLogPath)
+                                FileUtils.delete(currentLogFilePath)
+                                val url = data.data
+                                logcom("EaseIM", "上传本地log日志成功，url=$url")
+                                updateLog(url)
+                            }
+                            override fun onFail(code: Int?, msg: String?) {
+                                super.onFail(code, msg)
+                                logcom("EaseIM", "上传本地log日志失败")
+                            }
 
-                    })
+                        })
+                }
+
             }
         } catch (e: Exception) {
             e.printStackTrace()

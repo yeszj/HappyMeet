@@ -970,7 +970,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 return
             }
             val source = it.getIntAttribute("source", -1)
-            logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "source=${source}---roomId=${roomId}")
+            logcom(LiveRoomActivity.LIVE_ROOM_TAG, "source=${source}---roomId=${roomId}")
             if (source == ChatConstant.ACTION_MSG_APPLY_SET_UP) { //申请上麦
                 logcom("有人申请上麦")
                 runOnUiThread {
@@ -2027,7 +2027,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         })
     }
 
-    private var isFinish = false
+     var isFinish = false
     private var isOwnerClose = false
 
     private fun leaveRoomFinish() {
@@ -2221,19 +2221,22 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     fun exitRoom() {
         if (!isLeave) {
-            logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "触发exactDestroy关闭房间---roomId${roomId}")
-            request2(
-                { agoraRxApi.roomLeave(roomId, roomSourceBean.uuid) },
-                object : OnRequestResultListener<RoomLeaveResponse> {
-                    override fun onSuccess(data: BaseBean<RoomLeaveResponse>) {
-                    }
+            if (isFinish){
+                request2(
+                    { agoraRxApi.roomLeave(roomId, roomSourceBean.uuid) },
+                    object : OnRequestResultListener<RoomLeaveResponse> {
+                        override fun onSuccess(data: BaseBean<RoomLeaveResponse>) {
+                        }
 
-                    override fun onFail(code: Int?, msg: String?) {
-                    }
-                },
-                false
-            )
-            destroyRoom()
+                        override fun onFail(code: Int?, msg: String?) {
+                        }
+                    },
+                    false
+                )
+                destroyRoom()
+            }else{
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "触发exactDestroy关闭房间---roomId${roomId}")
+            }
             destroyAnimView()
         } else {
             destroyRoom()
@@ -2368,7 +2371,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             logcom("uid：" + leaveUserId + "开始离线倒计时")
             logcom("map地址：" + leaveMap[leaveUserId])
             logcom("线程地址：$this")
-            while (leaveMap.containsKey(leaveUserId) && leaveMap.get(leaveUserId) == this) {
+            while (leaveMap.containsKey(leaveUserId) && leaveMap[leaveUserId] == this) {
                 try {
                     sleep(1000)
                     millisecond += 1000

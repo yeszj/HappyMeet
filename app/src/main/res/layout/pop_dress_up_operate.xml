@@ -135,5 +135,10 @@
             app:fillMode="Backward"
             app:loopCount="1" />
 
+        <com.tencent.qgame.animplayer.AnimView
+            android:id="@+id/animView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
