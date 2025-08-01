@@ -42,6 +42,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.hyphenate.chat.EMMessage
 import com.opensource.svgaplayer.SVGACache
@@ -148,10 +149,32 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     private fun showSongListPop() {
         mViewModel.getSongList(roomId, object : OnRequestResultListener<SongListResponse> {
             override fun onSuccess(data: BaseBean<SongListResponse>) {
+                val response = data.data?:return
+                response.roomId = roomId
                 if (CommonUtils.isPopShow(songListPop)) {
+                    songListPop?.refreshData(response)
                     return
                 }
-                songListPop = SongListPop.showDialog(mContext, data.data!!)
+                songListPop = SongListPop.showDialog(mContext, response,isOwner,object : SongListPop.OnRefreshSeatListener{
+                    override fun onClearSongRoseSuccess() {
+                        EmMsgManager.sendCmdMessageToChatRoom(
+                            roomSourceBean.uid,
+                            "",
+                            ChatConstant.REFRESH_SEAT_ROSE
+                        )
+                        refreshSeatRoseInfo()
+                    }
+
+                    override fun onSetSongUserSuccess() {
+                        EmMsgManager.sendCmdMessageToChatRoom(
+                            roomSourceBean.uid,
+                            "",
+                            ChatConstant.REFRESH_SEAT_ROSE
+                        )
+                        refreshSeatRoseInfo()
+                        showSongListPop()
+                    }
+                })
             }
         })
     }
@@ -790,3 +813,5 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
         }
     }
 }
+
+

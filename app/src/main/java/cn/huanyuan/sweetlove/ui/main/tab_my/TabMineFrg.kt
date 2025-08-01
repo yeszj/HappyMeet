@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import cn.huanyuan.sweetlove.BuildConfig
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgTabMineBinding
 import cn.huanyuan.sweetlove.func.dialog.AvatarAndNickNameEditPop
@@ -84,9 +85,9 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         mBinding.viewInfo.setOnSingleClickListener {
             RouteIntent.lunchPersonHomePage(AppCacheManager.userId)
         }
-        LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO).observe(this) {
-            getData()
-        }
+//        LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO).observe(this) {
+//            getData()
+//        }
         LiveEventBus.get<String>(LiveDataEventManager.REFRESH_USER_CACHE).observe(this) {
             refreshUserInfo()
         }
@@ -268,6 +269,7 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         super.onResume()
         userInfo?.apply {
             showUploadAvatarPop(this)
+            getData()
         }
     }
 

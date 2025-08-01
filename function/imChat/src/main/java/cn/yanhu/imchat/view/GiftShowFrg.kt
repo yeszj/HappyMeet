@@ -1,21 +1,17 @@
 package cn.yanhu.imchat.view
 
-import android.annotation.SuppressLint
-import android.content.Context
+import android.os.Bundle
 import android.text.TextUtils
-import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import androidx.databinding.DataBindingUtil
-import cn.yanhu.baselib.utils.DialogUtils
+import cn.yanhu.baselib.base.BaseFragment
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.imchat.ImChatViewModel
+import cn.yanhu.imchat.databinding.ViewGiftShowBinding
 import cn.yanhu.imchat.R
 import cn.yanhu.imchat.adapter.SendGiftItemAdapter
 import cn.yanhu.imchat.api.imChatRxApi
-import cn.yanhu.imchat.databinding.ViewGiftShowBinding
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
@@ -23,43 +19,20 @@ import com.blankj.utilcode.util.GsonUtils
 
 /**
  * @author: zhengjun
- * created: 2025/2/12
+ * created: 2025/7/24
  * desc:
  */
-class GiftShowView : LinearLayout {
-    constructor(context: Context,source: Int,type: Int) : super(context) {
-        this.source = source
-        this.type = type
-        initView(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        initView(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
-        context, attrs, defStyle
-    ) {
-        initView(context)
-    }
-
-    private lateinit var mBinding: ViewGiftShowBinding
+class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
+    R.layout.view_gift_show,
+    ImChatViewModel::class.java
+) {
     private val giftAdapter by lazy { SendGiftItemAdapter() }
-
-    @SuppressLint("Recycle")
-    private fun initView(context: Context) {
-        mBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(context), R.layout.view_gift_show, this, true
-        )
+    override fun initData() {
+        source = requireArguments().getInt("source", 0)
+        type = requireArguments().getInt("type", 0)
         initGiftAdapter()
         getGiftInfo()
     }
-
-    fun enableScroll() {
-        mBinding.rvGift.requestFocus()
-        mBinding.rvGift.isNestedScrollingEnabled = true
-    }
-
 
     private var giftInfo: GiftResponse? = null
     fun getGiftInfo() {
@@ -118,6 +91,10 @@ class GiftShowView : LinearLayout {
         }
     }
 
+    fun getSelectItem(): GiftInfo? {
+        return giftAdapter.getSelectItem()
+    }
+
     private var onClickSendListener: OnClickSendListener? = null
     fun registerClickSendListener(sendListener: OnClickSendListener) {
         onClickSendListener = sendListener
@@ -133,7 +110,13 @@ class GiftShowView : LinearLayout {
         const val TYPE_SONG = 11 //点歌礼物
         const val TYPE_FACE = 12 //贴脸
         const val TYPE_LOVER = 14 //情侣
-
+        fun newInstance(source: Int,type: Int): GiftShowFrg{
+            val args = Bundle()
+            args.putInt("source", source)
+            args.putInt("type", type)
+            val fragment = GiftShowFrg()
+            fragment.arguments = args
+            return fragment
+        }
     }
-
 }

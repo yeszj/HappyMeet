@@ -17,7 +17,7 @@
             android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleLeftName="价格设置" />
+            app:titleLeftName="加好友设置" />
 
         <LinearLayout
             android:id="@+id/vg_item"
@@ -61,6 +61,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginHorizontal="@dimen/dp_12"
             android:background="@drawable/white_corner_10"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

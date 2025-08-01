@@ -58,6 +58,7 @@ import cn.yanhu.commonres.api.commonRxApi
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
+import cn.zj.netrequest.status.ErrorCode
 import com.xiaomi.push.da
 import org.json.JSONObject
 
@@ -539,7 +540,7 @@ class CustomEaseChatPrimaryMenu(
 
 
     fun setUserInfo(userInfo: UserDetailInfo) {
-        if (userInfo.isFriend || !userInfo.sameSex) {
+        if (userInfo.isFriend) {
             vgAddFriendTips!!.visibility = GONE
             edittext_layout!!.visibility = VISIBLE
             editText!!.setHint("输入聊天内容")

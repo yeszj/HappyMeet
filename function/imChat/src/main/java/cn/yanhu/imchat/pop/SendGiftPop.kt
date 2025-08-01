@@ -3,15 +3,14 @@ package cn.yanhu.imchat.pop
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.viewpager.widget.ViewPager
-import cn.yanhu.baselib.adapter.CustomViewPagerAdapter
+import androidx.viewpager2.widget.ViewPager2
+import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseSheetDialog
 import cn.yanhu.baselib.utils.CommonUtils
-import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
@@ -25,24 +24,16 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.imchat.R
 import cn.yanhu.imchat.api.imChatRxApi
-import cn.yanhu.imchat.databinding.DialogChatListBinding
 import cn.yanhu.imchat.databinding.PopSendGiftBinding
 import cn.yanhu.imchat.manager.EmMsgManager
-import cn.yanhu.imchat.view.GiftShowView
+import cn.yanhu.imchat.view.GiftShowFrg
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
-import com.blankj.utilcode.util.SnackbarUtils.dismiss
-import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.VibrateUtils
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.lxj.xpopup.XPopup
-import com.lxj.xpopup.core.BottomPopupView
-import com.lxj.xpopup.interfaces.SimpleCallback
-import okio.`-DeprecatedOkio`.source
 import java.math.BigDecimal
 
 /**
@@ -65,9 +56,9 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     private var source: Int = 0
     private var callId: Int = 0
     private var sendUserInfo: UserDetailInfo = UserDetailInfo()
-    private var onSendGiftListener: OnSendGiftListener?=null
+    private var onSendGiftListener: OnSendGiftListener? = null
 
-    @SuppressLint("CommitTransaction")
+    @SuppressLint("CommitTransaction", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
@@ -86,8 +77,13 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             this.tvRecharge.setOnSingleClickListener {
                 ApplicationProxy.instance.showRechargePop(requireActivity(), true)
             }
-            this.tvUserDetail.setOnSingleClickListener {
-                onSendGiftListener?.onShowUserInfo(sendUserInfo.userId)
+            this.tvSendAll.setOnSingleClickListener {
+                val fragment = giftViewsList[viewPager.currentItem] as GiftShowFrg
+                val selectItem = fragment.getSelectItem()
+                selectItem?.apply {
+                    val balanceRose = binding!!.tvRoseNum.text.toString()
+                    onSendGiftListener?.onSendAll(selectItem,balanceRose)
+                }
             }
             this.ivAvatar.setOnSingleClickListener {
                 onSendGiftListener?.onShowUserInfo(sendUserInfo.userId)
@@ -99,9 +95,10 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
         LiveEventBus.get<Boolean>(LiveDataEventManager.PAY_RESULT).observe(this) {
             if (it) {
-                giftViewsList[0].getGiftInfo()
+                (giftViewsList[0] as GiftShowFrg).getGiftInfo()
             }
         }
+
     }
 
     fun showAddFriendsBtn(userInfo: UserDetailInfo) {
@@ -115,7 +112,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         }
     }
 
-    private var sendGiftListener = object : GiftShowView.OnClickSendListener {
+    private var sendGiftListener = object : GiftShowFrg.OnClickSendListener {
         override fun onSendGift(item: GiftInfo?) {
             item?.apply {
                 startSendGift(this)
@@ -128,18 +125,19 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         }
     }
 
-    private val giftViewsList = mutableListOf<GiftShowView>()
+    private val giftViewsList = mutableListOf<Fragment>()
     private fun initTabLayout() {
         binding?.apply {
-            val giftShowView = GiftShowView(requireContext(), source, GiftShowView.TYPE_GIFT)
+            val giftShowView = GiftShowFrg.newInstance(source, GiftShowFrg.TYPE_GIFT)
             giftShowView.registerClickSendListener(sendGiftListener)
             giftViewsList.add(giftShowView)
             if (SendGiftRequest.SOURCE_LIVE_ROOM == source) {
-                val faceGiftShowView = GiftShowView(requireContext(), source, GiftShowView.TYPE_FACE)
+                val faceGiftShowView = GiftShowFrg.newInstance(source, GiftShowFrg.TYPE_FACE)
                 giftViewsList.add(faceGiftShowView)
                 faceGiftShowView.registerClickSendListener(sendGiftListener)
                 if (!sendUserInfo.isSameGender) {
-                    val loversGiftShowView = GiftShowView(requireContext(), source, GiftShowView.TYPE_LOVER)
+                    val loversGiftShowView =
+                        GiftShowFrg.newInstance(source, GiftShowFrg.TYPE_LOVER)
                     giftViewsList.add(loversGiftShowView)
                     loversGiftShowView.registerClickSendListener(sendGiftListener)
                 } else {
@@ -149,8 +147,8 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                 tvFace.visibility = View.INVISIBLE
                 tvLovers.visibility = View.INVISIBLE
             }
-
-            viewPager.adapter = CustomViewPagerAdapter(giftViewsList)
+            viewPager.offscreenPageLimit = 1
+            viewPager.adapter = MyFrgFragmentStateAdapter(this@SendGiftPop, giftViewsList)
             tabLayout.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
                     R.id.tv_gift -> {
@@ -167,23 +165,19 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                 }
             }
             tabLayout.check(tabLayout.getChildAt(0).id)
-            viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrolled(
-                    position: Int,
-                    positionOffset: Float,
-                    positionOffsetPixels: Int
-                ) {
-                }
-
+            viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     tabLayout.check(tabLayout.getChildAt(position).id)
-                }
-
-                override fun onPageScrollStateChanged(state: Int) {
+                    if (position==2){
+                        tvSendAll.visibility = View.GONE
+                    }else{
+                        tvSendAll.visibility = View.VISIBLE
+                    }
                 }
             })
         }
     }
+
 
     private fun setCurrentItem(position: Int) {
         binding?.viewPager?.setCurrentItem(position, true)
@@ -205,6 +199,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         sendGiftRequest.source = source
         sendGiftRequest.callId = callId
         sendGift(sendGiftRequest, item)
+
     }
 
     private fun sendGift(sendGiftRequest: SendGiftRequest, item: GiftInfo) {
@@ -212,9 +207,6 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             { imChatRxApi.sendGift(sendGiftRequest) },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
-                    if (!this@SendGiftPop.isVisible || binding == null) {
-                        return
-                    }
                     giftInfo?.roseNum = BigDecimal(
                         CommonUtils.subString(
                             giftInfo!!.roseNum.toPlainString(),
@@ -252,6 +244,10 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             })
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        logcom("礼物弹框销毁")
+    }
 
     fun hideFriendBtn() {
         binding?.tvAddFriend?.visibility = View.INVISIBLE
@@ -262,6 +258,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         fun onShowUserInfo(userId: String) {}
         fun onAddFriend() {}
         fun onShowFriendBtn() {}
+        fun onSendAll(item: GiftInfo,balance: String){}
     }
 
     companion object {
@@ -272,7 +269,8 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             source: Int,
             callId: Int,
             onSendGiftListener: OnSendGiftListener
-        ): SendGiftPop {
+
+            ): SendGiftPop {
             val createGroupPop =
                 SendGiftPop()
             val arguments = Bundle()

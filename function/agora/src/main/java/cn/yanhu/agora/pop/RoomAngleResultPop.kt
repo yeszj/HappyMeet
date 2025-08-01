@@ -37,12 +37,11 @@ class RoomAngleResultPop(
     override fun onCreate() {
         super.onCreate()
         mBinding = PopRoomAngleResultBinding.bind(popupImplView)
-        SVGAUtils.loadCustomAssetsSVGAAnim("angle_anim.svga", object : SVGAParser.ParseCompletion {
+        SVGAUtils.loadCustomAssetsSVGAAnim(if (type == CrownedUserListPop.TYPE_ANGLE) "angle_anim.svga" else "singer_anim.svga", object : SVGAParser.ParseCompletion {
             override fun onComplete(videoItem: SVGAVideoEntity) {
                 val dynamicItem = SVGADynamicEntity()
                 val drawable = SVGADrawable(videoItem, dynamicItem)
                 angleUser?.apply {
-                    R.drawable.angel_1
                     val drawableIdByName = if (type == CrownedUserListPop.TYPE_ANGLE) {
                         ResourceUtils.getDrawableIdByName("angel_" + angleUser.level)
                     } else {

@@ -7,4 +7,4 @@ import cn.yanhu.commonres.bean.BaseUserInfo
  * created: 2025/1/15
  * desc:
  */
-data class SongInfo(val userId:String,val portrait:String,val nickName:String,val songName:String,val clickInfo:BaseUserInfo)
+data class SongInfo(val id: String,val userId:String, val portrait:String, val nickName:String, val songName:String, val clickInfo:BaseUserInfo)

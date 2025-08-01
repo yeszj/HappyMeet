@@ -14,11 +14,13 @@ import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.commonres.bean.SettingItemInfo
+import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.imchat.manager.ImChatManager
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
+import com.blankj.utilcode.util.ActivityUtils
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.QuickAdapterHelper
 import com.chad.library.adapter4.util.setOnDebouncedItemClick
@@ -126,17 +128,28 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
 
     private fun getSettingList(): MutableList<SettingItemInfo> {
         val list = mutableListOf<SettingItemInfo>()
+
+        if (AppCacheManager.isWoman()){
+            list.add(
+                SettingItemInfo(
+                    ContextCompat.getDrawable(
+                        mContext,
+                        cn.yanhu.commonres.R.drawable.white_top_corner_10
+                    ),
+                    name = "加好友设置", pageUrl = PageIntentUtil.PAGE_PRICE_SET
+                )
+            )
+        }
+
         list.add(
             SettingItemInfo(
-                ContextCompat.getDrawable(
+                if (AppCacheManager.isMan())  ContextCompat.getDrawable(
                     mContext,
                     cn.yanhu.commonres.R.drawable.white_top_corner_10
+                ) else ContextCompat.getDrawable(
+                    ActivityUtils.getTopActivity(),
+                    cn.yanhu.baselib.R.color.white
                 ),
-                name = "价格设置", pageUrl = PageIntentUtil.PAGE_PRICE_SET
-            )
-        )
-        list.add(
-            SettingItemInfo(
                 name = "美颜设置",
                 pageUrl = PageIntentUtil.PAGE_BEAUTY_SET
             )

@@ -11,6 +11,7 @@ import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import cn.yanhu.baselib.anim.AnimManager.removeAnimSet
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.CommonUtils.isPopShow
 import cn.yanhu.baselib.utils.DialogUtils.showConfirmDialog
 import cn.yanhu.baselib.utils.GlideUtils

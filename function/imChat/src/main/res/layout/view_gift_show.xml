@@ -7,16 +7,17 @@
 
     </data>
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_gift"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:fadingEdgeLength="@dimen/dp_40"
+        android:nestedScrollingEnabled="true"
+        android:overScrollMode="never"
         android:paddingHorizontal="@dimen/dp_5"
         android:requiresFadingEdge="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="4"
-        tools:listitem="@layout/adapter_send_gift_item"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        tools:listitem="@layout/adapter_send_gift_item" />
 </layout>

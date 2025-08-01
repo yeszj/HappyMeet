@@ -5,4 +5,4 @@ package cn.yanhu.agora.bean
  * created: 2025/1/15
  * desc:
  */
-data class SongListResponse (val songInfo:SongInfo,val list:MutableList<SongInfo>)
+data class SongListResponse (val songInfo:SongInfo?,val list:MutableList<SongInfo>,var roomId: String)

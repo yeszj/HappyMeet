@@ -13,4 +13,13 @@
         <item name="android:layout_marginStart">@dimen/dp_2</item>
         <item name="android:layout_marginEnd">@dimen/dp_2</item>
     </style>
+
+    <style name="CustomBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:maxHeight">400dp</item>  <!-- 设置最大高度 -->
+        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+    </style>
+
+    <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:maxHeight">400dp</item>
+    </style>
 </resources>

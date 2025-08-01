@@ -10,6 +10,7 @@ import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
+import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
@@ -50,7 +51,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
     private var isPop: Boolean = false
     override fun initData() {
         userId = arguments?.getString(EaseConstant.EXTRA_CONVERSATION_ID).toString()
-        if (TextUtils.isEmpty(userId) || arguments==null) {
+        if (TextUtils.isEmpty(userId) || arguments == null) {
             finishPage()
             return
         }
@@ -62,7 +63,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         userInfo?.apply {
             bindUserInfo(this)
         }
-        chatFragment.setAddFriendListener(object : ChatFragment.OnAddFriendTipsListener{
+        chatFragment.setAddFriendListener(object : ChatFragment.OnAddFriendTipsListener {
             override fun onAddFriend() {
                 showAddFriendPop()
             }
@@ -140,7 +141,13 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         val giftInfo = GiftInfo()
         giftInfo.svga = url
         //显示礼物特效svg动画
-        giftAnimTaskManager.addTask(GiftPopAnimTask(giftInfo,mBinding.svgGiftAnim,mBinding.videoGiftAnimView))
+        giftAnimTaskManager.addTask(
+            GiftPopAnimTask(
+                giftInfo,
+                mBinding.svgGiftAnim,
+                mBinding.videoGiftAnimView
+            )
+        )
     }
 
     override fun initListener() {
@@ -158,15 +165,17 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
             val source = it.getIntAttribute("source", -1)
             if (source == CmdMsgTypeConfig.ADD_FRIEND) {
                 mBinding.vgAddFriendTips.visibility = View.GONE
-            }else if (source == ChatConstant.ACTION_MSG_MAN_CONSUME_ALERT){
+            } else if (source == ChatConstant.ACTION_MSG_MAN_CONSUME_ALERT) {
                 val data = it.getJSONObjectAttribute("data")
                 ThreadUtils.getMainHandler().postDelayed({
                     EmMsgManager.saveAlert(
                         " 温馨提示：每条消息需消耗${data.getInt("useRose")}玫瑰".trimIndent(),
                         "",
-                        "", conversationId = chatFragment.conversationId, event = ChatConstant.MSG_ALERT
+                        "",
+                        conversationId = chatFragment.conversationId,
+                        event = ChatConstant.MSG_ALERT
                     )
-                },500)
+                }, 500)
             }
         }
         LiveEventBus.get("sendGift", String::class.java).observe(this) { svga ->
@@ -179,7 +188,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         }
         LiveEventBus.get<MutableList<EMMessage>>(EventBusKeyConfig.RECEIVE_CHAT_MSG).observe(this) {
             for (message in it) {
-                if (message.from!= userId){
+                if (message.from != userId) {
                     break
                 }
                 val body = message.body
@@ -196,7 +205,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
                     } else if ((message.body as EMCustomMessageBody).event() == ChatConstant.MSG_ADD_FRIEND) { //是否同意好友
                         val params = (message.body as EMCustomMessageBody).params
                         if (params["isApplySuccess"] == "1") {
-                            ChatUserInfoManager.updateIsFriend(chatFragment.conversationId,true)
+                            ChatUserInfoManager.updateIsFriend(chatFragment.conversationId, true)
                             userInfo?.isFriend = true
                             chatFragment.setUserInfo(userInfo)
                         }
@@ -214,41 +223,30 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         }
     }
 
-    private fun showAddFriendPop(): BasePopupView {
-        return DialogUtils.showConfirmDialog(
-            "添加好友",
-            {
-                addFriend()
-            },
-            {
-            },
-            content = "是否同意花费${userInfo?.needRoseNum}玫瑰，添加好友？",
-            cancel = "取消",
-            confirm = "加好友",
-            cancelBg = cn.yanhu.baselib.R.drawable.shape_cancel_btn_r30
-        )
+    private fun showAddFriendPop() {
+
+        if (userInfo?.addFriendWay == 0) {
+            mViewModel.addFriend(userId)
+        } else {
+            DialogUtils.showConfirmDialog(
+                "添加好友",
+                {
+                    addFriend()
+                },
+                {
+                },
+                content = "是否同意花费${userInfo?.needRoseNum}玫瑰，添加好友？",
+                cancel = "取消",
+                confirm = "加好友",
+                cancelBg = cn.yanhu.baselib.R.drawable.shape_cancel_btn_r30
+            )
+        }
+
     }
 
     private fun addFriend() {
         mViewModel.becomeFriendRose(userId)
-        mViewModel.addFriendObservable.observe(this) { it ->
-            parseState(it, {
-                userInfo?.isFriend = true
-                ChatUserInfoManager.saveUserInfo(userInfo)
-                chatFragment.setUserInfo(userInfo)
-                mBinding.vgAddFriendTips.visibility = View.GONE
-                EmMsgManager.sendCmdMessagePeople(userId, CmdMsgTypeConfig.ADD_FRIEND, null)
-//                EmMsgManager.sendApplyFriend(
-//                    userId,
-//                    ImUserManager.getSelfUserInfo().nickName,
-//                    userInfo!!.nickName
-//                )
-            },{
-                if (it.code == ErrorCode.CODE_NO_BALANCE){
-                    ApplicationProxy.instance.showRechargePop(mContext, true)
-                }
-            })
-        }
+
     }
 
 
@@ -262,12 +260,37 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
     @SuppressLint("SetTextI18n")
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
+        mViewModel.addFriendObservable.observe(this){ it ->
+            parseState(it,{
+                showToast("好友请求已发送～")
+            },{
+                showToast(it.msg)
+            })
+        }
+        mViewModel.addFriendRoseObservable.observe(this) { it ->
+            parseState(it, {
+                userInfo?.isFriend = true
+                ChatUserInfoManager.saveUserInfo(userInfo)
+                chatFragment.setUserInfo(userInfo)
+                mBinding.vgAddFriendTips.visibility = View.GONE
+                EmMsgManager.sendCmdMessagePeople(userId, CmdMsgTypeConfig.ADD_FRIEND, null)
+//                EmMsgManager.sendApplyFriend(
+//                    userId,
+//                    ImUserManager.getSelfUserInfo().nickName,
+//                    userInfo!!.nickName
+//                )
+            }, {
+                if (it.code == ErrorCode.CODE_NO_BALANCE) {
+                    ApplicationProxy.instance.showRechargePop(mContext, true)
+                }
+            })
+        }
         mViewModel.userInfoObserver.observe(this) { it ->
             parseState(it, {
                 ChatUserInfoManager.saveUserInfo(it)
                 bindUserInfo(it)
-            },{
-                if (it.code == ErrorCode.HAS_BLACK){
+            }, {
+                if (it.code == ErrorCode.HAS_BLACK) {
                     finishPage()
                 }
             })
@@ -293,7 +316,8 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
     fun onNewIntent(intent: Intent?) {
         //chatFragment!!.onNewIntent(intent)
     }
-    companion object{
+
+    companion object {
         fun newInstance(args: Bundle): ImChatFrg {
             val fragment = ImChatFrg()
             fragment.arguments = args

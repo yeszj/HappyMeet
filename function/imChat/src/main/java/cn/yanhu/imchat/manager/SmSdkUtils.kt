@@ -62,7 +62,7 @@ object SmSdkUtils {
                             showToast(msg)
                             onUploadFileFail(msg, onSmCheckResultListener)
                         }
-                    },source.toString())
+                    },"1")
 
             }
 

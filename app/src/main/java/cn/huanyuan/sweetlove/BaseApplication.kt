@@ -114,7 +114,6 @@ import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
 import java.io.File
 import androidx.core.graphics.toColorInt
-import com.scwang.smart.refresh.footer.ClassicsFooter
 
 
 @Suppress("DEPRECATION")

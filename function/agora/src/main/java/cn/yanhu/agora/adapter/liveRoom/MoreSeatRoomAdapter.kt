@@ -235,10 +235,7 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
             var surfaceView: View?
             if (liveRoomSeatBean == null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
                 surfaceView = TextureView(context)
-
-
                 this.itemVideoSf.addView(surfaceView)
-
                 addVideoSf(surfaceView, dto, position)
 
             } else if (dto.roomUserSeatInfo!!.userId.toInt() != liveRoomSeatBean.uid) {

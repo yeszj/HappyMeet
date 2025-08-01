@@ -302,11 +302,12 @@
                 tools:visibility="visible">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/dp_50"
+                    android:layout_width="wrap_content"
+                    android:adjustViewBounds="true"
                     android:layout_height="@dimen/dp_15"
                     tools:visibility="gone"
-                    android:visibility="@{seatInfo.roomUserSeatInfo.songStatus==1?View.VISIBLE:View.GONE}"
-                    android:src="@drawable/svg_next_song" />
+                    android:visibility="@{seatInfo.roomUserSeatInfo.songStatus==1 || seatInfo.roomUserSeatInfo.songStatus==3?View.VISIBLE:View.GONE}"
+                    android:src="@{seatInfo.roomUserSeatInfo.songStatus==1?@drawable/svg_next_song:@drawable/svg_is_song}" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/dp_22"

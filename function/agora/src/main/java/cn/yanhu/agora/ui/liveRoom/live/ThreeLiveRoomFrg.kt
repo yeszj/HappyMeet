@@ -281,7 +281,10 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                             }
                         }
                     }
-
+                    cn.yanhu.agora.R.id.iv_avatar ->{
+                        val roomUserSeatInfo = item.roomUserSeatInfo ?: return
+                        showUserPop(roomUserSeatInfo.userId)
+                    }
                     cn.yanhu.agora.R.id.iv_rose -> {
                         val roomUserSeatInfo = item.roomUserSeatInfo ?: return
                         sendRose(roomUserSeatInfo)

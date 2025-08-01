@@ -129,10 +129,8 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
     override fun attachBaseContext(newBase: Context?) {
         val attachBaseContext = LanguageUtils.attachBaseContext(newBase)
         val configuration: Configuration = attachBaseContext.resources.configuration
-        if (configuration.fontScale>=1.2){
-            configuration.fontScale = 1.2f
-        }else{
-            configuration.fontScale = 1f
+        if (configuration.fontScale>=1.5){
+            configuration.fontScale = 1.5f
         }
         super.attachBaseContext(attachBaseContext)
     }

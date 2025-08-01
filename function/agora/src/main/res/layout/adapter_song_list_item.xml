@@ -10,6 +10,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_song"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="@dimen/dp_10"
         android:layout_marginBottom="@dimen/dp_10"
@@ -39,6 +40,16 @@
             app:layout_constraintStart_toEndOf="@+id/tv_index"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_height="@dimen/dp_44"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_start"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:src="@drawable/btn_start_song"
+            app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_height="wrap_content"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:orientation="vertical"

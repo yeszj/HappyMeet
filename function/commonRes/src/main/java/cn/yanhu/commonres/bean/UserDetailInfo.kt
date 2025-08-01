@@ -89,7 +89,7 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
         }
 
     @Bindable
-    var songStatus: Int = 0 //0:默认 1:即将演唱 2:插队
+    var songStatus: Int = 0 //0:默认 1:即将演唱 2:插队 3:正在演唱
         set(value) {
             field = value
             notifyPropertyChanged(BR._all)

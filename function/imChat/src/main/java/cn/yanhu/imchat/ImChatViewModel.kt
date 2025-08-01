@@ -28,7 +28,10 @@ class ImChatViewModel : BaseViewModel() {
     val groupPageInfoObserver = MutableLiveData<ResultState<GroupChatPageInfo>>()
     val userListObserver = MutableLiveData<ResultState<MutableList<UserDetailInfo>>>()
     val systemMsgObserver = MutableLiveData<ResultState<SystemMsgUnReadInfo>>()
-
+    val addFriendObservable = MutableLiveData<ResultState<String>>()
+    fun addFriend(chatUserId: String) {
+        request({ imChatRxApi.addFriend(chatUserId) }, addFriendObservable, false)
+    }
     fun getSystemMsg() {
         request({ imChatRxApi.getSystemMsg() }, systemMsgObserver, false)
     }
@@ -119,8 +122,8 @@ class ImChatViewModel : BaseViewModel() {
     }
 
 
-    val addFriendObservable = MutableLiveData<ResultState<String>>()
+    val addFriendRoseObservable = MutableLiveData<ResultState<String>>()
     fun becomeFriendRose(chatUserId: String) {
-        request({ imChatRxApi.becomeFriendRose(chatUserId) }, addFriendObservable, false)
+        request({ imChatRxApi.becomeFriendRose(chatUserId) }, addFriendRoseObservable, false)
     }
 }
