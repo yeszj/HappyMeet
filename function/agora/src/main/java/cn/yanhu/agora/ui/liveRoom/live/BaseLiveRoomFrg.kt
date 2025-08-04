@@ -181,7 +181,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         setRvSeatHeight()
         setRvChatMessageTop(false)
         initSeatStatus()
-
+        sendGiftPop?.dismiss()
         AgoraManager.getInstance().setRtcEngineEventHandlerListener(this)
 
         mBinding.roomInfo = roomSourceBean

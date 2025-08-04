@@ -25,6 +25,7 @@ import cn.zj.netrequest.status.BaseBean
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.StringUtils
+import com.hyphenate.util.PathUtil.filePathName
 import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
 
 /**
@@ -98,19 +99,27 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
                     logInfo.errorTime = timeValue
                     logInfo.description = reason
                     logInfo.extInfo = extraInfo
-                    uploadErrorFile()
+                    uploadErrorFile("agorasdk.log","agorasdkCopy.log",1)
+                    uploadErrorFile("agorasdk.1.log","agorasdk1Copy.log",2)
+                    uploadErrorFile("agorasdk.2.log","agorasdk2Copy.log",3)
+                    AppLogManager.uploadLog()
                 }
             }
         }
     }
 
-    private fun uploadErrorFile() {
+    private var upload1Success = false
+    private var upload2Success = false
+    private var upload3Success = false
+
+
+    private fun uploadErrorFile(filePathName: String,copyName: String,index : Int= 1) {
         DialogUtils.showLoading("正在上传...")
         val logPath =
-            "/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/agorasdk.log"
+            "/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/${filePathName}"
 
         val copyLogPath =
-            "/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/agorasdkCopy.log"
+            "/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/${copyName}"
         if (FileUtils.isFileExists(logPath)) {
             val isSuccess = FileUtils.copy(logPath, copyLogPath)
             val path = if (isSuccess) {
@@ -121,7 +130,7 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
             mViewModel.uploadFile(path, 2, object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     FileUtils.delete(copyLogPath)
-                    uploadLog(data.data)
+                    uploadLog(data.data,index)
                 }
 
                 override fun onFail(code: Int?, msg: String?) {
@@ -129,12 +138,12 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
                     DialogUtils.dismissLoading()
                 }
             })
+        }else{
+            uploadSuccess(index)
         }
-
-        AppLogManager.uploadLog()
     }
 
-    private fun uploadLog(url: String?) {
+    private fun uploadLog(url: String? ,index: Int) {
         if (TextUtils.isEmpty(url)) {
             DialogUtils.dismissLoading()
             return
@@ -142,9 +151,7 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
         logInfo.url = url!!
         mViewModel.uploadLog(logInfo, object : OnRequestResultListener<String> {
             override fun onSuccess(data: BaseBean<String>) {
-                DialogUtils.dismissLoading()
-                showToast("上传日志成功")
-                finish()
+                uploadSuccess(index)
             }
 
             override fun onFail(code: Int?, msg: String?) {
@@ -152,6 +159,21 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
                 DialogUtils.dismissLoading()
             }
         })
+    }
+
+    private fun uploadSuccess(index: Int) {
+        if (index == 1) {
+            upload1Success = true
+        } else if (index == 2) {
+            upload2Success = true
+        } else if (index == 3) {
+            upload3Success = true
+        }
+        if (upload1Success && upload2Success && upload3Success) {
+            DialogUtils.dismissLoading()
+            showToast("上传日志成功")
+            finish()
+        }
     }
 
     companion object {

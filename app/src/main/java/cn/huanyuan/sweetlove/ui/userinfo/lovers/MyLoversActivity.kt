@@ -122,7 +122,7 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
             mBinding.titleBar.setTitleRightText("")
             val userInfo = BaseUserInfo()
             userInfo.portrait =
-                "https://happymeet-new.oss-cn-hangzhou.aliyuncs.com/image/lovers_no_bind.png"
+                "https://happymeet-qy.oss-cn-hangzhou.aliyuncs.com/image/lovers_no_bind.png"
             it.loverInfo = userInfo
             mBinding.tvTips.visibility = View.INVISIBLE
         }
