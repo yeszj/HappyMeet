@@ -15,7 +15,8 @@ class RoomDetailInfo : RoomListBean(), Serializable, Observable {
     var uuid: String = ""
     var uid: String = ""
     var agoraToken: String = ""
-    var closeReasons:MutableList<String> = mutableListOf()
+    var closeReasons: MutableList<String> = mutableListOf()
+
     @Bindable
     var autoSeat: Boolean = false
         set(value) {
@@ -27,6 +28,7 @@ class RoomDetailInfo : RoomListBean(), Serializable, Observable {
     var manApplyInfo: ApplyUserInfo = ApplyUserInfo()
     var womanApplyInfo: ApplyUserInfo = ApplyUserInfo()
     var admin: Int = 0
+
     @Bindable
     var roomAdmin: Boolean = false
         set(value) {
@@ -34,12 +36,13 @@ class RoomDetailInfo : RoomListBean(), Serializable, Observable {
             notifyPropertyChanged(BR.roomAdmin)
         }
     var roomSeatResList: MutableList<RoomSeatInfo> = mutableListOf()
-    var seatRoseNum:Int = 0
-    var ifClubMember:Boolean = false
-    var queuePrice:String = "0"
-    var wishInfo:WishResponse?=null
+    var seatRoseNum: Int = 0
+    var ifClubMember: Boolean = false
+    var queuePrice: String = "0"
+    var wishInfo: WishResponse? = null
+    var pkDetail: RoomPkInfo? = null
 
-    fun isAdmin():Boolean{
+    fun isAdmin(): Boolean {
         return admin == 1
     }
 

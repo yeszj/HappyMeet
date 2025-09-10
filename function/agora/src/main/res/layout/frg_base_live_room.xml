@@ -38,23 +38,51 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_seat"
+        <FrameLayout
+            android:id="@+id/vg_seat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layout_constraintTop_toBottomOf="@+id/fl_topView"
-            tools:itemCount="3"
-            tools:layoutManager="com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager"
-            tools:listitem="@layout/adapter_three_room_user_seat_item"
-            tools:spanCount="2" />
+            app:layout_constraintTop_toBottomOf="@+id/fl_topView">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_seat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="3"
+                tools:layoutManager="com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager"
+                tools:listitem="@layout/adapter_three_room_user_seat_item"
+                tools:spanCount="2" />
+
+            <FrameLayout
+                android:id="@+id/seatContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/seatContainer"
+            android:id="@+id/vg_pkView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fl_topView" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/vg_seat"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btn_pk"
+                android:layout_width="wrap_content"
+                android:src="@drawable/pk_btn"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content"/>
+            <cn.yanhu.agora.ui.liveRoom.view.LiveRoomPkView
+                android:id="@+id/roomPkView"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/vg_seat" />
+        </FrameLayout>
+
 
         <FrameLayout
             android:id="@+id/fl_customView"
@@ -62,8 +90,8 @@
             android:layout_height="@dimen/dp_155"
             android:layout_marginStart="@dimen/dp_130"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/rv_seat"
-            app:layout_constraintTop_toTopOf="@+id/rv_seat" />
+            app:layout_constraintStart_toStartOf="@id/vg_seat"
+            app:layout_constraintTop_toTopOf="@+id/vg_seat" />
 
 
         <cn.yanhu.baselib.view.CustomFontTextView
@@ -247,33 +275,6 @@
                 app:fontType="@string/fontMedium" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/vg_autoSeat"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_28"
-            android:layout_marginBottom="@dimen/dp_50"
-            android:background="@drawable/bg_gradient_auto_seat"
-            android:gravity="center"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/bgInput"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:visibility="invisible">
-
-            <cn.yanhu.baselib.view.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp_12"
-                android:text="自动上麦"
-                android:textColor="@color/white" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/toggle_autoSeat"
-                android:layout_width="@dimen/dp_35"
-                android:layout_height="@dimen/dp_20"
-                android:layout_marginStart="@dimen/dp_5"
-                android:layout_marginEnd="@dimen/dp_6"
-                android:src="@{roomInfo.autoSeat?@drawable/svg_toggle_on:@drawable/svg_toggle_off}" />
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/giftAnimView"

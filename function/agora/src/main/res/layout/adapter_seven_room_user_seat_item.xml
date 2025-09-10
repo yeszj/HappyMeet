@@ -360,6 +360,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_pkResult"
+            android:layout_width="@dimen/dp_80"
+            android:src="@{seatInfo.pkStatus==1?@drawable/pk_success:seatInfo.pkStatus==2?@drawable/pk_fail:@drawable/pk_draw}"
+            android:layout_gravity="center"
+            tools:src="@drawable/pk_fail"
+            tools:visibility="visible"
+            android:visibility="@{seatInfo.pkStatus==0 || seatInfo.roomUserSeatInfo ==null?View.GONE:View.VISIBLE,default = gone}"
+            android:layout_height="@dimen/dp_80"/>
     </FrameLayout>
 
 

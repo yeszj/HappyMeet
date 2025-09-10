@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="userInfo"
+            type="cn.yanhu.commonres.bean.UserDetailInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/black_alpha80_corner_10"
+        android:paddingEnd="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
+        tools:background="@drawable/black_alpha80_corner_10">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/userAvatar"
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="@dimen/dp_18"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:src="@drawable/circle_logo"
+            app:avatarSize="@dimen/dp_32"
+            app:isCanClick="false"
+            app:isShowSvgAvatar="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true"
+            app:svgAvatarSize="@dimen/dp_45" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_6"
+            android:text="小助手"
+            android:textColor="#9EE6FF"
+            android:textSize="@dimen/sp_12"
+            app:fontWeightValue="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
+            app:layout_constraintStart_toEndOf="@+id/userAvatar"
+            app:layout_constraintTop_toTopOf="@+id/userAvatar" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_5"
+            android:text="PK已结束，双方平局！"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toStartOf="@+id/userAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/userAvatar" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

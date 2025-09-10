@@ -2,7 +2,7 @@
 <litepal>
     <dbname value="sweetlove" />
 
-    <version value="35" />
+    <version value="36" />
 
     <!--
     	Define your models in the list with mapping tag, LitePal will
@@ -20,6 +20,7 @@
         <mapping class="cn.yanhu.agora.bean.AgoraSdkCacheInfo"/>
         <mapping class="cn.yanhu.agora.bean.BeautyBean"/>
         <mapping class="cn.yanhu.agora.bean.InviteSeatRecord"/>
+        <mapping class="cn.yanhu.commonres.bean.RoomSwitchCache"/>
     </list>
     <list>
     </list>

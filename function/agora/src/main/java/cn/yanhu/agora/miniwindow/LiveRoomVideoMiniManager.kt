@@ -15,6 +15,8 @@ import cn.yanhu.imchat.manager.CutLiveRoomUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.yhao.floatwindow.*
+import androidx.core.view.isNotEmpty
+import androidx.core.view.isVisible
 
 /**
  * 视频聊天小窗口
@@ -43,7 +45,7 @@ class LiveRoomVideoMiniManager {
         layoutParams.width = width
         layoutParams.height = height
         binding.floatSf.layoutParams = layoutParams
-        if (binding.floatSf.childCount > 0) {
+        if (binding.floatSf.isNotEmpty()) {
             binding.floatSf.removeAllViews()
         }
         val floatWindow = FloatWindow.get(TAG)
@@ -67,7 +69,7 @@ class LiveRoomVideoMiniManager {
         }
         miniWindows.setOnClickListener {
             binding.floatFunction.visibility =
-                if (binding.floatFunction.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                if (binding.floatFunction.isVisible) View.GONE else View.VISIBLE
         }
         binding.floatVideoLl.visibility = View.VISIBLE
         binding.floatWmode.setOnSingleClickListener {

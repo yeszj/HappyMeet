@@ -398,6 +398,7 @@ public class AgoraManager implements IMediaExtensionObserver {
             super.onClientRoleChangeFailed(reason, currentRole);
         }
 
+        @SuppressLint("DefaultLocale")
         @Override
         public void onLocalVideoStateChanged(Constants.VideoSourceType source, int state, int error) {
             super.onLocalVideoStateChanged(source, state, error);

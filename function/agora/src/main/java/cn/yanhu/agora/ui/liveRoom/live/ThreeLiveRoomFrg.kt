@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.adapter.liveRoom.ThreeRoomSeatAdapter
 import cn.yanhu.agora.api.agoraRxApi
@@ -24,6 +25,7 @@ import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.zj.netrequest.application.ApplicationProxy
@@ -42,7 +44,7 @@ import org.json.JSONObject
 /**
  * @author: zhengjun
  * created: 2024/4/1
- * desc:
+ * desc:三人房
  */
 class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     override fun initData() {
@@ -57,12 +59,16 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         addTopTitleView()
         super.initData()
         mBinding.rvSeat.adapter = seatUserAdapter
-        if (isOwner) {
-            mBinding.vgAutoSeat.visibility = View.VISIBLE
-        } else {
-            mBinding.vgAutoSeat.visibility = View.INVISIBLE
-        }
+    }
 
+    override fun setHasSeatUpStatus() {
+        super.setHasSeatUpStatus()
+        seatUserAdapter.notifyItemChanged(0, "showEnterAnim")
+    }
+
+    override fun setSeatOutSuccess() {
+        super.setSeatOutSuccess()
+        seatUserAdapter.notifyItemChanged(0,  "hideEnterAnim")
     }
 
     private fun checkExclusiveSwitch() {
@@ -289,10 +295,19 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         val roomUserSeatInfo = item.roomUserSeatInfo ?: return
                         sendRose(roomUserSeatInfo)
                     }
+                    cn.yanhu.agora.R.id.vg_autoSeat -> {
+                        showSetAutoSeat()
+                    }
                 }
             }
 
         }
+
+    override fun refreshAutoSeat() {
+        super.refreshAutoSeat()
+        (seatUserAdapter as ThreeRoomSeatAdapter).roomDetailInfo = roomSourceBean
+        seatUserAdapter.notifyItemChanged(0,"updateToggleAuto")
+    }
 
     override fun initListener() {
         super.initListener()
@@ -307,6 +322,9 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         )
         seatUserAdapter.addOnItemChildClickListener(
             cn.yanhu.agora.R.id.tv_switch, childItemClickListener
+        )
+        seatUserAdapter.addOnItemChildClickListener(
+            cn.yanhu.agora.R.id.vg_autoSeat, childItemClickListener
         )
         seatUserAdapter.addOnItemChildClickListener(
             cn.yanhu.agora.R.id.tv_manApplyCount,

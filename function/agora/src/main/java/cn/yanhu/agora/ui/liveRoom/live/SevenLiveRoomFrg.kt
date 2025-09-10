@@ -16,6 +16,7 @@ import cn.yanhu.agora.R
 import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.ViewSevenRoomRankViewBinding
+import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 import cn.yanhu.agora.pop.CrownedUserListPop
 import cn.yanhu.agora.pop.RoomAngleRankPop
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -32,18 +33,18 @@ import com.chad.library.adapter4.util.addOnDebouncedChildClick
 /**
  * @author: zhengjun
  * created: 2024/4/1
- * desc:
+ * desc:七人房
  */
 open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
 
     protected val rankAdapter by lazy { LiveRoomRoseRankAdapter() }
     override fun initData() {
         roomSourceBean = requireArguments().getSerializable(IntentKeyConfig.DATA) as RoomDetailInfo
-
         seatUserAdapter =
             MoreSeatRoomAdapter(roomSourceBean.getFragmentType(), roomSourceBean.roomType)
         val layoutManager = QuickGridLayoutManager(mContext, 3)
         mBinding.rvSeat.layoutManager = layoutManager
+        initRankView()
         super.initData()
         (seatUserAdapter as MoreSeatRoomAdapter).setIsOwner(isOwner)
         mBinding.rvSeat.adapter = seatUserAdapter
@@ -52,18 +53,46 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
 
-    private lateinit var rankViewBinding: ViewSevenRoomRankViewBinding
-    protected open fun addRankView() {
-        val rankView =
-            LayoutInflater.from(mContext).inflate(R.layout.view_seven_room_rank_view, null)
-        rankViewBinding = DataBindingUtil.bind(rankView)!!
-        rankViewBinding.apply {
-            bindSevenRankView(rankView)
+    override fun setHasSeatUpStatus() {
+        super.setHasSeatUpStatus()
+        showAnimSwitch()
+    }
+
+    override fun setSeatOutSuccess() {
+        super.setSeatOutSuccess()
+        if (::rankViewBinding.isInitialized){
+            rankViewBinding.vgEnterAnim.visibility = View.GONE
+        }
+    }
+
+    private fun showAnimSwitch() {
+        if (::rankViewBinding.isInitialized) {
+            rankViewBinding.vgEnterAnim.visibility = View.VISIBLE
+            changeEnterAnimStatus(rankViewBinding.iconEnter)
         }
     }
 
 
-    private fun ViewSevenRoomRankViewBinding.bindSevenRankView(rankView: View?) {
+    private lateinit var rankViewBinding: ViewSevenRoomRankViewBinding
+
+    protected open fun initRankView(){
+        val rankView =
+            LayoutInflater.from(mContext).inflate(R.layout.view_seven_room_rank_view, null)
+        rankViewBinding = DataBindingUtil.bind(rankView)!!
+        mBinding.flCustomView.addView(rankView)
+    }
+
+    protected open fun addRankView() {
+        rankViewBinding.apply {
+            bindSevenRankView()
+        }
+        if (isOwner){
+            showAnimSwitch()
+        }
+    }
+
+
+    private fun ViewSevenRoomRankViewBinding.bindSevenRankView() {
         roomInfo = roomSourceBean
         this.isRoomOwner = isOwner
         toggleAutoSeat.setOnSingleClickListener {
@@ -72,11 +101,7 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
         isAngle = roomType == RoomListBean.TYPE_SEVEN_ANGLE
         isSong = roomType == RoomListBean.TYPE_SEVEN_SONG
         rvRank.adapter = rankAdapter
-        if (AppCacheManager.isOpenGiftAudio) {
-            ivAudio.setImageResource(R.drawable.svg_voice_on)
-        } else {
-            ivAudio.setImageResource(R.drawable.svg_voice_off)
-        }
+        changeGiftAudioStatus(ivAudio)
         rankAdapter.setOnItemClickListener { _, _, _ ->
             userReceiveRoseInfo?.apply {
                 showRankListPop()
@@ -98,15 +123,11 @@ open class SevenLiveRoomFrg : BaseLiveRoomFrg() {
             showCrownedListPop(CrownedUserListPop.TYPE_ANGLE)
         }
         vgGiftAudio.setOnSingleClickListener {
-            if (AppCacheManager.isOpenGiftAudio) {
-                ivAudio.setImageResource(R.drawable.svg_voice_off)
-                AppCacheManager.isOpenGiftAudio = false
-            } else {
-                ivAudio.setImageResource(R.drawable.svg_voice_on)
-                AppCacheManager.isOpenGiftAudio = true
-            }
+            changeGiftAudioStatus(ivAudio,true)
         }
-        mBinding.flCustomView.addView(rankView)
+        vgEnterAnim.setOnSingleClickListener {
+            changeEnterAnimStatus(iconEnter,true)
+        }
     }
     override fun refreshAutoSeat() {
             rankViewBinding.roomInfo = roomSourceBean

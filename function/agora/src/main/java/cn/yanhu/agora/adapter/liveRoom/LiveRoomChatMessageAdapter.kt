@@ -9,6 +9,7 @@ import cn.yanhu.agora.bean.GiftMsgInfo
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgEmojiItemBinding
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgGiftItemBinding
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgNoticeItemBinding
+import cn.yanhu.agora.databinding.AdapterChatRoomMsgRobotItemBinding
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgTxtItemBinding
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgWelcomeItemBinding
 import cn.yanhu.baselib.utils.CommonUtils
@@ -48,12 +49,17 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
         val binding: AdapterChatRoomMsgNoticeItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
+    class VH7(
+        val binding: AdapterChatRoomMsgRobotItemBinding
+    ) : RecyclerView.ViewHolder(binding.root)
+
     init {
         addItemType(
             ChatRoomMsgInfo.ITEM_NEW_ADD_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH6> {
                 override fun onBind(holder: VH6, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.tvNotice.text = "此版本暂不支持此消息"
+                    ViewUtils.setMarginVertical(holder.binding.vgNotice,0, CommonUtils.getDimension(R.dimen.dp_10))
                 }
 
                 override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH6 {
@@ -165,6 +171,24 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
                 }
             })
         addItemType(
+            ChatRoomMsgInfo.ITEM_ROBOT_TYPE,
+            object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH7> {
+                override fun onBind(holder: VH7, position: Int, item: ChatRoomMsgInfo?) {
+                    holder.binding.apply {
+                        tvContent.text = item?.content
+                        executePendingBindings()
+                    }
+                }
+
+                override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH7 {
+                    val binding: AdapterChatRoomMsgRobotItemBinding =
+                        AdapterChatRoomMsgRobotItemBinding.inflate(
+                            LayoutInflater.from(context), parent, false
+                        )
+                    return VH7(binding)
+                }
+            })
+        addItemType(
             ChatRoomMsgInfo.ITEM_DEFAULT_TYPE,
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH2> {
                 override fun onBind(holder: VH2, position: Int, item: ChatRoomMsgInfo?) {
@@ -193,7 +217,7 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
 
             }).onItemViewType { position, _ ->
             val item = getItem(position)
-            if (item!!.type >= 0 && item.type <= 5) {
+            if (item!!.type >= 0 && item.type <= 6) {
                 item.type
             } else {
                 -1

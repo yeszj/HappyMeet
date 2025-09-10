@@ -323,6 +323,7 @@ public class CustomEaseConversationListLayout extends EaseBaseLayout implements 
         menuHelper.addItemMenu(Menu.NONE, R.id.action_con_make_read, 0, getContext().getString(R.string.ease_conversation_menu_make_read));
         menuHelper.addItemMenu(Menu.NONE, R.id.action_con_make_top, 1, getContext().getString(R.string.ease_conversation_menu_make_top));
         menuHelper.addItemMenu(Menu.NONE, R.id.action_con_cancel_top, 2, getContext().getString(R.string.ease_conversation_menu_cancel_top));
+        menuHelper.addItemMenu(Menu.NONE, R.id.action_con_delete, 3, getContext().getString(R.string.ease_conversation_menu_delete));
 
         menuHelper.initMenu(view);
 

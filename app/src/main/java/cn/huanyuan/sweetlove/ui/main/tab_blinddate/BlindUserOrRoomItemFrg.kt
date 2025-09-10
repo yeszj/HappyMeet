@@ -1,6 +1,7 @@
 package cn.huanyuan.sweetlove.ui.main.tab_blinddate
 
 import android.os.Bundle
+import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.FrgBlindUserListItemBinding
@@ -49,6 +50,8 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
                 }
             }
         }
+
+
         if (!isRealVisible()){
             requestData()
         }
@@ -101,7 +104,7 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
                 isRequest = true
                 val roomList = it.roomList
                 if (page == 1) {
-                    adapter.isStateViewEnable = roomList.size <= 0
+                    adapter.isStateViewEnable = roomList.isEmpty()
                     adapter.submitList(roomList)
                 } else {
                     adapter.addAll(roomList)

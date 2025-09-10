@@ -24,8 +24,7 @@ class CustomVideoView(context: Context, val radius: Int, val url: String) : Vide
             this.apply {
                 setPlayerBackgroundColor(Color.TRANSPARENT)
                 setLooping(false)
-                isMute = !AppCacheManager.isOpenGiftAudio
-                setScreenScaleType(BaseVideoView.SCREEN_SCALE_CENTER_CROP)
+                setScreenScaleType(SCREEN_SCALE_CENTER_CROP)
                 setOnStateChangeListener(object : OnStateChangeListener {
                     override fun onPlayerStateChanged(playerState: Int) {
                     }

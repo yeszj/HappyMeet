@@ -120,7 +120,36 @@
                 android:src="@drawable/svg_voice_on"
                 android:layout_marginStart="@dimen/dp_4" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/vg_enterAnim"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginStart="@dimen/dp_4"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@color/blackAlpha80"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="@+id/vg_giftAudio"
+            app:layout_constraintBottom_toBottomOf="@+id/vg_giftAudio"
+            android:visibility="gone"
+            android:paddingHorizontal="@dimen/dp_4"
+            app:layout_constraintStart_toEndOf="@+id/vg_giftAudio"
+            tools:visibility="visible">
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="进场特效"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_enter"
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_4"
+                android:adjustViewBounds="true"
+                android:src="@drawable/svg_voice_on" />
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/vg_autoSeat"
             android:layout_width="wrap_content"

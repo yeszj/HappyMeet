@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_gradient_pk"
+            app:layout_constraintBottom_toBottomOf="@+id/pkProgress"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <LinearLayout
+            android:id="@+id/vg_time"
+            android:layout_width="@dimen/dp_98"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_pk_time"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_txtPk"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:src="@drawable/txt_pk" />
+
+            <cn.yanhu.baselib.widget.FontWeightValueTextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_2"
+                android:text="00:88"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                app:fontWeightValue="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vg_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_8"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/dp_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <cn.yanhu.commonres.view.OverlapFlowLayout
+                android:id="@+id/redAvatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:overAvatarSize="@dimen/dp_24"
+                app:overlapWidth="@dimen/dp_5" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_1"
+                android:layout_weight="1" />
+
+            <cn.yanhu.commonres.view.OverlapFlowLayout
+                android:id="@+id/blue_avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:overAvatarSize="@dimen/dp_24"
+                app:overlapWidth="@dimen/dp_5" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/pkProgress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_12"
+            android:progress="50"
+            android:progressDrawable="@drawable/pk_progress_red_bg"
+            app:layout_constraintTop_toBottomOf="@+id/vg_avatar" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_redValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:fontWeightValue="medium"
+            app:layout_constraintBottom_toBottomOf="@+id/pkProgress"
+            app:layout_constraintStart_toStartOf="@+id/pkProgress"
+            app:layout_constraintTop_toTopOf="@+id/pkProgress" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_blueValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:fontWeightValue="medium"
+            app:layout_constraintBottom_toBottomOf="@+id/pkProgress"
+            app:layout_constraintEnd_toEndOf="@+id/pkProgress"
+            app:layout_constraintTop_toTopOf="@+id/pkProgress" />
+
+        <cn.yanhu.commonres.view.CustomLottieAnimationView
+            android:id="@+id/iv_startTag"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_32"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="@+id/pkProgress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/pkProgress"
+            app:lottie_autoPlay="false"
+            app:lottie_fileName="pk_start.json"
+            app:lottie_loop="false" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_redResult"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_40"
+            android:src="@drawable/pk_success"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/pkProgress"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_blueResult"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginEnd="@dimen/dp_40"
+            android:src="@drawable/pk_fail"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/pkProgress"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

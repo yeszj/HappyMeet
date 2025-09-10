@@ -60,7 +60,7 @@ dependencies {
     api("me.weishu:free_reflection:3.0.1")
     api("com.github.gzu-liyujiang:Android_CN_OAID:4.2.4")
     //https://github.com/CymChad/BaseRecyclerViewAdapterHelper
-    api("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.4")
+    api("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.7")
     //https://github.com/li-xiaojun/XPopup/
     api("com.github.li-xiaojun:XPopup:2.10.0")
     api("com.github.bumptech.glide:glide:${rootProject.ext.get("glide")}")
@@ -70,7 +70,7 @@ dependencies {
     //https://github.com/lihangleo2/ShadowLayout
     api("com.github.lihangleo2:ShadowLayout:3.4.0")
 
-    //https://gitcode.com/youth5201314/banner/overview
+    //https://gitcode.com/youth5201314
     api("io.github.youth5201314:banner:2.2.3"){
         exclude("androidx.viewpager2","viewpager2")
     }

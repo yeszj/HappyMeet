@@ -31,6 +31,7 @@ import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.view.TitleBar
 import cn.zj.netrequest.BaseViewModel
+import cn.zj.netrequest.application.ApplicationProxy
 import com.blankj.utilcode.util.LanguageUtils
 import com.kingja.loadsir.callback.Callback
 import com.kingja.loadsir.core.LoadService
@@ -129,8 +130,8 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
     override fun attachBaseContext(newBase: Context?) {
         val attachBaseContext = LanguageUtils.attachBaseContext(newBase)
         val configuration: Configuration = attachBaseContext.resources.configuration
-        if (configuration.fontScale>=1.5){
-            configuration.fontScale = 1.5f
+        if (configuration.fontScale>=1.3){
+            configuration.fontScale = 1.3f
         }
         super.attachBaseContext(attachBaseContext)
     }

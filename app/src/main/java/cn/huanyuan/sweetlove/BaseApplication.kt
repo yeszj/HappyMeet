@@ -11,7 +11,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.http.HttpResponseCache
 import android.os.Build
@@ -26,7 +25,6 @@ import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.func.ApplicationRouterImpl
 import cn.huanyuan.sweetlove.func.manager.ChannelUtils
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
-import cn.huanyuan.sweetlove.func.service.LocalRecordingService
 import cn.huanyuan.sweetlove.func.task.AppPopTask
 import cn.huanyuan.sweetlove.func.task.ImChatMsgNotifyTask
 import cn.huanyuan.sweetlove.net.HttpHeadInterceptor
@@ -114,6 +112,7 @@ import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
 import java.io.File
 import androidx.core.graphics.toColorInt
+import cn.huanyuan.sweetlove.func.manager.AppLogManager
 
 
 @Suppress("DEPRECATION")
@@ -148,8 +147,6 @@ class BaseApplication : Application() {
                     reInitImSdk()
                 }
                 logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"App切换到前台")
-                val intent = Intent(activity, LocalRecordingService::class.java)
-                activity.stopService(intent)
                 checkAlertPermission(activity)
             }
 
@@ -161,16 +158,8 @@ class BaseApplication : Application() {
                     )
                 }
                 logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"App切换到后台")
-                if (AgoraManager.isLiveRoom) {
-                    val intent = Intent(activity, LocalRecordingService::class.java)
-                    intent.putExtra("type", AgoraManager.callType)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        activity.startForegroundService(intent)
-                    } else {
-                        activity.startService(intent)
-                    }
-                    logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"App切换到后台----开启前台服务")
-                }
+
+
             }
         })
     }
@@ -495,7 +484,7 @@ class BaseApplication : Application() {
                         highIMMsgId.setContentIntent(contentIntent) // 设置内容的点击意图
                             .setAutoCancel(true) // 点击通知栏后是否自动清除该通知
                             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                            .setSmallIcon(R.mipmap.icon_splash_logo) // 设置应用名称左边的小图标
+                            .setSmallIcon(cn.yanhu.commonres.R.mipmap.icon_splash_logo) // 设置应用名称左边的小图标
                             .setLargeIcon(resource).setContentTitle(nickName) // 设置通知栏里面的标题文本
                             .setContentText(
                                 EaseCommonUtils.getMessageDigest(
@@ -511,7 +500,7 @@ class BaseApplication : Application() {
             val notification: NotificationCompat.Builder =
                 NotificationCompat.Builder(topActivity).setContentIntent(contentIntent) // 设置内容的点击意图
                     .setAutoCancel(true) // 点击通知栏后是否自动清除该通知
-                    .setSmallIcon(R.mipmap.icon_splash_logo) // 设置应用名称左边的小图标
+                    .setSmallIcon(cn.yanhu.commonres.R.mipmap.icon_splash_logo) // 设置应用名称左边的小图标
                     .setContentTitle(nickName) // 设置通知栏里面的标题文本
                     .setContentText(
                         EaseCommonUtils.getMessageDigest(
@@ -566,7 +555,11 @@ class BaseApplication : Application() {
     private fun dealCommonCmdMsg(message: EMMessage) {
         try {
             val source = message.getIntAttribute("source", -1)
-            logcom("收到透传消息source=$source")
+            logcom("收到透传消息source = $source")
+            val attributes = message.attributes
+            if (BuildConfig.DEBUG){
+                logcom("收到透传消息${GsonUtils.toJson(attributes)}")
+            }
             if (source == CmdMsgTypeConfig.ADD_FRIEND) {
                 val userInfo = ChatUserInfoManager.getUserInfo(message.conversationId())
                 userInfo?.apply {
@@ -668,6 +661,9 @@ class BaseApplication : Application() {
                     ChatConstant.ACTION_USER_ONLINE,
                     data.toString()
                 )
+            }else if (source == ChatConstant.ACTION_UPLOAD_LOG){
+                AppLogManager.uploadErrorFile("agorasdk.log","agorasdkCopy.log")
+                AppLogManager.uploadLocalLog()
             }
         } catch (e: Exception) {
             e.printStackTrace()

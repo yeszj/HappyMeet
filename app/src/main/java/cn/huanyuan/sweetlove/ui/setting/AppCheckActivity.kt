@@ -47,8 +47,8 @@ class AppCheckActivity : BaseActivity<ActivityAppCheckBinding, SettingViewModel>
     override fun requestData() {
         super.requestData()
         mViewModel.getAppCheckInfo(
-            PermissionXUtils.hasPermission(mutableListOf(Manifest.permission.CAMERA) as ArrayList<String>),
-            PermissionXUtils.hasPermission(mutableListOf(Manifest.permission.RECORD_AUDIO) as ArrayList<String>)
+            PermissionXUtils.isNoPermission(mutableListOf(Manifest.permission.CAMERA) as ArrayList<String>),
+            PermissionXUtils.isNoPermission(mutableListOf(Manifest.permission.RECORD_AUDIO) as ArrayList<String>)
         )
     }
 

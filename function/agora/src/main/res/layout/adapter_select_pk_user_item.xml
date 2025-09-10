@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="cn.yanhu.commonres.R"/>
+        <import type="android.view.View"/>
+        <import type="android.text.TextUtils"/>
+        <variable
+            name="userInfo"
+            type="cn.yanhu.agora.bean.PkSeatUserInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_marginEnd="@dimen/dp_9"
+        android:layout_marginBottom="@dimen/dp_9"
+        android:layout_height="wrap_content">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp_42"
+            android:layout_height="@dimen/dp_42"
+            imageUrl="@{userInfo.portrait}"
+            app:riv_border_color="@color/colorMain"
+            app:riv_border_width="@dimen/dp_2"
+            tools:src="@drawable/ease_default_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_seat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_corner_10"
+            tools:backgroundTint="@color/colorMain"
+            android:gravity="center"
+            android:minWidth="@dimen/dp_28"
+            tools:text="1"
+            android:backgroundTint="@{userInfo.selectStatus==0?@color/fontGrayColor:userInfo.selectStatus==1?@color/colorMain:@color/colorBlue}"
+            android:text='@{userInfo.seatIndex==0?"主持":String.valueOf(userInfo.seatIndex)}'
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            android:visibility="@{TextUtils.isEmpty(userInfo.portrait)?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintEnd_toEndOf="@+id/iv_avatar"
+            app:layout_constraintStart_toStartOf="@+id/iv_avatar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

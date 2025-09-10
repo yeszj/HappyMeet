@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_top_corner_10"
+        android:backgroundTint="#161727"
+        android:paddingBottom="@dimen/dp_30">
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_20"
+            android:text="发起PK"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:fontWeightValue="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            android:background="@drawable/bg_pk_time_select"
+            android:drawableEnd="@drawable/svg_down_trangle"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:paddingVertical="@dimen/dp_3"
+            android:text="5分钟"
+            android:textColor="#99FFFFFF"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+            app:layout_constraintStart_toEndOf="@+id/tv_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_title" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:background="@drawable/bg_pk_time_select"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_title">
+
+            <RadioButton
+                android:id="@+id/rb_single"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_main_btn_r20"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="单人PK"
+                android:textColor="@color/color_pk_style" />
+
+            <RadioButton
+                android:id="@+id/rb_more"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_main_btn_r20"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="多人Pk"
+                android:textColor="@color/color_pk_style" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/vg_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_6"
+                android:layout_weight="1"
+                android:background="@drawable/bg_pk_red_user"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_10">
+
+                    <cn.yanhu.baselib.widget.FontWeightValueTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="红方 "
+                        android:textColor="@color/fontRedColor"
+                        android:textSize="@dimen/sp_14"
+                        app:fontWeightValue="bold" />
+
+                    <cn.yanhu.baselib.widget.FontWeightValueTextView
+                        android:id="@+id/tv_redCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0人"
+                        android:textColor="@color/fontRedColor"
+                        android:textSize="@dimen/sp_12" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_red"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_9"
+                    android:paddingTop="@dimen/dp_16"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3"
+                    tools:listitem="@layout/adapter_has_select_pk_user_item" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_6"
+                android:layout_weight="1"
+                android:background="@drawable/bg_pk_blue_user"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_10">
+
+                    <cn.yanhu.baselib.widget.FontWeightValueTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="蓝方 "
+                        android:textColor="#288DFF"
+                        android:textSize="@dimen/sp_14"
+                        app:fontWeightValue="bold" />
+
+                    <cn.yanhu.baselib.widget.FontWeightValueTextView
+                        android:id="@+id/tv_blueCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0人"
+                        android:textColor="#288DFF"
+                        android:textSize="@dimen/sp_12" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_9"
+                    android:paddingTop="@dimen/dp_16"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3"
+                    tools:listitem="@layout/adapter_has_select_pk_user_item" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="红方有人下麦了，成员列表已更新"
+            android:textColor="@color/colorMain"
+            android:visibility="gone"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vg_user" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_startPk"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="@drawable/selector_main_btn_r30"
+            android:gravity="center"
+            android:enabled="false"
+            android:text="发起PK"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontWeightValue="bold"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tips" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -34,6 +34,9 @@ object MiniWindowManager {
 
     @JvmStatic
     fun switchLiveToFront(context: Context, activity: Activity) {
+        if (activity.isDestroyed){
+            return
+        }
         val intent = Intent(
             context,
             activity.javaClass
@@ -45,7 +48,7 @@ object MiniWindowManager {
 
     @JvmStatic
     fun switchLiveToFront(type: Int, isFinish: Boolean = false) {
-        val topActivity = ActivityUtils.getTopActivity()
+        val topActivity = ActivityUtils.getTopActivity()?:return
         val intent = Intent(
             topActivity,
              LiveRoomActivity::class.java

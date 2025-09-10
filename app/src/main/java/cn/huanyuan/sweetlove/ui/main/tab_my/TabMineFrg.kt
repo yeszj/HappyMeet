@@ -479,6 +479,9 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
     }
 
     private fun removePic(position: Int) {
+        if (position<0 || position>=editPhotoAdapter.itemCount){
+            return
+        }
         val item = editPhotoAdapter.getItem(position)
         photoList.removeIf {
             it.url == item?.url

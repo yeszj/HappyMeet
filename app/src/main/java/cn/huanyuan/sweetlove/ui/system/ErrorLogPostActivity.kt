@@ -25,7 +25,6 @@ import cn.zj.netrequest.status.BaseBean
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.StringUtils
-import com.hyphenate.util.PathUtil.filePathName
 import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
 
 /**
@@ -102,7 +101,7 @@ class ErrorLogPostActivity : BaseActivity<ActivityErrorLogPostBinding, SystemVie
                     uploadErrorFile("agorasdk.log","agorasdkCopy.log",1)
                     uploadErrorFile("agorasdk.1.log","agorasdk1Copy.log",2)
                     uploadErrorFile("agorasdk.2.log","agorasdk2Copy.log",3)
-                    AppLogManager.uploadLog()
+                    AppLogManager.uploadLocalLog()
                 }
             }
         }

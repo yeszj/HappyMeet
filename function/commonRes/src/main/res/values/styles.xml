@@ -141,4 +141,14 @@
         <attr name="img_spacing" format="dimension" />
         <attr name="showVideo" format="boolean" />
     </declare-styleable>
+
+
+        <declare-styleable name="OverlapFlowLayout">
+            <!-- 每行最多显示几个头像 -->
+            <attr name="maxPerLine" format="integer" />
+            <!-- 头像重叠的宽度（单位 px 或 dp） -->
+            <attr name="overlapWidth" format="dimension" />
+            <attr name="overAvatarSize" format="dimension"/>
+        </declare-styleable>
+
 </resources>

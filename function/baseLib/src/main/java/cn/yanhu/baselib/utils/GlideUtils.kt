@@ -66,34 +66,7 @@ object GlideUtils {
             requestOptions.error(placeholderId)
         }
         if (errorId != null) requestOptions.error(errorId)
-        Glide.with(context).load(url).apply(requestOptions).addListener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: com.bumptech.glide.request.target.Target<Drawable?>,
-                isFirstResource: Boolean
-            ): Boolean {
-                e?.apply {
-                    logComToFile("Glide", "加载失败: ${e.message}")
-                    this.rootCauses.forEach { cause ->
-                        logComToFile("Glide", "加载失败rootCauses: ${cause?.message}")
-                    }
-                }
-                // 图片加载失败回调
-                return false // 返回false表示继续执行Glide默认错误处理
-            }
-
-            override fun onResourceReady(
-                resource: Drawable,
-                model: Any,
-                target: com.bumptech.glide.request.target.Target<Drawable?>?,
-                dataSource: DataSource,
-                isFirstResource: Boolean
-            ): Boolean {
-                // 图片加载成功回调
-                return false
-            }
-        }).into(imageView)
+        Glide.with(context).load(url).apply(requestOptions).into(imageView)
     }
 
     fun loadBlurTransPic(

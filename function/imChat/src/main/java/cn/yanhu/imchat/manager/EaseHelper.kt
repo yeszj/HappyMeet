@@ -3,6 +3,7 @@ package cn.yanhu.imchat.manager
 import android.text.TextUtils
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
+import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.db.ChatUserInfoManager
@@ -11,11 +12,25 @@ import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.GsonUtils
 import com.hyphenate.chat.EMClient
+import com.hyphenate.chat.EMConversation
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.domain.EaseUser
 import com.hyphenate.easeui.provider.EaseUserProfileProvider
+import com.jeremyliao.liveeventbus.LiveEventBus
 
 object EaseHelper {
+
+    fun setUserIsBlackSuccess(blockUserId: String?) {
+        LiveEventBus.get<String>(EventBusKeyConfig.BLOCK_USER_SUCCESS).post(blockUserId)
+        EMClient.getInstance().chatManager().deleteConversation(blockUserId, false)
+        EMClient.getInstance().chatManager().deleteConversationFromServer(
+            blockUserId,
+            EMConversation.EMConversationType.Chat,
+            false,
+            null
+        )
+    }
+
 
     @JvmStatic
     fun initEaseUI() {

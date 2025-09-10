@@ -724,7 +724,7 @@ public class CustomEaseChatMessageListLayout extends RelativeLayout implements I
                 }
             }
         }
-        if (rewardMap.size() > 0) {
+        if (!rewardMap.isEmpty()) {
             Collection<RewardRequest.RewardInfo> values = rewardMap.values();
             RewardRequest request = new RewardRequest(conversation.conversationId(), new ArrayList<>(values));
             EmMsgManager.receiveChatReward(request);

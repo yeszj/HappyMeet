@@ -1,8 +1,11 @@
 package cn.yanhu.commonres.utils
 
 import android.content.Context
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
+import cn.yanhu.commonres.bean.RoomSwitchCache
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 import cn.zj.netrequest.download.DownloadUtil
 import cn.zj.netrequest.download.FileDownloadListener
 import cn.zj.netrequest.download.InputParameter
@@ -25,10 +28,10 @@ object VideoAnimUtils {
     fun loadAssetsVideoAnim(
         context: Context,
         assetsName: String,
-        videoAnimView: AnimView, loadListener: OnLoadVideoAnimListener? = null
+        videoAnimView: AnimView, loadListener: OnLoadVideoAnimListener? = null,roomId: String = ""
     ) {
         videoAnimView.setScaleType(ScaleType.CENTER_CROP)
-        videoAnimView.setMute(!AppCacheManager.isOpenGiftAudio)
+        videoAnimView.setMute(!RoomSwitchCacheManager.isOpenGiftVoice(roomId))
         logcom("播发assets礼物特效")
         val dir = context.getExternalFilesDir(null)?.absolutePath + File.separator + "sweetLove"
         val boxPath = "$dir/$assetsName"
@@ -49,10 +52,12 @@ object VideoAnimUtils {
         context: Context,
         animUrl: String,
         videoAnimView: AnimView,
-        loadListener: OnLoadVideoAnimListener? = null
+        loadListener: OnLoadVideoAnimListener? = null,
+        roomId: String = ""
     ) {
+
         videoAnimView.setScaleType(ScaleType.CENTER_CROP)
-        videoAnimView.setMute(!AppCacheManager.isOpenGiftAudio)
+        videoAnimView.setMute(!RoomSwitchCacheManager.isOpenGiftVoice(roomId))
         val url = URL(animUrl)
         logcom(
             "urlParse",
@@ -105,11 +110,13 @@ object VideoAnimUtils {
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
+                        logComToFile("playGift","下载视频礼物特效失败:msg=${e.message}")
                         loadListener?.onLoadFail()
                     }
                 }
 
                 override fun onFailed(msg: String?) {
+                    logComToFile("playGift","下载视频礼物特效失败:msg=$msg")
                     loadListener?.onLoadFail()
                 }
             })

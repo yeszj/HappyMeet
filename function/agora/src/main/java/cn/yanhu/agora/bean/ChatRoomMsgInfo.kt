@@ -22,5 +22,7 @@ data class ChatRoomMsgInfo(val type: Int, val content: String,val sendUserInfo:U
 
         const val ITEM_EMOJI_TYPE = 5 //表情消息
 
+        const val ITEM_ROBOT_TYPE = 6 //机器人小助手
+
     }
 }

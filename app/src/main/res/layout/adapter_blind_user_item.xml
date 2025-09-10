@@ -76,13 +76,12 @@
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_status"
-            style="@style/common_white_shadow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="@dimen/dp_6"
             android:text='@{roomBean.roomTypeName}'
             android:textColor="@color/white"
-            android:textSize="@dimen/sp_12"
+            android:textSize="@dimen/dp_12"
             app:fontType="@string/fontMedium"
             app:layout_constraintBottom_toBottomOf="@+id/statuBg"
             app:layout_constraintStart_toEndOf="@+id/iv_status"

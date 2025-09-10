@@ -70,6 +70,7 @@ import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
 import androidx.core.view.isVisible
+import cn.yanhu.agora.service.LocalServiceManager
 
 /**
  * @author: zhengjun
@@ -802,6 +803,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
 
     override fun onResume() {
         super.onResume()
+        LocalServiceManager.startLocalService(mContext)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
@@ -823,6 +825,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
         }
     }
 
+
     override fun exactDestroy() {
         super.exactDestroy()
         LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESHCHATUSER).post(true)
@@ -842,5 +845,6 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
             callTimer = null
         }
         handler.removeCallbacksAndMessages(null)
+        LocalServiceManager.stopLocalService(mContext)
     }
 }

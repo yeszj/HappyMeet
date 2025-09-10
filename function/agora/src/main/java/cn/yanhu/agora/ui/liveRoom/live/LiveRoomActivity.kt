@@ -5,6 +5,7 @@ import android.content.Intent
 import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.ActivityLiveRoomBinding
 import cn.yanhu.agora.manager.AgoraManager
+import cn.yanhu.agora.service.LocalServiceManager
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.ext.logComToFile
@@ -77,6 +78,11 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
         //super.registerNecessaryObserver()
     }
 
+    override fun onResume() {
+        super.onResume()
+        LocalServiceManager.startLocalService(mContext)
+    }
+
     override fun onStop() {
         super.onStop()
         liveRoomFrg?.onCustomStop()
@@ -84,6 +90,7 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
 
     override fun exactDestroy() {
         super.exactDestroy()
+        LocalServiceManager.stopLocalService(mContext)
         if (liveRoomFrg?.isFinish == true){
             logComToFile(LIVE_ROOM_TAG,"用户主动退出")
         }else{

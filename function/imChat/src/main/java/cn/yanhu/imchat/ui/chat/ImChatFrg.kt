@@ -22,6 +22,7 @@ import cn.yanhu.imchat.ImChatViewModel
 import cn.yanhu.imchat.R
 import cn.yanhu.imchat.databinding.FrgImChatBinding
 import cn.yanhu.imchat.db.ChatUserInfoManager
+import cn.yanhu.imchat.manager.EaseHelper
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.yanhu.imchat.ui.chatSetting.UserChatSettingActivity
 import cn.zj.netrequest.application.ApplicationProxy
@@ -69,10 +70,13 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
             }
         })
         playUnShowGiftAnim()
+        LiveEventBus.get<String>(EventBusKeyConfig.BLOCK_USER_SUCCESS).observeSticky (this){
+            finishPage()
+        }
     }
 
     private fun finishPage() {
-        chatFragment?.customEaseChatPrimaryMenu?.hideSoftKeyboard()
+        chatFragment.customEaseChatPrimaryMenu?.hideSoftKeyboard()
         if (isPop) {
             LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.CLOSECHATDIALOG, "-1")
         } else {
@@ -107,7 +111,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
                 unreadMsgCount,
                 EMConversation.EMSearchDirection.UP
             )
-            if (emMessages.size > 0) {
+            if (emMessages.isNotEmpty()) {
                 for (i in emMessages.indices) {
                     val emMessage = emMessages[i]
                     if (emMessage.type == EMMessage.Type.CUSTOM) {
@@ -291,6 +295,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
                 bindUserInfo(it)
             }, {
                 if (it.code == ErrorCode.HAS_BLACK) {
+                    EaseHelper.setUserIsBlackSuccess(userId)
                     finishPage()
                 }
             })

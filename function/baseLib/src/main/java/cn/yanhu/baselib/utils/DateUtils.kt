@@ -24,6 +24,11 @@ object DateUtils {
         val hours = totalSeconds / 3600
         return Formatter().format("%02d:%02d:%02d", hours, minutes, seconds).toString()
     }
+    fun stringForTime2(totalSeconds: Int): String {
+        val seconds = totalSeconds % 60
+        val minutes = (totalSeconds / 60)
+        return Formatter().format("%02d:%02d", minutes, seconds).toString()
+    }
 
     fun clearCalendarHour(calendar: Calendar) {
         calendar[Calendar.MINUTE] = 0

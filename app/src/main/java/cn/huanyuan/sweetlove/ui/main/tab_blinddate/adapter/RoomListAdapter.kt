@@ -45,11 +45,12 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
             override fun onBind(holder: VH, position: Int, item: RoomListBean?) {
                 holder.binding.apply {
                     roomBean = item
-                    if ((ivStatus.tag as OnAttachStateChangeListener?)==null){
-                        val attachStateChangeListener =  object : OnAttachStateChangeListener {
+                    if ((ivStatus.tag as OnAttachStateChangeListener?) == null) {
+                        val attachStateChangeListener = object : OnAttachStateChangeListener {
                             override fun onViewAttachedToWindow(v: View) {
                                 ivStatus.startAnimation()
                             }
+
                             override fun onViewDetachedFromWindow(v: View) {
                                 ivStatus.pauseAnimation()
                             }
@@ -72,7 +73,7 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
             TYPE_FRIENDS,
             object : OnMultiItemAdapterListener<RoomListBean, RoomViewHolder> {
                 override fun onBind(holder: RoomViewHolder, position: Int, item: RoomListBean?) {
-                    if (item==null){
+                    if (item == null) {
                         return
                     }
                     holder.binding.apply {
@@ -133,16 +134,19 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
             override fun onBind(holder: VH2, position: Int, item: RoomListBean?) {
                 holder.binding.apply {
                     val tag = banner.tag as MyBannerImageAdapter?
-                    if (tag!=null){
+                    if (tag != null) {
                         tag.setDatas(item!!.banners)
-                    }else{
+                    } else {
                         val myBannerImageAdapter = MyBannerImageAdapter(banner, item!!.banners)
                         banner.addBannerLifecycleObserver(context)
                         banner.setAdapter(myBannerImageAdapter)
                         banner.tag = myBannerImageAdapter
                         banner.setOnBannerListener(object : OnBannerListener<BannerBean> {
                             override fun OnBannerClick(data: BannerBean, position: Int) {
-                                PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)
+                                PageIntentUtil.url2Page(
+                                    ActivityUtils.getTopActivity(),
+                                    data.pageUrl
+                                )
                             }
                         })
                     }

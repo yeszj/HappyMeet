@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.bean.AngleRoomResultInfo
+import cn.yanhu.agora.bean.PkConfigInfo
 import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomExtraInfo
 import cn.yanhu.agora.bean.RoomLeaveResponse
@@ -169,5 +170,9 @@ class LiveRoomViewModel : BaseViewModel() {
 
             }
         })
+    }
+
+    fun getPkConfigInfo(roomId: String,onRequestResultListener: OnRequestResultListener<PkConfigInfo>) {
+        request({ agoraRxApi.getPkConfigInfo(roomId) }, onRequestResultListener)
     }
 }

@@ -30,5 +30,10 @@ object EventBusKeyConfig {
     const val ADD_FRIEND_STATE = "add_friend_state"
     const val FRIEND_REQUEST_COUNT = "friend_request_count"
 
+    const val BLOCK_USER_SUCCESS = "block_user_success"
+
+    const val REFRESH_CHAT_MSG_TOP = "refresh_chat_msg_top"
+    const val CONTINUEPK = "continuePk"
+
 
 }

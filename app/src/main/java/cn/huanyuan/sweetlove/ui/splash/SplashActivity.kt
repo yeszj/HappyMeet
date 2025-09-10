@@ -30,6 +30,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 import cn.huanyuan.sweetlove.R
+import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 
 /**
  * @author: witness
@@ -68,6 +69,7 @@ class SplashActivity : FragmentActivity(
         }
         AppCacheManager.inviteUserId = ""
         setFullScreenStatusBar()
+        RoomSwitchCacheManager.clearRoomSwitchCache()
         if (AppCacheManager.isFirstOpenApp) {
             MainScope().launch {
                 Log.i("SplashActivity", "可以做一些初始化逻辑")

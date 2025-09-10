@@ -31,6 +31,7 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
     var roomPortraitList: List<String> = mutableListOf()
     var roomId: String? = ""
     val banners: MutableList<BannerBean> = mutableListOf()
+    var pkStatus:Int = 1
     fun isOwner():Boolean{
         return AppCacheManager.userId == ownerInfo?.userId
     }
@@ -116,6 +117,10 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
     }
     fun isPublicRoom(): Boolean {
         return roomType == TYPE_PUBLIC
+    }
+
+    fun isShowPkFunc(): Boolean{
+       return (roomType == TYPE_SEVEN_FRIEND || roomType == TYPE_NINE_FRIEND)
     }
 
 

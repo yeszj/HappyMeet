@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2
 import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseSheetDialog
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
@@ -231,14 +232,17 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                     if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
                         item.randomBoxGiftInfo = data.data
                     }
+                    logComToFile("sendGift","赠送礼物成功，giftName=${item.name}")
                     onSendGiftListener?.onSendGift(item)
                 }
 
                 override fun onFail(code: Int?, msg: String?) {
                     super.onFail(code, msg)
                     if (code == ErrorCode.CODE_NO_BALANCE) {
-                        ApplicationProxy.instance.showRechargePop(requireActivity(), true)
-                        dismiss()
+                        activity?.apply {
+                            ApplicationProxy.instance.showRechargePop(this, true)
+                            dismiss()
+                        }
                     }
                 }
             })

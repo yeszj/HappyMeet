@@ -20,7 +20,7 @@
         tools:replace="android:icon"
         tools:targetApi="31">
         <service
-            android:name=".func.service.LocalRecordingService"
+            android:name="cn.yanhu.agora.service.LocalRecordingService"
             android:foregroundServiceType="microphone|camera|mediaPlayback"
             tools:ignore="ForegroundServicePermission" />
         <activity

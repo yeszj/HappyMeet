@@ -3,6 +3,7 @@ package cn.yanhu.agora.ui.liveRoom.live
 import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.R
 import cn.yanhu.agora.adapter.liveRoom.LiveRoomRoseRankAdapter
@@ -14,6 +15,7 @@ import cn.yanhu.agora.bean.SongListResponse
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.databinding.ViewNineRoomRankViewBinding
 import cn.yanhu.agora.databinding.ViewSevenRoomRankViewBinding
+import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 import cn.yanhu.agora.pop.CrownedUserListPop
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.agora.pop.RoomAngleRankPop
@@ -29,10 +31,13 @@ import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.OperateInfo
+import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomListBean
+import cn.yanhu.commonres.bean.RoomPkInfo
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.bean.SeatUserInfo
 import cn.yanhu.commonres.config.ChatConstant
+import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.pop.CommonOperatePop
@@ -51,7 +56,7 @@ import java.util.Collections
 /**
  * @author: zhengjun
  * created: 2025/1/15
- * desc:
+ * desc:7人和9人k歌房
  */
 open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     private val rankAdapter by lazy { LiveRoomRoseRankAdapter() }
@@ -62,12 +67,14 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     private var nineSongRoomSeatView: NineSongRoomSeatView? = null
     private var nineSongRoomScaleView: NineSongRoomSeatView? = null
     override fun initData() {
+        roomSourceBean = requireArguments().getSerializable(IntentKeyConfig.DATA) as RoomDetailInfo
+        roomType = roomSourceBean.roomType
+        initRankView()
         super.initData()
         for (i in 0 until seatList.size) {
             val textureView = TextureView(mContext)
             surfaceViewList[i] = LiveRoomSeatBean(
-                0,
-                textureView
+                0, textureView
             )
         }
         if (hasExpand) {
@@ -75,14 +82,12 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
         } else {
             initSongView()
         }
-        if (isSevenSong()) {
-            addRankView()
-        } else {
-            addNineRankView()
-        }
+        addRankView()
         getRoseRankList()
+        if (isOwner) {
+            showAnimSwitch()
+        }
     }
-
 
     override fun initListener() {
         super.initListener()
@@ -99,9 +104,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
         list.add(OperateInfo("更换点歌礼物", cn.yanhu.commonres.R.color.cl_common, 1))
         list.add(OperateInfo("重置插队玫瑰数", cn.yanhu.commonres.R.color.cl_common, 2))
         return CommonOperatePop.showDialog(
-            mContext,
-            list,
-            object : CommonOperatePop.OnClickItemListener {
+            mContext, list, object : CommonOperatePop.OnClickItemListener {
                 override fun onClickItem(operateInfo: OperateInfo) {
                     if (operateInfo.type == 1) {
                         //更换点歌礼物
@@ -109,9 +112,8 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                     } else if (operateInfo.type == 2) {
                         //重置插队玫瑰数
                         ModifyInsertQueueRosePop.showDialog(
-                            mContext,
-                            roomId,
-                            roomSourceBean.queuePrice)
+                            mContext, roomId, roomSourceBean.queuePrice
+                        )
                     }
                 }
             })
@@ -129,7 +131,9 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                     mContext,
                     seatList,
                     roomSourceBean.ownerInfo!!.userId,
-                    selectUserId, data.data, object : ChooseSongPop.OnClickSongListener {
+                    selectUserId,
+                    data.data,
+                    object : ChooseSongPop.OnClickSongListener {
                         override fun onClickSong(seatUserInfo: SeatUserInfo) {
                             clickSong(seatUserInfo, giftInfo)
                         }
@@ -137,8 +141,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                         override fun onShowSongList() {
                             showSongListPop()
                         }
-                    }
-                )
+                    })
             }
 
         })
@@ -149,32 +152,29 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     private fun showSongListPop() {
         mViewModel.getSongList(roomId, object : OnRequestResultListener<SongListResponse> {
             override fun onSuccess(data: BaseBean<SongListResponse>) {
-                val response = data.data?:return
+                val response = data.data ?: return
                 response.roomId = roomId
                 if (CommonUtils.isPopShow(songListPop)) {
                     songListPop?.refreshData(response)
                     return
                 }
-                songListPop = SongListPop.showDialog(mContext, response,isOwner,object : SongListPop.OnRefreshSeatListener{
-                    override fun onClearSongRoseSuccess() {
-                        EmMsgManager.sendCmdMessageToChatRoom(
-                            roomSourceBean.uid,
-                            "",
-                            ChatConstant.REFRESH_SEAT_ROSE
-                        )
-                        refreshSeatRoseInfo()
-                    }
+                songListPop = SongListPop.showDialog(
+                    mContext, response, isOwner, object : SongListPop.OnRefreshSeatListener {
+                        override fun onClearSongRoseSuccess() {
+                            EmMsgManager.sendCmdMessageToChatRoom(
+                                roomSourceBean.uid, "", ChatConstant.REFRESH_SEAT_ROSE
+                            )
+                            refreshSeatRoseInfo()
+                        }
 
-                    override fun onSetSongUserSuccess() {
-                        EmMsgManager.sendCmdMessageToChatRoom(
-                            roomSourceBean.uid,
-                            "",
-                            ChatConstant.REFRESH_SEAT_ROSE
-                        )
-                        refreshSeatRoseInfo()
-                        showSongListPop()
-                    }
-                })
+                        override fun onSetSongUserSuccess() {
+                            EmMsgManager.sendCmdMessageToChatRoom(
+                                roomSourceBean.uid, "", ChatConstant.REFRESH_SEAT_ROSE
+                            )
+                            refreshSeatRoseInfo()
+                            showSongListPop()
+                        }
+                    })
             }
         })
     }
@@ -193,26 +193,37 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
 
-    private lateinit var nineRankViewBinding: ViewNineRoomRankViewBinding
-    private fun addNineRankView() {
-        val rankView =
-            LayoutInflater.from(mContext).inflate(R.layout.view_nine_room_rank_view, null)
-        nineRankViewBinding = DataBindingUtil.bind(rankView)!!
-        nineRankViewBinding.apply {
-            bindNineRankView(rankView)
+    override fun setHasSeatUpStatus() {
+        super.setHasSeatUpStatus()
+        showAnimSwitch()
+    }
+
+    override fun setSeatOutSuccess() {
+        super.setSeatOutSuccess()
+        if (isSevenSong()) {
+            rankViewBinding.vgEnterAnim.visibility = View.GONE
+        } else {
+            nineRankViewBinding.vgEnterAnim.visibility = View.GONE
         }
 
     }
 
-    private fun ViewNineRoomRankViewBinding.bindNineRankView(rankView: View?) {
+    private fun showAnimSwitch() {
+        if (isSevenSong()) {
+            rankViewBinding.vgEnterAnim.visibility = View.VISIBLE
+            changeEnterAnimStatus(rankViewBinding.iconEnter)
+        } else {
+            nineRankViewBinding.vgEnterAnim.visibility = View.VISIBLE
+            changeEnterAnimStatus(nineRankViewBinding.iconEnter)
+        }
+    }
+
+
+    private fun ViewNineRoomRankViewBinding.bindNineRankView() {
         toggleAutoSeat.setOnSingleClickListener {
             showSetAutoSeat()
         }
-        if (AppCacheManager.isOpenGiftAudio) {
-            ivAudio.setImageResource(R.drawable.svg_voice_on)
-        } else {
-            ivAudio.setImageResource(R.drawable.svg_voice_off)
-        }
+        changeGiftAudioStatus(ivAudio)
         roomInfo = roomSourceBean
         isAngle = roomType == RoomListBean.TYPE_NINE_ANGLE
         isSong = roomType == RoomListBean.TYPE_NINE_SONG
@@ -247,17 +258,14 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             }
         }
         vgGiftAudio.setOnSingleClickListener {
-            if (AppCacheManager.isOpenGiftAudio) {
-                ivAudio.setImageResource(R.drawable.svg_voice_off)
-                AppCacheManager.isOpenGiftAudio = false
-            } else {
-                ivAudio.setImageResource(R.drawable.svg_voice_on)
-                AppCacheManager.isOpenGiftAudio = true
-            }
+            changeGiftAudioStatus(ivAudio, true)
             SVGACache.clearCache()
         }
-        mBinding.flTopView.addView(rankView)
+        vgEnterAnim.setOnSingleClickListener {
+            changeEnterAnimStatus(iconEnter, true)
+        }
     }
+
 
     private fun initSongView() {
         if (isSevenSong()) {
@@ -477,7 +485,8 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     private fun expandSeat(position: Int, item: RoomSeatInfo) {
         if (isOwner) {
-            request({ agoraRxApi.setExpand(roomId, item.id) },
+            request(
+                { agoraRxApi.setExpand(roomId, item.id) },
                 object : OnRequestResultListener<String> {
                     override fun onSuccess(data: BaseBean<String>) {
                         startExpandItem(item, position)
@@ -498,8 +507,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     private var scalePosition: Int = -1
     private fun startExpandItem(
-        item: RoomSeatInfo,
-        position: Int
+        item: RoomSeatInfo, position: Int
     ) {
         val expandPosition = getExpandPosition()
         if (item.isExpand) {
@@ -563,6 +571,29 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     }
 
+    override fun updatePkResult(roomPkInfo: RoomPkInfo?,isClear: Boolean) {
+        for (i in 0 until seatList.size) {
+            val seatInfo = seatList[i]
+            seatInfo.roomUserSeatInfo ?: return
+            updatePkStatus(roomPkInfo, seatInfo,isClear)
+            if (isSevenSong()) {
+                if (hasExpand) {
+                    sevenSongRoomScaleView?.bindScaleRoseInfo(i, seatInfo)
+                } else {
+                    sevenSongRoomSeatView?.bindRoseInfo(i, seatInfo)
+                }
+            } else {
+                if (hasExpand) {
+                    nineSongRoomScaleView?.bindScaleRoseInfo(i, seatInfo)
+                } else {
+                    nineSongRoomSeatView?.bindRoseInfo(i, seatInfo)
+                }
+            }
+        }
+
+
+    }
+
     override fun updateSeatRoseInfo() {
         for (i in 0 until seatList.size) {
             val seatInfo = seatList[i]
@@ -591,7 +622,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             val position = it.getStringAttribute(ChatConstant.CUSTOM_DATA).toInt()
             val get = seatList[position]
             startExpandItem(get, position)
-        }else if(source == ChatConstant.ACTION_RESET_QUEUE_PRICE){
+        } else if (source == ChatConstant.ACTION_RESET_QUEUE_PRICE) {
             //更换插队玫瑰数成功
             getRoomDetail()
             refreshSeatRoseInfo()
@@ -667,16 +698,33 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     private lateinit var rankViewBinding: ViewSevenRoomRankViewBinding
     private fun addRankView() {
-        val rankView =
-            LayoutInflater.from(mContext).inflate(R.layout.view_seven_room_rank_view, null)
-        rankViewBinding = DataBindingUtil.bind(rankView)!!
-        rankViewBinding.apply {
-            bindSevenRankView(rankView)
+        if (isSevenSong()) {
+            rankViewBinding.apply {
+                bindSevenRankView()
+            }
+        } else {
+            nineRankViewBinding.apply {
+                bindNineRankView()
+            }
         }
-
     }
 
-    private fun ViewSevenRoomRankViewBinding.bindSevenRankView(rankView: View?) {
+    private lateinit var nineRankViewBinding: ViewNineRoomRankViewBinding
+    private fun initRankView() {
+        if (isSevenSong()) {
+            val rankView =
+                LayoutInflater.from(mContext).inflate(R.layout.view_seven_room_rank_view, null)
+            rankViewBinding = DataBindingUtil.bind(rankView)!!
+            mBinding.flCustomView.addView(rankView)
+        } else {
+            val rankView =
+                LayoutInflater.from(mContext).inflate(R.layout.view_nine_room_rank_view, null)
+            nineRankViewBinding = DataBindingUtil.bind(rankView)!!
+            mBinding.flTopView.addView(rankView)
+        }
+    }
+
+    private fun ViewSevenRoomRankViewBinding.bindSevenRankView() {
         roomInfo = roomSourceBean
         this.isRoomOwner = isOwner
         toggleAutoSeat.setOnSingleClickListener {
@@ -685,11 +733,9 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
         isAngle = roomType == RoomListBean.TYPE_SEVEN_ANGLE
         isSong = roomType == RoomListBean.TYPE_SEVEN_SONG
         rvRank.adapter = rankAdapter
-        if (AppCacheManager.isOpenGiftAudio) {
-            ivAudio.setImageResource(R.drawable.svg_voice_on)
-        } else {
-            ivAudio.setImageResource(R.drawable.svg_voice_off)
-        }
+
+        changeGiftAudioStatus(ivAudio)
+
         rankAdapter.setOnItemClickListener { _, _, _ ->
             userReceiveRoseInfo?.apply {
                 showRankListPop()
@@ -711,16 +757,12 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             showCrownedListPop(CrownedUserListPop.TYPE_SONG)
         }
         vgGiftAudio.setOnSingleClickListener {
-            if (AppCacheManager.isOpenGiftAudio) {
-                ivAudio.setImageResource(R.drawable.svg_voice_off)
-                AppCacheManager.isOpenGiftAudio = false
-            } else {
-                ivAudio.setImageResource(R.drawable.svg_voice_on)
-                AppCacheManager.isOpenGiftAudio = true
-            }
+            changeGiftAudioStatus(ivAudio, true)
             SVGACache.clearCache()
         }
-        mBinding.flCustomView.addView(rankView)
+        vgEnterAnim.setOnSingleClickListener {
+            changeEnterAnimStatus(iconEnter, true)
+        }
     }
 
     override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {

@@ -32,9 +32,6 @@ object AppCacheManager {
     @JvmStatic
     var GET_CONVERSATION_FROM_SERVER by ConfigPref("getConversationFromServer", true)
 
-    @JvmStatic
-    var isOpenGiftAudio by ConfigPref("roomGiftAudio", true)
-
     var agoraAppId by ConfigPref("agoraAppId","301729ee939d4470b6b60a795e9ccc22")
     @JvmStatic
     var beautyDefaultConfig by ConfigPref("beautyDefaultConfig","")
@@ -49,6 +46,9 @@ object AppCacheManager {
 
     @JvmStatic
     var alertCheckCount by ConfigPref("alertCheckCount",0)
+
+    @JvmStatic
+    var selectTimeIndex by ConfigPref("selectTimeIndex",-1)
 
     @JvmStatic
     fun isWoman():Boolean{

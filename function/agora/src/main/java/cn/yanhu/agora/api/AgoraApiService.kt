@@ -8,6 +8,7 @@ import cn.yanhu.agora.bean.EnterCheckResponse
 import cn.yanhu.agora.bean.LiveIncomeDetailInfo
 import cn.yanhu.agora.bean.LiveRecordResponse
 import cn.yanhu.agora.bean.LiveStatisticTotalInfo
+import cn.yanhu.agora.bean.PkConfigInfo
 import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomExtraInfo
 import cn.yanhu.agora.bean.RoomGroupMemberRes
@@ -44,12 +45,16 @@ interface AgoraApiService : CommonApiService {
 
     @POST("app/v1/room/mute")
     suspend fun setUserMute(
-        @Query("roomId") roomId: String, @Query("operatedUserId") operatedUserId: String,@Query("operate") operate: Int
+        @Query("roomId") roomId: String,
+        @Query("operatedUserId") operatedUserId: String,
+        @Query("operate") operate: Int
     ): BaseBean<String>
 
     @POST("app/v1/room/setAdmin")
     suspend fun setAdmin(
-        @Query("roomId") roomId: String, @Query("operatedUserId") operatedUserId: String,@Query("operate") operate: Int
+        @Query("roomId") roomId: String,
+        @Query("operatedUserId") operatedUserId: String,
+        @Query("operate") operate: Int
     ): BaseBean<String>
 
     @GET("app/v1/room/list")
@@ -284,12 +289,12 @@ interface AgoraApiService : CommonApiService {
 
     @POST("app/v1/room/song/changeGift")
     suspend fun changeSongGift(
-        @Query("roomId") roomId: String,@Query("giftId") giftId: String
+        @Query("roomId") roomId: String, @Query("giftId") giftId: String
     ): BaseBean<String>
 
     @POST("app/v1/room/song/resetQueuePrice")
     suspend fun resetQueuePrice(
-        @Query("roomId") roomId: String,@Query("price") price: String
+        @Query("roomId") roomId: String, @Query("price") price: String
     ): BaseBean<String>
 
     @POST("app/v1/room/song/click")
@@ -328,4 +333,23 @@ interface AgoraApiService : CommonApiService {
 
     @POST("app/v1/room/song/start")
     suspend fun setSongUser(@Query("id") id: String): BaseBean<String>
+
+    @POST("app/v1/room/pkPage")
+    suspend fun getPkConfigInfo(@Query("roomId") roomId: String): BaseBean<PkConfigInfo>
+
+    @POST("app/v1/room/endPk")
+    suspend fun endPk(
+        @Query("roomId") roomId: String?,
+        @Query("pkId") pkId: String
+    ): BaseBean<String>
+
+    @FormUrlEncoded
+    @POST("app/v1/room/createPk")
+    suspend fun startPk(
+        @Field("roomId") roomId: String?,
+        @Field("redMemberList") redMemberList: String,
+        @Field("blueMemberList") blueMemberList: String,
+        @Field("pkType") pkType: Int,
+        @Field("pkTime") pkTime: String
+    ): BaseBean<String>
 }

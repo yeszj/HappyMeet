@@ -50,6 +50,7 @@ object ImUserManager {
             request({ imChatRxApi.blockUser(userId)},object : OnRequestResultListener<String>{
                 override fun onSuccess(data: BaseBean<String>) {
                     showToast("用户已被拉黑")
+                    EaseHelper.setUserIsBlackSuccess(userId)
                 }
             })
             EMClient.getInstance().contactManager().asyncAddUserToBlackList(userId,true,object : EMCallBack{

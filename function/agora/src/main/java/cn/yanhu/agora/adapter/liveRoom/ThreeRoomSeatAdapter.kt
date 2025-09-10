@@ -6,6 +6,7 @@ import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import cn.yanhu.agora.R
 import cn.yanhu.agora.api.agoraRxApi
@@ -23,6 +24,7 @@ import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 import cn.yanhu.commonres.manager.SexManager
 import cn.yanhu.imchat.manager.ImUserManager
 import cn.zj.netrequest.ext.OnRequestResultListener
@@ -63,32 +65,7 @@ class ThreeRoomSeatAdapter :
         addItemType(TYPE_USER_SEAR, object : OnMultiItemAdapterListener<RoomSeatInfo, VH2> {
             override fun onBind(holder: VH2, position: Int, item: RoomSeatInfo?) {
                 //绑定男女嘉宾位置信息
-                holder.binding.apply {
-                    item?.apply {
-                        if (roomDetailInfo == null) {
-                            return
-                        }
-                        seatInfo = item
-                        if (item.roomUserSeatInfo == null) {
-                            setEmptySeatInfo(position, item)
-                        }
-
-                    }
-                    upDataSeats(position)
-                    if (position == 1) {
-                        ViewUtils.setMarginRight(vgParent, 0)
-                    } else {
-                        ViewUtils.setMarginRight(
-                            vgParent,
-                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_4)
-                        )
-                    }
-                    viewRank.setOnSingleClickListener {
-                        showUserReceiveRoseDetailPop(item)
-                    }
-
-                    executePendingBindings()
-                }
+                bindUserSeatInfo(holder, item, position)
             }
 
             override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH2 {
@@ -100,6 +77,39 @@ class ThreeRoomSeatAdapter :
             }
 
         })
+
+    private fun bindUserSeatInfo(
+        holder: VH2,
+        item: RoomSeatInfo?,
+        position: Int
+    ) {
+        holder.binding.apply {
+            item?.apply {
+                if (roomDetailInfo == null) {
+                    return
+                }
+                seatInfo = item
+                if (item.roomUserSeatInfo == null) {
+                    setEmptySeatInfo(position, item)
+                }
+
+            }
+            upDataSeats(position)
+            if (position == 1) {
+                ViewUtils.setMarginRight(vgParent, 0)
+            } else {
+                ViewUtils.setMarginRight(
+                    vgParent,
+                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_4)
+                )
+            }
+            viewRank.setOnSingleClickListener {
+                showUserReceiveRoseDetailPop(item)
+            }
+
+            executePendingBindings()
+        }
+    }
 
     private var liveRoomUserRoseDetailPop: LiveRoomUserRoseRankPop? = null
     private fun showUserReceiveRoseDetailPop(item: RoomSeatInfo?) {
@@ -128,14 +138,21 @@ class ThreeRoomSeatAdapter :
                 payloads: List<Any>
             ) {
                 if (payloads.isNotEmpty()) {
-                    if ( payloads[0] is String){
+                    if (payloads[0] is String) {
                         val switch = payloads[0]
-                        if (switch == "0"){
-                            holder.binding.tvSwitch.visibility = View.INVISIBLE
-                        }else{
+                        if (switch == "showEnterAnim"){
+                            holder.binding.vgEnterAnim.visibility = View.VISIBLE
+                            changeGiftAudioStatus(holder.binding.iconEnter, false)
+                        }else if (switch == "hideEnterAnim"){
+                            holder.binding.vgEnterAnim.visibility = View.GONE
+                        }else if (switch == "updateToggleAuto") {
+                            holder.binding.roomInfo = roomDetailInfo
+                        } else if (switch == "0") {
+                            holder.binding.tvSwitch.visibility = View.GONE
+                        }  else {
                             holder.binding.tvSwitch.visibility = View.VISIBLE
                         }
-                    }else{
+                    } else {
                         holder.binding.apply {
                             this.roomInfo = roomDetailInfo
                             bindWishInfo()
@@ -148,13 +165,15 @@ class ThreeRoomSeatAdapter :
 
             override fun onBind(holder: VH, position: Int, item: RoomSeatInfo?) {
                 holder.binding.apply {
-                    val owner = roomDetailInfo?.isOwner()==true
+                    val owner = roomDetailInfo?.isOwner() == true
 
                     bindWishInfo()
 
                     anchorSeatInfo.seatInfo = item
                     this.isOwner = owner
-
+                    if (owner){
+                        vgEnterAnim.visibility = View.VISIBLE
+                    }
                     this.roomInfo = roomDetailInfo
                     val tag = anchorSeatInfo.itemVideoSf.tag
                     if (tag == null || tag !is SurfaceView) {
@@ -172,8 +191,45 @@ class ThreeRoomSeatAdapter :
                     anchorSeatInfo.viewRank.setOnSingleClickListener {
                         showUserReceiveRoseDetailPop(item)
                     }
+                    changeEnterAnimStatus(ivAudio, false)
+                    changeGiftAudioStatus(iconEnter, false)
+                    vgGiftAudio.setOnSingleClickListener {
+                        changeGiftAudioStatus(ivAudio, true)
+                    }
+                    vgEnterAnim.setOnSingleClickListener {
+                        changeGiftAudioStatus(iconEnter, true)
+                    }
                     executePendingBindings()
                 }
+            }
+
+
+             fun changeEnterAnimStatus(iconEnter: ImageView, isSave: Boolean = false) {
+                val roomSwitchInfo = RoomSwitchCacheManager.getRoomSwitchInfo(roomDetailInfo!!.roomId!!)
+                if (isSave) {
+                    roomSwitchInfo.enterAnimOpen = !roomSwitchInfo.enterAnimOpen
+                    RoomSwitchCacheManager.saveRoomSwitchInfo(roomSwitchInfo)
+                }
+                if (roomSwitchInfo.enterAnimOpen) {
+                    iconEnter.setImageResource(R.drawable.svg_voice_on)
+                } else {
+                    iconEnter.setImageResource(R.drawable.svg_voice_off)
+                }
+            }
+
+            fun changeGiftAudioStatus(ivAudio: ImageView, isSave: Boolean = false) {
+                val roomSwitchInfo =
+                    RoomSwitchCacheManager.getRoomSwitchInfo(roomDetailInfo!!.roomId!!)
+                if (isSave) {
+                    roomSwitchInfo.giftVoiceOpen = !roomSwitchInfo.giftVoiceOpen
+                    RoomSwitchCacheManager.saveRoomSwitchInfo(roomSwitchInfo)
+                }
+                if (roomSwitchInfo.giftVoiceOpen) {
+                    ivAudio.setImageResource(R.drawable.svg_voice_on)
+                } else {
+                    ivAudio.setImageResource(R.drawable.svg_voice_off)
+                }
+
             }
 
             override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH {
@@ -193,17 +249,17 @@ class ThreeRoomSeatAdapter :
     private fun AdapterThreeRoomAnchorSeatItemBinding.bindWishInfo() {
         val tag = banner.tag
         val list = wishResponse?.list
-        if (tag==null){
+        if (tag == null) {
             val wishGiftBannerAdapter = WishGiftBannerAdapter(context, mutableListOf())
             banner.tag = wishGiftBannerAdapter
             banner.setAdapter(wishGiftBannerAdapter)
-            banner.setOnBannerListener{ _, _ ->
+            banner.setOnBannerListener { _, _ ->
                 wishResponse?.apply {
                     onRoomItemClickListener?.onClickWish()
                 }
             }
             wishGiftBannerAdapter.setDatas(list)
-        }else{
+        } else {
             val wishGiftBannerAdapter = tag as WishGiftBannerAdapter
             wishGiftBannerAdapter.setDatas(list)
         }
@@ -229,27 +285,12 @@ class ThreeRoomSeatAdapter :
             val currentSurfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = surfaceViewMap
             val liveRoomSeatBean: LiveRoomSeatBean? =
                 currentSurfaceViewMap[position]
-            if (liveRoomSeatBean == null  || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
+            if (liveRoomSeatBean == null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
                 val surfaceView = TextureView(context)
                 currentSurfaceViewMap[position] =
                     LiveRoomSeatBean(dto.roomUserSeatInfo!!.userId.toInt(), surfaceView)
-
-                this.itemVideoSf.addView(surfaceView)
-
-                addVideoSf(surfaceView, dto)
-
-                //  RoundUtils.bgBlur(this.anchorSeatInfo.wheetLeaveAlertImg, dto.roomUserSeatInfo.portrait, 240)
-            } else if (dto.roomUserSeatInfo!!.userId.toInt() != liveRoomSeatBean.uid) {
-                var surfaceView = liveRoomSeatBean.surfaceView
-                if (surfaceView == null) {
-                    surfaceView = TextureView(context)
-                }
-                ViewUtils.removeViewFormParent(surfaceView)
-                this.itemVideoSf.removeAllViews()
                 this.itemVideoSf.addView(surfaceView)
                 addVideoSf(surfaceView, dto)
-
-                // RoundUtils.bgBlur(binding.wheetLeaveAlertImg, dto.roomUserSeatInfo.portrait, 240)
             } else {
                 var surfaceView = liveRoomSeatBean.surfaceView
                 if (surfaceView == null) {
@@ -299,8 +340,6 @@ class ThreeRoomSeatAdapter :
             tvManApplyCount.visibility = View.INVISIBLE
         }
     }
-
-
 
 
     private fun AdapterThreeRoomUserSeatItemBinding.setEmptySeatInfo(
@@ -355,10 +394,10 @@ class ThreeRoomSeatAdapter :
         }
     }
 
-    private var wishResponse: WishResponse?=null
-    fun updateWishInfo(wishRes: WishResponse){
+    private var wishResponse: WishResponse? = null
+    fun updateWishInfo(wishRes: WishResponse) {
         wishResponse = wishRes
-        notifyItemChanged(0,true)
+        notifyItemChanged(0, true)
     }
 
     var onRoomItemClickListener: OnRoomItemClickListener? = null

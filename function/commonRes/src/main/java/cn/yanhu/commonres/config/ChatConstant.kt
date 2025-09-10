@@ -25,7 +25,7 @@ object ChatConstant {
     const val DEVICE_INFO = "deviceInfo"
 
     const val MSG_INVITE_SEND_GIFT = "msg_invite_send_gift" //女方邀请对方赠送礼物成为好友消息
-    const val CUSTOM_SEND_ATYPE = "sendType"
+    const val CUSTOM_SEND_TYPE = "sendType"
 
 
     //    /*
@@ -133,9 +133,14 @@ object ChatConstant {
     const val ACTION_ROOM_CHECK = 74//房间检测
 
     const val ACTION_ROOM_USER_OFFLINE_LEAVE = 75//离线下麦
+
     const val REFRESH_SEAT_ROSE = 76
+
+    const val ACTION_UPLOAD_LOG = 77//上传日志
+
 
     const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位
 
+    const val UPDATE_PK_INFO = 5001
 
 }

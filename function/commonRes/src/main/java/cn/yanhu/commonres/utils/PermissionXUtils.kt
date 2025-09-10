@@ -1,7 +1,9 @@
 package cn.yanhu.commonres.utils
 
 import android.Manifest
+import android.content.Context
 import android.os.Build
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import cn.yanhu.baselib.pop.CommonPermissionPop
@@ -29,11 +31,7 @@ object PermissionXUtils {
     ) {
         val permissionMediator = PermissionX.init(fragmentActivity)
         isRequestPermission(
-            permissionMediator,
-            permissions,
-            explainReasonStr,
-            failedStr,
-            permissionListener
+            permissionMediator, permissions, explainReasonStr, failedStr, permissionListener
         )
     }
 
@@ -46,15 +44,17 @@ object PermissionXUtils {
     ) {
         val permissionMediator = PermissionX.init(fragment)
         isRequestPermission(
-            permissionMediator,
-            permissions,
-            explainReasonStr,
-            failedStr,
-            permissionListener
+            permissionMediator, permissions, explainReasonStr, failedStr, permissionListener
         )
     }
 
-    fun hasPermission(permissions: ArrayList<String>): Boolean {
+    fun hasLocalServicePermission(activity: Context): Boolean {
+        return !isNoPermission(mutableListOf(Manifest.permission.RECORD_AUDIO) as ArrayList<String>) && NotificationManagerCompat.from(
+            activity
+        ).areNotificationsEnabled()
+    }
+
+    fun isNoPermission(permissions: ArrayList<String>): Boolean {
         for (permission in permissions) {
             if (permission == Manifest.permission.REQUEST_INSTALL_PACKAGES) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -82,22 +82,16 @@ object PermissionXUtils {
         failedStr: String?,
         permissionListener: PermissionListener
     ) {
-        val commonPermissionPop: CommonPermissionPop? = if (hasPermission(permissions)) {
+        val commonPermissionPop: CommonPermissionPop? = if (isNoPermission(permissions)) {
             showDialog((ActivityUtils.getTopActivity() as FragmentActivity), explainReasonStr)
         } else {
             null
         }
-        permissionMediator
-            .permissions(permissions)
-            .onForwardToSettings { scope, deniedList ->
+        permissionMediator.permissions(permissions).onForwardToSettings { scope, deniedList ->
                 scope.showForwardToSettingsDialog(
-                    deniedList,
-                    "您未授权相关权限，可在应用程序设置当中手动开启权限",
-                    "好的",
-                    "取消"
+                    deniedList, "您未授权相关权限，可在应用程序设置当中手动开启权限", "好的", "取消"
                 )
-            }
-            .request { allGranted: Boolean, _: List<String?>?, _: List<String?>? ->
+            }.request { allGranted: Boolean, _: List<String?>?, _: List<String?>? ->
                 if (commonPermissionPop != null && commonPermissionPop.isShow) {
                     commonPermissionPop.dismiss()
                 }
@@ -112,30 +106,26 @@ object PermissionXUtils {
 
     fun checkAlertPermission(
         fragmentActivity: FragmentActivity?,
-        cancelTxt:String = "退出" ,
+        cancelTxt: String = "退出",
         permissionListener: OnAlertPermissionListener
     ) {
-        PermissionX.init(fragmentActivity!!)
-            .permissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
+        PermissionX.init(fragmentActivity!!).permissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
             .explainReasonBeforeRequest()
             .onExplainRequestReason { scope: ExplainScope, _: List<String?>? ->
                 val systemAlertPermissionDialog = SystemAlertPermissionDialog(
-                    fragmentActivity,cancelTxt, object : SystemAlertPermissionDialog.OnClickCloseListener {
-                       override fun onClose() {
+                    fragmentActivity,
+                    cancelTxt,
+                    object : SystemAlertPermissionDialog.OnClickCloseListener {
+                        override fun onClose() {
                             permissionListener.onClose()
                         }
                     })
                 scope.showRequestReasonDialog(systemAlertPermissionDialog)
-            }
-            .onForwardToSettings { scope: ForwardScope, deniedList: List<String> ->
+            }.onForwardToSettings { scope: ForwardScope, deniedList: List<String> ->
                 scope.showForwardToSettingsDialog(
-                    deniedList,
-                    "您未授权相关权限，可在应用程序设置当中手动开启权限",
-                    "好的",
-                    "取消"
+                    deniedList, "您未授权相关权限，可在应用程序设置当中手动开启权限", "好的", "取消"
                 )
-            }
-            .request { allGranted: Boolean, _: List<String>, _: List<String> ->
+            }.request { allGranted: Boolean, _: List<String>, _: List<String> ->
                 if (allGranted) {
                     permissionListener.onSuccess()
                 } else {
@@ -146,25 +136,24 @@ object PermissionXUtils {
     }
 
 
-
     fun checkAlertPermission2(
         fragmentActivity: FragmentActivity?,
         tips: String,
         permissionListener: OnAlertPermissionListener
     ) {
-        PermissionX.init(fragmentActivity!!)
-            .permissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
+        PermissionX.init(fragmentActivity!!).permissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
             .explainReasonBeforeRequest()
             .onExplainRequestReason { scope: ExplainScope, _: List<String?>? ->
                 val systemAlertPermissionDialog = SystemAlertPermission2Dialog(
-                    fragmentActivity,tips, object : SystemAlertPermission2Dialog.OnClickCloseListener {
+                    fragmentActivity,
+                    tips,
+                    object : SystemAlertPermission2Dialog.OnClickCloseListener {
                         override fun onClose() {
                             permissionListener.onClose()
                         }
                     })
                 scope.showRequestReasonDialog(systemAlertPermissionDialog)
-            }
-            .request { allGranted: Boolean, _: List<String>, _: List<String> ->
+            }.request { allGranted: Boolean, _: List<String>, _: List<String> ->
                 if (allGranted) {
                     permissionListener.onSuccess()
                 } else {
@@ -179,22 +168,15 @@ object PermissionXUtils {
         tips: String,
         permissionListener: PermissionListener
     ) {
-        PermissionX.init(fragmentActivity)
-            .permissions(permissions)
-            .explainReasonBeforeRequest()
+        PermissionX.init(fragmentActivity).permissions(permissions).explainReasonBeforeRequest()
             .onExplainRequestReason(ExplainReasonCallback { scope, _ ->
                 scope.showRequestReasonDialog(
-                    permissions,
-                    tips,
-                    "去设置"
+                    permissions, tips, "去设置"
                 )
             })
             .onForwardToSettings(ForwardToSettingsCallback { scope: ForwardScope, deniedList: List<String> ->
                 scope.showForwardToSettingsDialog(
-                    deniedList,
-                    "您未授权相关权限，可在应用程序设置当中手动开启权限",
-                    "好的",
-                    "取消"
+                    deniedList, "您未授权相关权限，可在应用程序设置当中手动开启权限", "好的", "取消"
                 )
             })
             .request(RequestCallback { allGranted: Boolean, _: List<String?>?, _: List<String?>? ->
@@ -208,14 +190,16 @@ object PermissionXUtils {
     }
 
 
-    fun checkBeautyPermission(mContext: FragmentActivity,permissionListener: PermissionListener){
+    fun checkBeautyPermission(mContext: FragmentActivity, permissionListener: PermissionListener) {
         val permissions = ArrayList<String>()
         permissions.add(Manifest.permission.CAMERA)
-        checkPermission(mContext,
+        checkPermission(
+            mContext,
             permissions,
             "${AppUtils.getAppName()}想访问您的以下权限，用于美颜设置",
             "您拒绝授权权限，将无法体验部分功能",
-            permissionListener)
+            permissionListener
+        )
     }
 
     interface PermissionListener {

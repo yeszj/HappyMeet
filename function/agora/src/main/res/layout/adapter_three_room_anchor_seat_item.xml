@@ -88,22 +88,109 @@
             android:id="@+id/tv_switch"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_22"
-            android:layout_marginTop="@dimen/dp_14"
-            android:background="@drawable/white_corner_12"
-            android:backgroundTint="@color/whiteColorAlpha80"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@color/blackAlpha80"
             android:drawableStart="@drawable/icon_swarp"
             android:drawablePadding="@dimen/dp_2"
             android:gravity="center"
-            android:paddingHorizontal="@dimen/dp_6"
+            android:paddingHorizontal="@dimen/dp_4"
             android:text='@{roomInfo.privateRoom?"转为大厅":"转为专属"}'
-            android:textColor="@color/whiteAlpha40"
+            android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/vg_autoSeat"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="转为专属"
             tools:visibility="visible" />
 
+        <LinearLayout
+            android:id="@+id/vg_giftAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@color/blackAlpha80"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_4"
+            app:layout_constraintStart_toStartOf="@+id/vg_autoSeat"
+            android:paddingHorizontal="@dimen/dp_4"
+            app:layout_constraintTop_toBottomOf="@+id/tv_switch"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="礼物音效"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_audio"
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/svg_voice_on"
+                android:layout_marginStart="@dimen/dp_2" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/vg_enterAnim"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@color/blackAlpha80"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/vg_giftAudio"
+            app:layout_constraintStart_toStartOf="@+id/vg_autoSeat"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/dp_4"
+            android:paddingHorizontal="@dimen/dp_4"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="进场特效"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_enter"
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_2"
+                android:adjustViewBounds="true"
+                android:src="@drawable/svg_voice_on" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/vg_autoSeat"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginTop="@dimen/dp_4"
+            android:paddingHorizontal="@dimen/dp_4"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="@color/blackAlpha80"
+            android:layout_marginEnd="@dimen/dp_4"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/vg_enterAnim"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{isOwner?View.VISIBLE:View.GONE}"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自动上麦"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/toggle_autoSeat"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                tools:src="@drawable/svg_toggle_on"
+                android:layout_marginStart="@dimen/dp_2"
+                android:src="@{roomInfo.autoSeat?@drawable/svg_toggle_on:@drawable/svg_toggle_off}" />
+        </LinearLayout>
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_manApplyCount"
             android:layout_width="wrap_content"

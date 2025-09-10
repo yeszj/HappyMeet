@@ -130,7 +130,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                     // 获取到的会话列表
                     val conversations = result.data
                     serverConversationList.addAll(conversations)
-                    if (conversations.size > 0) {
+                    if (conversations.isNotEmpty()) {
                         val finalConversation = conversations[conversations.size - 1]
                         val lastMessage = finalConversation.lastMessage
                         val timeMillions = DateUtils.getTimeMillions(-3)

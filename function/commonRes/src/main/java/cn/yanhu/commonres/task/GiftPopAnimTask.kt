@@ -5,9 +5,11 @@ import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import cn.yanhu.baselib.queue.BaseQueueTask
 import cn.yanhu.baselib.utils.GlideUtils
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.manager.AppCacheManager
+import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 import cn.yanhu.commonres.utils.FileAssetsUtils
 import cn.yanhu.commonres.utils.SVGAUtils
 import cn.yanhu.commonres.utils.VideoAnimUtils
@@ -43,7 +45,8 @@ class GiftPopAnimTask(
     private val giftInfo: GiftInfo,
     private val svgaImageView: SVGAImageView?,
     private val videoAnimView: AnimView? = null,
-    val type: Int = 1
+    val type: Int = 1,
+    var roomId: String = ""
 ) :
     BaseQueueTask() {
     override fun doTask() {
@@ -129,6 +132,7 @@ class GiftPopAnimTask(
             })
             videoAnimView?.setAnimListener(object : IAnimListener {
                 override fun onFailed(errorType: Int, errorMsg: String?) {
+                    logComToFile("playGift","视频礼物特效播放失败:errorType=$errorType，errorMsg=$errorMsg")
                 }
 
                 override fun onVideoComplete() {
@@ -175,7 +179,7 @@ class GiftPopAnimTask(
             return
         }
         SVGACache.clearCache()
-        if (AppCacheManager.isOpenGiftAudio) {
+        if (RoomSwitchCacheManager.isOpenGiftVoice(roomId)) {
             SVGASoundManager.setVolume(1f)
         } else {
             SVGASoundManager.setVolume(0f)
@@ -210,6 +214,7 @@ class GiftPopAnimTask(
                 }
 
                 override fun onError() {
+                    logComToFile("playGift","视频礼物特效加载失败:svga=$svga")
                     doNextTask()
                 }
             })
@@ -223,9 +228,9 @@ class GiftPopAnimTask(
             }
         }
         if (isBox){
-            VideoAnimUtils.loadAssetsVideoAnim(topActivity,"luncky_box.mp4",videoAnimView!!,onLoadVideoAnimListener)
+            VideoAnimUtils.loadAssetsVideoAnim(topActivity,"luncky_box.mp4",videoAnimView!!,onLoadVideoAnimListener,roomId)
         }else{
-            VideoAnimUtils.loadNetVideoAnim(topActivity,svga,videoAnimView!!,onLoadVideoAnimListener)
+            VideoAnimUtils.loadNetVideoAnim(topActivity,svga,videoAnimView!!,onLoadVideoAnimListener,roomId)
         }
     }
 

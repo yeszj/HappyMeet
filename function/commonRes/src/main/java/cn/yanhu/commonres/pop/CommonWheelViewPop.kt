@@ -2,12 +2,14 @@ package cn.yanhu.commonres.pop
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.text.TextUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import com.github.gzuliyujiang.wheelview.contract.OnWheelChangedListener
 import com.github.gzuliyujiang.wheelview.widget.WheelView
 import com.lxj.xpopup.core.BottomPopupView
 import cn.yanhu.commonres.R
+import cn.yanhu.commonres.bean.WheelViewPopInfo
 import cn.yanhu.commonres.databinding.PopCommonWheelViewBinding
 import com.github.gzuliyujiang.wheelpicker.widget.OptionWheelLayout
 import com.lxj.xpopup.XPopup
@@ -22,6 +24,7 @@ class CommonWheelViewPop(
     context: Context,
     val arrayList: MutableList<String>,
     private val selectValue: String,
+    private val wheelViewPopInfo:WheelViewPopInfo?,
     private val onSelectResultListener: OnSelectWheelListener
 ) : BottomPopupView(context) {
     override fun getImplLayoutId(): Int {
@@ -40,6 +43,17 @@ class CommonWheelViewPop(
         mBinding.tvSure.setOnSingleClickListener {
             onSelectResultListener.onSelectValue(currentSelectValue)
             dismiss()
+        }
+        if (wheelViewPopInfo!=null){
+            mBinding.wheelView.setIndicatorColor(wheelViewPopInfo.dividerColor)
+            mBinding.vgParent.backgroundTintList = ColorStateList.valueOf(wheelViewPopInfo.bgColor)
+            mBinding.viewTop.backgroundTintList = ColorStateList.valueOf(wheelViewPopInfo.topBgColor)
+            mBinding.tvCancel.setTextColor(wheelViewPopInfo.leftBtnColor)
+            mBinding.tvSure.setTextColor(wheelViewPopInfo.rightBtnColor)
+            mBinding.tvCancel.text = wheelViewPopInfo.leftName
+            mBinding.tvSure.text = wheelViewPopInfo.rightName
+            mBinding.wheelView.setSelectedTextColor(wheelViewPopInfo.itemSelectedColor)
+            mBinding.wheelView.setTextColor(wheelViewPopInfo.itemNormalColor)
         }
     }
 
@@ -89,9 +103,10 @@ class CommonWheelViewPop(
             mContext: Context,
             list: MutableList<String>,
             selectValue: String,
-            onSelectResultListener: OnSelectWheelListener
+            onSelectResultListener: OnSelectWheelListener,
+            wheelViewPopInfo:WheelViewPopInfo?=null
         ): CommonWheelViewPop {
-            val pop = CommonWheelViewPop(mContext, list, selectValue, onSelectResultListener)
+            val pop = CommonWheelViewPop(mContext, list, selectValue,wheelViewPopInfo, onSelectResultListener)
             val builder = XPopup.Builder(mContext)
             builder.asCustom(pop).show()
             return pop

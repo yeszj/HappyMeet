@@ -46,23 +46,6 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
 
     var roomDetailInfo: RoomDetailInfo? = null
 
-    class EntityDiffCallback : DiffUtil.ItemCallback<RoomSeatInfo>() {
-        override fun areItemsTheSame(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Boolean {
-            // 判断是否是同一个 item（通常使用id字段判断）
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Boolean {
-            // 如果是同一个item，则判断item内的数据内容是否有变化
-            return oldItem.roomUserSeatInfo?.userId == newItem.roomUserSeatInfo?.userId
-        }
-
-        override fun getChangePayload(oldItem: RoomSeatInfo, newItem: RoomSeatInfo): Any? {
-            // 可选实现
-            return false
-        }
-    }
-
     init {
         bindAnchorSeatItem()
         bindUserSeatItem().onItemViewType { position, _ ->
@@ -114,29 +97,15 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
         val isShowNoTopBg: Boolean
         if (frgType == RoomListBean.FRG_NINE_ROOM) {
             isShowNoTopBg = position == 1 || position == 4 || position == 7
-            if (isExpandStyle) {
-                ViewUtils.setViewHeight(
-                    vgParent,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_80)
-                )
-            } else {
-                ViewUtils.setViewHeight(
-                    vgParent,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
-                )
-            }
+            ViewUtils.setViewHeight(
+                vgParent,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
+            )
         } else {
-            if (isExpandStyle) {
-                ViewUtils.setViewHeight(
-                    vgParent,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
-                )
-            } else {
-                ViewUtils.setViewHeight(
-                    vgParent,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_142)
-                )
-            }
+            ViewUtils.setViewHeight(
+                vgParent,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_142)
+            )
             isShowNoTopBg = position == 2 || position == 5
         }
         if (item.id == 1 && frgType == RoomListBean.FRG_SEVEN_ROOM) {
@@ -169,17 +138,6 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
             override fun onBind(holder: VH, position: Int, item: RoomSeatInfo?) {
 
                 holder.binding.apply {
-                    if (isExpandStyle) {
-                        ViewUtils.setViewHeight(
-                            vgAnchorParent,
-                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
-                        )
-                    } else {
-                        ViewUtils.setViewHeight(
-                            vgAnchorParent,
-                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_142)
-                        )
-                    }
                     anchorSeatInfo.apply {
                         bindItemInfo(item, position)
                     }
@@ -293,14 +251,6 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
     private var isRoomOwner = false
     fun setIsOwner(owner: Boolean) {
         this.isRoomOwner = owner
-    }
-
-    private var isExpandStyle = false
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setIsExpandStyle(isExpand: Boolean) {
-        isExpandStyle = isExpand
-        notifyDataSetChanged()
     }
 
 
