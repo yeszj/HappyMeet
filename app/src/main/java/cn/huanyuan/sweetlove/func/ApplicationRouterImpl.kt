@@ -12,6 +12,7 @@ import cn.huanyuan.sweetlove.net.HttpHeadConfig
 import cn.huanyuan.sweetlove.ui.login.LoginActivity
 import cn.huanyuan.sweetlove.ui.main.MainActivity
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
+import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
 import cn.yanhu.agora.miniwindow.EaseCallFloatWindow
 import cn.yanhu.agora.miniwindow.MiniWindowManager
@@ -134,6 +135,10 @@ class ApplicationRouterImpl : IApplication {
 
     override fun hasLoadAgoraSdk(): Boolean {
         return AgoraSdkCacheManager.hasLoadAgoraSdk()
+    }
+
+    override fun hasLoadBeautySdk(): Boolean {
+        return BeautyCacheManager.hasLoadBeautySdk()
     }
 
     override fun jumpToPage(className: String, intent: Intent) {

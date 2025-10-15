@@ -37,6 +37,16 @@ public class GiftInfo implements Serializable {
 
     private int loversType;
 
+    private String targetUserId;
+
+    public String getTargetUserId() {
+        return targetUserId;
+    }
+
+    public void setTargetUserId(String targetUserId) {
+        this.targetUserId = targetUserId;
+    }
+
     public String getLoversDesc() {
         if (loversType == 1) {
             return "黄金情侣";

@@ -188,7 +188,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
             SendGiftPop.showDialog(
                 mContext,
                 sendUserInfo,
-                SendGiftRequest.SOURCE_CALL,
+                SendGiftPop.SOURCE_VIDEO,
                 callInfo!!.id,
                 object : SendGiftPop.OnSendGiftListener {
                     override fun onSendGift(item: GiftInfo) {

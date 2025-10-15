@@ -2,6 +2,7 @@ package cn.yanhu.imchat.manager
 
 import android.annotation.SuppressLint
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.bean.SmCheckResult
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
@@ -9,6 +10,7 @@ import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.upload.UploadFileClient
 import cn.zj.netrequest.upload.UploadFileProgressListener
 import com.blankj.utilcode.util.ThreadUtils
+import com.xiaomi.push.da
 
 /**
  * @author: zhengjun
@@ -90,9 +92,9 @@ object SmSdkUtils {
         source: Int,
         onSmCheckResultListener: OnSmCheckResultListener
     ) {
-        request({ imChatRxApi.sendMessageCheckOfShuMei(chatId, content, messageType, source)},object : OnRequestResultListener<String>{
-            override fun onSuccess(data: BaseBean<String>) {
-                onSmCheckResultListener.onCheckSuccess(data.data)
+        request({ imChatRxApi.sendMessageCheckOfShuMei(chatId, content, messageType, source)},object : OnRequestResultListener<SmCheckResult>{
+            override fun onSuccess(data: BaseBean<SmCheckResult>) {
+                onSmCheckResultListener.onCheckSuccess(data.data!!, data.msg)
             }
 
             override fun onFail(code: Int?, msg: String?) {
@@ -103,7 +105,7 @@ object SmSdkUtils {
     }
 
     interface OnSmCheckResultListener {
-        fun onCheckSuccess(smCheckId: String?)
+        fun onCheckSuccess(smCheckResult: SmCheckResult,msg: String)
         fun onCheckFail(code:Int?,msg:String?)
     }
 }

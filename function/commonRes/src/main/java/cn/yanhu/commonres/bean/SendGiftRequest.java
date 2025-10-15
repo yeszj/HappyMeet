@@ -1,7 +1,7 @@
 package cn.yanhu.commonres.bean;
 
 public class SendGiftRequest {
-    public static final int SOURCE_LIVE_ROOM= 0;//
+    public static final int SOURCE_LIVE_ROOM= 0;//直播间
     public static final int SOURCE_CHAT = 1;//私聊
     public static final int SOURCE_CALL = 2;//一对一通话
 
@@ -20,6 +20,7 @@ public class SendGiftRequest {
     private String toUid;
     private Integer source;
     private Integer callId;
+    private String sendCntId;
 
     private String groupId;
 
@@ -29,6 +30,14 @@ public class SendGiftRequest {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public String getSendCntId() {
+        return sendCntId;
+    }
+
+    public void setSendCntId(String sendCntId) {
+        this.sendCntId = sendCntId;
     }
 
     public Integer getCallId() {

@@ -38,19 +38,13 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
             liveRoomFrg = ThreeLiveRoomFrg()
             liveRoomFrg?.arguments = intent.extras
             addFragment(liveRoomFrg)
-        } else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_SEVEN_ROOM) {
-            liveRoomFrg = SevenLiveRoomFrg()
+        } else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_SONG_ROOM
+            || roomSourceBean.getFragmentType() == RoomListBean.FRG_NINE_ROOM
+            || roomSourceBean.getFragmentType() == RoomListBean.FRG_SEVEN_ROOM) {
+            liveRoomFrg = MoreSeatLiveRoomFrg()
             liveRoomFrg?.arguments = intent.extras
             addFragment(liveRoomFrg)
-        } else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_NINE_ROOM) {
-            liveRoomFrg = NineLiveRoomFrg()
-            liveRoomFrg?.arguments = intent.extras
-            addFragment(liveRoomFrg)
-        }  else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_SONG_ROOM) {
-            liveRoomFrg = SongLiveRoomFrg()
-            liveRoomFrg?.arguments = intent.extras
-            addFragment(liveRoomFrg)
-        }else {
+        } else {
             val upgradeTipFrg = NeedUpgradeTipFrg()
             addFragment(upgradeTipFrg)
         }
@@ -91,16 +85,14 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
     override fun exactDestroy() {
         super.exactDestroy()
         LocalServiceManager.stopLocalService(mContext)
-        if (liveRoomFrg?.isFinish == true){
-            logComToFile(LIVE_ROOM_TAG,"用户主动退出")
-        }else{
-            logComToFile(LIVE_ROOM_TAG,"系统回收销毁")
+        if (liveRoomFrg?.isFinish == true) {
+            logComToFile(LIVE_ROOM_TAG, "用户主动退出")
+        } else {
+            logComToFile(LIVE_ROOM_TAG, "系统回收销毁")
         }
         liveRoomFrg?.exitRoom()
         AgoraManager.isLiveRoom = false
     }
-
-
 
 
     fun roomLeave(onRoomLeaveListener: OnRoomLeaveListener) {

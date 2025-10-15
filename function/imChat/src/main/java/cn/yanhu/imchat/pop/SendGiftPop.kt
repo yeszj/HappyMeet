@@ -58,6 +58,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     private var callId: Int = 0
     private var sendUserInfo: UserDetailInfo = UserDetailInfo()
     private var onSendGiftListener: OnSendGiftListener? = null
+    private var isShowContinueClick: Boolean = false
 
     @SuppressLint("CommitTransaction", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,6 +68,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                 requireArguments().getSerializable(IntentKeyConfig.DATA) as UserDetailInfo
             source = requireArguments().getInt("source")
             callId = requireArguments().getInt("callId")
+            isShowContinueClick = requireArguments().getBoolean("isShowContinueClick", false)
             this.userInfo = sendUserInfo
             this.executePendingBindings()
             logcom("showGiftPop = show")
@@ -83,7 +85,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                 val selectItem = fragment.getSelectItem()
                 selectItem?.apply {
                     val balanceRose = binding!!.tvRoseNum.text.toString()
-                    onSendGiftListener?.onSendAll(selectItem,balanceRose)
+                    onSendGiftListener?.onSendAll(selectItem, balanceRose)
                 }
             }
             this.ivAvatar.setOnSingleClickListener {
@@ -115,24 +117,34 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
     private var sendGiftListener = object : GiftShowFrg.OnClickSendListener {
         override fun onSendGift(item: GiftInfo?) {
-            item?.apply {
-                startSendGift(this)
+            if (SOURCE_VIDEO != source && SOURCE_CHAT != source && isShowContinueClick) {
+                onSendGiftListener?.onSendGift(item!!)
+            } else {
+                item?.apply {
+                    startSendGift(this)
+                }
             }
+
         }
 
-        override fun setGiftInfo(giftResponse: GiftResponse) {
+        override fun setGiftInfo(giftResponse: GiftResponse, type: Int) {
             giftInfo = giftResponse
+            if (giftResponse.list.isEmpty() && SOURCE_VIDEO != source && SOURCE_CHAT != source && type == GiftShowFrg.TYPE_LOVER) {
+                myFragmentStateAdapter?.removeItem(2)
+                binding?.tvLovers?.visibility = View.INVISIBLE
+            }
             setGiftInfo()
         }
     }
 
     private val giftViewsList = mutableListOf<Fragment>()
+    private var myFragmentStateAdapter: MyFrgFragmentStateAdapter? = null
     private fun initTabLayout() {
         binding?.apply {
             val giftShowView = GiftShowFrg.newInstance(source, GiftShowFrg.TYPE_GIFT)
             giftShowView.registerClickSendListener(sendGiftListener)
             giftViewsList.add(giftShowView)
-            if (SendGiftRequest.SOURCE_LIVE_ROOM == source) {
+            if (SOURCE_VIDEO != source && SOURCE_CHAT != source) {
                 val faceGiftShowView = GiftShowFrg.newInstance(source, GiftShowFrg.TYPE_FACE)
                 giftViewsList.add(faceGiftShowView)
                 faceGiftShowView.registerClickSendListener(sendGiftListener)
@@ -148,8 +160,9 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                 tvFace.visibility = View.INVISIBLE
                 tvLovers.visibility = View.INVISIBLE
             }
-            viewPager.offscreenPageLimit = 1
-            viewPager.adapter = MyFrgFragmentStateAdapter(this@SendGiftPop, giftViewsList)
+            viewPager.offscreenPageLimit = 2
+            myFragmentStateAdapter = MyFrgFragmentStateAdapter(this@SendGiftPop, giftViewsList)
+            viewPager.adapter = myFragmentStateAdapter
             tabLayout.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
                     R.id.tv_gift -> {
@@ -169,9 +182,9 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     tabLayout.check(tabLayout.getChildAt(position).id)
-                    if (position==2){
+                    if (position == 2) {
                         tvSendAll.visibility = View.GONE
-                    }else{
+                    } else {
                         tvSendAll.visibility = View.VISIBLE
                     }
                 }
@@ -197,7 +210,8 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         sendGiftRequest.toUid = sendUserInfo.userId
         sendGiftRequest.giftId = item.id
         sendGiftRequest.num = 1
-        sendGiftRequest.source = source
+        sendGiftRequest.source =
+            if (source == SOURCE_VIDEO) SendGiftRequest.SOURCE_CALL else if (source == SOURCE_CHAT) SendGiftRequest.SOURCE_CHAT else SendGiftRequest.SOURCE_LIVE_ROOM
         sendGiftRequest.callId = callId
         sendGift(sendGiftRequest, item)
 
@@ -232,7 +246,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                     if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
                         item.randomBoxGiftInfo = data.data
                     }
-                    logComToFile("sendGift","赠送礼物成功，giftName=${item.name}")
+                    logComToFile("sendGift", "赠送礼物成功，giftName=${item.name}")
                     onSendGiftListener?.onSendGift(item)
                 }
 
@@ -262,24 +276,27 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         fun onShowUserInfo(userId: String) {}
         fun onAddFriend() {}
         fun onShowFriendBtn() {}
-        fun onSendAll(item: GiftInfo,balance: String){}
+        fun onSendAll(item: GiftInfo, balance: String) {}
     }
 
     companion object {
+        const val SOURCE_VIDEO = 9
+        const val SOURCE_CHAT = 0
+
         @JvmStatic
         fun showDialog(
             context: FragmentActivity,
             sendUserInfo: UserDetailInfo,
             source: Int,
             callId: Int,
-            onSendGiftListener: OnSendGiftListener
-
-            ): SendGiftPop {
+            onSendGiftListener: OnSendGiftListener, isShowContinueClick: Boolean = false
+        ): SendGiftPop {
             val createGroupPop =
                 SendGiftPop()
             val arguments = Bundle()
             arguments.putInt("source", source)
             arguments.putInt("callId", callId)
+            arguments.putBoolean("isShowContinueClick", isShowContinueClick)
             arguments.putSerializable(IntentKeyConfig.DATA, sendUserInfo)
             createGroupPop.onSendGiftListener = onSendGiftListener
             createGroupPop.arguments = arguments

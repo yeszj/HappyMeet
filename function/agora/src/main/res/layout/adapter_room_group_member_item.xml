@@ -76,6 +76,19 @@
             app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
             app:layout_constraintStart_toEndOf="@id/userAvatar"  />
 
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_exit"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:textColor="@color/colorMain"
+            android:textSize="@dimen/sp_14"
+            app:fontWeightValue="medium"
+            android:text="退出"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="@dimen/dp_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

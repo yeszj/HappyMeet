@@ -5,12 +5,16 @@ import android.content.Context
 import android.view.View
 import cn.yanhu.agora.R
 import cn.yanhu.agora.adapter.liveRoom.RoomGroupMemberAdapter
+import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.RoomGroupMemberRes
 import cn.yanhu.agora.databinding.PopLiveRoomGroupMemberBinding
 import cn.yanhu.baselib.refresh.NoMoreDataFootView
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.router.RouteIntent
+import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.status.BaseBean
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.BottomPopupView
@@ -21,7 +25,7 @@ import com.lxj.xpopup.core.BottomPopupView
  * desc:
  */
 @SuppressLint("ViewConstructor")
-class RoomGroupMemberPop(context: Context, private val rankList: RoomGroupMemberRes) :
+class RoomGroupMemberPop(context: Context, private val rankList: RoomGroupMemberRes,var exitListener: OnExitGroupListener) :
     BottomPopupView(context) {
     private val userAdapter by lazy { RoomGroupMemberAdapter() }
     override fun getImplLayoutId(): Int {
@@ -52,15 +56,22 @@ class RoomGroupMemberPop(context: Context, private val rankList: RoomGroupMember
                 RouteIntent.lunchPersonHomePage(item.userId)
             }
         })
+        userAdapter.addOnItemChildClickListener(R.id.tv_exit) { _, view, position ->
+            exitListener.onExitGroup()
+        }
         mBiding.ivClose.setOnSingleClickListener { dismiss() }
+    }
+
+    interface OnExitGroupListener {
+        fun onExitGroup()
     }
 
     companion object {
         @JvmStatic
         fun showDialog(
-            mContext: Context, rankList: RoomGroupMemberRes
+            mContext: Context, rankList: RoomGroupMemberRes,exitListener: OnExitGroupListener
         ): RoomGroupMemberPop {
-            val matchPop = RoomGroupMemberPop(mContext, rankList)
+            val matchPop = RoomGroupMemberPop(mContext, rankList,exitListener)
             val builder =
                 XPopup.Builder(mContext)
             builder.asCustom(matchPop).show()

@@ -138,6 +138,7 @@ object ChatConstant {
 
     const val ACTION_UPLOAD_LOG = 77//上传日志
 
+    const val ACTION_SEND_GIFT = 78
 
     const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位
 

@@ -36,7 +36,7 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
 
     private var giftInfo: GiftResponse? = null
     fun getGiftInfo() {
-        request({ imChatRxApi.getGiftList(type) }, object : OnRequestResultListener<GiftResponse> {
+        request({ imChatRxApi.getGiftList(type,source) }, object : OnRequestResultListener<GiftResponse> {
             override fun onSuccess(data: BaseBean<GiftResponse>) {
                 giftInfo = data.data
                 removeRandomBoxGift()
@@ -51,7 +51,7 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
 
     private fun setGiftInfo() {
         giftAdapter.submitList(giftInfo?.list)
-        onClickSendListener?.setGiftInfo(giftInfo!!)
+        onClickSendListener?.setGiftInfo(giftInfo!!,type)
     }
 
     private var source: Int = 0
@@ -87,7 +87,6 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
         if (!TextUtils.isEmpty(AppCacheManager.giftInfo) && type == TYPE_GIFT) {
             giftInfo = GsonUtils.fromJson(AppCacheManager.giftInfo, GiftResponse::class.java)
             removeRandomBoxGift()
-            setGiftInfo()
         }
     }
 
@@ -102,7 +101,7 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
 
     interface OnClickSendListener {
         fun onSendGift(item: GiftInfo?)
-        fun setGiftInfo(giftResponse: GiftResponse)
+        fun setGiftInfo(giftResponse: GiftResponse,type:Int)
     }
 
     companion object {

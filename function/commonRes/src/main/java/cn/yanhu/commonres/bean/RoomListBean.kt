@@ -95,6 +95,10 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
         }
     }
 
+    fun isThreeRoom(): Boolean {
+        return getFragmentType() == FRG_THREE_ROOM
+    }
+
     fun isSongRoom():Boolean{
         return roomType == TYPE_SEVEN_SONG || roomType == TYPE_NINE_SONG
     }
@@ -120,8 +124,9 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
     }
 
     fun isShowPkFunc(): Boolean{
-       return (roomType == TYPE_SEVEN_FRIEND || roomType == TYPE_NINE_FRIEND)
+       return !isThreeRoom()
     }
+
 
 
     companion object {
@@ -144,6 +149,18 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
 
         const val TYPE_ROBOT_ROOM= 50
 
+        @JvmStatic
+        fun isThreeRoom(roomType:Int): Boolean {
+            return when (roomType) {
+                TYPE_PUBLIC, TYPE_PRIVATE,TYPE_ROBOT_ROOM -> {
+                    true
+                }
+
+                else -> {
+                    false
+                }
+            }
+        }
 
     }
 

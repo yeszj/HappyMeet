@@ -133,7 +133,7 @@
             android:text="打招呼"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_17"
-            android:visibility="@{isSelf|| (userinfo.sameSex &amp;&amp; userinfo.gender==1)?View.GONE:View.VISIBLE}"
+            android:visibility="@{isSelf?View.GONE:View.VISIBLE}"
             app:fontType="@string/fontBold"
             app:layout_constraintBottom_toBottomOf="@+id/vgChat"
             app:layout_constraintEnd_toEndOf="@+id/vgChat"

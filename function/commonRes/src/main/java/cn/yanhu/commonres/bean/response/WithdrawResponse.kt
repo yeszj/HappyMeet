@@ -1,5 +1,6 @@
 package cn.yanhu.commonres.bean.response
 
+import cn.yanhu.commonres.bean.PayWayInfo
 import cn.yanhu.commonres.bean.WithDrawInfo
 
 /**
@@ -13,8 +14,10 @@ data class WithdrawResponse(
     val withdrawalAgreement: String,
     val withdrawalRule: String,
     val aliAccount: String?,
+    val bankCard: String?,
     val wxNickName: String?,
     val wxAvatar:String?,
     var realName: String,
-    val desc:String
+    val desc:String,
+    val withdrawTypeList: MutableList<PayWayInfo>?
 )

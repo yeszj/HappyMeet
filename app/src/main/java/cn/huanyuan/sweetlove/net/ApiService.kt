@@ -185,6 +185,10 @@ interface ApiService : CommonApiService {
     suspend fun roseExchange(@Field("id") id: Int): BaseBean<String>
 
 
+    @FormUrlEncoded
+    @POST("app/v1/account/bindBank")
+    suspend fun bindBank(@Field("bankCard") bankCard: String): BaseBean<String>
+
     @GET("app/v1/account/getRoseExchangeInfo")
     suspend fun getRoseExchangeInfo(
     ): BaseBean<RoseExchangeResponse>

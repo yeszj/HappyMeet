@@ -51,7 +51,7 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
         }
 
     fun hideChatBtn(): Boolean {
-        return userId == AppCacheManager.userId || (sameSex && gender == 1)
+        return userId == AppCacheManager.userId
     }
 
     fun hideRoomBtn(): Boolean {

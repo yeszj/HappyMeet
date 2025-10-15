@@ -16,6 +16,7 @@ import cn.yanhu.commonres.bean.EditPhotoInfo
 import cn.yanhu.commonres.bean.ReportConfigInfo
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.ImageSelectManager
+import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.upload.UploadFileClient
@@ -53,6 +54,7 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
         mViewModel.complaintInfo.value = complaintInfo
         mBinding.complaintInfo = mViewModel.complaintInfo.value
         initEditAdapter()
+
         mBinding.rvType.adapter = complaintTypeAdapter
         complaintTypeAdapter.setOnItemClickListener { _, _, position ->
             complaintTypeAdapter.setSelectPosition(position)
@@ -110,6 +112,10 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
                     list.addAll(it.list)
                 }
                 complaintTypeAdapter.submitList(list)
+                val position = intent.getStringExtra(IntentKeyConfig.POSITION)
+                if (!TextUtils.isEmpty(position)){
+                    complaintTypeAdapter.setSelectPosition(position!!.toInt())
+                }
             })
         }
         mViewModel.complaintResultObservable.observe(this) {

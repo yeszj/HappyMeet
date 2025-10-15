@@ -183,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_4"
                 android:src="@drawable/svg_expand_live_room"
-                android:visibility="@{seatInfo.id!=1 &amp;&amp;isOwner &amp;&amp; (currentRoomType == RoomListBean.TYPE_SEVEN_SONG || currentRoomType == RoomListBean.TYPE_NINE_SONG)?View.VISIBLE:View.INVISIBLE}"
+                android:visibility="@{seatInfo.id!=1 &amp;&amp;isOwner &amp;&amp; (!RoomListBean.isThreeRoom(currentRoomType))?View.VISIBLE:View.INVISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_sendRose"
                 app:layout_constraintEnd_toStartOf="@+id/iv_chooseSong"
                 app:layout_constraintTop_toTopOf="@+id/iv_sendRose" />
@@ -194,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_4"
                 android:src="@drawable/svg_choose_song"
-                android:visibility="@{(currentRoomType == RoomListBean.TYPE_SEVEN_SONG || currentRoomType == RoomListBean.TYPE_NINE_SONG) &amp;&amp; (isOwner || !isSelf)?View.VISIBLE:View.INVISIBLE}"
+                android:visibility="@{(currentRoomType == RoomListBean.TYPE_SEVEN_SONG || currentRoomType == RoomListBean.TYPE_NINE_SONG) &amp;&amp; (isOwner || !isSelf)?View.VISIBLE:View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_sendRose"
                 app:layout_constraintEnd_toStartOf="@+id/iv_sendRose"
                 app:layout_constraintTop_toTopOf="@+id/iv_sendRose" />

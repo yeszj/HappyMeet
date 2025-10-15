@@ -138,6 +138,10 @@ object ImCallManager {
         chatType: Int,
         toUserId: String,
     ) {
+        if (!ApplicationProxy.instance.hasLoadBeautySdk()) {
+            LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS,true)
+            return
+        }
         if (!ApplicationProxy.instance.hasLoadAgoraSdk()) {
             LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS,true)
             return

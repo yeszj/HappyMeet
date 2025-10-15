@@ -7,6 +7,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
+import android.content.ComponentCallbacks2
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -113,6 +114,7 @@ import xyz.doikki.videoplayer.player.VideoViewManager
 import java.io.File
 import androidx.core.graphics.toColorInt
 import cn.huanyuan.sweetlove.func.manager.AppLogManager
+import cn.yanhu.baselib.queue.TaskQueueManager
 
 
 @Suppress("DEPRECATION")
@@ -552,10 +554,10 @@ class BaseApplication : Application() {
         imMsgNotifyTaskManager.addTask(ImChatMsgNotifyTask(appMsgNotifyInfo))
     }
 
+    private var authTime = 0L
     private fun dealCommonCmdMsg(message: EMMessage) {
         try {
             val source = message.getIntAttribute("source", -1)
-            logcom("收到透传消息source = $source")
             val attributes = message.attributes
             if (BuildConfig.DEBUG){
                 logcom("收到透传消息${GsonUtils.toJson(attributes)}")
@@ -638,6 +640,12 @@ class BaseApplication : Application() {
                     data.toString()
                 )
             } else if (source == ChatConstant.ACTION_FORCE_AUTH) {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - authTime < 1000) {
+                    logcom("1s内收到强制授权忽略")
+                    return
+                }
+                authTime = currentTime
                 addPopTask(
                     ChatConstant.ACTION_FORCE_AUTH,
                     "1"
@@ -888,6 +896,19 @@ class BaseApplication : Application() {
         ARouterWrapper.destory()
     }
 
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        // 系统内存不足时自动清理
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
+            Glide.get(this).clearMemory();
+        }
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        Glide.get(this).clearMemory();
+    }
+
     companion object {
         private val appPopTaskQueueManagerImpl = TaskQueueManagerImpl()
         private val globalTaskQueueManagerImpl = TaskQueueManagerImpl()
@@ -897,6 +918,11 @@ class BaseApplication : Application() {
         }
 
         fun addPopTask(type: Int, content: String) {
+            val task = AppPopTask(type, content)
+            if (TaskQueueManager.hasTask(task) && type !=  ChatConstant.GLOBAL_GIFT_ALERT && type !=  ChatConstant.ACTION_USER_ONLINE) {
+                logcom("已经存在该任务：taskName = ${task.getTaskName()} ")
+                return
+            }
             appPopTaskQueueManagerImpl.addTask(AppPopTask(type, content))
         }
 

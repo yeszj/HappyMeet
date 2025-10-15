@@ -107,7 +107,7 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
         }
         mBinding.vgRoom.setOnSingleClickListener {
             userInfo?.apply {
-                LiveRoomManager.toLiveRoomPage(mContext,this.roomId.toString())
+                LiveRoomManager.toLiveRoomPage(mContext, this.roomId.toString())
             }
         }
         mBinding.ivEdit.setOnSingleClickListener {
@@ -126,14 +126,10 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
 
     private fun showOperatePop(): CommonOperatePop {
         val list = mutableListOf<OperateInfo>()
-        if (userInfo?.isFriend == true){
+        if (userInfo?.isFriend == true) {
             list.add(OperateInfo("解除好友", cn.yanhu.commonres.R.color.cl_common, -1))
-        }else{
-            if (userInfo?.isSameGender == true && AppCacheManager.isMan()){
-                logcom("同性别，男性不显示添加好友")
-            }else{
-                list.add(OperateInfo("添加好友", cn.yanhu.commonres.R.color.cl_common, 0))
-            }
+        } else {
+            list.add(OperateInfo("添加好友", cn.yanhu.commonres.R.color.cl_common, 0))
         }
         list.add(OperateInfo("拉黑", cn.yanhu.commonres.R.color.cl_common, 1))
         list.add(OperateInfo("举报", cn.yanhu.commonres.R.color.colorTextRed, 2))
@@ -146,18 +142,21 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                         1 -> {
                             ImUserManager.setUserBlack(true, userId)
                         }
+
                         0 -> {
                             //添加好友
-                            if (userInfo?.addFriendWay==0){
+                            if (userInfo?.addFriendWay == 0) {
                                 mViewModel.addFriend(userId)
-                            }else{
+                            } else {
                                 showAddFriendPop()
                             }
                         }
+
                         -1 -> {
                             //解除好友
                             showCancelFriendTip()
                         }
+
                         else -> {
                             RouteIntent.lunchReportPage(userId)
                         }
@@ -191,7 +190,6 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
     }
 
 
-
     private fun addOnScrollListener() {
         mBinding.recyclerView.addOnScrollListener(object : OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -221,29 +219,29 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
 
     override fun requestData() {
         super.requestData()
-       // getDynamicByUserId()
-        mViewModel.getUserInfo(userId,userInfo!=null)
+        // getDynamicByUserId()
+        mViewModel.getUserInfo(userId, userInfo != null)
     }
 
     private fun getDynamicByUserId() {
-        mViewModel.getDynamicByUserId(page, userId,userInfo!=null)
+        mViewModel.getDynamicByUserId(page, userId, userInfo != null)
     }
 
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
-        mViewModel.cancelFriendObservable.observe(this){
-            parseState(it,{
-                ChatUserInfoManager.updateIsFriend(userId,false)
+        mViewModel.cancelFriendObservable.observe(this) {
+            parseState(it, {
+                ChatUserInfoManager.updateIsFriend(userId, false)
                 LiveEventBus.get<Boolean>(EventBusKeyConfig.ADD_FRIEND_STATE).post(true)
                 userInfo?.isFriend = false
 
                 showToast("已取消")
             })
         }
-        mViewModel.addFriendObservable.observe(this){ it ->
-            parseState(it,{
+        mViewModel.addFriendObservable.observe(this) { it ->
+            parseState(it, {
                 showToast("好友请求已发送～")
-            },{
+            }, {
                 showToast(it.msg)
             })
         }
@@ -253,10 +251,10 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                 showToast("添加好友成功")
                 ChatUserInfoManager.saveUserInfo(userInfo)
                 EmMsgManager.sendCmdMessagePeople(userId, CmdMsgTypeConfig.ADD_FRIEND, null)
-            },{
-                if (it.code == ErrorCode.CODE_NO_BALANCE){
+            }, {
+                if (it.code == ErrorCode.CODE_NO_BALANCE) {
                     ApplicationProxy.instance.showRechargePop(mContext, true)
-                }else{
+                } else {
                     showToast(it.msg)
                 }
             })
@@ -278,8 +276,8 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                 userInfo = it
                 bindBasicInfo(it)
                 setDataLoadFinish(page, 0, mBinding.refreshLayout)
-            },{
-                if (it.code == ErrorCode.HAS_BLACK){
+            }, {
+                if (it.code == ErrorCode.HAS_BLACK) {
                     finish()
                 }
             })
@@ -295,12 +293,12 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
         homePageHeadAdapter.item = it
         val isSelf = AppCacheManager.userId == it.userId
         mBinding.isSelf = isSelf
-        if (it.hideChatBtn()){
+        if (it.hideChatBtn()) {
             ViewUtils.setMarginRight(
                 mBinding.vgRoom,
                 CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_16)
             )
-        }else{
+        } else {
             ViewUtils.setMarginRight(
                 mBinding.vgRoom,
                 CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_16)

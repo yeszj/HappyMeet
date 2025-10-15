@@ -12,6 +12,7 @@ import cn.yanhu.baselib.utils.ext.showToast
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
+import com.blankj.utilcode.util.KeyboardUtils
 import com.lxj.xpopup.XPopup
 
 /**
@@ -55,6 +56,7 @@ class ModifyInsertQueueRosePop(context: Context, val roomId:String, private val 
         if (TextUtils.isEmpty(inputPrice)) {
             showToast("请输入价格")
         } else {
+            KeyboardUtils.hideSoftInput(mBinding.etPrice)
             request({ agoraRxApi.resetQueuePrice(roomId, inputPrice) },
                 object : OnRequestResultListener<String> {
                     override fun onSuccess(data: BaseBean<String>) {

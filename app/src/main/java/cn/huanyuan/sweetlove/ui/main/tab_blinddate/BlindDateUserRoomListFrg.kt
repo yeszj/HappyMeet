@@ -31,7 +31,7 @@ class BlindDateUserRoomListFrg : BaseFragment<FrgBlindDateUserListBinding, MainV
         // titles.add("专属")
 
         val fragments = childFragmentManager.fragments
-        if (fragments.size > 0) {
+        if (fragments.isNotEmpty()) {
             frgList = fragments
         } else {
             frgList.add(BlindUserOrRoomItemFrg.newsInstance(BlindUserOrRoomItemFrg.TYPE_RECOMMEND))

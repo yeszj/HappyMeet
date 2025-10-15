@@ -50,12 +50,12 @@ dependencies {
     api("com.alipay.sdk:alipaysdk-android:+@aar")
     //微信
     api("com.tencent.mm.opensdk:wechat-sdk-android:+")
-    api("com.umeng.umsdk:share-wx:7.3.5")
-    api("com.umeng.umsdk:share-core:7.3.5")
+    api("com.umeng.umsdk:share-wx:7.3.7")
+    api("com.umeng.umsdk:share-core:7.3.7")
     // 友盟统计SDK
-    api("com.umeng.umsdk:common:9.8.0")// 必选
-    api("com.umeng.umsdk:asms:1.8.6")// 必选
-    api("com.umeng.umsdk:apm:2.0.1")// 必选
+    api("com.umeng.umsdk:common:9.8.8")// 必选
+    api("com.umeng.umsdk:asms:1.8.7.2")// 必选
+    api("com.umeng.umsdk:apm:2.0.6")// 必选
     implementation(project(mapOf("path" to ":function:localRepo:live_face_sdk_aar")))
 
 //    implementation(project(mapOf("path" to ":function:localRepo:baidu_face_aar")))

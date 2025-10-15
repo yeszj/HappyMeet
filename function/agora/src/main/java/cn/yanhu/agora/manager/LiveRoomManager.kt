@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.EnterCheckResponse
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
+import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
 import cn.yanhu.agora.miniwindow.MiniWindowManager
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
@@ -48,7 +49,21 @@ object LiveRoomManager {
         applyRoomId: String,
         onRoomNoExitListener: OnRoomNoExitListener? = null
     ) {
-        if (AgoraSdkCacheManager.hasLoadAgoraSdk()) {
+        if (!BeautyCacheManager.hasLoadBeautySdk()) {
+            //showToast("请等待美颜插件加载完成")
+            DialogUtils.dismissLoading()
+            LiveDataEventManager.sendLiveDataMessage(
+                EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS,
+                true
+            )
+        } else if (!AgoraSdkCacheManager.hasLoadAgoraSdk()) {
+            //showToast("请等待插件加载完成")
+            DialogUtils.dismissLoading()
+            LiveDataEventManager.sendLiveDataMessage(
+                EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS,
+                true
+            )
+        } else {
             if (AgoraManager.isLiveRoom && AgoraManager.getInstance().currentRoomID == applyRoomId) {
                 val liveRoomActivity = ApplicationProxy.instance.getLiveRoomActivity()
                 if (liveRoomActivity != null) {
@@ -63,15 +78,7 @@ object LiveRoomManager {
             } else {
                 enterCheck(context, applyRoomId, onRoomNoExitListener)
             }
-        } else {
-            DialogUtils.dismissLoading()
-            LiveDataEventManager.sendLiveDataMessage(
-                EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS,
-                true
-            )
         }
-
-
     }
 
 
@@ -145,17 +152,17 @@ object LiveRoomManager {
                             EventBusKeyConfig.CLOSELIVEROOM,
                             applyRoomId
                         )
-                    }else if (code == ErrorCode.COMMON_TIP_SKIP){
-                        DialogUtils.showConfirmDialog(msg!!,{
-                        },{
+                    } else if (code == ErrorCode.COMMON_TIP_SKIP) {
+                        DialogUtils.showConfirmDialog(msg!!, {
+                        }, {
 
                         }, cancel = "", confirm = "好吧", isHideCancel = true)
-                    }else{
+                    } else {
                         showToast(msg)
                     }
                 }
 
-            },isShowToast = false,
+            }, isShowToast = false,
             activity = context
         )
 

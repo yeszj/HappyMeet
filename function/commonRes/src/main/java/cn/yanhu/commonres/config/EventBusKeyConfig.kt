@@ -35,5 +35,6 @@ object EventBusKeyConfig {
     const val REFRESH_CHAT_MSG_TOP = "refresh_chat_msg_top"
     const val CONTINUEPK = "continuePk"
 
+    const val BINDBANKSUCCESS = "bindBankSuccess"
 
 }

@@ -4,6 +4,7 @@ import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.ChatPriceItemInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
+import cn.yanhu.commonres.bean.SmCheckResult
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.imchat.bean.ChatCheckInfo
@@ -53,7 +54,7 @@ interface ImChatApiService : CommonApiService {
         @Query("content") content: String?,
         @Query("messageType") messageType: String?,
         @Query("source") source: Int?
-    ): BaseBean<String>
+    ): BaseBean<SmCheckResult>
 
     @GET("app/v1/room/getChatEmoji")
     suspend fun getChatEmoji(): BaseBean<MutableList<EaseEmojiconGroupEntity>>
@@ -166,7 +167,7 @@ interface ImChatApiService : CommonApiService {
     suspend fun getSystemMsg(): BaseBean<SystemMsgUnReadInfo>
 
     @GET("app/v1/room/gift/list")
-    suspend fun getGiftList(@Query("type") type: Int): BaseBean<GiftResponse>
+    suspend fun getGiftList(@Query("type") type: Int,@Query("source") source: Int = 0): BaseBean<GiftResponse>
 
     @FormUrlEncoded
     @POST("app/v1/operates/blockUser")

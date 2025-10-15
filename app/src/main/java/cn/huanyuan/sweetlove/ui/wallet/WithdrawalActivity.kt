@@ -39,6 +39,10 @@ import com.lxj.xpopup.core.BasePopupView
 import com.pcl.sdklib.listener.OnAuthResultListener
 import com.pcl.sdklib.sdk.alipay.AliAuthUtils
 import com.pcl.sdklib.sdk.wechat.WxAuthUtils
+import androidx.core.graphics.toColorInt
+import cn.huanyuan.sweetlove.ui.wallet.bank.BindBankActivity
+import cn.yanhu.commonres.config.EventBusKeyConfig
+import com.jeremyliao.liveeventbus.LiveEventBus
 
 /**
  * @author: zhengjun
@@ -92,8 +96,10 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                 selectAccountType = type
                 bindAccountInfo()
             }
-
         })
+        LiveEventBus.get<Boolean>(EventBusKeyConfig.BINDBANKSUCCESS).observe(this) {
+            requestData()
+        }
     }
 
     private fun clickAgreement() {
@@ -108,7 +114,6 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     private fun startWithdrawal() {
         withDrawInfo?.apply {
             if (isAgree) {
-
                 //已经实名认证
                 if (!TextUtils.isEmpty(withDrawInfo?.realName)) {
                     val selectType = mBinding.paySelectView.getSelectType()
@@ -118,10 +123,16 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                             toAliAuth()
                             return@apply
                         }
-                    } else {
+                    } else if (mBinding.paySelectView.getSelectType() == PayWayInfo.TYPE_WXPAY){
                         if (TextUtils.isEmpty(withDrawInfo?.wxNickName)) {
                             showToast("请先绑定微信账户")
                             toWxAuth()
+                            return@apply
+                        }
+                    }else{
+                        if (TextUtils.isEmpty(withDrawInfo?.bankCard)) {
+                            showToast("请先绑定银行卡")
+                            toBindBankCard()
                             return@apply
                         }
                     }
@@ -200,7 +211,9 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
         mViewModel.withdrawalInfoLivedata.observe(this) { it ->
             parseState(it, {
                 withDrawInfo = it
-
+                it.withdrawTypeList?.apply {
+                    mBinding.paySelectView.setPayList(this)
+                }
                 bindAccountInfo()
 
                 mBinding.tvBalance.text = it.balance
@@ -238,8 +251,10 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
         withDrawInfo?.apply {
             if (selectAccountType == PayWayInfo.TYPE_ALIPAY) {
                 bindAliStyle()
-            } else {
+            } else if (selectAccountType == PayWayInfo.TYPE_WXPAY) {
                 bindWxStyle()
+            }else{
+                bindBankStyle()
             }
             val name = if (TextUtils.isEmpty(this.realName)) {
                 "未认证"
@@ -250,14 +265,48 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
         }
     }
 
+    private fun WithdrawResponse.bindBankStyle() {
+        mBinding.tvBind.setTextColor("#FFB039".toColorInt())
+        if (TextUtils.isEmpty(this.bankCard)) {
+            ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_35))
+            mBinding.vgNoBind.visibility = View.VISIBLE
+            mBinding.vgNoBind.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_bank_no_bind)
+            mBinding.tvClickBind.backgroundTintList =
+                ColorStateList.valueOf("#FFB039".toColorInt())
+            mBinding.tvNobindTip.text = "您还未绑定银行卡"
+            mBinding.bgAccountInfo.visibility = View.INVISIBLE
+            mBinding.tvClickBind.setOnSingleClickListener {
+                if (TextUtils.isEmpty(this.realName)) {
+                    showToast("请先进行实名认证")
+                    toRealName()
+                } else {
+                    toBindBankCard()
+                }
+            }
+        } else {
+            mBinding.tvAccountTag.text = "银行卡号"
+            ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20))
+            mBinding.bgAccountInfo.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_bank_no_bind)
+            mBinding.bgAccountInfo.visibility = View.VISIBLE
+            mBinding.vgNoBind.visibility = View.GONE
+            mBinding.tvAccount.text = bankCard
+            mBinding.tvBind.setOnSingleClickListener { toBindBankCard() }
+        }
+    }
+
+
+    private fun WithdrawResponse.toBindBankCard(){
+        BindBankActivity.lunch(mContext, realName)
+    }
+
     private fun WithdrawResponse.bindWxStyle() {
-        mBinding.tvBind.setTextColor(Color.parseColor("#00CB76"))
+        mBinding.tvBind.setTextColor("#00CB76".toColorInt())
         if (TextUtils.isEmpty(this.wxNickName)) {
             ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_35))
             mBinding.vgNoBind.visibility = View.VISIBLE
             mBinding.vgNoBind.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_wx_no_bind)
             mBinding.tvClickBind.backgroundTintList =
-                ColorStateList.valueOf(Color.parseColor("#00CB76"))
+                ColorStateList.valueOf("#00CB76".toColorInt())
             mBinding.tvNobindTip.text = "您还未绑定微信账户"
             mBinding.bgAccountInfo.visibility = View.INVISIBLE
             mBinding.tvClickBind.setOnSingleClickListener {
@@ -280,13 +329,13 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     }
 
     private fun WithdrawResponse.bindAliStyle() {
-        mBinding.tvBind.setTextColor(Color.parseColor("#2D9AFF"))
+        mBinding.tvBind.setTextColor("#2D9AFF".toColorInt())
         if (TextUtils.isEmpty(this.aliAccount)) {
             ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_35))
             mBinding.vgNoBind.visibility = View.VISIBLE
             mBinding.vgNoBind.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_ali_no_bind)
             mBinding.tvClickBind.backgroundTintList =
-                ColorStateList.valueOf(Color.parseColor("#2D9AFF"))
+                ColorStateList.valueOf("#2D9AFF".toColorInt())
             mBinding.tvNobindTip.text = "您还未绑定支付宝账户"
             mBinding.bgAccountInfo.visibility = View.INVISIBLE
             mBinding.tvClickBind.setOnSingleClickListener {

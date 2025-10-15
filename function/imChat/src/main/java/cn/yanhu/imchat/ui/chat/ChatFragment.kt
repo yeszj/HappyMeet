@@ -11,19 +11,18 @@ import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import cn.yanhu.baselib.anim.AnimManager.removeAnimSet
-import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.CommonUtils.isPopShow
 import cn.yanhu.baselib.utils.DialogUtils.showConfirmDialog
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.GiftInfo
-import cn.yanhu.commonres.bean.SendGiftRequest
+import cn.yanhu.commonres.bean.SmCheckResult
+import cn.yanhu.commonres.bean.SmCheckResult.ChatTipContent
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.ImMessageParamsConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
-import cn.yanhu.commonres.manager.AppCacheManager.isWoman
 import cn.yanhu.commonres.manager.AppCacheManager.userId
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.utils.PermissionXUtils.PermissionListener
@@ -69,6 +68,8 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import com.lxj.xpopup.core.BasePopupView
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.File
 import java.util.Timer
 
@@ -463,7 +464,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         sendGiftPop = SendGiftPop.showDialog(
             mContext as FragmentActivity,
             sendUserInfo,
-            SendGiftRequest.SOURCE_CHAT,
+            SendGiftPop.SOURCE_CHAT,
             0,
             object : SendGiftPop.OnSendGiftListener {
                 override fun onSendGift(item: GiftInfo) {
@@ -733,9 +734,29 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                     SmSdkUtils.TYPE_MESSAGE,
                     source,
                     object : SmSdkUtils.OnSmCheckResultListener {
-                        override fun onCheckSuccess(smCheckId: String?) {
-                            message.setAttribute(ImMessageParamsConfig.SM_CHECK_ID, smCheckId)
-                            sendChatMessage(message)
+                        override fun onCheckSuccess(checkResult: SmCheckResult,msg: String) {
+                            //消息检测合规后 正式发送
+                            if (checkResult.canSend == 0) {
+                                message.setAttribute(
+                                    ImMessageParamsConfig.SM_CHECK_ID,
+                                    checkResult.recordId
+                                )
+                                message.setAttribute(
+                                    ImMessageParamsConfig.MSG_TYPE,
+                                    checkResult.msgType
+                                )
+                                sendChatMessage(message)
+                            } else {
+                                updateMsgFail(message,msg)
+                            }
+
+//                            val chatContent: ChatTipContent? = ChatTipContent("<font color = '#333333'>联系方式已成功发送</font><br>安全提醒：如对于表示无法收到、看不到联系方式，要继续送礼才可解锁时请勿轻信；如对方要求添加外部聊天工具时（微信、QQ等）如涉及金钱相关，请保持警惕并及时<font color = '#E83D24'>举报</font>，举报核实成功后可领取奖励。请谨防理财、裸聊、杀猪盘等诈骗，建议在平台内交友。",
+//                                "{clsPath:cn.huanyuan.sweetlove.ui.system.FeedbackActivity,id:100014,position:2}")
+                            val chatContent: ChatTipContent? = checkResult.chatContent
+                            if (chatContent != null) {
+                                ThreadUtils.getMainHandler()
+                                    .postDelayed(Runnable { saveSystemMsgFail(chatContent) }, 500)
+                            }
                         }
 
                         override fun onCheckFail(code: Int?, msg: String?) {
@@ -755,6 +776,19 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                 }
             }
         })
+    }
+
+    private fun saveSystemMsgFail(chatTipContent: ChatTipContent) {
+        val jsonObject = JSONObject()
+        try {
+            val jsonString: String? = chatTipContent.content
+            jsonObject.put(ImMessageParamsConfig.KEY_PAGE_URL, chatTipContent.url)
+            jsonObject.put(ImMessageParamsConfig.KEY_CONTENT, jsonString)
+            jsonObject.put(ImMessageParamsConfig.KEY_OTHER_USERID, conversationId)
+            EmMsgManager.saveCommonAlertMsg(jsonObject)
+        } catch (e: JSONException) {
+            throw RuntimeException(e)
+        }
     }
 
     private fun updateMsgFail(message: EMMessage, errorMsg: String?, code: Int = -1) {

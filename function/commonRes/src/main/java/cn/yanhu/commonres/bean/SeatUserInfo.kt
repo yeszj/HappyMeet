@@ -15,4 +15,5 @@ class SeatUserInfo : UserDetailInfo() {
             field = value
             notifyPropertyChanged(BR._all)
         }
+    var replacePrice: Int = 0
 }

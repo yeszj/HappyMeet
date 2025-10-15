@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleLeftName="银行卡绑定"
+            app:titleName=" " />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/viewBg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:text="请填写本人的银行卡号，否则无法提现"
+            android:gravity="center"
+            android:textSize="@dimen/sp_14"
+            android:textColor="#FF2A68"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="#1AFF2A68"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar" />
+
+        <View
+            android:id="@+id/bgName"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@drawable/common_shape_input_bg"
+            app:layout_constraintTop_toBottomOf="@+id/viewBg" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_realName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_16"
+            android:text="真实姓名"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toBottomOf="@+id/bgName"
+            app:layout_constraintStart_toStartOf="@id/bgName"
+            app:layout_constraintTop_toTopOf="@+id/bgName" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/et_realName"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:background="@color/transparent"
+            android:hint="请输入真实姓名"
+            android:inputType="text"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:textColor="@color/fontTextColor"
+            android:textColorHint="@color/blackAlpha80"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toBottomOf="@+id/bgName"
+            app:layout_constraintEnd_toEndOf="@+id/bgName"
+            app:layout_constraintStart_toEndOf="@+id/tv_realName"
+            app:layout_constraintTop_toTopOf="@+id/bgName" />
+
+        <View
+            android:id="@+id/bgIdCard"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_12"
+            android:background="@drawable/common_shape_input_bg"
+            app:layout_constraintTop_toBottomOf="@+id/bgName" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_idCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_16"
+            android:text="银行卡号"
+            android:textColor="@color/fontTextColor"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toBottomOf="@+id/bgIdCard"
+            app:layout_constraintStart_toStartOf="@id/bgIdCard"
+            app:layout_constraintTop_toTopOf="@+id/bgIdCard" />
+
+        <cn.yanhu.baselib.view.ClearEditText
+            android:id="@+id/et_bankCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/transparent"
+            android:hint="请输入银行卡号"
+            android:inputType="number"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:textColor="@color/fontTextColor"
+            android:textColorHint="@color/blackAlpha80"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toBottomOf="@+id/bgIdCard"
+            app:layout_constraintEnd_toEndOf="@+id/bgIdCard"
+            app:layout_constraintStart_toEndOf="@+id/tv_idCard"
+            app:layout_constraintTop_toTopOf="@+id/bgIdCard" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/btn_auth"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_50"
+            android:background="@drawable/white_corner_30"
+            android:backgroundTint="@color/colorMain"
+            android:gravity="center"
+            android:text="确认提交"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontType="@string/fontBold"
+            app:layout_constraintTop_toBottomOf="@+id/bgIdCard" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

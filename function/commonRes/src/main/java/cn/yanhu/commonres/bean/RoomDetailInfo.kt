@@ -41,7 +41,7 @@ class RoomDetailInfo : RoomListBean(), Serializable, Observable {
     var queuePrice: String = "0"
     var wishInfo: WishResponse? = null
     var pkDetail: RoomPkInfo? = null
-
+    var needComboCnt:Int = 0
     fun isAdmin(): Boolean {
         return admin == 1
     }

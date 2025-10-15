@@ -26,6 +26,7 @@ interface IApplication {
     fun isMiniLiveRoomShow():Boolean
     fun isShowFloatCalling():Boolean
     fun hasLoadAgoraSdk():Boolean
+    fun hasLoadBeautySdk():Boolean
 
     fun jumpToPage(className:String,intent: Intent)
     fun finishLiveRoomActivity(onRoomLeaveListener: OnRoomLeaveListener)

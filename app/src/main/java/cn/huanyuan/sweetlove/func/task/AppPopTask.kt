@@ -57,6 +57,10 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
         var currentPopTask: AppPopTask? = null
     }
 
+    override fun getTaskName(): String {
+        return type.toString()
+    }
+
     override fun doTask() {
         currentPopTask = this
         val topActivity = ActivityUtils.getTopActivity()
@@ -202,9 +206,10 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
         if (CommonUtils.isPopShow(forceAuthTipDialog)) {
             return
         }
+        logcom("showAuthTipPop")
         val commonTipsInfo = CommonTipsInfo(
-            "您的账户存在风险",
-            "根据监管要求，需要尽快完善实名信息，避免影响您的后续使用。",
+            "请先完成实名认证",
+            "为了保障您的账户安全，请先完善实名信息",
             "立即完善",
             type == 2,
             cn.yanhu.commonres.R.drawable.icon_secure_tip,

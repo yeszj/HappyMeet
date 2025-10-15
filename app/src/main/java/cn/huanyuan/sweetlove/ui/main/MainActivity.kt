@@ -35,6 +35,7 @@ import cn.yanhu.agora.manager.AgoraSdkDownloadManager
 import cn.yanhu.agora.manager.BeautyFaceEffectManager
 import cn.yanhu.agora.manager.BeautySDKManager
 import cn.yanhu.agora.manager.RtcEngineInit
+import cn.yanhu.agora.manager.RtcEngineInit.initRtcEngine
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
@@ -247,19 +248,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         }
     }
 
-    private fun initRtcEngine() {
-        if (AgoraSdkCacheManager.hasLoadAgoraSdk()) {
-            ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
-                override fun doInBackground(): Boolean {
-                    RtcEngineInit.initRtcEngine(mContext)
-                    return true
-                }
-
-                override fun onSuccess(result: Boolean?) {
-                }
-            })
-        }
-    }
 
     override fun initListener() {
         super.initListener()
@@ -329,7 +317,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             }
 
             override fun onInitRtc() {
-                initRtcEngine()
             }
 
             override fun onDownLoadFail() {

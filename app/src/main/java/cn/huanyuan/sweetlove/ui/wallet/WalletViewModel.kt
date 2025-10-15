@@ -47,6 +47,14 @@ class WalletViewModel : BaseViewModel() {
         )
     }
 
+    val bindBankResultLivedata = MutableLiveData<ResultState<String>>()
+    fun bindBank(bankCard: String){
+        request({ rxApi.bindBank(bankCard)},bindBankResultLivedata,
+            isShowDialog = true,
+            loadingHasContent = true
+        )
+    }
+
     fun getWalletRecord(filterId:String,type: Int,page:Int){
         request({ rxApi.getWalletRecord(filterId,type,page)},walletRecordLivedata,true)
     }

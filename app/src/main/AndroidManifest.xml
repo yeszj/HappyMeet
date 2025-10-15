@@ -231,5 +231,10 @@
             android:configChanges="orientation|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.wallet.bank.BindBankActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

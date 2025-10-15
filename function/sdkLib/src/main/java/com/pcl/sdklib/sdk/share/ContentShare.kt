@@ -4,7 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.showToast
+import com.blankj.utilcode.util.ActivityUtils
+import com.pcl.sdklib.manager.SdkParamsManager
+import com.tencent.mm.opensdk.constants.Build
+import com.tencent.mm.opensdk.modelbiz.WXOpenCustomerServiceChat
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.umeng.socialize.ShareAction
 import com.umeng.socialize.ShareContent
 import com.umeng.socialize.UMShareListener
@@ -76,8 +82,12 @@ class ContentShare(private val context: Context) {
      * @created at 2018/8/24 9:53
      */
     fun shareToWeiXin() {
-        ShareAction(context as Activity).setPlatform(SHARE_MEDIA.WEIXIN)
-            .setCallback(umShareListener).setShareContent(content).share()
+        DialogUtils.showConfirmDialog("温馨提示",{
+            ShareAction(context as Activity).setPlatform(SHARE_MEDIA.WEIXIN)
+                .setCallback(umShareListener).setShareContent(content).share()
+        },{
+        },"您即将跳转至微信分享链接，此操作需获得您的授权。点击“确认授权”将前往微信", confirm = "确认授权", cancel = "取消授权")
+
     }
 
     /**

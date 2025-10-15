@@ -54,6 +54,10 @@ class PayWaySelectView : LinearLayout {
         }
     }
 
+    fun setPayList(list:List<PayWayInfo>){
+        payWayAdapter.submitList(list)
+    }
+
 
     fun getSelectType():Int{
        return payWayAdapter.getSelectPayType()

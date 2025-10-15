@@ -3,6 +3,7 @@ package cn.yanhu.commonres.adapter
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.yanhu.commonres.bean.PayWayInfo
 import cn.yanhu.commonres.databinding.AdapterPayWayItemBinding
 import com.chad.library.adapter4.BaseQuickAdapter
+import androidx.core.graphics.toColorInt
+import cn.yanhu.baselib.utils.GlideUtils
 
 /**
  * @author: zhengjun
@@ -30,7 +33,11 @@ class PayWayAdapter : BaseQuickAdapter<PayWayInfo, PayWayAdapter.VH>() {
                 return
             }
             payWayInfo = item
-            ivLogo.setImageResource(item.iconId)
+            if (TextUtils.isEmpty(item.icon)){
+                ivLogo.setImageResource(item.iconId)
+            }else{
+                GlideUtils.load(context, item.icon, ivLogo)
+            }
             changeSelect(position)
             executePendingBindings()
         }
@@ -54,10 +61,13 @@ class PayWayAdapter : BaseQuickAdapter<PayWayInfo, PayWayAdapter.VH>() {
             val item = getItem(position)
             if (item?.payType == PayWayInfo.TYPE_ALIPAY){
                 viewBg.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_pay_select)
-                ivSelect.imageTintList  = ColorStateList.valueOf(Color.parseColor("#2D9AFF"))
-            }else{
+                ivSelect.imageTintList  = ColorStateList.valueOf("#2D9AFF".toColorInt())
+            }else if (item?.payType == PayWayInfo.TYPE_WXPAY){
                 viewBg.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_pay_select_wx)
-                ivSelect.imageTintList  = ColorStateList.valueOf(Color.parseColor("#00CF5F"))
+                ivSelect.imageTintList  = ColorStateList.valueOf("#00CF5F".toColorInt())
+            }else{
+                viewBg.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_pay_select_bank)
+                ivSelect.imageTintList  = ColorStateList.valueOf("#FFB039".toColorInt())
             }
             ivSelect.visibility = View.VISIBLE
         } else {

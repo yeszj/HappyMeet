@@ -1,6 +1,7 @@
 package cn.yanhu.baselib.queue
 
 import android.util.Log
+import cn.yanhu.baselib.utils.ext.logcom
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
@@ -39,6 +40,7 @@ class TaskQueueManagerImpl {
     fun getRunningTask() = currRunningTask
 
     fun addTask(task: IQueueTask) {
+
         scope.launch(handler) { addTaskSuspend(task) }
     }
 
@@ -120,7 +122,7 @@ class TaskQueueManagerImpl {
         } catch (ex: Exception) {
             ex.printStackTrace()
             Log.d(TAG, "handlerTaskCatch -> $ex")
-        }finally {
+        } finally {
             currRunningTask = null
             TaskQueueManager.removeTask(it)
             cacheTaskNameList.remove(it.getTaskName())

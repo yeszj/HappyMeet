@@ -17,7 +17,8 @@ data class ChatRoomGiftMsg(
     var giftCount:Int = 1,
     var source:Int = 1,
     var isSendNetGift : Boolean = true, //是否调用服务端接口发送礼物
-    var toUid:MutableList<String> = mutableListOf()
+    var toUid:MutableList<String> = mutableListOf(),
+    var sendCntId: String = ""
 ) :
     GiftIdentify, Cloneable,Serializable {
 

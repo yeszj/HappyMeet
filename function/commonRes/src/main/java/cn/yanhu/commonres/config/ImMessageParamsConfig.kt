@@ -28,6 +28,7 @@ object ImMessageParamsConfig {
     const val KEY_IS_USER_CHAT_CARD = "isUserChatCard"
 
     const val SM_CHECK_ID = "smCheckId"
+    const val MSG_TYPE = "msgType"
 
     const val SM_CHECK_CONTENT = "smCheckContent"
     const val SM_CHECK_SOURCE = "smCheckSource"

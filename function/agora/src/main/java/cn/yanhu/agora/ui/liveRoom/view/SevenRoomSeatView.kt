@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import cn.yanhu.agora.databinding.ViewSevenSongRoomSeatBinding
 import cn.yanhu.agora.R
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.LiveRoomSeatBean
@@ -15,9 +16,10 @@ import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.databinding.AdapterSevenRoomUserSeatItemBinding
 import cn.yanhu.agora.databinding.ViewNineSongRoomSeatBinding
 import cn.yanhu.agora.databinding.ViewNineSongScaleRoomSeatBinding
+import cn.yanhu.agora.databinding.ViewSevenSongRoomScaleSeatBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
-import cn.yanhu.agora.ui.liveRoom.live.SongLiveRoomFrg
+import cn.yanhu.agora.ui.liveRoom.live.MoreSeatLiveRoomFrg
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -27,6 +29,7 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
+import java.util.Collections
 
 /**
  * @author: zhengjun
@@ -34,220 +37,158 @@ import cn.zj.netrequest.status.BaseBean
  * desc:
  */
 @SuppressLint("ViewConstructor")
-open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Boolean) :
+open class SevenRoomSeatView(
+    context: Context,
+    private var isScaleStyle: Boolean,
+    var roomType: Int,
+    var currentRoomId: String,
+    var isRoomOwner: Boolean
+) :
     LinearLayout(context) {
+    init {
+        initView(context)
+    }
 
     private lateinit var mBinding: ViewDataBinding
     private fun initView(context: Context) {
         mBinding = if (isScaleStyle) {
             DataBindingUtil.inflate(
-                LayoutInflater.from(context), R.layout.view_nine_song_scale_room_seat, this, true
+                LayoutInflater.from(context), R.layout.view_seven_song_room_scale_seat, this, true
             )
         } else {
             DataBindingUtil.inflate(
-                LayoutInflater.from(context), R.layout.view_nine_song_room_seat, this, true
+                LayoutInflater.from(context), R.layout.view_seven_song_room_seat, this, true
             )
         }
 
     }
 
-
-    private var currentRoomId: String = ""
-
-    fun setRoomId(roomId: String, isOwner: Boolean) {
-        this.isRoomOwner = isOwner
-        currentRoomId = roomId
-    }
-
-    private var isRoomOwner = false
-    var seatInfoList: MutableList<RoomSeatInfo> = mutableListOf()
+    private var seatInfoList: MutableList<RoomSeatInfo> = mutableListOf()
     fun setSeatList(seatList: MutableList<RoomSeatInfo>) {
         this.seatInfoList = seatList
-        if (mBinding is ViewNineSongRoomSeatBinding) {
-            bindSongSeat(seatList)
+        if (mBinding is ViewSevenSongRoomSeatBinding) {
+            bindSongSeat()
         } else {
-            bindSongScaleSeat(seatList)
+            bindSongScaleSeat()
         }
     }
 
 
     private fun bindSongScaleSeat(
-        seatList: MutableList<RoomSeatInfo>,
     ) {
-        for (i in 0 until seatList.size) {
-            val seatInfo = seatList[i]
+        for (i in 0 until seatInfoList.size) {
+            val seatInfo = seatInfoList[i]
             bindScaleByPosition(i, seatInfo)
         }
     }
 
-    fun bindRoseInfo(
-        i: Int, seatInfo: RoomSeatInfo
-    ) {
-        val songBinding = mBinding as ViewNineSongRoomSeatBinding
+    private fun getSeatScaleBinding(i: Int): AdapterSevenRoomUserSeatItemBinding? {
+        val songBinding = mBinding as ViewSevenSongRoomScaleSeatBinding
         when (i) {
             0 -> {
-                songBinding.seat1.apply {
-                    this.seatInfo = seatInfo
-                }
+                return songBinding.seat1
             }
 
             1 -> {
-                songBinding.seat2.apply {
-                    this.seatInfo = seatInfo
-                }
+                return songBinding.seat2
             }
 
             2 -> {
-                songBinding.seat3.apply {
-                    this.seatInfo = seatInfo
-                }
+                return songBinding.seat3
             }
 
             3 -> {
-                songBinding.seat4.apply {
-                    this.seatInfo = seatInfo
-                }
+                return songBinding.seat4
             }
 
             4 -> {
-                songBinding.seat5.apply {
-                    this.seatInfo = seatInfo
-                }
+                return songBinding.seat5
             }
 
             5 -> {
-                songBinding.seat6.apply {
-                    this.seatInfo = seatInfo
-                }
+                return songBinding.seat6
             }
 
             6 -> {
-                songBinding.seat7.apply {
-                    this.seatInfo = seatInfo
-                }
+                return songBinding.seat7
             }
 
-            7 -> {
-                songBinding.seat8.apply { this.seatInfo = seatInfo }
+            else -> {
+                return null
+            }
+        }
+    }
+
+    private fun getSeatBinding(i: Int): AdapterSevenRoomUserSeatItemBinding? {
+        val songBinding = mBinding as ViewSevenSongRoomSeatBinding
+        when (i) {
+            0 -> {
+                return songBinding.seat1
             }
 
-            8 -> {
-                songBinding.seat9.apply { this.seatInfo = seatInfo }
+            1 -> {
+                return songBinding.seat2
             }
+
+            2 -> {
+                return songBinding.seat3
+            }
+
+            3 -> {
+                return songBinding.seat4
+            }
+
+            4 -> {
+                return songBinding.seat5
+            }
+
+            5 -> {
+                return songBinding.seat6
+            }
+
+            6 -> {
+                return songBinding.seat7
+            }
+
+
+            else -> {
+                return null
+            }
+        }
+    }
+
+
+    fun bindRoseInfo(
+        i: Int, seatInfo: RoomSeatInfo
+    ) {
+        val seatBinding = getSeatBinding(i)
+        seatBinding?.apply {
+            this.seatInfo = seatInfo
         }
     }
 
     fun bindScaleRoseInfo(
         i: Int, seatInfo: RoomSeatInfo
     ) {
-        val songBinding = mBinding as ViewNineSongScaleRoomSeatBinding
-        when (i) {
-            0 -> {
-                songBinding.seat1.apply {
-                    this.seatInfo = seatInfo
-                }
-            }
-
-            1 -> {
-                songBinding.seat2.apply {
-                    this.seatInfo = seatInfo
-                }
-            }
-
-            2 -> {
-                songBinding.seat3.apply {
-                    this.seatInfo = seatInfo
-                }
-            }
-
-            3 -> {
-                songBinding.seat4.apply {
-                    this.seatInfo = seatInfo
-                }
-            }
-
-            4 -> {
-                songBinding.seat5.apply {
-                    this.seatInfo = seatInfo
-                }
-            }
-
-            5 -> {
-                songBinding.seat6.apply {
-                    this.seatInfo = seatInfo
-                }
-            }
-
-            6 -> {
-                songBinding.seat7.apply {
-                    this.seatInfo = seatInfo
-                }
-            }
-
-            7 -> {
-                songBinding.seat8.apply {
-                    this.seatInfo = seatInfo
-                }
-            }
-
-            8 -> {
-                songBinding.seat9.apply {
-                    this.seatInfo = seatInfo
-                }
-            }
+        val seatBinding = getSeatScaleBinding(i)
+        seatBinding?.apply {
+            this.seatInfo = seatInfo
         }
     }
 
     fun bindScaleByPosition(
         i: Int, seatInfo: RoomSeatInfo
     ) {
-        val songBinding = mBinding as ViewNineSongScaleRoomSeatBinding
-        when (i) {
-            0 -> {
-                songBinding.seat1.apply {
-                    bindItemInfo(seatInfo, i)
-                }
-            }
-
-            1 -> {
-                songBinding.seat2.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            2 -> {
-                songBinding.seat3.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            3 -> {
-                songBinding.seat4.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            4 -> {
-                songBinding.seat5.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            5 -> {
-                songBinding.seat6.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            6 -> {
-                songBinding.seat7.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            7 -> {
-                songBinding.seat8.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            8 -> {
-                songBinding.seat9.apply { bindItemInfo(seatInfo, i) }
-            }
+        val seatScaleBinding = getSeatScaleBinding(i)
+        seatScaleBinding?.apply {
+            bindItemInfo(seatInfo, i)
         }
     }
 
     private fun bindSongSeat(
-        seatList: MutableList<RoomSeatInfo>,
     ) {
-        for (i in 0 until seatList.size) {
-            val seatInfo = seatList[i]
+        for (i in 0 until seatInfoList.size) {
+            val seatInfo = seatInfoList[i]
             bindSeatByPosition(i, seatInfo)
         }
     }
@@ -256,45 +197,9 @@ open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Bool
         i: Int, seatInfo: RoomSeatInfo
     ) {
         seatInfoList[i] = seatInfo
-        val songBinding = mBinding as ViewNineSongRoomSeatBinding
-        when (i) {
-            0 -> {
-                songBinding.seat1.apply {
-                    bindItemInfo(seatInfo, i)
-                }
-            }
-
-            1 -> {
-                songBinding.seat2.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            2 -> {
-                songBinding.seat3.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            3 -> {
-                songBinding.seat4.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            4 -> {
-                songBinding.seat5.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            5 -> {
-                songBinding.seat6.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            6 -> {
-                songBinding.seat7.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            7 -> {
-                songBinding.seat8.apply { bindItemInfo(seatInfo, i) }
-            }
-
-            8 -> {
-                songBinding.seat9.apply { bindItemInfo(seatInfo, i) }
-            }
+        val seatBinding = getSeatBinding(i)
+        seatBinding?.apply {
+            bindItemInfo(seatInfo, i)
         }
     }
 
@@ -321,53 +226,48 @@ open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Bool
             onClickSeatListener?.onChildClickListener(ivSendRose, position, item)
         }
         tvSeatIndex.text = (item!!.id - 1).toString()
-        this.currentRoomType = RoomListBean.TYPE_SEVEN_SONG
+        this.currentRoomType = roomType
         this.isOwner = isRoomOwner
         if (item.id == 1) {
-            tvOwner.visibility = View.VISIBLE
+            tvOwner.visibility = VISIBLE
         } else {
-            tvOwner.visibility = View.INVISIBLE
+            tvOwner.visibility = INVISIBLE
         }
         if (isScaleStyle) {
-            if (position == 4) {
+            if (position == 1) {
                 ViewUtils.setViewHeight(
-                    vgParent,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_320)
+                    vgParent, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_240)
                 )
             } else {
                 ViewUtils.setViewHeight(
-                    vgParent,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_80)
+                    vgParent, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
                 )
             }
 
         } else {
             ViewUtils.setViewHeight(
-                vgParent,
-                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_120)
+                vgParent, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_142)
             )
         }
 
-        val isShowNoTopBg = if (!isScaleStyle) {
-            position == 1 || position == 4 || position == 7
+        val isShowNoTopBg = position == 2 || position == 5
+        if (item.id == 1) {
+            vgParent.setBackgroundResource(R.drawable.bg_seat_no_stroke)
         } else {
-            position == 0 || position == 2 || position == 5 || position == 6 || position == 7 || position == 8
+            if (isShowNoTopBg) {
+                vgParent.setBackgroundResource(R.drawable.bg_seat_no_top_stroke)
+            } else {
+                vgParent.setBackgroundResource(R.drawable.bg_seat_bottom_stroke)
+            }
         }
 
-        if (isShowNoTopBg) {
-            vgParent.setBackgroundResource(R.drawable.bg_seat_no_top_stroke)
-        } else {
-            vgParent.setBackgroundResource(R.drawable.bg_seat_bottom_stroke)
-        }
+        upDataSeats(item, position)
         item.apply {
             seatInfo = item
             if (item.roomUserSeatInfo == null) {
                 setEmptySeatInfo()
             }
-            executePendingBindings()
         }
-        upDataSeats(item, position)
-
         viewRank.setOnSingleClickListener {
             showUserReceiveRoseDetailPop(item)
         }
@@ -379,9 +279,9 @@ open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Bool
         if (dto.roomUserSeatInfo != null) {
             this.isSelf = dto.roomUserSeatInfo!!.userId == AppCacheManager.userId
 
-            val liveRoomSeatBean: LiveRoomSeatBean? = SongLiveRoomFrg.surfaceViewList[position]
+            val liveRoomSeatBean: LiveRoomSeatBean? = MoreSeatLiveRoomFrg.surfaceViewList[position]
             var surfaceView: View?
-            if (liveRoomSeatBean == null|| liveRoomSeatBean.surfaceView ==null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
+            if (liveRoomSeatBean == null || liveRoomSeatBean.surfaceView == null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
                 surfaceView = TextureView(context)
                 this.itemVideoSf.removeAllViews()
                 this.itemVideoSf.addView(surfaceView)
@@ -393,7 +293,6 @@ open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Bool
                 ViewUtils.removeViewFormParent(surfaceView)
                 this.itemVideoSf.removeAllViews()
                 this.itemVideoSf.addView(surfaceView)
-
             } else {
                 surfaceView = liveRoomSeatBean.surfaceView
                 if (surfaceView == null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
@@ -401,38 +300,53 @@ open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Bool
                     ViewUtils.removeViewFormParent(surfaceView)
                     this.itemVideoSf.removeAllViews()
                     this.itemVideoSf.addView(surfaceView)
-                }else{
-                    if(this.itemVideoSf.childCount<=0){
+                } else {
+                    if (this.itemVideoSf.childCount <= 0) {
                         ViewUtils.removeViewFormParent(surfaceView)
                         this.itemVideoSf.addView(surfaceView)
                     }
                 }
             }
-
             //ViewUtils.setViewHeight(surfaceView,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_240))
             addVideoSf(surfaceView, dto, position)
             itemVideoSf.tag = surfaceView
         } else {
             this.isSelf = false
-
-            val liveRoomSeatBean = SongLiveRoomFrg.surfaceViewList[position]
+            val liveRoomSeatBean = MoreSeatLiveRoomFrg.surfaceViewList[position]
             liveRoomSeatBean?.apply {
                 this.uid = 0
-                SongLiveRoomFrg.surfaceViewList[position] = this
+                MoreSeatLiveRoomFrg.surfaceViewList[position] = this
             }
             this.itemVideoSf.removeAllViews()
         }
     }
 
     private fun addVideoSf(surfaceView: View, dto: RoomSeatInfo, position: Int) {
-        SongLiveRoomFrg.surfaceViewList[position] =
-            LiveRoomSeatBean(dto.roomUserSeatInfo!!.userId.toInt(), surfaceView)
+
+        val userId = dto.roomUserSeatInfo!!.userId
+        if (AppCacheManager.userId == userId) {
+            if (isScaleStyle) {
+                if (dto.isExpand) {
+                    AgoraManager.getInstance().setVideoEncoderConfiguration(720, 720)
+                } else {
+                    if (isRoomOwner) {
+                        AgoraManager.getInstance().setVideoEncoderConfiguration(260, 330)
+                    } else {
+                        AgoraManager.getInstance().setVideoEncoderConfiguration(260, 260)
+                    }
+                }
+            } else {
+                AgoraManager.getInstance().setVideoEncoderConfiguration(330, 360)
+            }
+
+        }
+
+        MoreSeatLiveRoomFrg.surfaceViewList[position] =
+            LiveRoomSeatBean(userId.toInt(), surfaceView)
         AgoraManager.getInstance().setupVideo(
-            dto.roomUserSeatInfo!!.userId.toInt(),
-            dto.roomUserSeatInfo!!.userId == AppCacheManager.userId,
-            surfaceView
+            userId.toInt(), userId == AppCacheManager.userId, surfaceView
         )
-        if (dto.roomUserSeatInfo!!.userId == AppCacheManager.userId) {
+        if (userId == AppCacheManager.userId) {
             AgoraManager.getInstance().muteLocalAudioStream(!dto.mikeUser)
         }
     }
@@ -471,14 +385,14 @@ open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Bool
         this.onClickSeatListener = onClickSeatListener
     }
 
-    fun userVideoStatusChanged(uid: Int, showPreload: Boolean,networkType:Int) {
+    fun userVideoStatusChanged(uid: Int, showPreload: Boolean, networkType: Int) {
         seatInfoList.forEach {
             if (it.roomUserSeatInfo?.userId?.toInt() == uid) {
-                if (showPreload){
-                    if (networkType==1){
+                if (showPreload) {
+                    if (networkType == 1) {
                         it.ifLeave = true
                     }
-                }else{
+                } else {
                     it.ifLeave = false
                 }
                 return
@@ -488,14 +402,12 @@ open class NineSongRoomSeatView(context: Context, private var isScaleStyle: Bool
 
     fun userNetChanged(uid: String, ifNetDisConnect: Boolean) {
         seatInfoList.forEach {
-            if (it.roomUserSeatInfo?.userId == uid && it.ifNetDisConnect!=ifNetDisConnect) {
+            if (it.roomUserSeatInfo?.userId == uid && it.ifNetDisConnect != ifNetDisConnect) {
                 it.ifNetDisConnect = ifNetDisConnect
                 return
             }
         }
     }
 
-    init {
-        initView(context)
-    }
+
 }

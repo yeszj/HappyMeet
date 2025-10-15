@@ -3,7 +3,6 @@ package cn.yanhu.agora.ui.liveRoom.live
 import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.R
 import cn.yanhu.agora.adapter.liveRoom.LiveRoomRoseRankAdapter
@@ -15,7 +14,6 @@ import cn.yanhu.agora.bean.SongListResponse
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.databinding.ViewNineRoomRankViewBinding
 import cn.yanhu.agora.databinding.ViewSevenRoomRankViewBinding
-import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 import cn.yanhu.agora.pop.CrownedUserListPop
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.agora.pop.RoomAngleRankPop
@@ -23,9 +21,9 @@ import cn.yanhu.agora.pop.song.ChangeClickSongGiftPop
 import cn.yanhu.agora.pop.song.ChooseSongPop
 import cn.yanhu.agora.pop.song.ModifyInsertQueueRosePop
 import cn.yanhu.agora.pop.song.SongListPop
-import cn.yanhu.agora.ui.liveRoom.view.NineSongRoomSeatView
+import cn.yanhu.agora.ui.liveRoom.view.NineRoomSeatView
 import cn.yanhu.agora.ui.liveRoom.view.OnClickSeatListener
-import cn.yanhu.agora.ui.liveRoom.view.SevenSongRoomSeatView
+import cn.yanhu.agora.ui.liveRoom.view.SevenRoomSeatView
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -47,7 +45,6 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
-import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.hyphenate.chat.EMMessage
 import com.opensource.svgaplayer.SVGACache
@@ -58,14 +55,12 @@ import java.util.Collections
  * created: 2025/1/15
  * desc:7人和9人k歌房
  */
-open class SongLiveRoomFrg : BaseLiveRoomFrg() {
+open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
     private val rankAdapter by lazy { LiveRoomRoseRankAdapter() }
-    private var sevenSongRoomSeatView: SevenSongRoomSeatView? = null
-    private var sevenSongRoomScaleView: SevenSongRoomSeatView? = null
-
-
-    private var nineSongRoomSeatView: NineSongRoomSeatView? = null
-    private var nineSongRoomScaleView: NineSongRoomSeatView? = null
+    private var sevenSongRoomSeatView: SevenRoomSeatView? = null
+    private var sevenSongRoomScaleView: SevenRoomSeatView? = null
+    private var nineSongRoomSeatView: NineRoomSeatView? = null
+    private var nineSongRoomScaleView: NineRoomSeatView? = null
     override fun initData() {
         roomSourceBean = requireArguments().getSerializable(IntentKeyConfig.DATA) as RoomDetailInfo
         roomType = roomSourceBean.roomType
@@ -192,7 +187,6 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             })
     }
 
-
     override fun setHasSeatUpStatus() {
         super.setHasSeatUpStatus()
         showAnimSwitch()
@@ -200,7 +194,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     override fun setSeatOutSuccess() {
         super.setSeatOutSuccess()
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             rankViewBinding.vgEnterAnim.visibility = View.GONE
         } else {
             nineRankViewBinding.vgEnterAnim.visibility = View.GONE
@@ -209,7 +203,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     private fun showAnimSwitch() {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             rankViewBinding.vgEnterAnim.visibility = View.VISIBLE
             changeEnterAnimStatus(rankViewBinding.iconEnter)
         } else {
@@ -268,36 +262,32 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
 
     private fun initSongView() {
-        if (isSevenSong()) {
-            sevenSongRoomSeatView = SevenSongRoomSeatView(mContext, false)
+        if (isSevenRoom()) {
+            sevenSongRoomSeatView = SevenRoomSeatView(mContext, false, roomType, roomId, isOwner)
             mBinding.seatContainer.removeAllViews()
             mBinding.seatContainer.addView(sevenSongRoomSeatView)
-            sevenSongRoomSeatView?.setRoomId(roomId, isOwner)
             sevenSongRoomSeatView?.setSeatList(seatList)
             sevenSongRoomSeatView?.setOnClickSeatListener(onClickSeatListener)
         } else {
-            nineSongRoomSeatView = NineSongRoomSeatView(mContext, false)
+            nineSongRoomSeatView = NineRoomSeatView(mContext, false, roomType, roomId, isOwner)
             mBinding.seatContainer.removeAllViews()
             mBinding.seatContainer.addView(nineSongRoomSeatView)
-            nineSongRoomSeatView?.setRoomId(roomId, isOwner)
             nineSongRoomSeatView?.setSeatList(seatList)
             nineSongRoomSeatView?.setOnClickSeatListener(onClickSeatListener)
         }
     }
 
     private fun initSongScaleView() {
-        if (isSevenSong()) {
-            sevenSongRoomScaleView = SevenSongRoomSeatView(mContext, true)
+        if (isSevenRoom()) {
+            sevenSongRoomScaleView = SevenRoomSeatView(mContext, true, roomType, roomId, isOwner)
             mBinding.seatContainer.removeAllViews()
             mBinding.seatContainer.addView(sevenSongRoomScaleView)
-            sevenSongRoomScaleView?.setRoomId(roomId, isOwner)
             sevenSongRoomScaleView?.setSeatList(seatList)
             sevenSongRoomScaleView?.setOnClickSeatListener(onClickSeatListener)
         } else {
-            nineSongRoomScaleView = NineSongRoomSeatView(mContext, true)
+            nineSongRoomScaleView = NineRoomSeatView(mContext, true, roomType, roomId, isOwner)
             mBinding.seatContainer.removeAllViews()
             mBinding.seatContainer.addView(nineSongRoomScaleView)
-            nineSongRoomScaleView?.setRoomId(roomId, isOwner)
             nineSongRoomScaleView?.setSeatList(seatList)
             nineSongRoomScaleView?.setOnClickSeatListener(onClickSeatListener)
         }
@@ -305,7 +295,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
 
     override fun userVideoStatusChanged(uid: Int, isShowPreload: Boolean) {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             if (hasExpand) {
                 sevenSongRoomScaleView?.userVideoStatusChanged(uid, isShowPreload, networkType)
             } else {
@@ -321,7 +311,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     override fun userNetChanged(uid: String, ifNetDisConnect: Boolean) {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             if (hasExpand) {
                 sevenSongRoomScaleView?.userNetChanged(uid, ifNetDisConnect)
             } else {
@@ -336,12 +326,12 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
         }
     }
 
-    private fun isSevenSong(): Boolean {
-        return roomType == RoomListBean.TYPE_SEVEN_SONG
+    private fun isSevenRoom(): Boolean {
+        return roomType == RoomListBean.TYPE_SEVEN_SONG || roomType == RoomListBean.TYPE_SEVEN_FRIEND || roomType == RoomListBean.TYPE_SEVEN_ANGLE
     }
 
     override fun getRoomSeatSuccess(seatList: MutableList<RoomSeatInfo>) {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             if (hasExpand) {
                 sevenSongRoomScaleView?.setSeatList(seatList)
             } else {
@@ -363,7 +353,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             for (i in 0 until it.size) {
                 val seatInfo = it[i]
                 if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
-                    if (isSevenSong()) {
+                    if (isSevenRoom()) {
                         if (hasExpand) {
                             sevenSongRoomScaleView?.bindScaleByPosition(i, seatInfo)
                         } else {
@@ -452,6 +442,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     override fun userLeaveChanged(uid: Int) {
         getOnlineUser()
+
         ThreadUtils.getMainHandler().post {
             for (i in 0 until seatList.size) {
                 val item = seatList[i]
@@ -460,7 +451,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                         item.roomUserSeatInfo = null
                     }
 
-                    if (isSevenSong()) {
+                    if (isSevenRoom()) {
                         if (hasExpand) {
                             sevenSongRoomScaleView?.bindScaleByPosition(i, item)
                         } else {
@@ -479,6 +470,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                     }
                 }
             }
+            getPkSeatUserList()
             refreshSeatRoseInfo()
         }
     }
@@ -498,7 +490,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     private fun getExpandPosition(): Int {
-        return if (roomType == RoomListBean.TYPE_SEVEN_SONG) {
+        return if (roomType == RoomListBean.TYPE_SEVEN_SONG || roomType == RoomListBean.TYPE_SEVEN_ANGLE || roomType == RoomListBean.TYPE_SEVEN_FRIEND) {
             1
         } else {
             4
@@ -548,7 +540,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     private fun showSeatView() {
         hasExpand = false
         clearSurfaceView()
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             if (sevenSongRoomSeatView == null) {
                 initSongView()
             } else {
@@ -567,16 +559,14 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                 mBinding.seatContainer.addView(nineSongRoomSeatView)
             }
         }
-
-
     }
 
-    override fun updatePkResult(roomPkInfo: RoomPkInfo?,isClear: Boolean) {
+    override fun updatePkResult(roomPkInfo: RoomPkInfo?, isClear: Boolean) {
         for (i in 0 until seatList.size) {
             val seatInfo = seatList[i]
-            seatInfo.roomUserSeatInfo ?: return
-            updatePkStatus(roomPkInfo, seatInfo,isClear)
-            if (isSevenSong()) {
+            seatInfo.roomUserSeatInfo ?: continue
+            updatePkStatus(roomPkInfo, seatInfo, isClear)
+            if (isSevenRoom()) {
                 if (hasExpand) {
                     sevenSongRoomScaleView?.bindScaleRoseInfo(i, seatInfo)
                 } else {
@@ -590,7 +580,40 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                 }
             }
         }
+    }
 
+    private fun updatePkStatus(
+        roomPkInfo: RoomPkInfo?, roomSeatInfo: RoomSeatInfo, isClear: Boolean = false
+    ) {
+        if (isClear || roomPkInfo == null) {
+            if (roomSeatInfo.pkStatus != 0) {
+                roomSeatInfo.pkStatus = 0
+            }
+        } else {
+            val redMemberList = roomPkInfo.redMemberList
+            val blueMemberList = roomPkInfo.blueMemberList
+            val result = roomPkInfo.result
+            val roomUserSeatInfo = roomSeatInfo.roomUserSeatInfo ?: return
+            if (redMemberList.contains(roomUserSeatInfo.userId)) {
+                if (result == RoomPkInfo.RESULT_BLUE_SUCCESS) {
+                    roomSeatInfo.pkStatus = 2
+                } else if (result == RoomPkInfo.RESULT_RED_SUCCESS) {
+                    roomSeatInfo.pkStatus = 1
+                } else {
+                    roomSeatInfo.pkStatus = 3
+                }
+            } else if (blueMemberList.contains(roomUserSeatInfo.userId)) {
+                if (result == RoomPkInfo.RESULT_BLUE_SUCCESS) {
+                    roomSeatInfo.pkStatus = 1
+                } else if (result == RoomPkInfo.RESULT_RED_SUCCESS) {
+                    roomSeatInfo.pkStatus = 2
+                } else {
+                    roomSeatInfo.pkStatus = 3
+                }
+            } else {
+                roomSeatInfo.pkStatus = 0
+            }
+        }
 
     }
 
@@ -599,7 +622,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             val seatInfo = seatList[i]
             val roomUserSeatInfo = seatInfo.roomUserSeatInfo
             if (roomUserSeatInfo != null) {
-                if (isSevenSong()) {
+                if (isSevenRoom()) {
                     if (hasExpand) {
                         sevenSongRoomScaleView?.bindScaleRoseInfo(i, seatInfo)
                     } else {
@@ -630,7 +653,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     override fun addHostSurfaceView() {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             if (hasExpand) {
                 sevenSongRoomScaleView?.setSeatList(seatList)
             } else {
@@ -658,7 +681,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     private fun showScaleSeatView() {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             if (sevenSongRoomScaleView == null) {
                 clearSurfaceView()
                 initSongScaleView()
@@ -689,7 +712,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     override fun refreshAutoSeat() {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             rankViewBinding.roomInfo = roomSourceBean
         } else {
             nineRankViewBinding.roomInfo = roomSourceBean
@@ -698,7 +721,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     private lateinit var rankViewBinding: ViewSevenRoomRankViewBinding
     private fun addRankView() {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             rankViewBinding.apply {
                 bindSevenRankView()
             }
@@ -711,7 +734,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     private lateinit var nineRankViewBinding: ViewNineRoomRankViewBinding
     private fun initRankView() {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             val rankView =
                 LayoutInflater.from(mContext).inflate(R.layout.view_seven_room_rank_view, null)
             rankViewBinding = DataBindingUtil.bind(rankView)!!
@@ -751,10 +774,13 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
             showAngleRankPop()
         }
         ivRule.setOnSingleClickListener {
-            PageIntentUtil.url2Page(mContext, WebUrlManager.SONG_ROOM_RULE)
+            PageIntentUtil.url2Page(
+                mContext,
+                if (roomSourceBean.isSongRoom()) WebUrlManager.SONG_ROOM_RULE else WebUrlManager.ANGLE_ROOM_RULE
+            )
         }
         ivCrowned.setOnSingleClickListener {
-            showCrownedListPop(CrownedUserListPop.TYPE_SONG)
+            showCrownedListPop(if (roomSourceBean.isSongRoom()) CrownedUserListPop.TYPE_SONG else CrownedUserListPop.TYPE_ANGLE)
         }
         vgGiftAudio.setOnSingleClickListener {
             changeGiftAudioStatus(ivAudio, true)
@@ -766,7 +792,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             rankViewBinding.tvOnlineNum.text = onlineResponse.onlineNum.toString()
         } else {
             nineRankViewBinding.tvOnlineNum.text = onlineResponse.onlineNum.toString()
@@ -800,8 +826,11 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
                 if (rankList == null) {
                     rankList = mutableListOf()
                 }
-                roomAngleRankPop =
-                    RoomAngleRankPop.showDialog(mContext, rankList, RoomAngleRankPop.TYPE_SONG)
+                roomAngleRankPop = RoomAngleRankPop.showDialog(
+                    mContext,
+                    rankList,
+                    if (roomSourceBean.isSongRoom()) RoomAngleRankPop.TYPE_SONG else RoomAngleRankPop.TYPE_ANGLE
+                )
             }
         })
     }
@@ -826,7 +855,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
 
     override fun refreshSeatMicStatus(seatPosition: Int, mickUser: Boolean) {
         seatList[seatPosition].mikeUser = mickUser
-        if (isSevenSong()) {
+        if (isSevenRoom()) {
             if (hasExpand) {
                 sevenSongRoomScaleView?.setSeatList(seatList)
             } else {
@@ -845,7 +874,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
         var surfaceViewList = mutableMapOf<Int, LiveRoomSeatBean>()
         fun getOwnerSurfaceView(owenId: String): View? {
             var surfaceView: View? = null
-            surfaceViewList.forEach { (t, u) ->
+            surfaceViewList.forEach { (_, u) ->
                 if (u.uid.toString() == owenId) {
                     surfaceView = u.surfaceView
                     return@forEach
@@ -855,5 +884,7 @@ open class SongLiveRoomFrg : BaseLiveRoomFrg() {
         }
     }
 }
+
+
 
 

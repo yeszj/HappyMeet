@@ -17,4 +17,17 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
     override fun getItemCount(): Int {
         return list.size
     }
+
+    // 移除单个项目
+    fun removeItem(position: Int) {
+        if (position < 0 || position >= list.size) return
+
+        list.removeAt(position)
+        notifyItemRemoved(position)
+
+        // 如果移除后还有数据，需要通知后续项目位置变化
+        if (position < list.size) {
+            notifyItemRangeChanged(position, list.size - position)
+        }
+    }
 }

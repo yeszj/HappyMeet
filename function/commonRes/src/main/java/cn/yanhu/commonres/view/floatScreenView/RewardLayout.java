@@ -336,7 +336,7 @@ public class RewardLayout extends LinearLayout {
                 }
                 // 根据加入时间排序所有child中giftview
                 Collections.sort(list);
-                if (list.size() > 0) {
+                if (!list.isEmpty()) {
                     removeGiftViewAnim(findSameUserGiftView(list.get(0)));
                 }
                 addGiftViewAnim(mBean);
@@ -354,7 +354,7 @@ public class RewardLayout extends LinearLayout {
                 if (adapter != null) {
                     giftView = adapter.onUpdate(giftView, mBean, sBean);
                 }
-               // mBean.setTheLatestRefreshTime(System.currentTimeMillis());
+                mBean.setTheLatestRefreshTime(System.currentTimeMillis());
                 giftView.setTag(mBean);
                 ViewGroup vg = (ViewGroup) giftView.getParent();
                 vg.setTag(mBean.getTheLatestRefreshTime());

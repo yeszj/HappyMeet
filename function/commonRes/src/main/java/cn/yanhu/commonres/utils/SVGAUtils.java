@@ -89,7 +89,9 @@ public class SVGAUtils {
             // 1. 清理内存
             System.gc();
         } catch (Exception e) {
+            parseCompletion.onError();
             e.printStackTrace();
+
         }
     }
 

@@ -3,8 +3,6 @@ package cn.yanhu.agora.ui.liveRoom.live
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
-import android.view.View.VISIBLE
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.adapter.liveRoom.ThreeRoomSeatAdapter
 import cn.yanhu.agora.api.agoraRxApi
@@ -15,6 +13,7 @@ import cn.yanhu.agora.pop.RoomWishListPop
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.Spans
@@ -34,6 +33,7 @@ import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
+import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.chad.library.adapter4.BaseMultiItemAdapter
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -100,9 +100,6 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         }
     }
 
-
-
-
     private fun startSendGift(item: GiftInfo) {
         val sendGiftRequest = SendGiftRequest()
         sendGiftRequest.roomId = roomId
@@ -143,8 +140,6 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                 }
             })
     }
-
-
 
     private var liveRoomUserListPop: LiveRoomSeatManagerPop? = null
     fun showUserList(gender: String) {
@@ -193,11 +188,15 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         topTitleBinding.tvJoinGroup.visibility = View.INVISIBLE
     }
 
+    override fun exitGroupSuccess() {
+        topTitleBinding.tvGroupMember.visibility = View.INVISIBLE
+        topTitleBinding.tvJoinGroup.visibility = View.VISIBLE
+    }
+
     override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {
         super.refreshOnlineUser(onlineResponse)
         topTitleBinding.tvOnlineNum.text = onlineResponse.onlineNum.toString()
     }
-
 
     override fun getRoomInfoSuccess() {
         super.getRoomInfoSuccess()
@@ -365,17 +364,18 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     private fun switchRoomType() {
-        val roomType = if (roomSourceBean.isPrivateRoom()) 1 else 2
+        val type = if (roomSourceBean.isPrivateRoom()) 1 else 2
         mViewModel.switchRoomType(roomId,
-            roomType.toString(),
+            type.toString(),
             object : OnRequestResultListener<Boolean> {
                 override fun onSuccess(data: BaseBean<Boolean>) {
-                    if (roomType == 1) {
-                        roomSourceBean.roomType = roomType
+                    if (type == 1) {
+                        roomType = type
+                        roomSourceBean.roomType = type
                         EmMsgManager.sendCmdMessageToChatRoom(
                             roomSourceBean.uid, "", ChatConstant.ACTION_MSG_SWITCH_TYPE_PLAZA
                         )
-                        mBinding.ivSendGift.visibility = VISIBLE
+                        mBinding.ivSendGift.visibility = View.VISIBLE
                         showToast("房间已切换为大厅")
                     } else {
                         showToast("已发送消息至男嘉宾，男嘉宾同意后可转至专属房间")
@@ -391,12 +391,102 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                 override fun onSuccess(data: BaseBean<String>) {
                     val result = data.data ?: return
                     if (result == "0") {
-                        mBinding.ivSendGift.visibility = VISIBLE
+                        mBinding.ivSendGift.visibility = View.VISIBLE
                     } else {
                         mBinding.ivSendGift.visibility = GONE
                     }
                 }
 
             })
+    }
+
+    override fun getRoomSeatSuccess(seatList: MutableList<RoomSeatInfo>) {
+        seatUserAdapter.items.forEach {
+            seatList.forEach { roomSeatInfo ->
+                if (it.roomUserSeatInfo?.userId == roomSeatInfo.roomUserSeatInfo?.userId) {
+                    roomSeatInfo.pkStatus = it.pkStatus
+                }
+            }
+        }
+        seatUserAdapter.submitList(seatList)
+    }
+
+    override fun refreshSeatMicStatus(seatPosition: Int, mickUser: Boolean) {
+        seatUserAdapter.getItem(seatPosition)?.mikeUser = mickUser
+    }
+
+    override fun refreshSeatInfo(it: MutableList<RoomSeatInfo>, uid: Int) {
+        ThreadUtils.getMainHandler().post {
+            for (i in 0 until it.size) {
+                val seatInfo = it[i]
+                if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
+                    seatUserAdapter.safeUpdateItem(
+                        seatUserAdapter.items as MutableList,
+                        i,
+                        seatInfo
+                    )
+                    logComToFile(TAG, "更新麦位信息成功userId=$uid，position=$i")
+                    if (isOwner) {
+                        getPkSeatUserList()
+                    }
+                    return@post
+                }
+            }
+        }
+    }
+
+    override fun updateSeatRoseInfo() {
+        for (i in 0 until seatList.size) {
+            val seatInfo = seatList[i]
+            val roomUserSeatInfo = seatInfo.roomUserSeatInfo
+            if (roomUserSeatInfo != null) {
+                val item = seatUserAdapter.getItem(i)
+                if (item != null) {
+                    item.roomUserSeatInfo?.roseNum = roomUserSeatInfo.roseNum
+                    item.roomUserSeatInfo?.userList = roomUserSeatInfo.userList
+                }
+            }
+        }
+    }
+
+    override fun userLeaveChanged(uid: Int) {
+        ThreadUtils.getMainHandler().post {
+            for (i in 0 until seatUserAdapter.items.size) {
+                val item = seatUserAdapter.getItem(i) ?: break
+                if (item.roomUserSeatInfo?.userId?.toInt() == uid) {
+                    if (roomSourceBean.ownerInfo?.userId != uid.toString()) {
+                        item.roomUserSeatInfo = null
+                    }
+                    seatUserAdapter.notifyItemChanged(i)
+                }
+            }
+            seatList = seatUserAdapter.items.toMutableList()
+        }
+    }
+
+    override fun userVideoStatusChanged(uid: Int, isShowPreload: Boolean) {
+        var list = seatUserAdapter.items
+        list.forEach {
+            if (it.roomUserSeatInfo?.userId?.toInt() == uid) {
+                if (isShowPreload) {
+                    if (networkType == 1) {
+                        it.ifLeave = true
+                    }
+                } else {
+                    it.ifLeave = false
+                }
+                return
+            }
+        }
+    }
+
+    override fun userNetChanged(uid: String, ifNetDisConnect: Boolean) {
+        var list =   seatUserAdapter.items.toMutableList()
+        list.forEach {
+            if (it.roomUserSeatInfo?.userId == uid && it.ifNetDisConnect != ifNetDisConnect) {
+                it.ifNetDisConnect = ifNetDisConnect
+                return
+            }
+        }
     }
 }

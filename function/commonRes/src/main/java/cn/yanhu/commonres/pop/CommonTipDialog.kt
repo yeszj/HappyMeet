@@ -11,6 +11,8 @@ import com.lxj.xpopup.core.CenterPopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
 import cn.yanhu.commonres.R
 import cn.yanhu.commonres.databinding.DialogCommonTipsBinding
+import cn.yanhu.commonres.manager.LiveDataEventManager
+import com.jeremyliao.liveeventbus.LiveEventBus
 
 /**
  * @author: zhengjun
@@ -52,6 +54,11 @@ class CommonTipDialog(
                     dismiss()
                 }
                 onClickBtnListener?.onClickBtn()
+            }
+        }
+        LiveEventBus.get<Boolean>(LiveDataEventManager.FACE_RESULT).observe(this) {
+            if (it){
+                dismiss()
             }
         }
     }

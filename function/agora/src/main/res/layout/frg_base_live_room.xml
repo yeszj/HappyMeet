@@ -63,23 +63,25 @@
         <FrameLayout
             android:id="@+id/vg_pkView"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/vg_seat"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@+id/vg_seat">
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/btn_pk"
                 android:layout_width="wrap_content"
-                android:src="@drawable/pk_btn"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/dp_10"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content"/>
+                android:layout_marginTop="@dimen/dp_10"
+                android:src="@drawable/pk_btn"
+                android:visibility="gone" />
+
             <cn.yanhu.agora.ui.liveRoom.view.LiveRoomPkView
                 android:id="@+id/roomPkView"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/vg_seat" />
         </FrameLayout>
 
@@ -350,6 +352,61 @@
             android:gravity="center"
             android:orientation="vertical" />
 
+        <LinearLayout
+            android:id="@+id/vg_foreverTip"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            android:background="@drawable/continue_click_bg"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/vg_clickRose"
+            app:layout_constraintEnd_toEndOf="@+id/vg_clickRose"
+            app:layout_constraintTop_toTopOf="@+id/vg_clickRose">
+
+            <cn.yanhu.baselib.view.StrokeGradientTextView
+                android:id="@+id/tv_faceTip1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="继续连击 "
+                android:textSize="@dimen/sp_14"
+                app:endColor="@color/white"
+                app:fontCustomStyle="bold"
+                app:gradientStrokeWidth="@dimen/dp_2"
+                app:startColor="@color/white"
+                app:strokeColor="#80AA1C00"
+                tools:textStyle="bold" />
+
+            <cn.yanhu.baselib.view.StrokeGradientTextView
+                android:id="@+id/tv_clickCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9"
+                android:textSize="@dimen/sp_20"
+                app:endColor="@color/white"
+                app:fontCustomStyle="bold"
+                app:gradientStrokeWidth="@dimen/dp_2"
+                app:startColor="@color/white"
+                app:strokeColor="#80AA1C00"
+                tools:textStyle="bold" />
+
+            <cn.yanhu.baselib.view.StrokeGradientTextView
+                android:id="@+id/tv_faceTip2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:paddingEnd="@dimen/dp_90"
+                android:text=" 次可升级永久贴脸  "
+                android:textSize="@dimen/sp_14"
+                app:endColor="@color/white"
+                app:fontCustomStyle="bold|italic"
+                app:gradientStrokeWidth="@dimen/dp_2"
+                app:startColor="@color/white"
+                app:strokeColor="#80AA1C00"
+                tools:textStyle="bold|italic" />
+        </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/vg_clickRose"
             android:layout_width="@dimen/dp_81"
@@ -389,7 +446,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="  连击  "
-                    android:textSize="@dimen/sp_24"
+                    android:textSize="@dimen/dp_24"
                     app:endColor="@color/white"
                     app:fontCustomStyle="bold|italic"
                     app:gradientStrokeWidth="@dimen/dp_2"
@@ -402,7 +459,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="x1"
-                    android:textSize="@dimen/sp_24"
+                    android:textSize="@dimen/dp_24"
                     app:endColor="@color/white"
                     app:fontCustomStyle="bold|italic"
                     app:gradientStrokeWidth="@dimen/dp_2"

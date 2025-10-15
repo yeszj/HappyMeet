@@ -5,6 +5,7 @@ import cn.yanhu.agora.bean.AngleRoomResultInfo
 import cn.yanhu.agora.bean.CheckCallBalanceRes
 import cn.yanhu.agora.bean.ConfigSdkVersion
 import cn.yanhu.agora.bean.EnterCheckResponse
+import cn.yanhu.agora.bean.GiftSendCntInfo
 import cn.yanhu.agora.bean.LiveIncomeDetailInfo
 import cn.yanhu.agora.bean.LiveRecordResponse
 import cn.yanhu.agora.bean.LiveStatisticTotalInfo
@@ -266,8 +267,7 @@ interface AgoraApiService : CommonApiService {
 
     @GET("app/v1/matchmakerManage/getKbData")
     suspend fun getMyLiveRecord(
-        @Query("filterId") filterId: Int,
-        @Query("page") page: Int
+        @Query("filterId") filterId: Int, @Query("page") page: Int
     ): BaseBean<LiveRecordResponse>
 
 
@@ -278,8 +278,7 @@ interface AgoraApiService : CommonApiService {
 
     @POST("app/v1/room/setExpand")
     suspend fun setExpand(
-        @Query("roomId") roomId: String,
-        @Query("seatNum") seatNum: Int
+        @Query("roomId") roomId: String, @Query("seatNum") seatNum: Int
     ): BaseBean<String>
 
     @GET("app/v1/room/song/getInfo")
@@ -316,8 +315,7 @@ interface AgoraApiService : CommonApiService {
 
     @POST("app/v1/room/operateCrowned")
     suspend fun operateCrowned(
-        @Query("roomId") roomId: String,
-        @Query("operatedUserId") operatedUserId: String
+        @Query("roomId") roomId: String, @Query("operatedUserId") operatedUserId: String
     ): BaseBean<AngleRoomResultInfo>
 
     @GET("app/v1/room/getExtraInfo")
@@ -339,8 +337,12 @@ interface AgoraApiService : CommonApiService {
 
     @POST("app/v1/room/endPk")
     suspend fun endPk(
-        @Query("roomId") roomId: String?,
-        @Query("pkId") pkId: String
+        @Query("roomId") roomId: String?, @Query("pkId") pkId: String
+    ): BaseBean<String>
+
+    @GET("app/v1/fanClub/exit")
+    suspend fun exitGroup(
+        @Query("leaderUserId") leaderUserId: String?,
     ): BaseBean<String>
 
     @FormUrlEncoded
@@ -352,4 +354,7 @@ interface AgoraApiService : CommonApiService {
         @Field("pkType") pkType: Int,
         @Field("pkTime") pkTime: String
     ): BaseBean<String>
+
+    @POST("app/v1/room/gift/sendCnt")
+    suspend fun sendCnt(@Body sendGiftRequest: SendGiftRequest): BaseBean<GiftSendCntInfo>
 }

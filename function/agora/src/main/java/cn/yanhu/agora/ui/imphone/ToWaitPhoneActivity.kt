@@ -20,6 +20,7 @@ import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
+import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.imchat.manager.ChatCallStatusConfig
 import cn.yanhu.imchat.manager.CutLiveRoomUtils
 import cn.yanhu.imchat.manager.EmMsgManager
@@ -82,7 +83,11 @@ class ToWaitPhoneActivity : BaseActivity<ActivityToWaitPhoneBinding, ImPhoneView
     override fun initListener() {
         super.initListener()
         mBinding.waitPhoneAnswer.setOnSingleClickListener {
-            if (AgoraSdkCacheManager.hasLoadAgoraSdk()) {
+            if (!ApplicationProxy.instance.hasLoadBeautySdk()) {
+                LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS,true)
+            }else if (!ApplicationProxy.instance.hasLoadAgoraSdk()){
+                LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS,true)
+            }else{
                 if (LiveRoomVideoMiniManager.getInstance().isShowing) {
                     CutLiveRoomUtils.showChangeAlert(
                         object : CutLiveRoomUtils.ChangeListener {
@@ -95,9 +100,6 @@ class ToWaitPhoneActivity : BaseActivity<ActivityToWaitPhoneBinding, ImPhoneView
                 } else {
                     callUp()
                 }
-            } else {
-                LiveEventBus.get<Boolean>(EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS)
-                    .post(true)
             }
         }
         mBinding.titleBar.setTitleButtonOnClickListener(object : TitleBar.TitleButtonOnClickListener{

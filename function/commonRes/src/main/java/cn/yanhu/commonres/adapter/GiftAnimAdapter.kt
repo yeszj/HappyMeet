@@ -35,7 +35,6 @@ class GiftAnimAdapter(private var clearListener: OnClearListener) :
         val giftNum = view.findViewById<CustomFontTextView>(R.id.tv_gift_amount)
         val ivAvatar = view.findViewById<UserAvatarView>(R.id.iv_avatar)
         val giftImage = view.findViewById<ImageView>(R.id.iv_gift_img)
-        val vgRoot = view.findViewById<ViewGroup>(R.id.vg_root)
 
         val userName = view.findViewById<TextView>(R.id.tv_user_name)
         val tvTargetName = view.findViewById<TextView>(R.id.tv_targetName)

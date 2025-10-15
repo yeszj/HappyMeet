@@ -53,11 +53,11 @@ object EmMsgManager {
     }
 
     @JvmStatic
-    fun sendAgreeSeatApplyMsg(userId:String,nickName:String,roomId:String,seatId:String){
+    fun sendAgreeSeatApplyMsg(userId: String, nickName: String, roomId: String, seatId: String) {
         val map = HashMap<String, Any>()
         map["ownerNickname"] = nickName
         map["roomId"] = roomId
-        map["seatId"] =seatId
+        map["seatId"] = seatId
         sendCmdMessagePeople(
             userId,
             ChatConstant.ACTION_MSG_APPLY_SET_UP_SUCCESS,
@@ -84,7 +84,7 @@ object EmMsgManager {
         action: Int,
         params: Map<String, Any>?,
         chatType: EMMessage.ChatType = EMMessage.ChatType.Chat,
-        onlineOnly: Boolean = true
+        onlineOnly: Boolean = true, callBack: EMCallBack? = null
     ) {
         val cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD)
         cmdMsg.chatType = chatType
@@ -114,13 +114,9 @@ object EmMsgManager {
         val cmdBody = EMCmdMessageBody("action")
         cmdMsg.deliverOnlineOnly(onlineOnly)
         cmdMsg.addBody(cmdBody)
-        cmdMsg.setMessageStatusCallback(object : EMCallBack {
-            override fun onSuccess() {
-            }
-
-            override fun onError(code: Int, error: String) {
-            }
-        })
+        if (callBack!=null){
+            cmdMsg.setMessageStatusCallback(callBack)
+        }
         // 发送消息
         EMClient.getInstance().chatManager().sendMessage(cmdMsg)
     }
@@ -131,6 +127,7 @@ object EmMsgManager {
         content: String,
         action: Int,
         onlineOnly: Boolean = true
+
     ) {
         val map: MutableMap<String, String> = java.util.HashMap()
         map[ChatConstant.CUSTOM_DATA] = content
@@ -142,14 +139,24 @@ object EmMsgManager {
         toUid: String,
         content: String,
         action: Int,
-        onlineOnly: Boolean = true
+        onlineOnly: Boolean = true,
+        callBack: EMCallBack? = null
     ) {
-        val map: MutableMap<String, String> = java.util.HashMap()
-        map[ChatConstant.CUSTOM_DATA] = content
-        sendCmdMessagePeople(toUid, action, map, EMMessage.ChatType.ChatRoom, onlineOnly)
+        val cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD)
+        cmdMsg.chatType = EMMessage.ChatType.ChatRoom
+        cmdMsg.setAttribute(ChatConstant.CUSTOM_DATA, content)
+        cmdMsg.setAttribute(ChatConstant.SOURCE, action)
+        // 发送给特定用户。
+        cmdMsg.to = toUid
+        val cmdBody = EMCmdMessageBody("action")
+        cmdMsg.deliverOnlineOnly(onlineOnly)
+        cmdMsg.addBody(cmdBody)
+        if (callBack!=null){
+            cmdMsg.setMessageStatusCallback(callBack)
+        }
+        // 发送消息
+        EMClient.getInstance().chatManager().sendMessage(cmdMsg)
     }
-
-
 
     @JvmStatic
     fun sendTextMsg(
@@ -490,7 +497,7 @@ object EmMsgManager {
             }
             var unreadCount = 0
             for (conversation in conversations) {
-                 conversation.lastMessage ?: continue
+                conversation.lastMessage ?: continue
                 if (conversation.unreadMsgCount > 0) {
                     unreadCount += conversation.unreadMsgCount
                 }
@@ -502,7 +509,7 @@ object EmMsgManager {
         }
     }
 
-   private fun getConversations(chatType: EMConversationType?): List<EMConversation>? {
+    private fun getConversations(chatType: EMConversationType?): List<EMConversation>? {
         return try {
             if (EMClient.getInstance().chatManager() == null) {
                 return null
