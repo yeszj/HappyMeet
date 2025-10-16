@@ -15,7 +15,7 @@ import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.agora.databinding.AdapterSevenRoomAnchorSeatItemBinding
-import cn.yanhu.agora.databinding.AdapterSevenRoomUserSeatItemBinding
+import cn.yanhu.agora.databinding.AdapterLiveRoomUserSeatItemBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.baselib.utils.CommonUtils
@@ -41,7 +41,7 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
     ) : RecyclerView.ViewHolder(binding.root)
 
     class VH2(
-        val binding: AdapterSevenRoomUserSeatItemBinding
+        val binding: AdapterLiveRoomUserSeatItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
     var roomDetailInfo: RoomDetailInfo? = null
@@ -73,8 +73,8 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
 
 
             override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH2 {
-                val binding: AdapterSevenRoomUserSeatItemBinding =
-                    AdapterSevenRoomUserSeatItemBinding.inflate(
+                val binding: AdapterLiveRoomUserSeatItemBinding =
+                    AdapterLiveRoomUserSeatItemBinding.inflate(
                         LayoutInflater.from(context), parent, false
                     )
                 return VH2(binding)
@@ -82,7 +82,7 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
 
         })
 
-    private fun AdapterSevenRoomUserSeatItemBinding.bindItemInfo(
+    private fun AdapterLiveRoomUserSeatItemBinding.bindItemInfo(
         item: RoomSeatInfo?,
         position: Int
     ) {
@@ -181,7 +181,7 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
      var surfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = mutableMapOf()
 
     //更新座位状态
-    private fun AdapterSevenRoomUserSeatItemBinding.upDataSeats(position: Int) {
+    private fun AdapterLiveRoomUserSeatItemBinding.upDataSeats(position: Int) {
         val dto: RoomSeatInfo = getItem(position) ?: return
 
         if (dto.roomUserSeatInfo != null) {
@@ -235,7 +235,7 @@ class MoreSeatRoomAdapter(val frgType: Int, val roomType: Int) :
         }
     }
 
-    private fun AdapterSevenRoomUserSeatItemBinding.setEmptySeatInfo(
+    private fun AdapterLiveRoomUserSeatItemBinding.setEmptySeatInfo(
         item: RoomSeatInfo
     ) {
         if (roomDetailInfo!!.ownerInfo?.userId == AppCacheManager.userId) {

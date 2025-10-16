@@ -7,5 +7,5 @@ package cn.yanhu.commonres.bean
  */
 data class ReportConfigInfo (val key:String,val list:MutableList<ConfigInfo>){
 
-    data class ConfigInfo(val id:Int, val desc:String, var select:Boolean)
+    data class ConfigInfo(val id:Int, val desc:String, var extra: String)
 }

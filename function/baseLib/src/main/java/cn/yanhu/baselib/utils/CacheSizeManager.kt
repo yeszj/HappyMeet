@@ -80,6 +80,7 @@ object CacheSizeManager {
         ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
             override fun onSuccess(result: Boolean) {
                 showToast("清除成功")
+                GlideHealthMonitor.recoverGlide()
                 onClearCacheListener?.onClearSuccess()
                 DialogUtils.dismissLoading()
             }

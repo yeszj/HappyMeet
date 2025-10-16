@@ -20,6 +20,9 @@ public class GiftInfo implements Serializable {
 
     public static final int TYPE_ROSE = 13;
 
+    public static final int TYPE_GIFT = 1;
+    public static final int TYPE_LOVER = 14 ;//情侣
+
     private String name;
     private int price;
     private boolean allBroadcast;

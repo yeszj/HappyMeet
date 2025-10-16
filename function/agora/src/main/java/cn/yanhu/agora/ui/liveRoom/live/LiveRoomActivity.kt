@@ -2,19 +2,28 @@ package cn.yanhu.agora.ui.liveRoom.live
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.ActivityLiveRoomBinding
 import cn.yanhu.agora.manager.AgoraManager
+import cn.yanhu.agora.manager.monitor.ComprehensiveFrameRateMonitor
+import cn.yanhu.agora.manager.monitor.MemoryMonitor
+import cn.yanhu.agora.service.LocalRecordingService
 import cn.yanhu.agora.service.LocalServiceManager
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
+import cn.yanhu.agora.ui.liveRoom.live.SlideLiveRoomActivity.Companion.LIVE_ROOM_TAG
 import cn.yanhu.baselib.base.BaseActivity
+import cn.yanhu.baselib.utils.ext.countDown
 import cn.yanhu.baselib.utils.ext.logComToFile
+import cn.yanhu.baselib.utils.ext.logcom
 import cn.zj.netrequest.OnRoomLeaveListener
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.router.RouterPath
+import cn.zj.netrequest.BuildConfig
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.AppUtils
 
 /**
  * @author: zhengjun
@@ -40,7 +49,8 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
             addFragment(liveRoomFrg)
         } else if (roomSourceBean.getFragmentType() == RoomListBean.FRG_SONG_ROOM
             || roomSourceBean.getFragmentType() == RoomListBean.FRG_NINE_ROOM
-            || roomSourceBean.getFragmentType() == RoomListBean.FRG_SEVEN_ROOM) {
+            || roomSourceBean.getFragmentType() == RoomListBean.FRG_SEVEN_ROOM
+        ) {
             liveRoomFrg = MoreSeatLiveRoomFrg()
             liveRoomFrg?.arguments = intent.extras
             addFragment(liveRoomFrg)
@@ -51,6 +61,19 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
         setFullScreenStatusBar(true)
         AgoraManager.callType = 1
         AgoraManager.isLiveRoom = true
+        if (AppUtils.isAppDebug()) {
+            checkMemory()
+            ComprehensiveFrameRateMonitor(mContext).startComprehensiveMonitoring()
+        }
+    }
+
+    private fun checkMemory() {
+        mContext.countDown(60 * 20, 5000, start = {
+        }, end = {
+            //倒计时结束
+        }, next = {
+            MemoryMonitor.logMemorySnapshot(mContext)
+        }, cancel = {})
     }
 
     @SuppressLint("MissingSuperCall")
@@ -74,7 +97,10 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
 
     override fun onResume() {
         super.onResume()
-        LocalServiceManager.startLocalService(mContext)
+        if (!LocalRecordingService.isRunning) {
+            logcom("开启通话前台服务")
+            LocalServiceManager.startLocalService(mContext)
+        }
     }
 
     override fun onStop() {
@@ -84,7 +110,9 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
 
     override fun exactDestroy() {
         super.exactDestroy()
-        LocalServiceManager.stopLocalService(mContext)
+        if (LocalRecordingService.isRunning) {
+            LocalServiceManager.stopLocalService(mContext)
+        }
         if (liveRoomFrg?.isFinish == true) {
             logComToFile(LIVE_ROOM_TAG, "用户主动退出")
         } else {

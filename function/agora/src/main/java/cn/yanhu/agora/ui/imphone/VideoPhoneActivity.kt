@@ -70,6 +70,7 @@ import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
 import androidx.core.view.isVisible
+import cn.yanhu.agora.service.LocalRecordingService
 import cn.yanhu.agora.service.LocalServiceManager
 
 /**
@@ -191,7 +192,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
                 SendGiftPop.SOURCE_VIDEO,
                 callInfo!!.id,
                 object : SendGiftPop.OnSendGiftListener {
-                    override fun onSendGift(item: GiftInfo) {
+                    override fun onSendGift(item: GiftInfo,isCombo: Boolean) {
                         //赠送礼物提示
                         starGiftAnimation(
                             createGiftSendModel(
@@ -803,7 +804,9 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
 
     override fun onResume() {
         super.onResume()
-        LocalServiceManager.startLocalService(mContext)
+        if (!LocalRecordingService.isRunning) {
+            LocalServiceManager.startLocalService(mContext)
+        }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
@@ -845,6 +848,8 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
             callTimer = null
         }
         handler.removeCallbacksAndMessages(null)
-        LocalServiceManager.stopLocalService(mContext)
+        if (LocalRecordingService.isRunning) {
+            LocalServiceManager.stopLocalService(mContext)
+        }
     }
 }

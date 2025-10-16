@@ -133,6 +133,7 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
             override fun onSuccess(data: BaseBean<FaceAuthInfo>) {
                 isLoadFaceInfo = false
                 if (topActivity.isDestroyed) {
+                    doNextTask()
                     return
                 }
                 val faceInfo = data.data ?: return
@@ -142,6 +143,7 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
 
             override fun onFail(code: Int?, msg: String?) {
                 isLoadFaceInfo = false
+                doNextTask()
             }
 
         }, true)

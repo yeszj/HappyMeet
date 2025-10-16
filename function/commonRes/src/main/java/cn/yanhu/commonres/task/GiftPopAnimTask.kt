@@ -8,14 +8,11 @@ import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.commonres.bean.GiftInfo
-import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.RoomSwitchCacheManager
-import cn.yanhu.commonres.utils.FileAssetsUtils
 import cn.yanhu.commonres.utils.SVGAUtils
 import cn.yanhu.commonres.utils.VideoAnimUtils
 import cn.yanhu.commonres.utils.VideoAnimUtils.OnLoadVideoAnimListener
 import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.bumptech.glide.request.target.CustomTarget
@@ -33,8 +30,6 @@ import com.tencent.qgame.animplayer.AnimView
 import com.tencent.qgame.animplayer.inter.IAnimListener
 import com.tencent.qgame.animplayer.inter.IFetchResource
 import com.tencent.qgame.animplayer.mix.Resource
-import com.tencent.qgame.animplayer.util.ScaleType
-import java.io.File
 
 /**
  * @author: zhengjun
@@ -49,6 +44,16 @@ class GiftPopAnimTask(
     var roomId: String = ""
 ) :
     BaseQueueTask() {
+
+    fun getMemoryStatus(): String {
+        val runtime = Runtime.getRuntime()
+        val usedMB = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)
+        val maxMB = runtime.maxMemory() / (1024 * 1024)
+        val usage = (runtime.totalMemory() - runtime.freeMemory()).toDouble() / runtime.maxMemory().toDouble() * 100
+
+        return "已用: ${usedMB}MB / ${maxMB}MB (${"%.1f".format(usage)}%)"
+    }
+
     override fun doTask() {
         try {
             var randomGift: GiftInfo? = null
@@ -156,6 +161,8 @@ class GiftPopAnimTask(
                 }
             })
 
+            //logcom(getMemoryStatus())
+
         } catch (e: Exception) {
             e.printStackTrace()
             doNextTask()
@@ -178,7 +185,6 @@ class GiftPopAnimTask(
             doNextTask()
             return
         }
-        SVGACache.clearCache()
         if (RoomSwitchCacheManager.isOpenGiftVoice(roomId)) {
             SVGASoundManager.setVolume(1f)
         } else {
@@ -209,8 +215,6 @@ class GiftPopAnimTask(
                             svgaImageView.tag = videoItem
                         }
                     }
-
-
                 }
 
                 override fun onError() {
@@ -236,7 +240,6 @@ class GiftPopAnimTask(
 
     private fun isMp4(svga: String?): Boolean =
         !TextUtils.isEmpty(svga) && svga!!.endsWith(".mp4") && videoAnimView != null
-
 
     override fun finishTask() {
 

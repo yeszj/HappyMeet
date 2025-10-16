@@ -115,6 +115,7 @@ import java.io.File
 import androidx.core.graphics.toColorInt
 import cn.huanyuan.sweetlove.func.manager.AppLogManager
 import cn.yanhu.baselib.queue.TaskQueueManager
+import cn.yanhu.baselib.utils.GlideHealthMonitor
 
 
 @Suppress("DEPRECATION")
@@ -243,7 +244,7 @@ class BaseApplication : Application() {
 
     private fun init() {
         LitePal.initialize(this)
-
+        GlideHealthMonitor.init(this)
         //预初始化友盟
         UMConfigure.preInit(
             this,
@@ -899,15 +900,23 @@ class BaseApplication : Application() {
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         // 系统内存不足时自动清理
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
-            Glide.get(this).clearMemory();
+        if (level >= TRIM_MEMORY_MODERATE) {
+            clearMemory()
         }
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        Glide.get(this).clearMemory();
+        clearMemory()
     }
+
+    private fun clearMemory() {
+        Glide.get(this).clearMemory()
+        // 2. 强制GC
+        Runtime.getRuntime().gc()
+        System.runFinalization()
+    }
+
 
     companion object {
         private val appPopTaskQueueManagerImpl = TaskQueueManagerImpl()

@@ -12,6 +12,8 @@ import cn.yanhu.imchat.databinding.ViewGiftShowBinding
 import cn.yanhu.imchat.R
 import cn.yanhu.imchat.adapter.SendGiftItemAdapter
 import cn.yanhu.imchat.api.imChatRxApi
+import cn.yanhu.imchat.pop.SendGiftPop.Companion.SOURCE_CHAT
+import cn.yanhu.imchat.pop.SendGiftPop.Companion.SOURCE_VIDEO
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
@@ -55,11 +57,11 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
     }
 
     private var source: Int = 0
-    private var type:Int = TYPE_GIFT
+    private var type:Int = GiftInfo.TYPE_GIFT
 
     private fun removeRandomBoxGift() {
         //如果不是直播间 移除随机盲盒礼物
-        if (SendGiftRequest.SOURCE_LIVE_ROOM != source) {
+        if (SOURCE_VIDEO == source || SOURCE_CHAT == source) {
             giftInfo?.list?.removeIf {
                 it.type == GiftInfo.TYPE_RANDOM_BOX
             }
@@ -84,7 +86,7 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
         ) { _, _, position ->
             onClickSendListener?.onSendGift(giftAdapter.getItem(position))
         }
-        if (!TextUtils.isEmpty(AppCacheManager.giftInfo) && type == TYPE_GIFT) {
+        if (!TextUtils.isEmpty(AppCacheManager.giftInfo) && type == GiftInfo.TYPE_GIFT) {
             giftInfo = GsonUtils.fromJson(AppCacheManager.giftInfo, GiftResponse::class.java)
             removeRandomBoxGift()
         }
@@ -105,10 +107,7 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
     }
 
     companion object {
-        const val TYPE_GIFT = 1
-        const val TYPE_SONG = 11 //点歌礼物
-        const val TYPE_FACE = 12 //贴脸
-        const val TYPE_LOVER = 14 //情侣
+
         fun newInstance(source: Int,type: Int): GiftShowFrg{
             val args = Bundle()
             args.putInt("source", source)

@@ -51,6 +51,18 @@
                     android:nestedScrollingEnabled="false"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="3" />
+                <cn.yanhu.baselib.widget.FontWeightValueTextView
+                    android:id="@+id/tv_typeDesc"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/white_corner_5"
+                    android:backgroundTint="#1AF8459B"
+                    android:textSize="@dimen/sp_14"
+                    android:visibility="gone"
+                    android:textColor="#FF3874"
+                    android:padding="@dimen/dp_10"
+                    android:text="举报有奖：拉人广告一经核实，奖励举报人随机座驾3天。"
+                    android:layout_marginHorizontal="@dimen/dp_12"
+                    android:layout_height="wrap_content"/>
 
                 <cn.yanhu.baselib.view.CustomFontTextView
                     android:layout_width="wrap_content"

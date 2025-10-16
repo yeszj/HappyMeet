@@ -16,6 +16,8 @@ public class GlobalGiftBean {
 
     private String giftIcon;
     private String giftName;
+
+    private String giftNum;
     private String fromUserPortrait;
     private int fromUserId;
     private String fromUserNickName;
@@ -23,6 +25,14 @@ public class GlobalGiftBean {
     private String toUserNickName;
     private int toUserId;
     private String toUserPortrait;
+
+    public String getGiftNum() {
+        return giftNum;
+    }
+
+    public void setGiftNum(String giftNum) {
+        this.giftNum = giftNum;
+    }
 
     public String getGiftName() {
         return giftName;

@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.system.adapter
 
+import android.R.attr.data
 import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
@@ -48,8 +49,7 @@ class ComplaintTypeAdapter :
     }
 
     private fun AdapterComplaintTypeItemBinding.changeSelect(position: Int) {
-        val item = getItem(position)?:return
-        if (item.select) {
+        if (selectPosition == position) {
             tvType.backgroundTintList =
                 ColorStateList.valueOf(CommonUtils.getColor(R.color.colorMain))
             tvType.setTextColor(CommonUtils.getColor(R.color.white))
@@ -64,9 +64,20 @@ class ComplaintTypeAdapter :
         return VH(parent)
     }
 
+    fun getSelectItem(): ReportConfigInfo.ConfigInfo? {
+        if (selectPosition==-1){
+            return null
+        }
+        return getItem(selectPosition)
+    }
+
+    private var selectPosition: Int = -1
     fun setSelectPosition(position: Int) {
-        val item = getItem(position) ?: return
-        item.select = !item.select
-        notifyItemChanged(position, true)
+        if (selectPosition != position) {
+            val oldPosition = selectPosition
+            selectPosition = position
+            notifyItemChanged(oldPosition, true)
+            notifyItemChanged(selectPosition, true)
+        }
     }
 }

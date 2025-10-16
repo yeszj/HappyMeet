@@ -3,6 +3,7 @@ package cn.huanyuan.sweetlove.ui.system
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.ComplaintInfo
 import cn.huanyuan.sweetlove.databinding.ActivityFeedbackBinding
@@ -58,8 +59,20 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
         mBinding.rvType.adapter = complaintTypeAdapter
         complaintTypeAdapter.setOnItemClickListener { _, _, position ->
             complaintTypeAdapter.setSelectPosition(position)
+            setTypeExtraDesc(position)
         }
         requestData()
+    }
+
+    private fun setTypeExtraDesc(position: Int) {
+        val item = complaintTypeAdapter.getItem(position)
+        val extra = item?.extra
+        if (!TextUtils.isEmpty(extra)) {
+            mBinding.tvTypeDesc.text = extra
+            mBinding.tvTypeDesc.visibility = View.VISIBLE
+        } else {
+            mBinding.tvTypeDesc.visibility = View.GONE
+        }
     }
 
     override fun requestData() {
@@ -67,17 +80,15 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
         mViewModel.getReportConfigs()
     }
 
-
     override fun initListener() {
         super.initListener()
         mBinding.btnCommit.setOnSingleClickListener {
             val typeIdList = mutableListOf<String>()
-            complaintTypeAdapter.items.forEach {
-                if (it.select) {
-                    typeIdList.add(it.id.toString())
-                }
+            val selectItem = complaintTypeAdapter.getSelectItem()
+            if (selectItem!=null){
+                typeIdList.add(it.id.toString())
+                mViewModel.complaintInfo.value?.typeIds = typeIdList.joinToString(",")
             }
-            mViewModel.complaintInfo.value?.typeIds = typeIdList.joinToString(",")
             val complaintInfo = mViewModel.complaintInfo.value
             if (TextUtils.isEmpty(complaintInfo?.typeIds)) {
                 showToast("请选择违规类型")
@@ -114,7 +125,10 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
                 complaintTypeAdapter.submitList(list)
                 val position = intent.getStringExtra(IntentKeyConfig.POSITION)
                 if (!TextUtils.isEmpty(position)){
-                    complaintTypeAdapter.setSelectPosition(position!!.toInt())
+                    val toInt = position!!.toInt()
+                    complaintTypeAdapter.setSelectPosition(toInt)
+                    setTypeExtraDesc(toInt)
+
                 }
             })
         }

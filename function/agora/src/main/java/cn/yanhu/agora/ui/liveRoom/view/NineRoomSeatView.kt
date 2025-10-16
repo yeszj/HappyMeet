@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import cn.yanhu.agora.R
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.LiveRoomSeatBean
 import cn.yanhu.agora.bean.UserReceiveRoseInfo
-import cn.yanhu.agora.databinding.AdapterSevenRoomUserSeatItemBinding
+import cn.yanhu.agora.databinding.AdapterLiveRoomUserSeatItemBinding
 import cn.yanhu.agora.databinding.ViewNineSongRoomSeatBinding
 import cn.yanhu.agora.databinding.ViewNineSongScaleRoomSeatBinding
 import cn.yanhu.agora.manager.AgoraManager
@@ -21,13 +22,11 @@ import cn.yanhu.agora.ui.liveRoom.live.MoreSeatLiveRoomFrg
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
-import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.bean.RoomSeatInfo
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
-import java.util.Collections
 
 /**
  * @author: zhengjun
@@ -116,7 +115,7 @@ open class NineRoomSeatView(
     }
 
 
-    private fun getSeatScaleBinding(i: Int): AdapterSevenRoomUserSeatItemBinding? {
+    private fun getSeatScaleBinding(i: Int): AdapterLiveRoomUserSeatItemBinding? {
         val songBinding = mBinding as ViewNineSongScaleRoomSeatBinding
         when (i) {
             0 -> {
@@ -161,7 +160,7 @@ open class NineRoomSeatView(
         }
     }
 
-    private fun getSeatBinding(i: Int): AdapterSevenRoomUserSeatItemBinding? {
+    private fun getSeatBinding(i: Int): AdapterLiveRoomUserSeatItemBinding? {
         val songBinding = mBinding as ViewNineSongRoomSeatBinding
         when (i) {
             0 -> {
@@ -218,7 +217,7 @@ open class NineRoomSeatView(
     }
 
 
-    private fun AdapterSevenRoomUserSeatItemBinding.bindItemInfo(
+    private fun AdapterLiveRoomUserSeatItemBinding.bindItemInfo(
         item: RoomSeatInfo?, position: Int
     ) {
         ivChooseSong.setOnSingleClickListener {
@@ -292,55 +291,74 @@ open class NineRoomSeatView(
         }
     }
 
-    //更新座位状态
-    private fun AdapterSevenRoomUserSeatItemBinding.upDataSeats(dto: RoomSeatInfo, position: Int) {
+    private fun AdapterLiveRoomUserSeatItemBinding.upDataSeats(dto: RoomSeatInfo, position: Int) {
+        val seatInfo = dto.roomUserSeatInfo
 
-        if (dto.roomUserSeatInfo != null) {
-            this.isSelf = dto.roomUserSeatInfo!!.userId == AppCacheManager.userId
+        if (seatInfo != null) {
+            this.isSelf = seatInfo.userId == AppCacheManager.userId
 
-            val liveRoomSeatBean: LiveRoomSeatBean? = MoreSeatLiveRoomFrg.surfaceViewList[position]
-            var surfaceView: View?
-            if (liveRoomSeatBean == null || liveRoomSeatBean.surfaceView == null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
-                surfaceView = TextureView(context)
-                this.itemVideoSf.removeAllViews()
-                this.itemVideoSf.addView(surfaceView)
-            } else if (dto.roomUserSeatInfo!!.userId.toInt() != liveRoomSeatBean.uid) {
-                surfaceView = liveRoomSeatBean.surfaceView
-                if (surfaceView == null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
-                    surfaceView = TextureView(context)
-                }
-                ViewUtils.removeViewFormParent(surfaceView)
-                this.itemVideoSf.removeAllViews()
-                this.itemVideoSf.addView(surfaceView)
+            val liveRoomSeatBean = MoreSeatLiveRoomFrg.surfaceViewList[position]
+            val surfaceView =
+                getOrCreateSurfaceView(liveRoomSeatBean, seatInfo.userId.toInt())
 
-            } else {
-                surfaceView = liveRoomSeatBean.surfaceView
-                if (surfaceView == null || (liveRoomSeatBean.surfaceView as TextureView?)?.isAvailable == false) {
-                    surfaceView = TextureView(context)
-                    ViewUtils.removeViewFormParent(surfaceView)
-                    this.itemVideoSf.removeAllViews()
-                    this.itemVideoSf.addView(surfaceView)
-                } else {
-                    if (this.itemVideoSf.childCount <= 0) {
-                        ViewUtils.removeViewFormParent(surfaceView)
-                        this.itemVideoSf.addView(surfaceView)
-                    }
-                }
-            }
-
-            //ViewUtils.setViewHeight(surfaceView,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_240))
+            //处理SurfaceView的添加
+            setupSurfaceView(surfaceView)
             addVideoSf(surfaceView, dto, position)
             itemVideoSf.tag = surfaceView
         } else {
-            this.isSelf = false
-
-            val liveRoomSeatBean = MoreSeatLiveRoomFrg.surfaceViewList[position]
-            liveRoomSeatBean?.apply {
-                this.uid = 0
-                MoreSeatLiveRoomFrg.surfaceViewList[position] = this
-            }
-            this.itemVideoSf.removeAllViews()
+            handleEmptySeat(position)
         }
+    }
+
+    /**
+     * 获取或创建SurfaceView
+     */
+    private fun AdapterLiveRoomUserSeatItemBinding.getOrCreateSurfaceView(
+        liveRoomSeatBean: LiveRoomSeatBean?,
+        userId: Int
+    ): View {
+        // 情况1: 没有SurfaceView或不可用
+        if (liveRoomSeatBean?.surfaceView == null ||
+            (liveRoomSeatBean.surfaceView as? TextureView)?.isAvailable == false
+        ) {
+            return TextureView(context)
+        }
+
+        // 情况2: 用户ID不匹配
+        if (userId != liveRoomSeatBean.uid) {
+            return liveRoomSeatBean.surfaceView?.takeIf {
+                (it as? TextureView)?.isAvailable != false
+            } ?: TextureView(context)
+        }
+
+        // 情况3: 用户ID匹配，检查可用性
+        return liveRoomSeatBean.surfaceView?.takeIf {
+            (it as? TextureView)?.isAvailable == true
+        } ?: TextureView(context)
+    }
+
+    /**
+     * 设置SurfaceView到容器中
+     */
+    private fun AdapterLiveRoomUserSeatItemBinding.setupSurfaceView(surfaceView: View) {
+        // 如果容器中没有子视图或子视图不同，则重新添加
+        if (itemVideoSf.isEmpty() || itemVideoSf.getChildAt(0) != surfaceView) {
+            // 先移除父视图
+            ViewUtils.removeViewFormParent(surfaceView)
+            itemVideoSf.removeAllViews()
+            itemVideoSf.addView(surfaceView)
+        }
+    }
+
+    /**
+     * 处理空座位情况
+     */
+    private fun AdapterLiveRoomUserSeatItemBinding.handleEmptySeat(position: Int) {
+        this.isSelf = false
+
+        // 更新座位信息
+        MoreSeatLiveRoomFrg.surfaceViewList[position]?.uid = 0
+        this.itemVideoSf.removeAllViews()
     }
 
     private fun addVideoSf(surfaceView: View, dto: RoomSeatInfo, position: Int) {
@@ -385,7 +403,7 @@ open class NineRoomSeatView(
         })
     }
 
-    private fun AdapterSevenRoomUserSeatItemBinding.setEmptySeatInfo(
+    private fun AdapterLiveRoomUserSeatItemBinding.setEmptySeatInfo(
     ) {
         if (isRoomOwner) {
             //是房主

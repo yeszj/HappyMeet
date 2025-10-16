@@ -30,20 +30,39 @@ class LocalRecordingService : Service() {
     companion object {
         private const val NOTIFICATION_ID = 20250808
         private const val CHANNEL_ID = "im_call_audio"
+
+        @Volatile
+        var isRunning = false
+            private set
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isRunning = false
     }
 
     override fun onCreate() {
         super.onCreate()
-        // 立即启动前台服务，挂简易通知
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            startForeground(NOTIFICATION_ID, buildSimpleNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE)
-        } else {
-            startForeground(NOTIFICATION_ID, buildSimpleNotification())
+        isRunning = true
+        try {
+            // 立即启动前台服务，挂简易通知
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                startForeground(
+                    NOTIFICATION_ID,
+                    buildSimpleNotification(),
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                )
+            } else {
+                startForeground(NOTIFICATION_ID, buildSimpleNotification())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent==null) return super.onStartCommand(intent, flags, startId)
+        if (intent == null) return super.onStartCommand(intent, flags, startId)
         type = intent.getIntExtra("type", 1)
 
         // 异步更新最终通知
@@ -110,7 +129,11 @@ class LocalRecordingService : Service() {
 
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            val channel = NotificationChannel(CHANNEL_ID, AppUtils.getAppName(), NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                AppUtils.getAppName(),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
             manager.createNotificationChannel(channel)
             Notification.Builder(this, CHANNEL_ID)
         } else {

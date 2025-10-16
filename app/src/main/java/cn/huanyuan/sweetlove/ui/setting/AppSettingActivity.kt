@@ -129,17 +129,17 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
     private fun getSettingList(): MutableList<SettingItemInfo> {
         val list = mutableListOf<SettingItemInfo>()
 
-        if (AppCacheManager.isWoman()){
-            list.add(
-                SettingItemInfo(
-                    ContextCompat.getDrawable(
-                        mContext,
-                        cn.yanhu.commonres.R.drawable.white_top_corner_10
-                    ),
-                    name = "加好友设置", pageUrl = PageIntentUtil.PAGE_PRICE_SET
-                )
-            )
-        }
+//        if (AppCacheManager.isWoman()){
+//            list.add(
+//                SettingItemInfo(
+//                    ContextCompat.getDrawable(
+//                        mContext,
+//                        cn.yanhu.commonres.R.drawable.white_top_corner_10
+//                    ),
+//                    name = "加好友设置", pageUrl = PageIntentUtil.PAGE_PRICE_SET
+//                )
+//            )
+//        }
 
         list.add(
             SettingItemInfo(

@@ -117,8 +117,8 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
     private var sendGiftListener = object : GiftShowFrg.OnClickSendListener {
         override fun onSendGift(item: GiftInfo?) {
-            if (SOURCE_VIDEO != source && SOURCE_CHAT != source && isShowContinueClick) {
-                onSendGiftListener?.onSendGift(item!!)
+            if (SOURCE_VIDEO != source && SOURCE_CHAT != source && isShowContinueClick && item?.type != GiftInfo.TYPE_LOVER && item?.type != GiftInfo.TYPE_RANDOM_BOX) {
+                onSendGiftListener?.onSendGift(item!!,true)
             } else {
                 item?.apply {
                     startSendGift(this)
@@ -129,7 +129,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
         override fun setGiftInfo(giftResponse: GiftResponse, type: Int) {
             giftInfo = giftResponse
-            if (giftResponse.list.isEmpty() && SOURCE_VIDEO != source && SOURCE_CHAT != source && type == GiftShowFrg.TYPE_LOVER) {
+            if (giftResponse.list.isEmpty() && SOURCE_VIDEO != source && SOURCE_CHAT != source && type == GiftInfo.TYPE_LOVER) {
                 myFragmentStateAdapter?.removeItem(2)
                 binding?.tvLovers?.visibility = View.INVISIBLE
             }
@@ -141,16 +141,16 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     private var myFragmentStateAdapter: MyFrgFragmentStateAdapter? = null
     private fun initTabLayout() {
         binding?.apply {
-            val giftShowView = GiftShowFrg.newInstance(source, GiftShowFrg.TYPE_GIFT)
+            val giftShowView = GiftShowFrg.newInstance(source, GiftInfo.TYPE_GIFT)
             giftShowView.registerClickSendListener(sendGiftListener)
             giftViewsList.add(giftShowView)
             if (SOURCE_VIDEO != source && SOURCE_CHAT != source) {
-                val faceGiftShowView = GiftShowFrg.newInstance(source, GiftShowFrg.TYPE_FACE)
+                val faceGiftShowView = GiftShowFrg.newInstance(source, GiftInfo.TYPE_FACE)
                 giftViewsList.add(faceGiftShowView)
                 faceGiftShowView.registerClickSendListener(sendGiftListener)
                 if (!sendUserInfo.isSameGender) {
                     val loversGiftShowView =
-                        GiftShowFrg.newInstance(source, GiftShowFrg.TYPE_LOVER)
+                        GiftShowFrg.newInstance(source, GiftInfo.TYPE_LOVER)
                     giftViewsList.add(loversGiftShowView)
                     loversGiftShowView.registerClickSendListener(sendGiftListener)
                 } else {
@@ -247,7 +247,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                         item.randomBoxGiftInfo = data.data
                     }
                     logComToFile("sendGift", "赠送礼物成功，giftName=${item.name}")
-                    onSendGiftListener?.onSendGift(item)
+                    onSendGiftListener?.onSendGift(item,false)
                 }
 
                 override fun onFail(code: Int?, msg: String?) {
@@ -272,7 +272,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     }
 
     interface OnSendGiftListener {
-        fun onSendGift(item: GiftInfo)
+        fun onSendGift(item: GiftInfo,isCombo: Boolean)
         fun onShowUserInfo(userId: String) {}
         fun onAddFriend() {}
         fun onShowFriendBtn() {}

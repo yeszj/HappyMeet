@@ -467,7 +467,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
             SendGiftPop.SOURCE_CHAT,
             0,
             object : SendGiftPop.OnSendGiftListener {
-                override fun onSendGift(item: GiftInfo) {
+                override fun onSendGift(item: GiftInfo,isCombo: Boolean) {
                     EmMsgManager.sendGiftMessage(item, conversationId, chatLayout)
                 }
             })

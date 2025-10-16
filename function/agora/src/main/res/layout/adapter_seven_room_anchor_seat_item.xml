@@ -13,7 +13,7 @@
 
         <include
             android:id="@+id/anchorSeatInfo"
-            layout="@layout/adapter_seven_room_user_seat_item"
+            layout="@layout/adapter_live_room_user_seat_item"
             android:layout_width="@dimen/dp_120"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
