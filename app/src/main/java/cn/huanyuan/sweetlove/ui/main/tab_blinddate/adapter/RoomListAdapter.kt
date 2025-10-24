@@ -78,6 +78,7 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
                     }
                     holder.binding.apply {
                         roomBean = item
+                        viewBg.tag = item.id.toString()
                         if (rvAvatar.tag == null) {
                             val roomAvatarAdapter = RoomAvatarAdapter()
                             rvAvatar.adapter = roomAvatarAdapter
@@ -88,7 +89,7 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
                             roomAvatarAdapter.setOnDebouncedItemClick { _, _, _ ->
                                 LiveRoomManager.toLiveRoomPage(
                                     context,
-                                    item.id.toString()
+                                    viewBg.tag.toString()
                                 )
                             }
                             rvAvatar.layoutManager = linearLayoutManager

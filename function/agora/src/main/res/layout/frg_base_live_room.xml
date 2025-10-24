@@ -339,9 +339,9 @@
             app:autoPlay="false"
             app:clearsAfterDetached="true"
             app:fillMode="Clear"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:loopCount="1" />
 

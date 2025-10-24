@@ -37,6 +37,15 @@
             android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/white_corner_12">
 
+            <cn.yanhu.baselib.widget.FontWeightValueTextView
+                android:layout_width="wrap_content"
+                android:textColor="@color/cl_common"
+                tools:text="标题标题"
+                android:paddingBottom="@dimen/dp_5"
+                android:text="@{item.title}"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

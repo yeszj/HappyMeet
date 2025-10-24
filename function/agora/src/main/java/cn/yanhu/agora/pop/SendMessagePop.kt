@@ -233,6 +233,7 @@ class SendMessagePop(
             val builder = XPopup.Builder(mContext)
             builder.setPopupCallback(xPopupCallback).autoFocusEditText(isKeyboard)
                 .hasShadowBg(false)
+                .isDestroyOnDismiss(true)
                 //.isRequestFocus(isKeyboard)
                 .autoOpenSoftInput(isKeyboard).asCustom(confirmPayDialog).show()
             return confirmPayDialog

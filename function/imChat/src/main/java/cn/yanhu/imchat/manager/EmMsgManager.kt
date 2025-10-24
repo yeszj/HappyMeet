@@ -155,6 +155,7 @@ object EmMsgManager {
             cmdMsg.setMessageStatusCallback(callBack)
         }
         // 发送消息
+        //OptimizedMessageSender.sendMessageConcurrent(cmdMsg)
         EMClient.getInstance().chatManager().sendMessage(cmdMsg)
     }
 

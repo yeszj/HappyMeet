@@ -41,8 +41,12 @@ import com.pcl.sdklib.sdk.alipay.AliAuthUtils
 import com.pcl.sdklib.sdk.wechat.WxAuthUtils
 import androidx.core.graphics.toColorInt
 import cn.huanyuan.sweetlove.ui.wallet.bank.BindBankActivity
+import cn.yanhu.commonres.adapter.MyBannerImageAdapter
+import cn.yanhu.commonres.bean.BannerBean
 import cn.yanhu.commonres.config.EventBusKeyConfig
+import com.blankj.utilcode.util.ActivityUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.youth.banner.listener.OnBannerListener
 
 /**
  * @author: zhengjun
@@ -215,13 +219,34 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                     mBinding.paySelectView.setPayList(this)
                 }
                 bindAccountInfo()
-
+                bindBanner(it.banners)
                 mBinding.tvBalance.text = it.balance
                 val list = it.list
                 selectItem = list[0]
                 setWithdrawRule()
                 withdrawalAdapter.submitList(list)
             })
+        }
+    }
+
+    private var bannerImageAdapter: MyBannerImageAdapter?=null
+    private fun bindBanner(list: MutableList<BannerBean>) {
+        if (list.isEmpty()){
+            mBinding.banner.visibility = View.GONE
+        }else{
+            mBinding.banner.visibility = View.VISIBLE
+            if (bannerImageAdapter==null){
+                mBinding.banner.addBannerLifecycleObserver(this)
+                bannerImageAdapter = MyBannerImageAdapter(mBinding.banner, list)
+                mBinding.banner.setAdapter(bannerImageAdapter)
+                mBinding.banner.setOnBannerListener(object : OnBannerListener<BannerBean> {
+                    override fun OnBannerClick(data: BannerBean, position: Int) {
+                        PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)
+                    }
+                })
+            }else{
+                bannerImageAdapter?.setDatas(list)
+            }
         }
     }
 

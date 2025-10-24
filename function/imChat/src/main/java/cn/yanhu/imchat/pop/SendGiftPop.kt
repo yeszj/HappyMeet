@@ -1,6 +1,7 @@
 package cn.yanhu.imchat.pop
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -117,8 +118,8 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
     private var sendGiftListener = object : GiftShowFrg.OnClickSendListener {
         override fun onSendGift(item: GiftInfo?) {
-            if (SOURCE_VIDEO != source && SOURCE_CHAT != source && isShowContinueClick && item?.type != GiftInfo.TYPE_LOVER && item?.type != GiftInfo.TYPE_RANDOM_BOX) {
-                onSendGiftListener?.onSendGift(item!!,true)
+            if (SOURCE_VIDEO != source && SOURCE_CHAT != source && isShowContinueClick && item?.type != GiftInfo.TYPE_LOVER && item?.type != GiftInfo.TYPE_RANDOM_BOX && item?.type != GiftInfo.TYPE_FRAME) {
+                onSendGiftListener?.onSendGift(item!!, true)
             } else {
                 item?.apply {
                     startSendGift(this)
@@ -137,6 +138,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         }
     }
 
+
     private val giftViewsList = mutableListOf<Fragment>()
     private var myFragmentStateAdapter: MyFrgFragmentStateAdapter? = null
     private fun initTabLayout() {
@@ -154,12 +156,18 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                     giftViewsList.add(loversGiftShowView)
                     loversGiftShowView.registerClickSendListener(sendGiftListener)
                 } else {
-                    tvLovers.visibility = View.INVISIBLE
+                    tabLayout.removeView(tvLovers)
+                    tvLovers.visibility = View.GONE
                 }
             } else {
-                tvFace.visibility = View.INVISIBLE
+                tabLayout.removeView(tvFace)
+                tvFace.visibility = View.GONE
                 tvLovers.visibility = View.INVISIBLE
             }
+            val frameShowView = GiftShowFrg.newInstance(source, GiftInfo.TYPE_FRAME)
+            frameShowView.registerClickSendListener(sendGiftListener)
+            giftViewsList.add(frameShowView)
+
             viewPager.offscreenPageLimit = 2
             myFragmentStateAdapter = MyFrgFragmentStateAdapter(this@SendGiftPop, giftViewsList)
             viewPager.adapter = myFragmentStateAdapter
@@ -175,6 +183,10 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
                     R.id.tv_lovers -> {
                         setCurrentItem(2)
+                    }
+
+                    R.id.tv_frame -> {
+                        setCurrentItem(giftViewsList.size - 1)
                     }
                 }
             }
@@ -199,6 +211,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
     private fun setGiftInfo() {
         giftInfo?.apply {
+            onSendGiftListener?.refreshRoseBalance(this.roseNum)
             binding?.tvRoseNum?.text = this.roseNum.toPlainString()
         }
     }
@@ -247,7 +260,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                         item.randomBoxGiftInfo = data.data
                     }
                     logComToFile("sendGift", "赠送礼物成功，giftName=${item.name}")
-                    onSendGiftListener?.onSendGift(item,false)
+                    onSendGiftListener?.onSendGift(item, false)
                 }
 
                 override fun onFail(code: Int?, msg: String?) {
@@ -262,6 +275,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             })
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         logcom("礼物弹框销毁")
@@ -272,7 +286,8 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     }
 
     interface OnSendGiftListener {
-        fun onSendGift(item: GiftInfo,isCombo: Boolean)
+        fun refreshRoseBalance(balance: BigDecimal) {}
+        fun onSendGift(item: GiftInfo, isCombo: Boolean)
         fun onShowUserInfo(userId: String) {}
         fun onAddFriend() {}
         fun onShowFriendBtn() {}

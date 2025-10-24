@@ -2,6 +2,8 @@ package cn.yanhu.agora.miniwindow
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import cn.yanhu.baselib.utils.CommonUtils
@@ -26,7 +28,7 @@ class LiveRoomVideoMiniManager {
 
     @SuppressLint("InflateParams")
     fun show(
-        context: Activity,
+        context: Context,
         type: Int,
         onwnerInfo: UserDetailInfo?,
         permissionListener: PermissionListener,

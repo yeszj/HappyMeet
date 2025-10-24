@@ -3,11 +3,13 @@ package cn.yanhu.agora.ui.liveRoom.live
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
+import androidx.core.content.ContentProviderCompat.requireContext
 import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.ActivityLiveRoomBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.monitor.ComprehensiveFrameRateMonitor
 import cn.yanhu.agora.manager.monitor.MemoryMonitor
+import cn.yanhu.agora.manager.refreshRate.SmartRefreshRateManager
 import cn.yanhu.agora.service.LocalRecordingService
 import cn.yanhu.agora.service.LocalServiceManager
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
@@ -24,6 +26,8 @@ import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.BuildConfig
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.AppUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 
 /**
  * @author: zhengjun
@@ -61,20 +65,20 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
         setFullScreenStatusBar(true)
         AgoraManager.callType = 1
         AgoraManager.isLiveRoom = true
-        if (AppUtils.isAppDebug()) {
-            checkMemory()
-            ComprehensiveFrameRateMonitor(mContext).startComprehensiveMonitoring()
-        }
+        checkMemory()
     }
 
+    private var checkMemoryScope:CoroutineScope?=null
     private fun checkMemory() {
-        mContext.countDown(60 * 20, 5000, start = {
+        mContext.countDown(60 * 20 * 8, 60000 * 5, start = {
+            checkMemoryScope = it
         }, end = {
             //倒计时结束
         }, next = {
             MemoryMonitor.logMemorySnapshot(mContext)
         }, cancel = {})
     }
+
 
     @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent) {
@@ -110,6 +114,7 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
 
     override fun exactDestroy() {
         super.exactDestroy()
+        checkMemoryScope?.cancel()
         if (LocalRecordingService.isRunning) {
             LocalServiceManager.stopLocalService(mContext)
         }

@@ -3,15 +3,18 @@ package cn.huanyuan.sweetlove.ui.main
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import cn.gxgre.forlove.manager.ImageLoadManager.getImageBitmap
 import cn.happy.beautyface.ui.utils.BeautyConfigManager
 import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.R
@@ -38,10 +41,13 @@ import cn.yanhu.agora.manager.RtcEngineInit
 import cn.yanhu.agora.manager.RtcEngineInit.initRtcEngine
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
+import cn.yanhu.agora.manager.monitor.MemoryMonitor
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.DateUtils
 import cn.yanhu.baselib.utils.GlideUtils
+import cn.yanhu.baselib.utils.ext.countDown
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.adapter.CircleBannerImageAdapter
@@ -68,8 +74,10 @@ import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -118,7 +126,29 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         checkInit()
         appStart()
         BeautyConfigManager.getNetBeautyConfig()
-        //startActivity(Intent(mContext,TestActivity::class.java))
+        clearOldLogFile()
+    }
+
+    private fun clearOldLogFile() {
+        ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
+            override fun onSuccess(result: Boolean?) {
+            }
+
+            override fun doInBackground(): Boolean? {
+                val files = LogUtils.getLogFiles()
+                files.forEach {
+                    val currentLogFilePath = LogUtils.getCurrentLogFilePath()
+                    val todayStr = DateUtils.getYestodyStr(0, "yyyy_MM_dd")
+                    val yesTodayStr = DateUtils.getYestodyStr(-1, "yyyy_MM_dd")
+                    logcom("logTime","todayStr=$todayStr,yesTodayStr=$yesTodayStr")
+                    val yestodayLogFilePath = currentLogFilePath.replace(todayStr, yesTodayStr)
+                    if (it.absolutePath != LogUtils.getCurrentLogFilePath() && it.absolutePath != yestodayLogFilePath) {
+                        FileUtils.delete(it)
+                    }
+                }
+                return true
+            }
+        })
     }
 
     private fun getRecommendLiveFloat() {
@@ -126,15 +156,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             @SuppressLint("SetTextI18n")
             override fun onSuccess(data: BaseBean<LiveFloatInfo>) {
                 val response = data.data
-                if (response==null){
+                if (response == null) {
                     mBinding.vgLiveFloat.visibility = View.GONE
-                }else{
+                } else {
                     val portraitList = response.portraitList
-                    if (portraitList.isNotEmpty()){
+                    if (portraitList.isNotEmpty()) {
                         mBinding.vgLiveFloat.visibility = View.VISIBLE
                         mBinding.tvFloatLiveCount.text = "${response.count}人正在直播"
                         bindBanner(portraitList)
-                    }else{
+                    } else {
                         mBinding.vgLiveFloat.visibility = View.GONE
                     }
                 }
@@ -144,11 +174,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         })
     }
 
-    private var bannerAdapter: CircleBannerImageAdapter?=null
+    private var bannerAdapter: CircleBannerImageAdapter? = null
     private fun bindBanner(list: MutableList<String>) {
-        if (bannerAdapter==null){
+        if (bannerAdapter == null) {
             mBinding.liveBanner.addBannerLifecycleObserver(this)
-            bannerAdapter = CircleBannerImageAdapter(mBinding.liveBanner,list)
+            bannerAdapter = CircleBannerImageAdapter(mBinding.liveBanner, list)
             mBinding.liveBanner.setAdapter(bannerAdapter)
             mBinding.vgLiveFloat.setOnSingleClickListener {
                 startActivity(Intent(mContext, RecommendRoomActivity::class.java))
@@ -159,8 +189,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     startActivity(Intent(mContext, RecommendRoomActivity::class.java))
                 }
             })
-        }else{
-            bannerAdapter?.setDatas( list)
+        } else {
+            bannerAdapter?.setDatas(list)
         }
     }
 
@@ -339,7 +369,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             if (downLoadFail) {
                 downloadAgoraSdk()
             }
-            downloadProgressPop = DownloadProgressPop.showDialog(ActivityUtils.getTopActivity(),
+            downloadProgressPop = DownloadProgressPop.showDialog(
+                ActivityUtils.getTopActivity(),
                 progress,
                 object : SimpleCallback() {
                     override fun onDismiss(popupView: BasePopupView) {
@@ -360,7 +391,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 downloadBeautySdk()
             }
             beautyDownloadProgressPop =
-                DownloadProgressPop.showDialog(ActivityUtils.getTopActivity(),
+                DownloadProgressPop.showDialog(
+                    ActivityUtils.getTopActivity(),
                     progress,
                     object : SimpleCallback() {
                         override fun onDismiss(popupView: BasePopupView) {
@@ -381,7 +413,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun getRechargeInfo() {
-        request({ rxApi.getRechargeInfo() },
+        request(
+            { rxApi.getRechargeInfo() },
             object : OnRequestResultListener<RoseRechargeResponse> {
                 override fun onSuccess(data: BaseBean<RoseRechargeResponse>) {
                     val rechargeResponse = data.data
@@ -504,7 +537,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 cn.yanhu.commonres.R.drawable.tab_default_bg,
                 tabEntity.name
             )
-        GlideUtils.loadAsDrawable(mContext,
+        GlideUtils.loadAsDrawable(
+            mContext,
             tabEntity.normalIcon,
             object : CustomTarget<Drawable>() {
                 override fun onResourceReady(
@@ -516,7 +550,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
             })
-        GlideUtils.loadAsDrawable(mContext,
+        GlideUtils.loadAsDrawable(
+            mContext,
             tabEntity.selectIcon,
             object : CustomTarget<Drawable>() {
                 override fun onResourceReady(

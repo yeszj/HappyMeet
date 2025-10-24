@@ -37,7 +37,7 @@ class InviteRecordHeadAdapter(val mContext: FragmentActivity) :
         }
         holder.binding.apply {
             tvTotalCount.text = item.totalInviteCount.toString()
-            tvTotalIncome.text = item.totalIncome
+            tvTotalIncome.text = item.monthInviteIncome
             if (TextUtils.isEmpty(item.numDesc)) {
                 tvNumDesc.visibility = View.INVISIBLE
             } else {
@@ -72,7 +72,7 @@ class InviteRecordHeadAdapter(val mContext: FragmentActivity) :
     var filterTimeName = "全部好友"
 
     override fun onBindViewHolder(holder: VH, item: InviteRecordResponse?, payloads: List<Any>) {
-        if (!payloads.isNullOrEmpty()) {
+        if (payloads.isNotEmpty()) {
             holder.binding.apply {
                 tvFilter.text = filterName
                 tvFilterTime.text = filterTimeName

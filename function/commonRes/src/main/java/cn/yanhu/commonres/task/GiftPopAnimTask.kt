@@ -4,7 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import cn.yanhu.baselib.queue.BaseQueueTask
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
+import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.commonres.bean.GiftInfo
@@ -56,11 +58,22 @@ class GiftPopAnimTask(
 
     override fun doTask() {
         try {
+           // logComToFile("memoryInfo","送礼："+getMemoryStatus()+"\nanimUrl="+giftInfo.svga)
             var randomGift: GiftInfo? = null
             if (!TextUtils.isEmpty(giftInfo.randomBoxGiftInfo)) {
                 randomGift =
                     GsonUtils.fromJson(giftInfo.randomBoxGiftInfo, GiftInfo::class.java)
             }
+
+            svgaImageView?.apply {
+                if (giftInfo.type == GiftInfo.TYPE_FRAME){
+                    val width = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_100)
+                    ViewUtils.setViewSize(svgaImageView,width,width)
+                }else{
+                    ViewUtils.setViewMatch(svgaImageView)
+                }
+            }
+
             playGiftAnim(giftInfo,randomGift!=null)
 
             svgaImageView?.callback = object : SVGACallback {
@@ -91,34 +104,35 @@ class GiftPopAnimTask(
                     resource: Resource,
                     result: (Bitmap?) -> Unit
                 ) {
-                    if (randomGift != null) {
-                        val srcTag = resource.tag
-                        if (srcTag.isNotEmpty() && "01" == srcTag) {
-                            GlideUtils.loadAsBitmap(
-                                ActivityUtils.getTopActivity(),
-                                randomGift!!.giftIcon,
-                                object :
-                                    CustomTarget<Bitmap>() {
-                                    override fun onResourceReady(
-                                        resource: Bitmap,
-                                        transition: Transition<in Bitmap>?
-                                    ) {
-                                        result(resource)
-                                    }
-
-                                    override fun onLoadCleared(placeholder: Drawable?) {
-                                    }
-
-                                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                                        result(null)
-                                    }
-                                })
-                        } else {
-                            result(null)
-                        }
-                    } else {
-                        result(null)
-                    }
+//                    if (randomGift != null) {
+//                        val srcTag = resource.tag
+//                        if (srcTag.isNotEmpty() && "01" == srcTag) {
+//                            GlideUtils.loadAsBitmap(
+//                                ActivityUtils.getTopActivity(),
+//                                randomGift!!.giftIcon,
+//                                object :
+//                                    CustomTarget<Bitmap>() {
+//                                    override fun onResourceReady(
+//                                        resource: Bitmap,
+//                                        transition: Transition<in Bitmap>?
+//                                    ) {
+//                                        result(resource)
+//                                    }
+//
+//                                    override fun onLoadCleared(placeholder: Drawable?) {
+//                                    }
+//
+//                                    override fun onLoadFailed(errorDrawable: Drawable?) {
+//                                        result(null)
+//                                    }
+//                                })
+//                        } else {
+//                            result(null)
+//                        }
+//                    } else {
+//                        result(null)
+//                    }
+                    result(null)
                 }
 
                 override fun fetchText(
@@ -131,6 +145,7 @@ class GiftPopAnimTask(
                 override fun releaseResource(resources: List<Resource>) {
                     resources.forEach {
                         it.bitmap?.recycle()
+                        it.bitmap = null
                     }
                 }
 
@@ -232,7 +247,7 @@ class GiftPopAnimTask(
             }
         }
         if (isBox){
-            VideoAnimUtils.loadAssetsVideoAnim(topActivity,"luncky_box.mp4",videoAnimView!!,onLoadVideoAnimListener,roomId)
+            VideoAnimUtils.loadAssetsVideoAnim(topActivity,"lucky_gift_box.mp4",videoAnimView!!,onLoadVideoAnimListener,roomId)
         }else{
             VideoAnimUtils.loadNetVideoAnim(topActivity,svga,videoAnimView!!,onLoadVideoAnimListener,roomId)
         }

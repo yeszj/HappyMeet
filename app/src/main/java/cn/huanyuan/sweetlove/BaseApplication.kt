@@ -116,6 +116,7 @@ import androidx.core.graphics.toColorInt
 import cn.huanyuan.sweetlove.func.manager.AppLogManager
 import cn.yanhu.baselib.queue.TaskQueueManager
 import cn.yanhu.baselib.utils.GlideHealthMonitor
+import com.efs.sdk.base.core.cache.CacheManager
 
 
 @Suppress("DEPRECATION")
@@ -907,14 +908,13 @@ class BaseApplication : Application() {
 
     override fun onLowMemory() {
         super.onLowMemory()
+        logComToFile("memoryInfo","onLowMemory")
         clearMemory()
     }
 
     private fun clearMemory() {
+        logComToFile("memoryInfo","clearMemory")
         Glide.get(this).clearMemory()
-        // 2. 强制GC
-        Runtime.getRuntime().gc()
-        System.runFinalization()
     }
 
 

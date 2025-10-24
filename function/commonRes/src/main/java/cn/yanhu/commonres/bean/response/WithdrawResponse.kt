@@ -1,5 +1,6 @@
 package cn.yanhu.commonres.bean.response
 
+import cn.yanhu.commonres.bean.BannerBean
 import cn.yanhu.commonres.bean.PayWayInfo
 import cn.yanhu.commonres.bean.WithDrawInfo
 
@@ -19,5 +20,7 @@ data class WithdrawResponse(
     val wxAvatar:String?,
     var realName: String,
     val desc:String,
-    val withdrawTypeList: MutableList<PayWayInfo>?
+    val withdrawTypeList: MutableList<PayWayInfo>?,
+    var banners: MutableList<BannerBean> = mutableListOf()
+
 )

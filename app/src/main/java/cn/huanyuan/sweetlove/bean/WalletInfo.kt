@@ -16,5 +16,6 @@ data class WalletInfo(
     val invitePortrait: String?,
     val inviteNickName: String?,
     val ifEdit:Boolean,
-    val carouselList:MutableList<String>
+    val carouselList:MutableList<String>,
+    val monthInviteIncome: String,
 )

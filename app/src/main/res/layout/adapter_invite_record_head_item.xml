@@ -95,7 +95,7 @@
                 <cn.yanhu.baselib.view.CustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="累计邀请收益(元)"
+                    android:text="本月邀请收益(元)"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_14"
                     app:fontType="@string/fontBold" />

@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.userinfo.lovers
 
+import android.R.attr.text
 import android.annotation.SuppressLint
 import android.view.View
 import cn.huanyuan.sweetlove.databinding.ActivityMyLoversBinding
@@ -75,7 +76,11 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
             parseState(it, {
                 showToast("解除情侣成功～")
                 DialogUtils.dismissLoading()
-                EmMsgManager.sendCmdMessagePeople(loversInfo!!.viewInfo.userId,ChatConstant.ACTION_CANCEL_LOVERS,null)
+                EmMsgManager.sendCmdMessagePeople(
+                    loversInfo!!.viewInfo.userId,
+                    ChatConstant.ACTION_CANCEL_LOVERS,
+                    null
+                )
                 LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
                 requestData()
             }, {
@@ -103,7 +108,7 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
 
     @SuppressLint("SetTextI18n")
     private fun bindTips(it: LoversResponse) {
-        if ( it.loversType!=null && it.loversType!!>=1) {
+        if (it.loversType != null && it.loversType!! >= 1) {
             if (it.viewInfo.userId == AppCacheManager.userId) {
                 mBinding.titleBar.setTitleRightText("解除情侣")
                 mBinding.tvTips.visibility = View.VISIBLE
@@ -146,7 +151,7 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
     }
 
     private var bindLoversPop: BindLoversPop? = null
-    private var sendGiftInfo:GiftInfo?=null
+    private var sendGiftInfo: GiftInfo? = null
     private fun showBindLoversPop() {
         if (CommonUtils.isPopShow(bindLoversPop) || loversInfo == null) {
             return
@@ -190,15 +195,18 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
         } else {
             loversInfo!!.viewInfo.nickName
         }
-        val content = Spans.builder()
-            .text("确认要解除你和${nickName}的情侣关系吗？\n\n")
-            .text("温馨提示：需支付${loversInfo?.cancalPrice}玫瑰")
-            .color(
-                CommonUtils.getColor(
-                    cn.yanhu.baselib.R.color.colorMain
+        val spansBuilder = Spans.builder()
+            .text("确认要解除你和${nickName}的情侣关系吗？");
+        if (loversInfo?.isFree == 0) {
+            spansBuilder.text("\n\n温馨提示：需支付${loversInfo?.cancalPrice}玫瑰")
+                .color(
+                    CommonUtils.getColor(
+                        cn.yanhu.baselib.R.color.colorMain
+                    )
                 )
-            ).build()
+        }
 
+        val content = spansBuilder.build()
         return DialogUtils.showConfirmDialog(
             "解除情侣",
             {

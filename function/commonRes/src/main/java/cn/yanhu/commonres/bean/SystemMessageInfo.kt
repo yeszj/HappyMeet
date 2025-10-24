@@ -5,4 +5,4 @@ package cn.yanhu.commonres.bean
  * created: 2024/10/11
  * desc:
  */
-data class SystemMessageInfo(val content: String, val time: String, val url: String)
+data class SystemMessageInfo(val content: String, val time: String, val url: String,val title: String)

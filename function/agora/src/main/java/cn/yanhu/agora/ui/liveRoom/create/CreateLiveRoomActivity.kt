@@ -12,6 +12,9 @@ import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomTypeInfo
 import cn.yanhu.agora.bean.request.CreateRoomRequest
 import cn.yanhu.agora.databinding.ActivityCreateLiveRoomBinding
+import cn.yanhu.agora.manager.LiveRoomManager
+import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
+import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
 import cn.yanhu.agora.pop.BuyLiveTimePop
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.base.BaseActivity
@@ -66,7 +69,7 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
             setRestTime()
         }
         val stringExtra = intent.getStringExtra(IntentKeyConfig.DATA)
-        if (TextUtils.isEmpty(stringExtra) || stringExtra=="null"){
+        if (TextUtils.isEmpty(stringExtra) || stringExtra == "null") {
             finish()
             return
         }
@@ -87,7 +90,7 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
             .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.colorMain)).click(
                 mBinding.tvAgreement,
                 CustomClickSpan(
-                    mContext,
+                    mContext.applicationContext,
                     CommonUtils.getColor(cn.yanhu.baselib.R.color.colorMain),
                     object : CustomClickSpan.OnAllSpanClickListener {
                         override fun onClick(widget: View?) {
@@ -100,7 +103,7 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
 
 
     private fun bindBanner(list: MutableList<BannerBean>) {
-        if (list.size <= 0) {
+        if (list.isEmpty()) {
             mBinding.banner.visibility = View.GONE
         }
         mBinding.banner.addBannerLifecycleObserver(this)
@@ -147,15 +150,16 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
 
     private fun checkBeautyPermission() {
 
-        PermissionXUtils.checkBeautyPermission(mContext,object : PermissionXUtils.PermissionListener {
-            override fun onSuccess() {
-                RouteIntent.lunchToBeautifulFace()
-            }
+        PermissionXUtils.checkBeautyPermission(mContext,
+            object : PermissionXUtils.PermissionListener {
+                override fun onSuccess() {
+                    RouteIntent.lunchToBeautifulFace()
+                }
 
-            override fun onFail() {
-            }
+                override fun onFail() {
+                }
 
-        })
+            })
     }
 
 
@@ -186,7 +190,8 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
         val arrayList = ArrayList<String>()
         arrayList.add(Manifest.permission.CAMERA)
         arrayList.add(Manifest.permission.RECORD_AUDIO)
-        PermissionXUtils.checkPermission(mContext,
+        PermissionXUtils.checkPermission(
+            mContext,
             arrayList,
             "为了便于使用上麦、实名认证等服务，请先同意麦克风、声音、摄像头权限",
             "您拒绝授权相关权限，无法使用部分功能",
@@ -194,6 +199,7 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
                 override fun onSuccess() {
                     showCreateRoomTip()
                 }
+
                 override fun onFail() {
                 }
             })
@@ -203,7 +209,23 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
         DialogUtils.showConfirmDialog(
             "直播规范提醒",
             {
-                mViewModel.createRoom(createRoomRequest)
+                if (!BeautyCacheManager.hasLoadBeautySdk()) {
+                    //showToast("请等待美颜插件加载完成")
+                    DialogUtils.dismissLoading()
+                    LiveDataEventManager.sendLiveDataMessage(
+                        EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS,
+                        true
+                    )
+                } else if (!AgoraSdkCacheManager.hasLoadAgoraSdk()) {
+                    //showToast("请等待插件加载完成")
+                    DialogUtils.dismissLoading()
+                    LiveDataEventManager.sendLiveDataMessage(
+                        EventBusKeyConfig.SHOW_AGORA_SDK_DOWNLOAD_PROGRESS,
+                        true
+                    )
+                } else {
+                    mViewModel.createRoom(createRoomRequest)
+                }
             },
             {
             },
@@ -237,7 +259,10 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
                 //创建成功 进入房间页面
                 showToast("创建成功")
                 RouteIntent.lunchToLiveRoom(mContext, roomInfo)
-                LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.CLOSELIVEROOM,roomInfo.roomId.toString())
+                LiveDataEventManager.sendLiveDataMessage(
+                    EventBusKeyConfig.CLOSELIVEROOM,
+                    roomInfo.roomId.toString()
+                )
                 finish()
             })
         }

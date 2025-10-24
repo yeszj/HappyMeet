@@ -15,7 +15,8 @@ data class LoversResponse(
     val loversType: Int?,
     val ruleImg: String,
     val giftList: MutableList<GiftInfo>,
-    val cancalPrice:String
+    val cancalPrice:String,
+    val isFree:Int //0收费 1免费
 ){
     fun loverDesc():String{
         return when (loversType) {

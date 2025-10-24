@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.debugImplementation
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -64,5 +66,7 @@ dependencies {
     implementation(project(mapOf("path" to ":function:localRepo:extension_aar")))
     api(project(mapOf("path" to ":function:beautyFace")))
 
-
+//    dependencies {
+//        debugImplementation ("com.squareup.leakcanary:leakcanary-android:2.12")
+//    }
 }

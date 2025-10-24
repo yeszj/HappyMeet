@@ -6,9 +6,11 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 
 import java.lang.reflect.Field;
+import java.util.concurrent.RejectedExecutionException;
 
 import cn.yanhu.baselib.crash.compat.ActivityKillerV15_V20;
 import cn.yanhu.baselib.crash.compat.ActivityKillerV21_V23;
@@ -48,9 +50,12 @@ public final class CrashUtils {
 
         initActivityKiller();
 
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            if (isGlideRelatedException(e)) {
+                // 处理 Glide 相关异常，不崩溃应用
+                Log.w("Glide", "Glide task rejected, safe to ignore", e);
+                // 可以选择重启应用或恢复状态
+            }else {
                 if (sExceptionHandler != null) {
                     sExceptionHandler.uncaughtExceptionHappened(t, e);
                 }
@@ -59,10 +64,20 @@ public final class CrashUtils {
                     safeMode();
                 }
             }
+
         });
 
     }
+    private static boolean isGlideRelatedException(Throwable throwable) {
+        if (!(throwable instanceof RejectedExecutionException)) {
+            return false;
+        }
 
+        String stackTrace = Log.getStackTraceString(throwable);
+        return stackTrace.contains("com.bumptech.glide") ||
+                stackTrace.contains("G1.r") ||
+                stackTrace.contains("getSize");
+    }
     /**
      * 替换ActivityThread.mH.mCallback，实现拦截Activity生命周期，直接忽略生命周期的异常的话会导致黑屏，目前
      * 会调用ActivityManager的finishActivity结束掉生命周期抛出异常的Activity

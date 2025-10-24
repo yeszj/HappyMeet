@@ -86,7 +86,7 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
             val typeIdList = mutableListOf<String>()
             val selectItem = complaintTypeAdapter.getSelectItem()
             if (selectItem!=null){
-                typeIdList.add(it.id.toString())
+                typeIdList.add(selectItem.id.toString())
                 mViewModel.complaintInfo.value?.typeIds = typeIdList.joinToString(",")
             }
             val complaintInfo = mViewModel.complaintInfo.value

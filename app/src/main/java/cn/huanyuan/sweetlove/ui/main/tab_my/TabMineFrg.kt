@@ -182,6 +182,7 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         emUserInfo.ext = GsonUtils.toJson(it)
         ImUserManager.updateUserInfo(emUserInfo)
         AppCacheManager.userInfo = emUserInfo.ext
+        LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.UPDATE_LIVE_ROOM_SELF_INFO)
         AppCacheManager.isAdmin = it.isAdmin
         AppCacheManager.gender = it.gender
         mBinding.userinfo = it
@@ -269,7 +270,9 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         super.onResume()
         userInfo?.apply {
             showUploadAvatarPop(this)
-            getData()
+            if (!isAddAvatarImg){
+                getData()
+            }
         }
     }
 
@@ -389,24 +392,28 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
 
     private var bannerImageAdapter: MyBannerImageAdapter?=null
     private fun bindBanner(list: MutableList<BannerBean>) {
-        if (bannerImageAdapter==null){
-            mBinding.banner.addBannerLifecycleObserver(this)
-            bannerImageAdapter = MyBannerImageAdapter(mBinding.banner, list)
-            mBinding.banner.setAdapter(bannerImageAdapter)
-            mBinding.banner.setOnBannerListener(object : OnBannerListener<BannerBean> {
-                override fun OnBannerClick(data: BannerBean, position: Int) {
-                    PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)
-                }
-            })
+        if (list.isEmpty()){
+            mBinding.banner.visibility = View.GONE
         }else{
-            bannerImageAdapter?.setDatas(list)
+            mBinding.banner.visibility = View.VISIBLE
+            if (bannerImageAdapter==null){
+                mBinding.banner.addBannerLifecycleObserver(this)
+                bannerImageAdapter = MyBannerImageAdapter(mBinding.banner, list)
+                mBinding.banner.setAdapter(bannerImageAdapter)
+                mBinding.banner.setOnBannerListener(object : OnBannerListener<BannerBean> {
+                    override fun OnBannerClick(data: BannerBean, position: Int) {
+                        PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)
+                    }
+                })
+            }else{
+                bannerImageAdapter?.setDatas(list)
+            }
         }
-
     }
 
 
     private val photoList: MutableList<EditPhotoInfo> = mutableListOf()
-
+    private var isAddAvatarImg = false
     @SuppressLint("SetTextI18n")
     private fun selectBgCallBack(selectList: ArrayList<LocalMedia>?) {
         if (selectList.isNullOrEmpty()) {
@@ -414,6 +421,7 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         }
         selectList.forEach {
             if (PictureMimeType.isHasImage(it.mimeType) || PictureMimeType.isHasVideo(it.mimeType)) {
+                isAddAvatarImg = true
                 val availablePath = it.availablePath
                 val editPhotoInfo =
                     EditPhotoInfo(availablePath, 0, PictureMimeType.isHasVideo(it.mimeType))
@@ -506,7 +514,10 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         }
         mViewModel.updatePersonalPageSingle(2, urls, object : OnRequestResultListener<String> {
             override fun onSuccess(data: BaseBean<String>) {
-
+                isAddAvatarImg = false
+            }
+            override fun onFail(code: Int?, msg: String?) {
+                isAddAvatarImg = false
             }
         })
     }

@@ -434,7 +434,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
 
                 R.id.iv_sendRose -> {
                     val roomUserSeatInfo = item.roomUserSeatInfo ?: return
-                    sendRose(roomUserSeatInfo)
+                    sendPopGift(roomUserSeatInfo,roseGiftInfo!!,clickCount>0)
                 }
             }
         }

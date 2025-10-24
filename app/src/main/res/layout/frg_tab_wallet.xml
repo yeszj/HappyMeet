@@ -84,7 +84,7 @@
                     <View
                         android:id="@+id/bgBalance"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_196"
+                        android:layout_height="@dimen/dp_170"
                         android:layout_marginStart="@dimen/dp_12"
                         android:layout_marginTop="@dimen/dp_12"
                         android:layout_marginEnd="@dimen/dp_12"
@@ -126,7 +126,7 @@
                         android:layout_marginEnd="@dimen/dp_24"
                         android:gravity="center_horizontal"
                         android:paddingTop="@dimen/dp_36"
-                        android:text="累计总收入(元)"
+                        android:text="本月收入(元)"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontMedium"
@@ -138,7 +138,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/dp_6"
-                        android:text="@{walletInfo.totalIncome}"
+                        android:text="@{walletInfo.monthIncome}"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_24"
                         app:fontType="@string/fontBold"
@@ -152,13 +152,13 @@
                         android:layout_width="@dimen/dp_132"
                         android:layout_height="@dimen/dp_40"
                         android:layout_marginStart="@dimen/dp_24"
-                        android:layout_marginBottom="@dimen/dp_24"
+                        android:layout_marginBottom="@dimen/dp_20"
                         android:background="@drawable/white_alpha60_r20"
                         android:text="提现"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontBold"
-                        app:layout_constraintBottom_toTopOf="@+id/tv_monthIncome"
+                        app:layout_constraintBottom_toBottomOf="@+id/bgBalance"
                         app:layout_constraintEnd_toStartOf="@+id/btn_exchange"
                         app:layout_constraintStart_toStartOf="@id/bgBalance" />
 
@@ -168,33 +168,17 @@
                         android:layout_height="@dimen/dp_40"
                         android:layout_marginStart="@dimen/dp_12"
                         android:layout_marginEnd="@dimen/dp_24"
-                        android:layout_marginBottom="@dimen/dp_24"
+                        android:layout_marginBottom="@dimen/dp_20"
                         android:background="@drawable/white_corner_20"
                         android:gravity="center"
                         android:text="兑换玫瑰"
                         android:textColor="@color/colorMain"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontBold"
-                        app:layout_constraintBottom_toTopOf="@+id/tv_monthIncome"
+                        app:layout_constraintBottom_toBottomOf="@+id/bgBalance"
                         app:layout_constraintEnd_toEndOf="@id/bgBalance"
                         app:layout_constraintStart_toEndOf="@+id/btn_withDraw" />
 
-                    <cn.yanhu.baselib.view.CustomFontTextView
-                        android:id="@+id/tv_monthIncome"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dp_26"
-                        android:background="@drawable/black_alpha90_top_r10"
-                        android:gravity="center"
-                        android:paddingStart="@dimen/dp_16"
-                        android:paddingEnd="@dimen/dp_16"
-                        android:text='@{"本月收入："+walletInfo.monthIncome+"元"}'
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        app:fontType="@string/fontMedium"
-                        app:layout_constraintBottom_toBottomOf="@+id/bgBalance"
-                        app:layout_constraintEnd_toEndOf="@+id/bgBalance"
-                        app:layout_constraintStart_toStartOf="@+id/bgBalance"
-                        tools:text="本月收入：120.2元" />
 
 
                     <View
@@ -274,7 +258,6 @@
                         android:text="查看详情"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14"
-                        android:visibility="gone"
                         app:fontType="@string/fontBold"
                         app:layout_constraintBottom_toTopOf="@+id/tv_monthInvite"
                         app:layout_constraintEnd_toStartOf="@+id/btn_invite"
@@ -282,11 +265,12 @@
 
                     <cn.yanhu.baselib.view.CustomFontButton
                         android:id="@+id/btn_invite"
-                        android:layout_width="@dimen/dp_132"
+                        android:layout_width="0dp"
                         android:layout_height="@dimen/dp_40"
                         android:layout_marginBottom="@dimen/dp_24"
                         android:background="@drawable/white_corner_20"
                         android:text="继续邀请"
+                        android:layout_marginEnd="@dimen/dp_24"
                         android:textColor="@color/colorMain"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontBold"

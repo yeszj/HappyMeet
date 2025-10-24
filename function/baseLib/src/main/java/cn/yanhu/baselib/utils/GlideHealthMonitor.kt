@@ -1,5 +1,6 @@
 package cn.yanhu.baselib.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -45,6 +46,10 @@ object GlideHealthMonitor {
      * 建议在 RequestListener.onLoadFailed() 或 GlobalErrorInterceptor 中调用
      */
     fun onLoadFailed(e: Throwable?) {
+        // 过滤掉可以忽略的异常
+        if (shouldIgnoreException(e)) {
+            return
+        }
         val now = System.currentTimeMillis()
 
         if (now - lastFailTimestamp > RESET_WINDOW_MS) {
@@ -58,10 +63,56 @@ object GlideHealthMonitor {
             recoverGlide()
         }
     }
+    private fun isNetworkRelatedException(e: Throwable?): Boolean {
+        return e?.message?.contains("ENOENT") == true ||
+                e?.message?.contains("EACCES") == true ||
+                e?.message?.contains("timeout") == true ||
+                e?.message?.contains("Network") == true
+    }
+
+    private fun isCancellationException(e: Throwable?): Boolean {
+        return e?.message?.contains("Canceled") == true ||
+                e?.message?.contains("cleared") == true
+    }
+
+    private fun shouldIgnoreException(e: Throwable?): Boolean {
+        return when {
+            e == null -> true
+            e is java.util.concurrent.RejectedExecutionException -> {
+                logcom("忽略 Glide 线程池拒绝异常（通常由生命周期引起）")
+                true
+            }
+
+            isCancellationException(e) -> {
+                logcom("忽略取消加载的异常）")
+                true
+            }
+
+            isNetworkRelatedException(e) == true -> {
+                logcom("忽略网络问题加载的异常")
+                true
+            }
+
+            else -> false
+        }
+    }
+
+    private fun clearAllGlideRequests() {
+        try {
+            // 清理内存缓存和活动资源
+            Glide.get(appContext).apply {
+                clearMemory()
+                // 注意：这里不要调用 clearDiskCache()，因为它可能很慢
+            }
+        } catch (e: Exception) {
+            logcom("清理 Glide 请求时异常: ${e.message}")
+        }
+    }
 
     /**
      * 主线程安全地重建 Glide 实例
      */
+    @SuppressLint("VisibleForTests")
     @Synchronized
     fun recoverGlide() {
         if (isRecovering) return
@@ -70,14 +121,19 @@ object GlideHealthMonitor {
         handler.post {
             try {
                 logcom("Glide 可能已全局失效，开始恢复...")
+                // 1. 先暂停所有新的 Glide 请求
+                Glide.with(appContext).pauseAllRequests()
 
-                // 安全销毁旧实例
-                try {
-                    Glide.tearDown()
-                } catch (_: Exception) {
-                }
+                // 2. 清理所有现有请求
+                clearAllGlideRequests()
 
-                // 重新初始化 Glide
+                // 3. 等待一段时间让现有任务完成
+                Thread.sleep(100)
+
+                // 4.安全销毁旧实例
+                safeTearDown()
+
+                // 5.重新初始化 Glide
                 Glide.init(appContext, GlideBuilder().apply {
                     setMemoryCache(LruResourceCache(10 * 1024 * 1024)) // 10MB
                     setSourceExecutor(GlideExecutor.newSourceExecutor())
@@ -92,6 +148,18 @@ object GlideHealthMonitor {
             } finally {
                 isRecovering = false
             }
+        }
+    }
+
+    private fun safeTearDown() {
+        try {
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                Glide.tearDown()
+            } else {
+                handler.post { Glide.tearDown() }
+            }
+        } catch (e: Exception) {
+            logcom("Glide.tearDown() 异常（可忽略）: ${e.message}")
         }
     }
 }

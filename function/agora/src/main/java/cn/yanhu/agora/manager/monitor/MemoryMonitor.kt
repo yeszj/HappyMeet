@@ -3,6 +3,7 @@ package cn.yanhu.agora.manager.monitor
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Debug
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 
 object MemoryMonitor {
@@ -58,11 +59,10 @@ object MemoryMonitor {
         val temperature = temperatureMonitor.getCurrentTemperature()
         val cpuUsage = cpuMonitor.getCurrentCPUUsage()
         val batteryTemp = temperatureMonitor.getBatteryTemperature()
-        logcom(
+        logComToFile(
             "memoryInfo", """
             📱 内存快照:
-            ▫️ Java堆: ${info.javaHeapUsed}MB/${info.javaHeapMax}MB (${"%.1f".format(info.usagePercent)}%)
-            ▫️ Native: ${info.nativeMemory}MB
+            ▫️ 已用: ${info.javaHeapUsed}MB/${info.javaHeapMax}MB (${"%.1f".format(info.usagePercent)}%)
             ▫️ 内存总计: ${info.totalMemory}MB
             ▫️ 低内存: ${info.isLowMemory}
             ▫️ 内存状态: ${if (isMemoryCritical(context)) "⚠️紧张" else "✅正常"}

@@ -292,7 +292,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                     }
                     cn.yanhu.agora.R.id.iv_rose -> {
                         val roomUserSeatInfo = item.roomUserSeatInfo ?: return
-                        sendRose(roomUserSeatInfo)
+                        sendPopGift(roomUserSeatInfo,roseGiftInfo!!,clickCount>0)
                     }
                     cn.yanhu.agora.R.id.vg_autoSeat -> {
                         showSetAutoSeat()
