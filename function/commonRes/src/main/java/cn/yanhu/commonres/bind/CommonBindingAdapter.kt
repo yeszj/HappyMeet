@@ -69,36 +69,34 @@ fun loadImage(
     if (url is String && url.isEmpty()) {
         return
     }
-    val tag = view.tag
     val placeholderIds = if (placeholderId == 0) {
         cn.yanhu.baselib.R.drawable.icon_portrait
     } else {
         placeholderId
     }
-    if (tag == null || (url != null && url != tag)) {
-        view.tag = url
-        GlideUtils.load(
-            view.context,
-            url,
-            view,
-            placeholderId = placeholderIds,
-            errorId = placeholderIds
-        )
-    }
+    GlideUtils.load(
+        view.context,
+        url,
+        view,
+        placeholderId = placeholderIds,
+        errorId = placeholderIds
+    )
 }
 
-@BindingAdapter( value = ["maskUrl", "maskRadius","maskSampling"],
-    requireAll = false)
+@BindingAdapter(
+    value = ["maskUrl", "maskRadius", "maskSampling"],
+    requireAll = false
+)
 fun loadMaskImage(
     view: AppCompatImageView,
     maskUrl: Any?,
-    maskRadius:Int=25,
-    maskSampling:Int=3
+    maskRadius: Int = 25,
+    maskSampling: Int = 3
 ) {
     if (maskUrl is String && maskUrl.isEmpty()) {
         return
     }
-    GlideUtils.loadBlurTransPic(view.context, maskUrl.toString(),maskRadius,maskSampling, view)
+    GlideUtils.loadBlurTransPic(view.context, maskUrl.toString(), maskRadius, maskSampling, view)
 }
 
 
@@ -125,11 +123,14 @@ fun loadImage2(
 //        return
 //    }
 
-    view.setTag(cn.yanhu.commonres.R.id.tag_url,url)
+    view.setTag(cn.yanhu.commonres.R.id.tag_url, url)
     GlideUtils.loadAsDrawable(view.context, url, object : CustomTarget<Drawable>() {
-        override fun onResourceReady(resource: Drawable, transition: com.bumptech.glide.request.transition.Transition<in Drawable>?) {
+        override fun onResourceReady(
+            resource: Drawable,
+            transition: com.bumptech.glide.request.transition.Transition<in Drawable>?
+        ) {
             if (url == view.getTag(cn.yanhu.commonres.R.id.tag_url)) {
-                view.setTag(cn.yanhu.commonres.R.id.tag_drawable,resource)
+                view.setTag(cn.yanhu.commonres.R.id.tag_drawable, resource)
                 view.setImageDrawable(resource)
             }
         }

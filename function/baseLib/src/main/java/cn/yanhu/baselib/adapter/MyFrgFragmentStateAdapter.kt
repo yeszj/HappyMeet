@@ -17,7 +17,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
     override fun getItemCount(): Int {
         return list.size
     }
+    // 关键：为每个Fragment分配唯一ID
+    override fun getItemId(position: Int): Long {
+        return list[position].hashCode().toLong()
+    }
 
+    override fun containsItem(itemId: Long): Boolean {
+        return list.any { it.hashCode().toLong() == itemId }
+    }
     // 移除单个项目
     fun removeItem(position: Int) {
         if (position < 0 || position >= list.size) return

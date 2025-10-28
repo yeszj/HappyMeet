@@ -18,6 +18,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.GsonUtils
+import com.chad.library.adapter4.util.addOnDebouncedChildClick
 
 /**
  * @author: zhengjun
@@ -81,7 +82,7 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
             }
 
         }
-        giftAdapter.addOnItemChildClickListener(
+        giftAdapter.addOnDebouncedChildClick(
             R.id.tv_send
         ) { _, _, position ->
             onClickSendListener?.onSendGift(giftAdapter.getItem(position))

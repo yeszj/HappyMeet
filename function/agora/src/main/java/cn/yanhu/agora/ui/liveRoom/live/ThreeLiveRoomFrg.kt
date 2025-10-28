@@ -87,6 +87,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
             if (CommonUtils.isPopShow(roomWishListPop)){
                 return
             }
+            startSendComboGift(chatRoomRoseGiftMsg)
             roomWishListPop = RoomWishListPop.showDialog(
                 mContext,
                 roomId,
@@ -292,7 +293,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                     }
                     cn.yanhu.agora.R.id.iv_rose -> {
                         val roomUserSeatInfo = item.roomUserSeatInfo ?: return
-                        sendPopGift(roomUserSeatInfo,roseGiftInfo!!,clickCount>0)
+                        sendPopGift(roomUserSeatInfo,roseGiftInfo!!)
                     }
                     cn.yanhu.agora.R.id.vg_autoSeat -> {
                         showSetAutoSeat()

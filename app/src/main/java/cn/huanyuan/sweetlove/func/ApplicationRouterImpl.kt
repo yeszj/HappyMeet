@@ -32,6 +32,7 @@ import com.hyphenate.EMCallBack
 import com.hyphenate.chat.EMClient
 import com.pcl.sdklib.sdk.jverrify.JiGuangSDKUtils
 import com.pcl.sdklib.sdk.wechat.WxCustomerServiceUtils
+import java.math.BigDecimal
 
 /**
  * @author: zhengjun
@@ -88,8 +89,8 @@ class ApplicationRouterImpl : IApplication {
         WxCustomerServiceUtils.askCustomer()
     }
 
-    override fun showRechargePop(mContext: FragmentActivity, isDismissWhenPaySuccess: Boolean) {
-        RoseRechargePop.showDialog(mContext, isDismissWhenPaySuccess)
+    override fun showRechargePop(mContext: FragmentActivity, isDismissWhenPaySuccess: Boolean,balanceRose: BigDecimal?) {
+        RoseRechargePop.showDialog(mContext, isDismissWhenPaySuccess,balanceRose = balanceRose)
     }
 
     override fun showRechargePop(

@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import cn.zj.netrequest.OnRoomLeaveListener
+import java.math.BigDecimal
 
 interface IApplication {
     fun loginInvalid()
@@ -18,7 +19,7 @@ interface IApplication {
     /**
      * 显示充值弹框
      */
-    fun showRechargePop(mContext: FragmentActivity, isDismissWhenPaySuccess: Boolean)
+    fun showRechargePop(mContext: FragmentActivity, isDismissWhenPaySuccess: Boolean,balanceRose: BigDecimal?=null)
     fun showRechargePop(mContext: FragmentActivity,hasShadow:Boolean, isDismissWhenPaySuccess: Boolean)
     fun getLiveRoomActivity():Activity?
     fun isCalling():Boolean

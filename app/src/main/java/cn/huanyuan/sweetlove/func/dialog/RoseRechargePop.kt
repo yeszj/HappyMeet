@@ -25,6 +25,7 @@ import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.BottomPopupView
 import com.pcl.sdklib.listener.OnPayResultListener
 import com.pcl.sdklib.manager.PayManager
+import java.math.BigDecimal
 
 /**
  * @author: zhengjun
@@ -32,10 +33,10 @@ import com.pcl.sdklib.manager.PayManager
  * desc:玫瑰充值弹框
  */
 @SuppressLint("ViewConstructor")
-class RoseRechargePop(val mContext: FragmentActivity, val isDismissWhenPaySuccess: Boolean) :
+class RoseRechargePop(val mContext: FragmentActivity, val isDismissWhenPaySuccess: Boolean,val balanceRose: BigDecimal?=null) :
     BottomPopupView(mContext) {
     override fun getImplLayoutId(): Int {
-        return cn.huanyuan.sweetlove.R.layout.pop_rose_recharge
+        return R.layout.pop_rose_recharge
     }
 
     private lateinit var mBinding: PopRoseRechargeBinding
@@ -48,6 +49,9 @@ class RoseRechargePop(val mContext: FragmentActivity, val isDismissWhenPaySucces
             initRechargeAdapter()
             ivRecharge.setOnSingleClickListener {
                 PayManager.toPay(mContext, paySelectView.getSelectType(), selectItem!!.id)
+            }
+            if (balanceRose!=null){
+                tvRoseBalance.text = balanceRose.toPlainString()
             }
             getRechargeInfo()
         }
@@ -107,7 +111,9 @@ class RoseRechargePop(val mContext: FragmentActivity, val isDismissWhenPaySucces
     ) {
         rechargeResponse?.apply {
             rechargeAgreements = this.rechargeAgreement
-            mBinding.tvRoseBalance.text = roseBalance
+            if (balanceRose==null) {
+                mBinding.tvRoseBalance.text = roseBalance
+            }
             if (!isRefreshBalance) {
                 selectItem = list[defaultSelect]
                 mBinding.selectItem = selectItem
@@ -134,9 +140,10 @@ class RoseRechargePop(val mContext: FragmentActivity, val isDismissWhenPaySucces
         fun showDialog(
             mContext: FragmentActivity,
             hasShadowBg: Boolean = true,
-            isDismissWhenPaySuccess: Boolean = false
+            isDismissWhenPaySuccess: Boolean = false,
+            balanceRose: BigDecimal?=null
         ): RoseRechargePop {
-            val roseRechargePop = RoseRechargePop(mContext, isDismissWhenPaySuccess)
+            val roseRechargePop = RoseRechargePop(mContext, isDismissWhenPaySuccess,balanceRose)
             val builder = XPopup.Builder(mContext)
             builder
                 .hasShadowBg(hasShadowBg)

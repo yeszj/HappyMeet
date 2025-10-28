@@ -8,7 +8,7 @@ import cn.yanhu.commonres.bean.UserDetailInfo
  * created: 2024/4/2
  * desc:
  */
-data class ChatRoomMsgInfo(val type: Int, val content: String,val sendUserInfo:UserDetailInfo?,val altUser:BaseUserInfo?=null){
+data class ChatRoomMsgInfo(var type: Int, var content: String, var sendUserInfo:UserDetailInfo?, var altUser:BaseUserInfo?=null){
     companion object{
         const val ITEM_NEW_ADD_TYPE = -1 //新增的消息 老版本不支持
 

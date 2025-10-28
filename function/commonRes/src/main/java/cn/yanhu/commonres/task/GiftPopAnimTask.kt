@@ -58,7 +58,7 @@ class GiftPopAnimTask(
 
     override fun doTask() {
         try {
-           // logComToFile("memoryInfo","送礼："+getMemoryStatus()+"\nanimUrl="+giftInfo.svga)
+            logComToFile("memoryInfo","送礼："+getMemoryStatus()+"\nanimUrl="+giftInfo.svga)
             var randomGift: GiftInfo? = null
             if (!TextUtils.isEmpty(giftInfo.randomBoxGiftInfo)) {
                 randomGift =
