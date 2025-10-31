@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.ActivityTaskCenterBinding
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
+import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager

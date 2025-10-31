@@ -3,18 +3,14 @@ package cn.huanyuan.sweetlove.ui.main
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager2.widget.ViewPager2
-import cn.gxgre.forlove.manager.ImageLoadManager.getImageBitmap
 import cn.happy.beautyface.ui.utils.BeautyConfigManager
 import cn.huanyuan.sweetlove.BaseApplication
 import cn.huanyuan.sweetlove.R
@@ -37,23 +33,16 @@ import cn.yanhu.agora.listener.OnDownloadProgressListener
 import cn.yanhu.agora.manager.AgoraSdkDownloadManager
 import cn.yanhu.agora.manager.BeautyFaceEffectManager
 import cn.yanhu.agora.manager.BeautySDKManager
-import cn.yanhu.agora.manager.RtcEngineInit
-import cn.yanhu.agora.manager.RtcEngineInit.initRtcEngine
-import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
-import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
-import cn.yanhu.agora.manager.monitor.MemoryMonitor
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
+import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DateUtils
 import cn.yanhu.baselib.utils.GlideUtils
-import cn.yanhu.baselib.utils.ext.countDown
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.adapter.CircleBannerImageAdapter
-import cn.yanhu.commonres.adapter.MyBannerImageAdapter
 import cn.yanhu.commonres.bean.AppPopResponse
-import cn.yanhu.commonres.bean.BannerBean
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.bean.response.RoseRechargeResponse
 import cn.yanhu.commonres.config.ChatConstant
@@ -62,7 +51,6 @@ import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.loading.MainLoadingCallBack
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.AppManager
-import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.task.AppPopTypeManager
 import cn.yanhu.imchat.api.imChatRxApi
@@ -87,7 +75,6 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
 import com.permissionx.guolindev.PermissionX
-import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.listener.OnBannerListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -502,7 +489,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             mBinding.tabLayout.addItem(createBottomBarItem(it))
         }
         bindTabToVp()
-        if (fragments.size > 0) {
+        if (fragments.isNotEmpty()) {
             if (selectItem > 0) {
                 mBinding.tabLayout.currentItem = selectItem - 1
             } else {

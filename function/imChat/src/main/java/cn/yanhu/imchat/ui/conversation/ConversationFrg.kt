@@ -15,6 +15,7 @@ import cn.yanhu.baselib.utils.ViewPager2Helper
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.indicator.CommonIndicatorAdapter
+import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.manager.AppManager
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.utils.PermissionXUtils
@@ -23,6 +24,7 @@ import cn.yanhu.imchat.R
 import cn.yanhu.imchat.databinding.FrgConversationBinding
 import cn.yanhu.imchat.databinding.ViewImListTopBinding
 import cn.zj.netrequest.ext.parseState
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.permissionx.guolindev.PermissionX
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
@@ -41,7 +43,9 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
         initTabLayout()
         initVpData()
         verifyPermission()
-        requestData()
+        LiveEventBus.get< String>(EventBusKeyConfig.REFRESH_IM_CONVERSATION).observe(this) {
+            requestData()
+        }
     }
 
     private fun initTabLayout() {
@@ -79,6 +83,11 @@ class ConversationFrg : BaseFragment<FrgConversationBinding, ImChatViewModel>(
     override fun requestData() {
         super.requestData()
         mViewModel.getSystemMsg()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requestData()
     }
 
     @SuppressLint("SetTextI18n")

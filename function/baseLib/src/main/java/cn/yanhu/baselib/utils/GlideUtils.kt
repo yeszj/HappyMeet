@@ -101,7 +101,7 @@ object GlideUtils {
                             return true; // 表示已处理该异常
                         }
                         logComToFile("glide", "加载失败：url=${url},error=${e?.message}")
-                        GlideHealthMonitor.onLoadFailed(e)
+                       // GlideHealthMonitor.onLoadFailed(e)
                         return false // 继续交给 Glide 默认逻辑
                     }
 

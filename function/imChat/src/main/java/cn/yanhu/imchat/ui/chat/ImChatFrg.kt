@@ -35,7 +35,6 @@ import com.hyphenate.chat.EMCustomMessageBody
 import com.hyphenate.chat.EMMessage
 import com.hyphenate.easeui.constants.EaseConstant
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.lxj.xpopup.core.BasePopupView
 
 /**
  * @author: zhengjun
@@ -70,7 +69,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
             }
         })
         playUnShowGiftAnim()
-        LiveEventBus.get<String>(EventBusKeyConfig.BLOCK_USER_SUCCESS).observeSticky (this){
+        LiveEventBus.get<String>(EventBusKeyConfig.BLOCK_USER_SUCCESS).observe (this){
             finishPage()
         }
     }

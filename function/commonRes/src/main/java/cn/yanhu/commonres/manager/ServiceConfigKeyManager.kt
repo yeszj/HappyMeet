@@ -16,6 +16,6 @@ object ServiceConfigKeyManager {
     const val KEY_NEW_YEAR_EVENT = "new_year_event"
 
     //礼物连击配置
-    const val GIF_COMBO_SWITCH = "gif_combo_switch_new"
+    const val GIF_COMBO_SWITCH = "gift_combo_switch_new"
 
 }

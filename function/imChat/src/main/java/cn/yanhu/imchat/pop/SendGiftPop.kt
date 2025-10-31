@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
-import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
+import cn.yanhu.baselib.adapter.FrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseSheetDialog
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
@@ -19,7 +19,6 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
-import cn.yanhu.commonres.bean.SendGiftRequest.SOURCE_CHAT
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.config.ChatConstant
@@ -77,8 +76,8 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             this.userInfo = sendUserInfo
             this.executePendingBindings()
             logcom("showGiftPop = show")
-            val balanceRose = requireArguments().getString("balanceRose","")
-            if (!TextUtils.isEmpty(balanceRose) && isShowContinueClick){
+            val balanceRose = requireArguments().getString("balanceRose", "")
+            if (!TextUtils.isEmpty(balanceRose) && isShowContinueClick) {
                 binding?.tvRoseNum?.text = balanceRose
             }
 
@@ -149,7 +148,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
 
     private val giftViewsList = mutableListOf<Fragment>()
-    private var myFragmentStateAdapter: MyFrgFragmentStateAdapter? = null
+    private var myFragmentStateAdapter: FrgFragmentStateAdapter? = null
     private fun initTabLayout() {
         binding?.apply {
             val giftShowView = GiftShowFrg.newInstance(source, GiftInfo.TYPE_GIFT)
@@ -179,7 +178,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             giftViewsList.add(frameShowView)
 
             viewPager.offscreenPageLimit = giftViewsList.size
-            myFragmentStateAdapter = MyFrgFragmentStateAdapter(this@SendGiftPop, giftViewsList)
+            myFragmentStateAdapter = FrgFragmentStateAdapter(this@SendGiftPop, giftViewsList)
             viewPager.adapter = myFragmentStateAdapter
             tabLayout.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
@@ -221,7 +220,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
     private fun setGiftInfo() {
         giftInfo?.apply {
-            if (!isShowContinueClick){
+            if (!isShowContinueClick) {
                 binding?.tvRoseNum?.text = this.roseNum.toPlainString()
             }
         }
@@ -240,7 +239,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                 if (source == SOURCE_VIDEO) SendGiftRequest.SOURCE_CALL else if (source == SOURCE_CHAT) SendGiftRequest.SOURCE_CHAT else SendGiftRequest.SOURCE_LIVE_ROOM
             sendGiftRequest.callId = callId
             sendGift(sendGiftRequest, item)
-        }else{
+        } else {
             showRechargePop(true)
         }
     }
@@ -290,8 +289,12 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     private fun showRechargePop(isDismiss: Boolean = false) {
         activity?.apply {
             val balanceRose = binding?.tvRoseNum?.text.toString()
-            ApplicationProxy.instance.showRechargePop(this, true, balanceRose = BigDecimal(balanceRose) )
-            if (isDismiss){
+            ApplicationProxy.instance.showRechargePop(
+                this,
+                true,
+                balanceRose = BigDecimal(balanceRose)
+            )
+            if (isDismiss) {
                 dismiss()
             }
         }
@@ -305,6 +308,10 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
     fun hideFriendBtn() {
         binding?.tvAddFriend?.visibility = View.INVISIBLE
+    }
+
+    fun refreshBalanceRose(balanceRose: BigDecimal) {
+        binding?.tvRoseNum?.text = balanceRose.toPlainString()
     }
 
     interface OnSendGiftListener {
@@ -325,14 +332,16 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             sendUserInfo: UserDetailInfo,
             source: Int,
             callId: Int,
-            onSendGiftListener: OnSendGiftListener, isShowContinueClick: Boolean = false,balanceRose: BigDecimal?=null
+            onSendGiftListener: OnSendGiftListener,
+            isShowContinueClick: Boolean = false,
+            balanceRose: BigDecimal? = null
         ): SendGiftPop {
             val createGroupPop =
                 SendGiftPop()
             val arguments = Bundle()
             arguments.putInt("source", source)
             arguments.putInt("callId", callId)
-            if (balanceRose!=null){
+            if (balanceRose != null) {
                 arguments.putString("balanceRose", balanceRose.toPlainString())
             }
             arguments.putBoolean("isShowContinueClick", isShowContinueClick)

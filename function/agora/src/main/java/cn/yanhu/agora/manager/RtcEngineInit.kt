@@ -11,6 +11,7 @@ import io.agora.rtc2.IMediaExtensionObserver
 import io.agora.rtc2.IRtcEngineEventHandler
 import io.agora.rtc2.RtcEngineConfig
 import io.agora.rtc2.RtcEngineEx
+import io.agora.rtc2.video.VideoCanvas
 
 /**
  * @author: zhengjun
@@ -18,15 +19,15 @@ import io.agora.rtc2.RtcEngineEx
  * desc:
  */
 object RtcEngineInit {
-     var mRtcEngine: RtcEngineEx? = null
-    fun initRtcEngine(context: Context):RtcEngineEx? {
+    var mRtcEngine: RtcEngineEx? = null
+    fun initRtcEngine(context: Context): RtcEngineEx? {
         try {
             val config = RtcEngineConfig()
             config.mContext = context
             config.mAppId = AppCacheManager.agoraAppId
             config.mEventHandler = object : IRtcEngineEventHandler() {
             }
-            config.mExtensionObserver = object : IMediaExtensionObserver{
+            config.mExtensionObserver = object : IMediaExtensionObserver {
                 override fun onEventWithContext(
                     extContext: ExtensionContext?,
                     key: String?,
@@ -65,11 +66,11 @@ object RtcEngineInit {
 
             }
             // 添加美颜插件
-          //  config.addExtension("AgoraFaceUnityExtension")
+            //  config.addExtension("AgoraFaceUnityExtension")
             config.mNativeLibPath = getSoPath()
             mRtcEngine = RtcEngineEx.create(config) as RtcEngineEx
             // 启用插件
-          //  mRtcEngine!!.enableExtension("FaceUnity", "Effect", true)
+            //  mRtcEngine!!.enableExtension("FaceUnity", "Effect", true)
             mRtcEngine!!.setAudioScenario(Constants.AudioScenario.getValue(Constants.AudioScenario.GAME_STREAMING))
             return mRtcEngine
         } catch (e: Exception) {

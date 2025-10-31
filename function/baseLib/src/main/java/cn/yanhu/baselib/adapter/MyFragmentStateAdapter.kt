@@ -9,7 +9,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
  * created: 2024/2/18
  * desc:
  */
- class MyFragmentStateAdapter(fragmentActivity: FragmentActivity,private val  list: MutableList<Fragment>) :
+class MyFragmentStateAdapter(fragmentActivity: FragmentActivity, private val  list: MutableList<Fragment>) :
     FragmentStateAdapter(fragmentActivity) {
     override fun createFragment(position: Int): Fragment {
         return list[position]

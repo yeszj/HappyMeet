@@ -56,6 +56,7 @@ public class AgoraManager implements IMediaExtensionObserver {
 
     private static final class AgoraManagerHolder {
         private static final AgoraManager agoraManager = new AgoraManager();
+
     }
 
     public static AgoraManager getInstance() {
@@ -110,7 +111,6 @@ public class AgoraManager implements IMediaExtensionObserver {
         mRtcEngine.startPreview();
         // BeautySetManager.getInstance().enableBeauty(true);
         BeautyManager.setupLocalVideo(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN);
-        // mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
     }
 
     public void writeRtcLog(String format, Object... value) {
@@ -232,7 +232,8 @@ public class AgoraManager implements IMediaExtensionObserver {
                 enableLocalVideo(true);
                 publishPkVideo();
             } else {
-                mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+                VideoCanvas videoCanvas = VideoCanvasPool.INSTANCE.obtainVideoCanvas(uid, surfaceView);
+                mRtcEngine.setupRemoteVideo(videoCanvas);
             }
         }
     }
@@ -276,7 +277,8 @@ public class AgoraManager implements IMediaExtensionObserver {
                 BeautyManager.setupLocalVideo(null, VideoCanvas.RENDER_MODE_HIDDEN);
                 cancelPublishPkVideo();
             } else {
-                mRtcEngine.setupRemoteVideo(new VideoCanvas(null, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+                mRtcEngine.setupRemoteVideo(null);
+                VideoCanvasPool.INSTANCE.recycleVideoCanvas(uid);
             }
         }
     }

@@ -27,6 +27,7 @@ object ChatConstant {
     const val MSG_INVITE_SEND_GIFT = "msg_invite_send_gift" //女方邀请对方赠送礼物成为好友消息
     const val CUSTOM_SEND_TYPE = "sendType"
 
+    const val MSG_COMMON_SYSTEM: String = "msg_common_system"
 
     //    /*
     //     * 一对一通话 end

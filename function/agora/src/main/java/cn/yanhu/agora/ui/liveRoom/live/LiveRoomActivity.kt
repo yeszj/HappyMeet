@@ -129,6 +129,7 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
 
 
     fun roomLeave(onRoomLeaveListener: OnRoomLeaveListener) {
+        logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "进入其它房间，手动退出当前房间")
         liveRoomFrg?.roomLeave(onRoomLeaveListener)
     }
 

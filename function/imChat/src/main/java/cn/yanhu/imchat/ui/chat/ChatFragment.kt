@@ -15,6 +15,7 @@ import cn.yanhu.baselib.utils.CommonUtils.isPopShow
 import cn.yanhu.baselib.utils.DialogUtils.showConfirmDialog
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.bean.CommonSystemMsgInfo
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.SmCheckResult
 import cn.yanhu.commonres.bean.SmCheckResult.ChatTipContent
@@ -190,6 +191,24 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                     showFailTips("当前可能包含违规内容，无法发送")
                 }
             }
+        }
+    }
+
+    override fun onChatSuccess(message: EMMessage) {
+        super.onChatSuccess(message)
+        if (smCheckResult != null) {
+            val chatContent: ChatTipContent? = smCheckResult!!.chatContent
+            val systemTipContent: CommonSystemMsgInfo? = smCheckResult!!.systemTipContent
+            if (systemTipContent != null) {
+                EmMsgManager.sendCustomMsg(
+                    conversationId,
+                    ChatConstant.MSG_COMMON_SYSTEM,
+                    GsonUtils.toJson(systemTipContent)
+                )
+            } else if (chatContent != null) {
+                saveSystemMsgFail(chatContent)
+            }
+            smCheckResult = null
         }
     }
 
@@ -467,7 +486,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
             SendGiftPop.SOURCE_CHAT,
             0,
             object : SendGiftPop.OnSendGiftListener {
-                override fun onSendGift(item: GiftInfo,isCombo: Boolean) {
+                override fun onSendGift(item: GiftInfo, isCombo: Boolean) {
                     EmMsgManager.sendGiftMessage(item, conversationId, chatLayout)
                 }
             })
@@ -712,6 +731,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         return false
     }
 
+    private var smCheckResult: SmCheckResult? = null
     private fun startSendCheck(message: EMMessage, source: Int, content: String) {
         message.setAttribute(ImMessageParamsConfig.SM_CHECK_CONTENT, content)
         message.setAttribute(ImMessageParamsConfig.SM_CHECK_SOURCE, source)
@@ -734,8 +754,9 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                     SmSdkUtils.TYPE_MESSAGE,
                     source,
                     object : SmSdkUtils.OnSmCheckResultListener {
-                        override fun onCheckSuccess(checkResult: SmCheckResult,msg: String) {
+                        override fun onCheckSuccess(checkResult: SmCheckResult, msg: String) {
                             //消息检测合规后 正式发送
+                            smCheckResult = checkResult;
                             if (checkResult.canSend == 0) {
                                 message.setAttribute(
                                     ImMessageParamsConfig.SM_CHECK_ID,
@@ -747,16 +768,20 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                                 )
                                 sendChatMessage(message)
                             } else {
-                                updateMsgFail(message,msg)
+                                updateMsgFail(message, msg)
+                                val chatContent: ChatTipContent? = checkResult.chatContent
+                                if (chatContent != null) {
+                                    ThreadUtils.getMainHandler()
+                                        .postDelayed(
+                                            Runnable { saveSystemMsgFail(chatContent) },
+                                            500
+                                        )
+                                }
                             }
 
 //                            val chatContent: ChatTipContent? = ChatTipContent("<font color = '#333333'>联系方式已成功发送</font><br>安全提醒：如对于表示无法收到、看不到联系方式，要继续送礼才可解锁时请勿轻信；如对方要求添加外部聊天工具时（微信、QQ等）如涉及金钱相关，请保持警惕并及时<font color = '#E83D24'>举报</font>，举报核实成功后可领取奖励。请谨防理财、裸聊、杀猪盘等诈骗，建议在平台内交友。",
 //                                "{clsPath:cn.huanyuan.sweetlove.ui.system.FeedbackActivity,id:100014,position:2}")
-                            val chatContent: ChatTipContent? = checkResult.chatContent
-                            if (chatContent != null) {
-                                ThreadUtils.getMainHandler()
-                                    .postDelayed(Runnable { saveSystemMsgFail(chatContent) }, 500)
-                            }
+
                         }
 
                         override fun onCheckFail(code: Int?, msg: String?) {

@@ -1,6 +1,7 @@
 package cn.yanhu.agora.ui.liveRoom.live
 
 import android.view.LayoutInflater
+import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -67,15 +68,14 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
         initRankView()
         super.initData()
         for (i in 0 until seatList.size) {
-            val textureView = TextureView(mContext)
             surfaceViewList[i] = LiveRoomSeatBean(
-                0, textureView
+                0, null
             )
         }
         if (hasExpand) {
-            initSongScaleView()
+            initSongScaleView(false)
         } else {
-            initSongView()
+            initSongView(false)
         }
         addRankView()
         getRoseRankList()
@@ -261,7 +261,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
 
-    private fun initSongView() {
+    private fun initSongView(loadVideo: Boolean = true) {
         if (isSevenRoom()) {
             sevenSongRoomSeatView = SevenRoomSeatView(mContext, false, roomType, roomId, isOwner)
             mBinding.seatContainer.removeAllViews()
@@ -277,7 +277,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
         }
     }
 
-    private fun initSongScaleView() {
+    private fun initSongScaleView(loadVideo: Boolean = true) {
         if (isSevenRoom()) {
             sevenSongRoomScaleView = SevenRoomSeatView(mContext, true, roomType, roomId, isOwner)
             mBinding.seatContainer.removeAllViews()
@@ -333,15 +333,15 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
     override fun getRoomSeatSuccess(seatList: MutableList<RoomSeatInfo>) {
         if (isSevenRoom()) {
             if (hasExpand) {
-                sevenSongRoomScaleView?.setSeatList(seatList)
+                sevenSongRoomScaleView?.setSeatList(seatList, true)
             } else {
-                sevenSongRoomSeatView?.setSeatList(seatList)
+                sevenSongRoomSeatView?.setSeatList(seatList, true)
             }
         } else {
             if (hasExpand) {
-                nineSongRoomScaleView?.setSeatList(seatList)
+                nineSongRoomScaleView?.setSeatList(seatList, true)
             } else {
-                nineSongRoomSeatView?.setSeatList(seatList)
+                nineSongRoomSeatView?.setSeatList(seatList, true)
             }
         }
 
@@ -434,7 +434,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
 
                 R.id.iv_sendRose -> {
                     val roomUserSeatInfo = item.roomUserSeatInfo ?: return
-                    sendPopGift(roomUserSeatInfo,roseGiftInfo!!)
+                    sendPopGift(roomUserSeatInfo, roseGiftInfo!!)
                 }
             }
         }
@@ -471,7 +471,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                 }
             }
             getPkSeatUserList()
-            refreshSeatRoseInfo()
+            //refreshSeatRoseInfo()
         }
     }
 
@@ -544,7 +544,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
             if (sevenSongRoomSeatView == null) {
                 initSongView()
             } else {
-                sevenSongRoomSeatView?.setSeatList(seatList)
+                sevenSongRoomSeatView?.setSeatList(seatList, true)
                 ViewUtils.removeViewFormParent(sevenSongRoomSeatView)
                 mBinding.seatContainer.removeAllViews()
                 mBinding.seatContainer.addView(sevenSongRoomSeatView)
@@ -553,7 +553,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
             if (nineSongRoomSeatView == null) {
                 initSongView()
             } else {
-                nineSongRoomSeatView?.setSeatList(seatList)
+                nineSongRoomSeatView?.setSeatList(seatList, true)
                 ViewUtils.removeViewFormParent(nineSongRoomSeatView)
                 mBinding.seatContainer.removeAllViews()
                 mBinding.seatContainer.addView(nineSongRoomSeatView)
@@ -655,29 +655,29 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
     override fun addHostSurfaceView() {
         if (isSevenRoom()) {
             if (hasExpand) {
-                sevenSongRoomScaleView?.setSeatList(seatList)
+                sevenSongRoomScaleView?.setSeatHost(seatList)
             } else {
-                sevenSongRoomSeatView?.setSeatList(seatList)
+                sevenSongRoomSeatView?.setSeatHost(seatList)
             }
         } else {
             if (hasExpand) {
-                nineSongRoomScaleView?.setSeatList(seatList)
+                nineSongRoomScaleView?.setSeatHost(seatList)
             } else {
-                nineSongRoomSeatView?.setSeatList(seatList)
+                nineSongRoomSeatView?.setSeatHost(seatList)
             }
         }
 
     }
 
     private fun clearSurfaceView() {
-        for (i in 0 until surfaceViewList.size) {
-            val liveRoomSeatBean = surfaceViewList[i]
-            liveRoomSeatBean?.apply {
-                this.uid = 0
-                surfaceViewList[i] = this
-                ViewUtils.removeViewFormParent(this.surfaceView)
-            }
-        }
+//        for (i in 0 until surfaceViewList.size) {
+//            val liveRoomSeatBean = surfaceViewList[i]
+//            liveRoomSeatBean?.apply {
+//                this.uid = 0
+//                surfaceViewList[i] = this
+//                ViewUtils.removeViewFormParent(this.surfaceView)
+//            }
+//        }
     }
 
     private fun showScaleSeatView() {
@@ -692,7 +692,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                     ViewUtils.removeViewFormParent(sevenSongRoomScaleView)
                     mBinding.seatContainer.addView(sevenSongRoomScaleView)
                 }
-                sevenSongRoomScaleView?.setSeatList(seatList)
+                sevenSongRoomScaleView?.setSeatList(seatList, scalePosition == -1)
             }
         } else {
             if (nineSongRoomScaleView == null) {
@@ -705,7 +705,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                     ViewUtils.removeViewFormParent(nineSongRoomScaleView)
                     mBinding.seatContainer.addView(nineSongRoomScaleView)
                 }
-                nineSongRoomScaleView?.setSeatList(seatList)
+                nineSongRoomScaleView?.setSeatList(seatList, scalePosition == -1)
             }
         }
 
@@ -872,6 +872,15 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
 
     companion object {
         var surfaceViewList = mutableMapOf<Int, LiveRoomSeatBean>()
+        fun getUserSeatBeanById(owenId: String): LiveRoomSeatBean? {
+            surfaceViewList.forEach { (_, u) ->
+                if (u.uid.toString() == owenId) {
+                    return u
+                }
+            }
+            return null
+        }
+
         fun getOwnerSurfaceView(owenId: String): View? {
             var surfaceView: View? = null
             surfaceViewList.forEach { (_, u) ->

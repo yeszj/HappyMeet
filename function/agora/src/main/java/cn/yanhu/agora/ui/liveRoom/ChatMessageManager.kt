@@ -1,6 +1,5 @@
 package cn.yanhu.agora.ui.liveRoom
 
-import android.R.id.message
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -19,12 +18,10 @@ import cn.yanhu.commonres.bean.ChatRoomGiftMsg
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
-import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.imchat.manager.ImUserManager
 import com.blankj.utilcode.util.GsonUtils
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.hyphenate.EMCallBack
-import com.hyphenate.EMChatRoomChangeListener
 import com.hyphenate.EMValueCallBack
 import com.hyphenate.chat.EMClient
 import com.hyphenate.chat.EMMessage
@@ -50,11 +47,11 @@ import java.util.concurrent.atomic.AtomicInteger
  * desc:
  */
 // OptimizedChatMessageManager.kt
-class OptimizedChatMessageManager(
+class ChatMessageManager(
     private val context: Context,
     private val viewModel: LiveRoomViewModel,
     private val binding: FrgBaseLiveRoomBinding
-) : LiveRoomComponent, EMChatRoomChangeListener {
+) : LiveRoomComponent {
 
     companion object {
         private const val MAX_CHAT_MESSAGES = 500
@@ -517,7 +514,6 @@ class OptimizedChatMessageManager(
     override fun release() {
         mainHandler.removeCallbacksAndMessages(null)
         coroutineScope.cancel() // 取消所有协程
-        EMClient.getInstance().chatroomManager().removeChatRoomListener(this)
 
         // 清理所有资源
         messageCallbacks.clear()
@@ -526,60 +522,6 @@ class OptimizedChatMessageManager(
 
         logComToFile("ChatMessageManager", "Released all resources")
     }
-
-    // EMChatRoomChangeListener 实现
-    override fun onChatRoomDestroyed(roomId: String?, roomName: String?) {
-        if (roomId == this.roomInfo.uid) {
-            logComToFile("ChatMessageManager", "Chat room destroyed: $roomId")
-            onMessageListener?.onChatRoomDestroyed()
-        }
-    }
-
-    override fun onMemberJoined(roomId: String?, participant: String?) {
-        if (roomId == this.roomInfo.uid) {
-            logComToFile("ChatMessageManager", "Member joined: $participant")
-            // 可以在这里处理成员加入的逻辑
-        }
-    }
-
-    override fun onMemberExited(roomId: String?, roomName: String?, participant: String?) {
-        if (roomId == this.roomInfo.uid) {
-            logComToFile("ChatMessageManager", "Member exited: $participant")
-            // 可以在这里处理成员退出的逻辑
-        }
-    }
-
-    override fun onMuteListAdded(chatRoomId: String?, mutes: MutableList<String>?, expireTime: Long) {
-        if (chatRoomId == this.roomInfo.uid) {
-            mutes?.forEach { mute ->
-                if (mute == AppCacheManager.userId) {
-                    ifMute = true
-                    showToast("你已被禁言")
-                }
-            }
-        }
-    }
-
-    override fun onMuteListRemoved(chatRoomId: String?, mutes: MutableList<String>?) {
-        if (chatRoomId == this.roomInfo.uid) {
-            mutes?.forEach { mute ->
-                if (mute == AppCacheManager.userId) {
-                    ifMute = false
-                    showToast("你已被取消禁言")
-                }
-            }
-        }
-    }
-
-    // 其他 EMChatRoomChangeListener 方法的空实现
-    override fun onRemovedFromChatRoom(reason: Int, roomId: String?, roomName: String?, participant: String?) {}
-    override fun onWhiteListAdded(chatRoomId: String?, whitelist: MutableList<String>?) {}
-    override fun onWhiteListRemoved(chatRoomId: String?, whitelist: MutableList<String>?) {}
-    override fun onAllMemberMuteStateChanged(chatRoomId: String?, isMuted: Boolean) {}
-    override fun onAdminAdded(chatRoomId: String?, admin: String?) {}
-    override fun onAdminRemoved(chatRoomId: String?, admin: String?) {}
-    override fun onOwnerChanged(chatRoomId: String?, newOwner: String?, oldOwner: String?) {}
-    override fun onAnnouncementChanged(chatRoomId: String?, announcement: String?) {}
 
     // 消息处理器 - 修复 Handler 复用问题
     private inner class MessageProcessor {

@@ -16,7 +16,7 @@ import com.hyphenate.push.EMPushHelper;
 import com.hyphenate.push.EMPushType;
 import com.hyphenate.push.PushListener;
 import com.hyphenate.util.EMLog;
-
+import cn.yanhu.imchat.custom.message.chatSystemMsg.ChatSystemMsgViewAdapterDelegate;
 import cn.yanhu.imchat.custom.message.chatEmojiView.ChatEmojiNewAdapterDelegate;
 import cn.yanhu.imchat.custom.message.chatGifEmojiView.ChatGifEmojiNewAdapterDelegate;
 import cn.yanhu.imchat.custom.message.chatRelatiionshipView.ChatRelationshipViewAdapterDelegate;
@@ -88,6 +88,7 @@ public class EMInitUtils {
 
             //注册对话类型
             EaseMessageTypeSetManager.getInstance()
+                    .addMessageType(ChatSystemMsgViewAdapterDelegate.class)
                     .addMessageType(ChatTipAdapterDelegate.class)         //提示
                     .addMessageType(ChatRelationshipViewAdapterDelegate.class)
                     .addMessageType(InviteSendGiftViewAdapterDelegate.class)

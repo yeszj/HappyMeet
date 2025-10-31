@@ -58,13 +58,12 @@ class GiftPopAnimTask(
 
     override fun doTask() {
         try {
-            logComToFile("memoryInfo","送礼："+getMemoryStatus()+"\nanimUrl="+giftInfo.svga)
             var randomGift: GiftInfo? = null
             if (!TextUtils.isEmpty(giftInfo.randomBoxGiftInfo)) {
                 randomGift =
                     GsonUtils.fromJson(giftInfo.randomBoxGiftInfo, GiftInfo::class.java)
             }
-
+            //logComToFile("memoryInfo","送礼："+getMemoryStatus()+"\nanimUrl="+giftInfo.svga)
             svgaImageView?.apply {
                 if (giftInfo.type == GiftInfo.TYPE_FRAME){
                     val width = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_100)
@@ -74,7 +73,11 @@ class GiftPopAnimTask(
                 }
             }
 
-            playGiftAnim(giftInfo,randomGift!=null)
+            if (randomGift!=null){
+                playGiftAnim(randomGift,false)
+            }else{
+                playGiftAnim(giftInfo,false)
+            }
 
             svgaImageView?.callback = object : SVGACallback {
                 override fun onFinished() {
@@ -82,12 +85,14 @@ class GiftPopAnimTask(
                     if (tag != null && tag is SVGAVideoEntity) {
                         tag.clear()
                     }
-                    if (randomGift != null) {
-                        playGiftAnim(randomGift!!)
-                        randomGift = null
-                    } else {
-                        doNextTask()
-                    }
+                    doNextTask()
+//
+//                    if (randomGift != null) {
+//                        playGiftAnim(randomGift!!)
+//                        randomGift = null
+//                    } else {
+//                        doNextTask()
+//                    }
                 }
 
                 override fun onPause() {
@@ -157,12 +162,15 @@ class GiftPopAnimTask(
 
                 override fun onVideoComplete() {
                     ThreadUtils.getMainHandler().post {
-                        if (randomGift != null) {
-                            playGiftAnim(randomGift!!)
-                            randomGift = null
-                        } else {
-                            doNextTask()
-                        }
+//                        if (randomGift != null) {
+//                            playGiftAnim(randomGift!!)
+//                            randomGift = null
+//                        } else {
+//                            doNextTask()
+//                        }
+//                        System.gc()
+                        doNextTask()
+
                     }
                 }
 

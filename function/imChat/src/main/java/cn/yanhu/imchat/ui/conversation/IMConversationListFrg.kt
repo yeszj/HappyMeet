@@ -192,6 +192,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         userIdList.clear()
+        LiveDataEventManager.sendLiveDataMessage(EventBusKeyConfig.REFRESH_IM_CONVERSATION)
         loadData()
     }
 
