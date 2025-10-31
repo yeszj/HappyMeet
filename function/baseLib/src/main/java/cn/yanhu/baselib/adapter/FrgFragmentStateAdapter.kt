@@ -1,7 +1,5 @@
 package cn.yanhu.baselib.adapter
 
-import android.os.Parcelable
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
@@ -23,11 +21,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
     }
     // 关键：为每个Fragment分配唯一ID
     override fun getItemId(position: Int): Long {
-        return list[position].javaClass.name.hashCode().toLong()
+        return list[position].hashCode().toLong()
     }
 
     override fun containsItem(itemId: Long): Boolean {
-        return list.any { it.javaClass.name.hashCode().toLong() == itemId }
+        return list.any { it.hashCode().toLong() == itemId }
     }
     // 移除单个项目
     fun removeItem(position: Int) {
