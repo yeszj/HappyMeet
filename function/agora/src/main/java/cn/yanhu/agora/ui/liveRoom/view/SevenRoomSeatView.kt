@@ -2,10 +2,7 @@ package cn.yanhu.agora.ui.liveRoom.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
-import android.graphics.PixelFormat
 import android.view.LayoutInflater
-import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
@@ -30,9 +27,6 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
-import androidx.core.view.isEmpty
-import androidx.core.view.isNotEmpty
-import cn.yanhu.agora.ui.liveRoom.TextureViewPool
 import cn.yanhu.baselib.utils.ext.logcom
 
 /**
@@ -198,18 +192,25 @@ open class SevenRoomSeatView(
     ) {
         val seatScaleBinding = getSeatScaleBinding(i)
         seatScaleBinding?.apply {
-            val tag = seatScaleBinding.vgParent.tag
-            if (tag == null || (tag as RoomSeatInfo).roomUserSeatInfo?.userId != seatInfo.roomUserSeatInfo?.userId || seatInfo.roomUserSeatInfo == null || seatScaleBinding.itemVideoSf.childCount <= 0) {
-                seatScaleBinding.vgParent.tag = seatInfo
-                bindItemInfo(seatInfo, i)
-            } else {
-                if (isReload) {
-                    upDataSeatVideo(seatInfo, i)
-                }
+            bindSeatInfo(i,seatInfo,isReload)
+        }
+    }
+    private fun AdapterLiveRoomUserSeatItemBinding.bindSeatInfo(  i: Int, seatInfo: RoomSeatInfo, isReload: Boolean = false){
+        seatInfoList[i] = seatInfo
+        val tag = this.vgParent.tag as RoomSeatInfo?
+        val tagUserInfo = tag?.roomUserSeatInfo
+        if (tag == null || tagUserInfo?.userId != seatInfo.roomUserSeatInfo?.userId || seatInfo.roomUserSeatInfo == null || this.itemVideoSf.childCount <= 0) {
+            this.vgParent.tag = seatInfo
+            bindItemInfo(seatInfo, i)
+        } else {
+            if (tagUserInfo?.roseNum != seatInfo.roomUserSeatInfo?.roseNum || tag.mikeUser != seatInfo.mikeUser) {
+                this.seatInfo = seatInfo
+            }
+            if (isReload) {
+                upDataSeatVideo(seatInfo, i)
             }
         }
     }
-
     private fun bindSongSeat(
         isReload: Boolean
     ) {
@@ -225,16 +226,7 @@ open class SevenRoomSeatView(
         seatInfoList[i] = seatInfo
         val seatBinding = getSeatBinding(i)
         seatBinding?.apply {
-            val tag = seatBinding.vgParent.tag
-            if (tag == null || (tag as RoomSeatInfo).roomUserSeatInfo?.userId != seatInfo.roomUserSeatInfo?.userId || seatInfo.roomUserSeatInfo == null || seatBinding.itemVideoSf.childCount <= 0) {
-                seatBinding.vgParent.tag = seatInfo
-                bindItemInfo(seatInfo, i)
-            } else {
-                if (isReload) {
-                    upDataSeatVideo(seatInfo, i)
-                }
-            }
-
+            bindSeatInfo(i,seatInfo,isReload)
         }
     }
 
@@ -242,28 +234,26 @@ open class SevenRoomSeatView(
     private fun AdapterLiveRoomUserSeatItemBinding.bindItemInfo(
         item: RoomSeatInfo?, position: Int
     ) {
-        ivChooseSong.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(ivChooseSong, position, item)
+        setItemListener(position)
+        setItemStyle( position)
+
+        upDataSeatVideo(item!!, position)
+        seatInfo = item
+
+    }
+
+    private fun AdapterLiveRoomUserSeatItemBinding.setItemStyle(
+        position: Int
+    ) {
+        if (vgParent.getTag(cn.yanhu.commonres.R.id.tag_set_style) as Boolean? ==true){
+            return
         }
-        itemVideoSf.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(itemVideoSf, position, item)
-        }
-        vgEmptySeat.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(vgEmptySeat, position, item)
-        }
-        ivExpand.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(ivExpand, position, item)
-        }
-        ivVoiceStatus.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(ivVoiceStatus, position, item)
-        }
-        ivSendRose.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(ivSendRose, position, item)
-        }
-        tvSeatIndex.text = (item!!.id - 1).toString()
+        vgParent.setTag(cn.yanhu.commonres.R.id.tag_set_style,true)
+
+        tvSeatIndex.text = position.toString()
         this.currentRoomType = roomType
         this.isOwner = isRoomOwner
-        if (item.id == 1) {
+        if (position == 0) {
             tvOwner.visibility = VISIBLE
         } else {
             tvOwner.visibility = INVISIBLE
@@ -286,7 +276,7 @@ open class SevenRoomSeatView(
         }
 
         val isShowNoTopBg = position == 2 || position == 5
-        if (item.id == 1) {
+        if (position == 0) {
             vgParent.setBackgroundResource(R.drawable.bg_seat_no_stroke)
         } else {
             if (isShowNoTopBg) {
@@ -295,11 +285,36 @@ open class SevenRoomSeatView(
                 vgParent.setBackgroundResource(R.drawable.bg_seat_bottom_stroke)
             }
         }
+    }
 
-        upDataSeatVideo(item, position)
-        seatInfo = item
+    private fun AdapterLiveRoomUserSeatItemBinding.setItemListener(position: Int) {
+        if (ivChooseSong.tag != null && ivChooseSong.tag == true) {
+            return
+        }
+        ivChooseSong.tag = true
         viewRank.setOnSingleClickListener {
-            showUserReceiveRoseDetailPop(item)
+            showUserReceiveRoseDetailPop(this.seatInfo)
+        }
+        ivChooseSong.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(ivChooseSong, position, this.seatInfo)
+        }
+        itemVideoSf.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(itemVideoSf, position, this.seatInfo)
+        }
+        vgEmptySeat.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(vgEmptySeat, position, this.seatInfo)
+        }
+        ivExpand.setOnSingleClickListener {
+            if (isScaleStyle && position == 1) {
+                this.seatInfo?.isExpand = true
+            }
+            onClickSeatListener?.onChildClickListener(ivExpand, position, this.seatInfo)
+        }
+        ivVoiceStatus.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(ivVoiceStatus, position, this.seatInfo)
+        }
+        ivSendRose.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(ivSendRose, position, this.seatInfo)
         }
     }
 

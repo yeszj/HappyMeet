@@ -7,6 +7,7 @@ import cn.yanhu.agora.bean.BeautyFileCacheInfo
 import cn.yanhu.agora.bean.ConfigSdkVersion
 import cn.yanhu.agora.listener.OnDownloadProgressListener
 import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.zj.netrequest.download.DownloadUtil
 import cn.zj.netrequest.download.FileDownloadListener
@@ -115,6 +116,7 @@ class BeautySDKManager {
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
+                        logComToFile("agoraSdk", "美颜sdk下载失败${e.printStackTrace()}")
                         reDownLoadWhenFail(downloadProgressListener)
 
                     }
@@ -122,6 +124,7 @@ class BeautySDKManager {
                 }
 
                 override fun onFailed(msg: String?) {
+                    logComToFile("agoraSdk", "美颜sdk下载失败msg=${msg}")
                     reDownLoadWhenFail(downloadProgressListener)
                 }
             })
@@ -133,7 +136,7 @@ class BeautySDKManager {
             downloadSdkInfo(downloadProgressListener)
             downloadFailCount++
         } else {
-            logcom("agoraSdk", "声网sdk重新下载2次失败")
+            logComToFile("agoraSdk", "美颜sdk重新下载2次失败")
             downloadProgressListener.onDownLoadFail()
         }
     }

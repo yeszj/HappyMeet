@@ -16,5 +16,6 @@
     <item type="id" name="tag_callback"/>
     <item type="id" name="tag_fetchResource"/>
     <item type="id" name="tag_animListener"/>
+    <item type="id" name="tag_set_style"/>
 
 </resources>

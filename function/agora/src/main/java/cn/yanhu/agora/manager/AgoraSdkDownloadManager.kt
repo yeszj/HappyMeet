@@ -8,6 +8,7 @@ import cn.yanhu.agora.bean.AgoraSdkCacheInfo
 import cn.yanhu.agora.bean.ConfigSdkVersion
 import cn.yanhu.agora.listener.OnDownloadProgressListener
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.utils.DeviceInfoUtil
@@ -117,14 +118,14 @@ object AgoraSdkDownloadManager {
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    logcom("agoraSdk", "声网sdk下载失败${e.printStackTrace()}")
+                    logComToFile("agoraSdk", "声网sdk下载失败${e.printStackTrace()}")
                     reDownLoadWhenFail(downloadProgressListener)
                 }
             }
 
             override fun onFailed(msg: String?) {
                 reDownLoadWhenFail(downloadProgressListener)
-                logcom("agoraSdk", "声网sdk下载失败$msg")
+                logComToFile("agoraSdk", "声网sdk下载失败$msg")
             }
         })
     }

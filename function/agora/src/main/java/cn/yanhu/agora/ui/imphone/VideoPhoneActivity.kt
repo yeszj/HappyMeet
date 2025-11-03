@@ -13,7 +13,6 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
-import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.WindowManager
 import cn.yanhu.agora.R
@@ -39,7 +38,6 @@ import cn.yanhu.commonres.api.commonRxApi
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.GiftSendModel
-import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.EventBusKeyConfig
@@ -66,7 +64,6 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.pcl.sdklib.listener.OnPayResultListener
 import com.pcl.sdklib.manager.PayManager
 import io.agora.rtc2.IRtcEngineEventHandler
-import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
 import androidx.core.view.isVisible

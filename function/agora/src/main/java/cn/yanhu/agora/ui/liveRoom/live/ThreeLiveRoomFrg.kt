@@ -417,12 +417,16 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     override fun refreshSeatInfo(it: MutableList<RoomSeatInfo>, uid: Int) {
+        val items = seatUserAdapter.items
+        if (items==null){
+            return
+        }
         ThreadUtils.getMainHandler().post {
             for (i in 0 until it.size) {
                 val seatInfo = it[i]
                 if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
                     seatUserAdapter.safeUpdateItem(
-                        seatUserAdapter.items as MutableList,
+                        items as MutableList,
                         i,
                         seatInfo
                     )

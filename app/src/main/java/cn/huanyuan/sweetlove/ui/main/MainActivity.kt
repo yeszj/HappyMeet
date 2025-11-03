@@ -34,7 +34,6 @@ import cn.yanhu.agora.manager.AgoraSdkDownloadManager
 import cn.yanhu.agora.manager.BeautyFaceEffectManager
 import cn.yanhu.agora.manager.BeautySDKManager
 import cn.yanhu.baselib.adapter.MyFragmentStateAdapter
-import cn.yanhu.baselib.adapter.MyFrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DateUtils

@@ -1806,6 +1806,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             roomLeave()
             return
         }
+        val mySeatId = getMySeatId()
+        if (mySeatId==-1){
+            refreshSeatInfo()
+            return
+        }
         mViewModel.userSetSeat(
             roomId,
             SEAT_TYPE_SIT_DOWN,

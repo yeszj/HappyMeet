@@ -3,7 +3,6 @@ package cn.yanhu.agora.ui.liveRoom.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
@@ -17,11 +16,8 @@ import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.databinding.AdapterLiveRoomUserSeatItemBinding
 import cn.yanhu.agora.databinding.ViewNineSongRoomSeatBinding
 import cn.yanhu.agora.databinding.ViewNineSongScaleRoomSeatBinding
-import cn.yanhu.agora.databinding.ViewSevenSongRoomSeatBinding
 import cn.yanhu.agora.manager.AgoraManager
-import cn.yanhu.agora.manager.monitor.MemoryMonitor
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
-import cn.yanhu.agora.ui.liveRoom.TextureViewPool
 import cn.yanhu.agora.ui.liveRoom.live.MoreSeatLiveRoomFrg
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
@@ -32,8 +28,6 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
-import com.blankj.utilcode.util.ThreadUtils
-import androidx.core.view.isNotEmpty
 
 
 /**
@@ -118,16 +112,7 @@ open class NineRoomSeatView(
     ) {
         val seatScaleBinding = getSeatScaleBinding(i)
         seatScaleBinding?.apply {
-            val tag = seatScaleBinding.vgParent.tag
-            val tagUserInfo = (tag as RoomSeatInfo?)?.roomUserSeatInfo
-            if (tag == null || tagUserInfo?.userId != seatInfo.roomUserSeatInfo?.userId || seatInfo.roomUserSeatInfo == null || seatScaleBinding.itemVideoSf.childCount <= 0 || tagUserInfo?.roseNum != seatInfo.roomUserSeatInfo?.roseNum) {
-                seatScaleBinding.vgParent.tag = seatInfo
-                bindItemInfo(seatInfo, i)
-            } else {
-                if (isReload) {
-                    upDataSeatVideo(seatInfo, i)
-                }
-            }
+            bindSeatInfo(i,seatInfo,isReload)
         }
     }
 
@@ -235,51 +220,58 @@ open class NineRoomSeatView(
     fun bindSeatByPosition(
         i: Int, seatInfo: RoomSeatInfo, isReload: Boolean = false
     ) {
-        seatInfoList[i] = seatInfo
         val seatBinding = getSeatBinding(i)
         seatBinding?.apply {
-            val tagUserInfo = (tag as RoomSeatInfo?)?.roomUserSeatInfo
-            if (tag == null || tagUserInfo?.userId != seatInfo.roomUserSeatInfo?.userId || seatInfo.roomUserSeatInfo == null || seatBinding.itemVideoSf.childCount <= 0 || tagUserInfo?.roseNum != seatInfo.roomUserSeatInfo?.roseNum) {
-                seatBinding.vgParent.tag = seatInfo
-                bindItemInfo(seatInfo, i)
-            } else {
-                if (isReload) {
-                    upDataSeatVideo(seatInfo, i)
-                }
-            }
-
+            bindSeatInfo(i,seatInfo,isReload)
         }
     }
-
+    private fun AdapterLiveRoomUserSeatItemBinding.bindSeatInfo(  i: Int, seatInfo: RoomSeatInfo, isReload: Boolean = false){
+        seatInfoList[i] = seatInfo
+        val tag = this.vgParent.tag as RoomSeatInfo?
+        val tagUserInfo = tag?.roomUserSeatInfo
+        if (tag == null || tagUserInfo?.userId != seatInfo.roomUserSeatInfo?.userId || seatInfo.roomUserSeatInfo == null || this.itemVideoSf.childCount <= 0) {
+            this.vgParent.tag = seatInfo
+            bindItemInfo(seatInfo, i)
+        } else {
+            if (tagUserInfo?.roseNum != seatInfo.roomUserSeatInfo?.roseNum || tag.mikeUser != seatInfo.mikeUser) {
+                this.seatInfo = seatInfo
+            }
+            if (isReload) {
+                upDataSeatVideo(seatInfo, i)
+            }
+        }
+    }
 
     private fun AdapterLiveRoomUserSeatItemBinding.bindItemInfo(
         item: RoomSeatInfo?, position: Int
     ) {
-        ivChooseSong.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(ivChooseSong, position, item)
+        setItemListener(position)
+
+        setItemStyle(position)
+
+        item.apply {
+            seatInfo = item
+            executePendingBindings()
         }
-        itemVideoSf.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(itemVideoSf, position, item)
+        upDataSeatVideo(item!!, position)
+
+    }
+
+
+    private fun AdapterLiveRoomUserSeatItemBinding.setItemStyle(
+        position: Int
+    ) {
+        if (vgParent.getTag(cn.yanhu.commonres.R.id.tag_set_style) as Boolean? ==true){
+            return
         }
-        vgEmptySeat.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(vgEmptySeat, position, item)
-        }
-        ivExpand.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(ivExpand, position, item)
-        }
-        ivVoiceStatus.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(ivVoiceStatus, position, item)
-        }
-        ivSendRose.setOnSingleClickListener {
-            onClickSeatListener?.onChildClickListener(ivSendRose, position, item)
-        }
-        tvSeatIndex.text = (item!!.id - 1).toString()
+        vgParent.setTag(cn.yanhu.commonres.R.id.tag_set_style,true)
+        tvSeatIndex.text = position.toString()
         this.currentRoomType = roomType
         this.isOwner = isRoomOwner
-        if (item.id == 1) {
-            tvOwner.visibility = View.VISIBLE
+        if (position == 0) {
+            tvOwner.visibility = VISIBLE
         } else {
-            tvOwner.visibility = View.INVISIBLE
+            tvOwner.visibility = INVISIBLE
         }
         if (isScaleStyle) {
             if (position == 4) {
@@ -312,14 +304,36 @@ open class NineRoomSeatView(
         } else {
             vgParent.setBackgroundResource(R.drawable.bg_seat_bottom_stroke)
         }
-        item.apply {
-            seatInfo = item
-            executePendingBindings()
-        }
-        upDataSeatVideo(item, position)
+    }
 
+    private fun AdapterLiveRoomUserSeatItemBinding.setItemListener(position: Int) {
+        if (ivChooseSong.tag != null && ivChooseSong.tag == true) {
+            return
+        }
+        ivChooseSong.tag = true
+        ivChooseSong.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(ivChooseSong, position, this.seatInfo)
+        }
+        itemVideoSf.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(itemVideoSf, position, this.seatInfo)
+        }
+        vgEmptySeat.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(vgEmptySeat, position, this.seatInfo)
+        }
+        ivExpand.setOnSingleClickListener {
+            if (isScaleStyle && position == 4) {
+                this.seatInfo?.isExpand = true
+            }
+            onClickSeatListener?.onChildClickListener(ivExpand, position, this.seatInfo)
+        }
+        ivVoiceStatus.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(ivVoiceStatus, position, this.seatInfo)
+        }
+        ivSendRose.setOnSingleClickListener {
+            onClickSeatListener?.onChildClickListener(ivSendRose, position, this.seatInfo)
+        }
         viewRank.setOnSingleClickListener {
-            showUserReceiveRoseDetailPop(item)
+            showUserReceiveRoseDetailPop(this.seatInfo)
         }
     }
 
@@ -332,7 +346,7 @@ open class NineRoomSeatView(
         if (seatInfo != null) {
             this.isSelf = seatInfo.userId == localUserId
 
-            val liveRoomSeatBean = MoreSeatLiveRoomFrg.surfaceViewList[dto.id-1]
+            val liveRoomSeatBean = MoreSeatLiveRoomFrg.surfaceViewList[dto.id - 1]
 
             val surfaceView =
                 getOrCreateSurfaceView(liveRoomSeatBean)
@@ -352,14 +366,22 @@ open class NineRoomSeatView(
     private fun AdapterLiveRoomUserSeatItemBinding.getOrCreateSurfaceView(
         liveRoomSeatBean: LiveRoomSeatBean?
     ): View {
-        val surfaceView = TextureView(context)
-        surfaceView.setLayoutParams(
-            ViewGroup.LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT
+        val surfaceView = liveRoomSeatBean?.surfaceView
+        if (surfaceView == null
+        ) {
+            logcom("addSurfaceView", "新建SurfaceView")
+            val surfaceView = TextureView(context)
+            surfaceView.setLayoutParams(
+                ViewGroup.LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT
+                )
             )
-        )
-        return surfaceView
+            return surfaceView
+        } else {
+            logcom("addSurfaceView", "使用缓存中的SurfaceView,isAvailable = ")
+            return surfaceView
+        }
     }
 
 
@@ -405,7 +427,7 @@ open class NineRoomSeatView(
         itemVideoSf.removeAllViews()
         itemVideoSf.addView(surfaceView)
 
-        MoreSeatLiveRoomFrg.surfaceViewList[dto.id-1] =
+        MoreSeatLiveRoomFrg.surfaceViewList[dto.id - 1] =
             LiveRoomSeatBean(userId.toInt(), surfaceView)
 
 

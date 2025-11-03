@@ -42,6 +42,7 @@ class LiveRoomViewModel : BaseViewModel() {
             onRequestResultListener,false
         )
     }
+
     fun saveRoomWarnRecord(
          userId:String, roomId:String,  reason:String, type:Int
     ) {
@@ -58,8 +59,6 @@ class LiveRoomViewModel : BaseViewModel() {
     fun autoSeat(roomId: String, status: String,onRequestResultListener: OnRequestResultListener<String>) {
         request({ agoraRxApi.autoSeat(roomId, status) }, onRequestResultListener)
     }
-
-
 
     fun switchMike(
         roomId: Int,

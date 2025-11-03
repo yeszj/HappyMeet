@@ -116,7 +116,6 @@ import androidx.core.graphics.toColorInt
 import cn.huanyuan.sweetlove.func.manager.AppLogManager
 import cn.yanhu.baselib.queue.TaskQueueManager
 import cn.yanhu.baselib.utils.GlideHealthMonitor
-import com.efs.sdk.base.core.cache.CacheManager
 
 
 @Suppress("DEPRECATION")

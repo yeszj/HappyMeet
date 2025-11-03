@@ -7,7 +7,9 @@ import cn.zj.netrequest.application.ApplicationProxy
 import com.hjq.toast.ToastUtils
 import java.net.ConnectException
 import java.net.SocketTimeoutException
+import java.net.URISyntaxException
 import java.net.UnknownHostException
+import java.net.UnknownServiceException
 
 
 /**
@@ -103,8 +105,8 @@ fun dealNetException(e: Throwable, isShowToast: Boolean = true) {
         if (isShowToast) {
             e.printStackTrace()
             var message = e.message
-            if (e is UnknownHostException) {
-                message =getString(R.string.net_load_error)
+            if (e is UnknownHostException || e is UnknownServiceException || e is URISyntaxException) {
+                message = ""
             } else if (e is SocketTimeoutException || e is ConnectException) {
                 message = getString(R.string.tips_timeout)
             }
