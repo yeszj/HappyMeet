@@ -391,12 +391,12 @@ open class SevenRoomSeatView(
         if (localUserId == userId) {
             if (isScaleStyle) {
                 if (dto.isExpand) {
-                    AgoraManager.getInstance().setVideoEncoderConfiguration(700, 700)
+                    AgoraManager.getInstance().setVideoEncoderConfiguration(704, 704)
                 } else {
-                    AgoraManager.getInstance().setVideoEncoderConfiguration(260, 260)
+                    AgoraManager.getInstance().setVideoEncoderConfiguration(256, 256)
                 }
             } else {
-                AgoraManager.getInstance().setVideoEncoderConfiguration(300, 355)
+                AgoraManager.getInstance().setVideoEncoderConfiguration(320, 400)
             }
         }
 

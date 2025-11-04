@@ -406,9 +406,10 @@ open class NineRoomSeatView(
         if (localUserId == userId) {
             if (isScaleStyle) {
                 if (dto.isExpand) {
-                    AgoraManager.getInstance().setVideoEncoderConfiguration(720, 720)
+                    //270 320  560  640
+                    AgoraManager.getInstance().setVideoEncoderConfiguration(560, 640)
                 } else {
-                    AgoraManager.getInstance().setVideoEncoderConfiguration(200, 200)
+                    AgoraManager.getInstance().setVideoEncoderConfiguration(208, 208)
                 }
             } else {
                 AgoraManager.getInstance().setVideoEncoderConfiguration(320, 320)
