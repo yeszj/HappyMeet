@@ -358,7 +358,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                 userArrays.add((conversationId))
             }
         }
-        if (userArrays.size <= 0) {
+        if (userArrays.isEmpty()) {
             EMLog.e(
                 TAG_CONVERSATION_LIST,
                 "updateFinalConversationList-没有新的会话列表用,无需获取用户信息"
@@ -487,7 +487,6 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                 conversationInfo.isSelected = easeConversationInfo.isSelected
                 conversationInfo.isGroup = easeConversationInfo.isGroup
                 conversationInfo.isTop = easeConversationInfo.isTop
-                //dataBean.selfPortrait = BaseApplication.getUserIcon()
                 conversationInfo.dataBean = dataBean
                 addCacheConversationInfo(emConversation, conversationInfo)
                 infoList.add(conversationInfo)
@@ -502,23 +501,9 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
 
     override fun loadDataFinish(data: MutableList<EaseConversationInfo>?) {
         super.loadDataFinish(data)
-        if (data != null) {
-            saveConversationCache(data)
-        }
     }
 
 
-    private fun saveConversationCache(conversationList: MutableList<EaseConversationInfo>) {
-        val subList = if (conversationList.size > 0) {
-            conversationList.subList(
-                0, min(10, conversationList.size)
-            )
-        } else {
-            mutableListOf()
-        }
-        val toJson = GsonUtils.toJson(subList)
-        SPUtils.getInstance().put(SpCacheKeyConfig.KEY_IM_CONVERSATION_LIST, toJson)
-    }
 
 
     private fun getCustomMessage(

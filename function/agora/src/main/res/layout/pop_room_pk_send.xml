@@ -75,7 +75,7 @@
                 android:button="@null"
                 android:gravity="center"
                 android:paddingHorizontal="@dimen/dp_10"
-                android:text="多人Pk"
+                android:text="多人PK"
                 android:textColor="@color/color_pk_style" />
         </RadioGroup>
 

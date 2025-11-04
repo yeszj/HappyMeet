@@ -7,6 +7,7 @@ import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.view.isNotEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import cn.yanhu.agora.databinding.ViewSevenSongRoomSeatBinding
@@ -18,7 +19,9 @@ import cn.yanhu.agora.databinding.AdapterLiveRoomUserSeatItemBinding
 import cn.yanhu.agora.databinding.ViewSevenSongRoomScaleSeatBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
+import cn.yanhu.agora.ui.liveRoom.TextureViewPool
 import cn.yanhu.agora.ui.liveRoom.live.MoreSeatLiveRoomFrg
+import cn.yanhu.agora.ui.liveRoom.live.MoreSeatLiveRoomFrg.Companion.surfaceViewList
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -28,6 +31,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import cn.yanhu.baselib.utils.ext.logcom
+import cn.yanhu.commonres.bean.SeatUserInfo
 
 /**
  * @author: zhengjun
@@ -327,16 +331,16 @@ open class SevenRoomSeatView(
         if (seatInfo != null) {
             this.isSelf = seatInfo.userId == localUserId
 
-            val liveRoomSeatBean =  MoreSeatLiveRoomFrg.surfaceViewList[dto.id-1]
+            val liveRoomSeatBean =  surfaceViewList[dto.id-1]
 
             val surfaceView =
-                getOrCreateSurfaceView(liveRoomSeatBean)
+                getOrCreateSurfaceView(liveRoomSeatBean,seatInfo)
 
             //处理SurfaceView的添加
-            addVideoSf(surfaceView, dto, position)
+            addVideoSf(surfaceView, dto)
             itemVideoSf.tag = surfaceView
         } else {
-            handleEmptySeat(position)
+            handleEmptySeat()
         }
     }
 
@@ -344,36 +348,36 @@ open class SevenRoomSeatView(
      * 获取或创建SurfaceView
      */
     private fun AdapterLiveRoomUserSeatItemBinding.getOrCreateSurfaceView(
-        liveRoomSeatBean: LiveRoomSeatBean?,
+        liveRoomSeatBean: LiveRoomSeatBean?,seatUserInfo: SeatUserInfo
     ): View {
-        val surfaceView = liveRoomSeatBean?.surfaceView
-        if (surfaceView == null
+        val cacheSurfaceView = liveRoomSeatBean?.surfaceView
+        if (cacheSurfaceView != null
         ) {
-            logcom("addSurfaceView", "新建SurfaceView")
-            val surfaceView = TextureView(context)
-            surfaceView.setLayoutParams(
-                ViewGroup.LayoutParams(
-                    LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT
-                )
-            )
-            return surfaceView
-        } else {
-            logcom("addSurfaceView", "使用缓存中的SurfaceView,isAvailable = ")
-            return surfaceView
+            if (seatUserInfo.userId == liveRoomSeatBean.uid.toString()){
+                logcom("addSurfaceView","使用缓存中的SurfaceView")
+                return cacheSurfaceView
+            }else{
+                TextureViewPool.recycleTextureView(cacheSurfaceView as TextureView)
+                liveRoomSeatBean.surfaceView = null
+            }
         }
-
+        val surfaceView = TextureView(context)
+        surfaceView.setLayoutParams(
+            ViewGroup.LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT
+            )
+        )
+        logcom("addSurfaceView","新建SurfaceView")
+        return surfaceView
     }
 
 
     /**
      * 处理空座位情况
      */
-    private fun AdapterLiveRoomUserSeatItemBinding.handleEmptySeat(position: Int) {
+    private fun AdapterLiveRoomUserSeatItemBinding.handleEmptySeat() {
         this.isSelf = false
-
-        // 更新座位信息
-        MoreSeatLiveRoomFrg.surfaceViewList[position]?.uid = 0
         this.itemVideoSf.removeAllViews()
         setEmptySeatInfo()
     }
@@ -381,7 +385,6 @@ open class SevenRoomSeatView(
     private fun AdapterLiveRoomUserSeatItemBinding.addVideoSf(
         surfaceView: View,
         dto: RoomSeatInfo,
-        position: Int
     ) {
 
         val userId = dto.roomUserSeatInfo!!.userId
@@ -395,22 +398,14 @@ open class SevenRoomSeatView(
             } else {
                 AgoraManager.getInstance().setVideoEncoderConfiguration(300, 355)
             }
-
         }
-
-//        if (itemVideoSf.isNotEmpty() ){
-//            val view = itemVideoSf.getChildAt(0) as TextureView?
-//            if (view != null) {
-//                TextureViewPool.recycleTextureView(view)
-//            }
-//        }
 
         // 先移除父视图
         ViewUtils.removeViewFormParent(surfaceView)
         itemVideoSf.removeAllViews()
         itemVideoSf.addView(surfaceView)
 
-        MoreSeatLiveRoomFrg.surfaceViewList[dto.id-1] =
+        surfaceViewList[dto.id-1] =
             LiveRoomSeatBean(userId.toInt(), surfaceView)
 
         AgoraManager.getInstance().setupVideo(

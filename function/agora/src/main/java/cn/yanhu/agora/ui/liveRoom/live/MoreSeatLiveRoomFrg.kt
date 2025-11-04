@@ -22,6 +22,7 @@ import cn.yanhu.agora.pop.song.ChangeClickSongGiftPop
 import cn.yanhu.agora.pop.song.ChooseSongPop
 import cn.yanhu.agora.pop.song.ModifyInsertQueueRosePop
 import cn.yanhu.agora.pop.song.SongListPop
+import cn.yanhu.agora.ui.liveRoom.TextureViewPool
 import cn.yanhu.agora.ui.liveRoom.view.NineRoomSeatView
 import cn.yanhu.agora.ui.liveRoom.view.OnClickSeatListener
 import cn.yanhu.agora.ui.liveRoom.view.SevenRoomSeatView
@@ -47,6 +48,7 @@ import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ThreadUtils
+import com.efs.sdk.memleaksdk.monitor.internal.be
 import com.hyphenate.chat.EMMessage
 import com.opensource.svgaplayer.SVGACache
 import java.util.Collections
@@ -366,7 +368,6 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                             nineSongRoomSeatView?.bindSeatByPosition(i, seatInfo)
                         }
                     }
-
                     return@post
                 }
             }
@@ -450,7 +451,6 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                     if (roomSourceBean.ownerInfo?.userId != uid.toString()) {
                         item.roomUserSeatInfo = null
                     }
-
                     if (isSevenRoom()) {
                         if (hasExpand) {
                             sevenSongRoomScaleView?.bindScaleByPosition(i, item)

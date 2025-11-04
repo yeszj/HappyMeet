@@ -1102,7 +1102,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
                         item.randomBoxGiftInfo = data.data
                     }
-                    sendGiftSuccess(item, userInfo)
+                    sendGiftSuccess(item, userInfo,isSendAll = true)
                     if (needSendUserInfo.isNotEmpty()) {
                         sendNext(needSendUserInfo, item)
                     }
@@ -1136,12 +1136,13 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     protected fun sendGiftSuccess(
-        item: GiftInfo, roomUserSeatInfo: UserDetailInfo, isSend: Boolean = true
+        item: GiftInfo, roomUserSeatInfo: UserDetailInfo, isSend: Boolean = true,isSendAll: Boolean = false
     ) {
         LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
         item.sendNumber = 1
         val chatRoomGiftMsg =
             ChatRoomGiftMsg(selfUserInfo!!, roomUserSeatInfo, item)
+        chatRoomGiftMsg.isAllSeatSend = isSendAll
         showFloatAnim(chatRoomGiftMsg)
         //val giftMsgInfo = GiftMsgInfo(item, roomUserSeatInfo)
         if (isSend) {
@@ -1423,7 +1424,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         val giftInfo = fromJson.giftInfo
         //fromJson.sendUser = sendUserInfo
         runOnUiThread {
-            if (isShowContinueClick && giftInfo.type != GiftInfo.TYPE_RANDOM_BOX && giftInfo.type != GiftInfo.TYPE_LOVER) {
+            val allSeatSend = fromJson.isAllSeatSend
+            if (isShowContinueClick && giftInfo.type != GiftInfo.TYPE_RANDOM_BOX && giftInfo.type != GiftInfo.TYPE_LOVER && giftInfo.type != GiftInfo.TYPE_FRAME && !allSeatSend) {
                 showFloatAnim(fromJson)
             } else {
                 playSvga(fromJson)
@@ -1887,6 +1889,10 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
 
         val seatId = if (TextUtils.isEmpty(seatNum)) getNeedSeatId().toString() else seatNum
+        if (seatId=="-1"){
+            showToast("没有可用的麦位")
+            return
+        }
         mViewModel.userSetSeat(roomId, operate, seatId, object : OnRequestResultListener<String> {
             override fun onSuccess(data: BaseBean<String>) {
                 if (operate == SEAT_TYPE_APPLY) {

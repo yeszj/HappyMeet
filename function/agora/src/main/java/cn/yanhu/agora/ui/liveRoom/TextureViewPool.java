@@ -90,7 +90,6 @@ public class TextureViewPool {
 
             // 步骤1: 移除所有监听器
             textureView.setSurfaceTextureListener(null);
-
             // 步骤2: 清理SurfaceTexture
             SurfaceTexture surfaceTexture = textureView.getSurfaceTexture();
             if (surfaceTexture != null) {
@@ -110,7 +109,6 @@ public class TextureViewPool {
             // 步骤4: 清理其他引用
             textureView.setTag(null);
             textureView.setOnClickListener(null);
-
             Log.d("TextureRecycler", "TextureView recycled successfully");
         }
 
