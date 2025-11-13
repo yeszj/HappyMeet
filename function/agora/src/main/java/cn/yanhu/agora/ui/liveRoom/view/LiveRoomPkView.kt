@@ -73,8 +73,8 @@ class LiveRoomPkView : LinearLayout {
             }
         }
         val status = roomPkInfo.status
-        mBinding.redAvatar.setAvatarUrls(roomPkInfo.redMemberAvatarList)
-        mBinding.blueAvatar.setAvatarUrls(roomPkInfo.blueMemberAvatarList)
+        mBinding.redAvatar.setAvatarUrls(roomPkInfo.redMemberSeatList, isRedUser = true)
+        mBinding.blueAvatar.setAvatarUrls(roomPkInfo.blueMemberSeatList, isRedUser = false)
         val redCnt = roomPkInfo.redCnt
         val blueCnt = roomPkInfo.blueCnt
         mBinding.tvRedValue.text = redCnt.toString()
@@ -140,6 +140,8 @@ class LiveRoomPkView : LinearLayout {
     private fun hidePkView() {
         if (this.isVisible) {
             this.visibility = GONE
+            mBinding.redAvatar.clearAvatars()
+            mBinding.blueAvatar.clearAvatars()
             LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_CHAT_MSG_TOP).post(false)
         }
     }

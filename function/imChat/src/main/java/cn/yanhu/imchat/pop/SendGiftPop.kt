@@ -13,10 +13,12 @@ import androidx.viewpager2.widget.ViewPager2
 import cn.yanhu.baselib.adapter.FrgFragmentStateAdapter
 import cn.yanhu.baselib.base.BaseSheetDialog
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.bean.CommonErrorTipsInfo
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.UserDetailInfo
@@ -29,16 +31,19 @@ import cn.yanhu.imchat.R
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.databinding.PopSendGiftBinding
 import cn.yanhu.imchat.manager.EmMsgManager
+import cn.yanhu.imchat.manager.SendGiftCheckManager
 import cn.yanhu.imchat.manager.SmSdkUtils.SOURCE_VIDEO
 import cn.yanhu.imchat.view.GiftShowFrg
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
 import com.blankj.utilcode.util.VibrateUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.xiaomi.push.bi
+import com.xiaomi.push.da
 import java.math.BigDecimal
 
 /**
@@ -125,14 +130,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
 
     private var sendGiftListener = object : GiftShowFrg.OnClickSendListener {
         override fun onSendGift(item: GiftInfo?) {
-            if (SOURCE_VIDEO != source && SOURCE_CHAT != source && isShowContinueClick && item?.type != GiftInfo.TYPE_LOVER && item?.type != GiftInfo.TYPE_RANDOM_BOX && item?.type != GiftInfo.TYPE_FRAME) {
-                onSendGiftListener?.onSendGift(item!!, true)
-            } else {
-                item?.apply {
-                    startSendGift(this)
-                }
-            }
-
+            checkSendGift(item!!)
         }
 
         override fun setGiftInfo(giftResponse: GiftResponse, type: Int) {
@@ -143,6 +141,29 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                 binding?.tabLayout?.removeView(binding?.tvLovers)
             }
             setGiftInfo()
+        }
+    }
+
+    private fun clickSendGift(item: GiftInfo?) {
+        if (SOURCE_VIDEO != source && SOURCE_CHAT != source && isShowContinueClick && item?.type != GiftInfo.TYPE_LOVER && item?.type != GiftInfo.TYPE_RANDOM_BOX && item?.type != GiftInfo.TYPE_FRAME) {
+            onSendGiftListener?.onSendGift(item!!, true)
+        } else {
+            item?.apply {
+                startSendGift(this)
+            }
+        }
+    }
+
+    private fun checkSendGift(item: GiftInfo){
+        val balanceRose = binding?.tvRoseNum?.text.toString()
+        if (CommonUtils.compareString(balanceRose, item.price.toString())) {
+            SendGiftCheckManager.checkSendGift(sendUserInfo.userId,item.id,object : SendGiftCheckManager.OnCheckGiftListener{
+                override fun onCanSend() {
+                    clickSendGift(item)
+                }
+            })
+        }else{
+            showRechargePop(true)
         }
     }
 

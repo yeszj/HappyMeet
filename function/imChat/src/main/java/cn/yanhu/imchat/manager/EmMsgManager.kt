@@ -283,6 +283,21 @@ object EmMsgManager {
     }
 
     @JvmStatic
+    fun getCustomMsg(
+        conversationId: String,
+        event: String,
+        content: String
+    ) : EMMessage {
+        val message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM)
+        val body = EMCustomMessageBody(event)
+        message.setAttribute(ChatConstant.CUSTOM_DATA, content)
+        message.body = body
+        message.to = conversationId
+        message.setStatus(EMMessage.Status.INPROGRESS)
+        return message
+    }
+
+    @JvmStatic
     fun updateInviteGiftMessage(inviteSendGiftMsgId: String) {
         val message = EMClient.getInstance().chatManager().getMessage(inviteSendGiftMsgId)
         message.setAttribute(ChatConstant.HAS_SEND_GIFT, true)

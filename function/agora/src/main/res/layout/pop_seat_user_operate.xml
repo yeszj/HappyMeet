@@ -116,11 +116,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/dp_5"
-                    android:text='@{TextUtils.isEmpty(userInfo.loverInfo.nickName)?"暂无情侣":userInfo.loverInfo.loverDesc()+"\n"+userInfo.loverInfo.nickName}'
+                    android:text='@{TextUtils.isEmpty(userInfo.loverInfo.nickName)?"暂无CP":userInfo.loverInfo.loverDesc()+"\n"+userInfo.loverInfo.nickName}'
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_12"
                     app:fontType="@string/fontMedium"
-                    tools:text="黄金情侣\n琼(舞)" />
+                    tools:text="黄金CP\n琼(舞)" />
             </LinearLayout>
         </LinearLayout>
 

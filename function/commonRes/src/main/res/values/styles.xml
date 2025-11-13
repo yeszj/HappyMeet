@@ -151,4 +151,12 @@
             <attr name="overAvatarSize" format="dimension"/>
         </declare-styleable>
 
+    <declare-styleable name="CustomMarqueeTextView">
+        <attr name="mq_textColor" format="color" />
+        <attr name="mq_textSize" format="dimension" />
+        <attr name="mq_spacing" format="dimension" />
+        <attr name="mq_text" format="string" />
+        <attr name="mq_speed" format="integer" />
+    </declare-styleable>
+
 </resources>

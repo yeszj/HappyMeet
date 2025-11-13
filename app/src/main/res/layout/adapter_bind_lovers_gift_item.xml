@@ -34,7 +34,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="钻石情侣"
+            tools:text="钻石CP"
             tools:visibility="invisible" />
 
         <LinearLayout
@@ -63,7 +63,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_11"
                 app:fontType="@string/fontMedium"
-                tools:text="黄金情侣" />
+                tools:text="黄金CP" />
         </LinearLayout>
 
 
@@ -89,7 +89,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_gift"
-            tools:text="黄金情侣" />
+            tools:text="黄金CP" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="wrap_content"

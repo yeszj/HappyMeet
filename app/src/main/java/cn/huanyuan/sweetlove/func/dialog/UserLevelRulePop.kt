@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.func.dialog
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -15,6 +16,7 @@ import com.lxj.xpopup.XPopup
  * created: 2025/2/19
  * desc:
  */
+@SuppressLint("ViewConstructor")
 class UserLevelRulePop(
     context: Context, private val ruleDrawable: Drawable, private val wealthDrawable: Drawable
 ) : CenterPopupView(context) {

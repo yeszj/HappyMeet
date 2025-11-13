@@ -40,10 +40,16 @@ import com.pcl.sdklib.listener.OnAuthResultListener
 import com.pcl.sdklib.sdk.alipay.AliAuthUtils
 import com.pcl.sdklib.sdk.wechat.WxAuthUtils
 import androidx.core.graphics.toColorInt
+import cn.huanyuan.sweetlove.net.rxApi
+import cn.huanyuan.sweetlove.ui.login.SetPwdActivity
 import cn.huanyuan.sweetlove.ui.wallet.bank.BindBankActivity
 import cn.yanhu.commonres.adapter.MyBannerImageAdapter
+import cn.yanhu.commonres.bean.AuthCenterInfo
 import cn.yanhu.commonres.bean.BannerBean
 import cn.yanhu.commonres.config.EventBusKeyConfig
+import cn.zj.netrequest.ext.OnRequestResultListener
+import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ActivityUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.youth.banner.listener.OnBannerListener
@@ -68,8 +74,19 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             setWithdrawRule()
             withdrawalAdapter.setSelectPosition(position)
         }
+        getAuthCenterInfo()
         setAgreementInfo()
         requestData()
+    }
+
+    private var authCenterInfo: AuthCenterInfo? = null
+    fun getAuthCenterInfo() {
+        request({ rxApi.getAuthCenterInfo() }, object : OnRequestResultListener<AuthCenterInfo>{
+            override fun onSuccess(data: BaseBean<AuthCenterInfo>) {
+                authCenterInfo = data.data
+            }
+
+        })
     }
 
     private fun setAgreementInfo() {
@@ -207,7 +224,10 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             },{
                 if (it.code==ErrorCode.COMMON_TIP_POP){
                     showErrorTip(it)
-                }else{
+                }else if (it.code == ErrorCode.CODE_SET_PWD){
+                    showToast(it.msg)
+                    SetPwdActivity.lunch(mContext,authCenterInfo?.phone.toString())
+                } else{
                     showToast(it.msg)
                 }
             })

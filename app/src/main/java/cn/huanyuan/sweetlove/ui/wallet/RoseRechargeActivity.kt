@@ -54,11 +54,14 @@ class RoseRechargeActivity : BaseActivity<ActivityRoseRechargeBinding, WalletVie
             .text("${CommonUtils.getString(R.string.app_name)}充值协议")
             .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.adminTagColor)).click(
                 mBinding.tvRechargeAgreement,
-                CustomClickSpan(mContext,CommonUtils.getColor(cn.yanhu.baselib.R.color.adminTagColor), object : CustomClickSpan.OnAllSpanClickListener {
-                    override fun onClick(widget: View?) {
-                        RouteIntent.lunchToWebView(WebUrlManager.RECHARGE_AGREEMENT)
-                    }
-                })
+                CustomClickSpan(
+                    mContext,
+                    CommonUtils.getColor(cn.yanhu.baselib.R.color.adminTagColor),
+                    object : CustomClickSpan.OnAllSpanClickListener {
+                        override fun onClick(widget: View?) {
+                            RouteIntent.lunchToWebView(WebUrlManager.RECHARGE_AGREEMENT)
+                        }
+                    })
             ).build()
         mBinding.tvRechargeAgreement.text = build
     }
@@ -102,7 +105,7 @@ class RoseRechargeActivity : BaseActivity<ActivityRoseRechargeBinding, WalletVie
                 rewardInfo?.apply {
                     this.title = "首充福利"
                     this.btn = "立即领取"
-                    RewardShowPop.showDialog(mContext,this)
+                    RewardShowPop.showDialog(mContext, this)
                 }
                 requestData()
             }
@@ -110,23 +113,23 @@ class RoseRechargeActivity : BaseActivity<ActivityRoseRechargeBinding, WalletVie
     }
 
     private var rechargeAgreement: String = ""
-    private var rewardInfo:RoseRechargeResponse.RewardInfo?=null
+    private var rewardInfo: RoseRechargeResponse.RewardInfo? = null
     private fun onGetRechargeInfoResult() {
         mViewModel.rechargeInfoLivedata.observe(this) { it ->
             parseState(it, {
                 val bannerInfo = it.bannerBean
                 rewardInfo = it.rewardInfo
-                if (bannerInfo==null){
+                if (bannerInfo == null) {
                     mBinding.ivBanner.visibility = View.GONE
-                }else{
+                } else {
                     mBinding.ivBanner.visibility = View.VISIBLE
                     mBinding.ivBanner.setOnSingleClickListener {
-                        if (!TextUtils.isEmpty(bannerInfo.pageUrl)){
-                            PageIntentUtil.url2Page(mContext,bannerInfo.pageUrl)
+                        if (!TextUtils.isEmpty(bannerInfo.pageUrl)) {
+                            PageIntentUtil.url2Page(mContext, bannerInfo.pageUrl)
                         }
                     }
                     val img = bannerInfo.img
-                    loadAsDrawable(mContext,img, object :
+                    loadAsDrawable(mContext, img, object :
                         CustomTarget<Drawable>() {
                         override fun onResourceReady(
                             resource: Drawable,
@@ -134,9 +137,16 @@ class RoseRechargeActivity : BaseActivity<ActivityRoseRechargeBinding, WalletVie
                         ) {
                             mBinding.ivBanner.setImageDrawable(resource)
                         }
+
                         override fun onLoadCleared(placeholder: Drawable?) {
                         }
                     })
+                }
+                if (TextUtils.isEmpty(it.scrollText)) {
+                    mBinding.tvNotice.visibility = View.GONE
+                } else {
+                    mBinding.tvNotice.visibility = View.VISIBLE
+                    mBinding.tvNotice.setText(it.scrollText)
                 }
                 rechargeAgreement = it.rechargeAgreement
                 val list = it.list

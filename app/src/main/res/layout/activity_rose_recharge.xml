@@ -35,13 +35,28 @@
             app:titleName=" "
             app:titleRightColor="@color/whiteAlpha40"
             app:titleRightName="明细" />
-
+        <cn.yanhu.commonres.view.CustomMarqueeView
+            android:id="@+id/tv_notice"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_23"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar"
+            android:background="@color/blackAlpha90"
+            android:focusableInTouchMode="true"
+            android:singleLine="true"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_13"
+            app:mq_text="请勿轻信任何非官方渠道的虚拟充值信息进行充值，谨慎诈骗等不法行为及由此带来的法律风险！禁止未成年人充值！"
+            app:mq_textColor = "@color/white"
+            app:mq_textSize="@dimen/sp_13" />
         <cn.yanhu.baselib.refresh.MyRefreshLayout
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/viewRecharge"
-            app:layout_constraintTop_toBottomOf="@+id/titleBar">
+            app:layout_constraintTop_toBottomOf="@+id/tv_notice">
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"

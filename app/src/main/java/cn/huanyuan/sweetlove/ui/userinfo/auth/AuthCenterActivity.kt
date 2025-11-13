@@ -3,10 +3,12 @@ package cn.huanyuan.sweetlove.ui.userinfo.auth
 import android.text.TextUtils
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.ActivityAuthCenterBinding
+import cn.huanyuan.sweetlove.ui.login.SetPwdActivity
 import cn.huanyuan.sweetlove.ui.userinfo.UserViewModel
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.utils.SVGAUtils
 import cn.zj.netrequest.ext.parseState
 import com.pcl.sdklib.listener.OnAuthResultListener
 import com.pcl.sdklib.sdk.alipay.AliAuthUtils
@@ -47,6 +49,9 @@ class AuthCenterActivity : BaseActivity<ActivityAuthCenterBinding, UserViewModel
                     }
                 })
             }
+        }
+        mBinding.bgPwd.setOnSingleClickListener {
+            SetPwdActivity.lunch(mContext,mBinding.authInfo?.phone.toString())
         }
         mBinding.bgWxBind.setOnSingleClickListener {
             val realName = mBinding.authInfo?.realName

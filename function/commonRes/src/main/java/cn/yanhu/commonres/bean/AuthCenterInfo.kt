@@ -13,7 +13,8 @@ data class AuthCenterInfo(
     val realName: String,
     val wxNickName: String,
     val wxAvatar: String,
-    val aliAccount: String
+    val aliAccount: String,
+    val passwordAuth: Boolean
 ){
 
     fun getHidePhone():String{

@@ -7,6 +7,8 @@ import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
 import cn.yanhu.agora.R
 import cn.yanhu.agora.api.agoraRxApi
@@ -142,7 +144,7 @@ class ThreeRoomSeatAdapter :
                         val switch = payloads[0]
                         if (switch == "showEnterAnim"){
                             holder.binding.vgEnterAnim.visibility = View.VISIBLE
-                            changeGiftAudioStatus(holder.binding.iconEnter, false)
+                            changeEnterAnimStatus(holder.binding.ivEnter, false)
                         }else if (switch == "hideEnterAnim"){
                             holder.binding.vgEnterAnim.visibility = View.GONE
                         }else if (switch == "updateToggleAuto") {
@@ -191,29 +193,29 @@ class ThreeRoomSeatAdapter :
                     anchorSeatInfo.viewRank.setOnSingleClickListener {
                         showUserReceiveRoseDetailPop(item)
                     }
-                    changeEnterAnimStatus(ivAudio, false)
-                    changeGiftAudioStatus(iconEnter, false)
+                    changeEnterAnimStatus(ivEnter, false)
+                    changeGiftAudioStatus(ivAudio, false)
                     vgGiftAudio.setOnSingleClickListener {
                         changeGiftAudioStatus(ivAudio, true)
                     }
                     vgEnterAnim.setOnSingleClickListener {
-                        changeGiftAudioStatus(iconEnter, true)
+                        changeEnterAnimStatus(ivEnter, true)
                     }
                     executePendingBindings()
                 }
             }
 
 
-             fun changeEnterAnimStatus(iconEnter: ImageView, isSave: Boolean = false) {
+             fun changeEnterAnimStatus(ivEnterAnim: AppCompatImageView, isSave: Boolean = false) {
                 val roomSwitchInfo = RoomSwitchCacheManager.getRoomSwitchInfo(roomDetailInfo!!.roomId!!)
                 if (isSave) {
                     roomSwitchInfo.enterAnimOpen = !roomSwitchInfo.enterAnimOpen
                     RoomSwitchCacheManager.saveRoomSwitchInfo(roomSwitchInfo)
                 }
                 if (roomSwitchInfo.enterAnimOpen) {
-                    iconEnter.setImageResource(R.drawable.svg_voice_on)
+                    ivEnterAnim.setImageResource(R.drawable.svg_voice_on)
                 } else {
-                    iconEnter.setImageResource(R.drawable.svg_voice_off)
+                    ivEnterAnim.setImageResource(R.drawable.svg_voice_off)
                 }
             }
 

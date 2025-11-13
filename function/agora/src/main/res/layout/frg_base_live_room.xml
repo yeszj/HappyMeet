@@ -299,22 +299,6 @@
                 app:gift_item_layout="@layout/gift_animation_item"
                 app:max_gift="2" />
 
-            <!--            <cn.yanhu.commonres.view.GiftFrameLayout-->
-            <!--                android:id="@+id/call_gift_dialog_one"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginStart="@dimen/dp_10"-->
-            <!--                android:visibility="invisible"-->
-            <!--                app:layout_constraintBottom_toTopOf="@+id/call_gift_dialog_two" />-->
-
-            <!--            <cn.yanhu.commonres.view.GiftFrameLayout-->
-            <!--                android:id="@+id/call_gift_dialog_two"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginStart="@dimen/dp_10"-->
-            <!--                android:layout_marginBottom="@dimen/dp_20"-->
-            <!--                android:visibility="invisible"-->
-            <!--                app:layout_constraintBottom_toTopOf="@+id/call_gift" />-->
         </LinearLayout>
 
         <cn.yanhu.commonres.view.floatScreenView.RewardLayout
@@ -351,18 +335,17 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical" />
-
         <LinearLayout
             android:id="@+id/vg_foreverTip"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_40"
-            android:visibility="invisible"
-            tools:visibility="visible"
             android:background="@drawable/continue_click_bg"
             android:gravity="center_vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/vg_clickRose"
             app:layout_constraintEnd_toEndOf="@+id/vg_clickRose"
-            app:layout_constraintTop_toTopOf="@+id/vg_clickRose">
+            app:layout_constraintTop_toTopOf="@+id/vg_clickRose"
+            app:layout_constraintBottom_toBottomOf="@+id/vg_clickRose"
+            android:visibility="invisible"
+            tools:visibility="visible">
 
             <cn.yanhu.baselib.view.StrokeGradientTextView
                 android:id="@+id/tv_faceTip1"
@@ -406,7 +389,6 @@
                 app:strokeColor="#80AA1C00"
                 tools:textStyle="bold|italic" />
         </LinearLayout>
-
         <RelativeLayout
             android:id="@+id/vg_clickRose"
             android:layout_width="@dimen/dp_81"

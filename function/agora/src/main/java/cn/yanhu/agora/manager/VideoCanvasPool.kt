@@ -2,6 +2,7 @@ package cn.yanhu.agora.manager
 
 import android.view.View
 import cn.yanhu.baselib.utils.ext.logComToFile
+import cn.yanhu.baselib.utils.ext.logcom
 import io.agora.rtc2.Constants
 import io.agora.rtc2.video.VideoCanvas
 import java.util.Stack
@@ -45,7 +46,7 @@ object VideoCanvasPool {
             }
         }
         inUseCanvases[uid] = canvas
-        logComToFile("VideoCanvasPool", "获取VideoCanvas for UID: $uid, 池状态: ${getPoolStats()}")
+        logcom("VideoCanvasPool", "获取VideoCanvas for UID: $uid, 池状态: ${getPoolStats()}")
 
         return canvas
     }
@@ -62,10 +63,10 @@ object VideoCanvasPool {
 
             if (availableCanvases.size < MAX_POOL_SIZE) {
                 availableCanvases.push(canvas)
-                logComToFile("VideoCanvasPool", "VideoCanvas回收到池中 for UID: $uid")
+                logcom("VideoCanvasPool", "VideoCanvas回收到池中 for UID: $uid")
             } else {
                 // 池已满，让对象被GC回收
-                logComToFile("VideoCanvasPool", "VideoCanvas池已满，对象将被GC回收")
+                logcom("VideoCanvasPool", "VideoCanvas池已满，对象将被GC回收")
             }
         }
     }

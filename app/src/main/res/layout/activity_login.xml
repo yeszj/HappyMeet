@@ -13,8 +13,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:fillViewport="true"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -97,15 +97,16 @@
                     app:layout_constraintStart_toEndOf="@+id/divider"
                     app:layout_constraintTop_toTopOf="@+id/bgPhone" />
 
+
                 <cn.yanhu.baselib.view.CustomFontButton
                     android:id="@+id/bgCode"
                     android:layout_width="@dimen/dp_328"
                     android:layout_height="@dimen/dp_50"
                     android:layout_marginBottom="@dimen/dp_24"
+                    android:alpha="0.5"
                     android:background="@drawable/common_shape_click_bg"
                     android:gravity="center"
                     android:text="获取验证码"
-                    android:alpha="0.5"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_17"
                     app:fontType="@string/fontBold"
@@ -113,6 +114,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
+                <cn.yanhu.baselib.widget.FontWeightValueTextView
+                    android:id="@+id/tv_pwdLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dp_20"
+                    android:text="使用密码登录"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bgCode" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -133,11 +145,11 @@
                 android:id="@+id/iv_check"
                 android:layout_width="@dimen/dp_25"
                 android:layout_height="@dimen/dp_25"
-                android:padding="@dimen/dp_5"
                 android:layout_marginStart="@dimen/dp_15"
-                app:layout_constraintStart_toStartOf="parent"
+                android:padding="@dimen/dp_5"
                 android:src="@drawable/svg_unselected_r20"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_agreement"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_agreement" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
@@ -147,16 +159,15 @@
                 android:layout_marginBottom="@dimen/dp_25"
                 android:gravity="center_vertical"
                 android:paddingTop="@dimen/dp_10"
-                android:paddingBottom="@dimen/dp_10"
                 android:paddingEnd="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
                 android:text="同意并接受用户服务协议，隐私政策，号码认证协议"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_check"
-                app:layout_constraintEnd_toEndOf="parent" />
-
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_check" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

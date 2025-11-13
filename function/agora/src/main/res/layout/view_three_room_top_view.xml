@@ -13,6 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        tools:background="@color/blackAlpha80"
         android:layout_height="wrap_content">
 
         <com.makeramen.roundedimageview.RoundedImageView
@@ -124,11 +125,11 @@
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_onlineNum"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_28"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_4"
             android:background="@drawable/white_corner_20"
-            android:paddingHorizontal="@dimen/dp_12"
-            android:paddingVertical="@dimen/dp_6"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:paddingVertical="@dimen/dp_4"
             android:textSize="@dimen/sp_14"
             android:backgroundTint="#1AFFFFFF"
             android:drawableStart="@drawable/icon_online_user"

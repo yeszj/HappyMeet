@@ -79,8 +79,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:titleColor="@color/white"
             app:titleLeftIco="@drawable/svg_white_back"
-            app:titleLeftName="我的情侣"
-            app:titleRightName="解除情侣" />
+            app:titleLeftName="我的CP"
+            app:titleRightName="解除CP" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -171,7 +171,7 @@
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_11"
                                 app:fontType="@string/fontMedium"
-                                tools:text="黄金情侣" />
+                                tools:text="黄金CP" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -219,7 +219,7 @@
                             android:layout_marginTop="@dimen/dp_m_10"
                             android:background="@drawable/gradient_main_r16"
                             android:gravity="center"
-                            android:text="绑定情侣"
+                            android:text="绑定CP"
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_14"
                             android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName) &amp;&amp; !isSelf &amp;&amp; !isSameSex?View.VISIBLE:View.GONE}"
@@ -231,7 +231,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_m_10"
                             android:gravity="center"
-                            android:text="暂无情侣"
+                            android:text="暂无CP"
                             android:textColor="#888888"
                             android:textSize="@dimen/sp_14"
                             android:visibility="@{TextUtils.isEmpty(loversRes.loverInfo.nickName) &amp;&amp; isSelf?View.VISIBLE:View.GONE}" />
@@ -244,7 +244,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dp_20"
                     android:layout_marginTop="@dimen/dp_20"
-                    android:text="你和九月的情侣关系将在3天后失效"
+                    android:text="你和九月的CP关系将在3天后失效"
                     android:textColor="#66000000"
                     android:textSize="@dimen/sp_13" />
 

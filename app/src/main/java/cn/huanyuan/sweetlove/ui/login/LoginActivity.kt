@@ -38,8 +38,7 @@ import kotlin.system.exitProcess
  */
 @Route(path = RouterPath.ROUTER_LOGIN)
 class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
-    R.layout.activity_login,
-    LoginViewModel::class.java
+    R.layout.activity_login, LoginViewModel::class.java
 ) {
 
     private var isPrivacyCheck = false
@@ -51,23 +50,23 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
     }
 
     private fun initJiGuangLogin() {
-        JiGuangSDKUtils.getInstance().setJiGuangSDKListener(object :
-            JiGuangSDKUtils.JiGuangSdkCallback() {
-            override fun fail(msg: String?) {
-                super.fail(msg)
-            }
+        JiGuangSDKUtils.getInstance()
+            .setJiGuangSDKListener(object : JiGuangSDKUtils.JiGuangSdkCallback() {
+                override fun fail(msg: String?) {
+                    super.fail(msg)
+                }
 
-            override fun successLoginToken(loginToken: String, operator: String?) {
-                super.successLoginToken(loginToken, operator)
-                getPhoneByJiguangToken(loginToken)
-            }
+                override fun successLoginToken(loginToken: String, operator: String?) {
+                    super.successLoginToken(loginToken, operator)
+                    getPhoneByJiguangToken(loginToken)
+                }
 
-            override fun jumpPhoneLogin() {
-                super.jumpPhoneLogin()
-                JVerificationInterface.clearPreLoginCache() //清除预取号缓存
-                JVerificationInterface.dismissLoginAuthActivity() //关闭授权页
-            }
-        })
+                override fun jumpPhoneLogin() {
+                    super.jumpPhoneLogin()
+                    JVerificationInterface.clearPreLoginCache() //清除预取号缓存
+                    JVerificationInterface.dismissLoginAuthActivity() //关闭授权页
+                }
+            })
         JiGuangSDKUtils.getInstance().startLogin()
     }
 
@@ -91,11 +90,18 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
 
     override fun initListener() {
         super.initListener()
-        mBinding.etPhone.addTextChangedListener(object : TextWatcher{
+        mBinding.tvPwdLogin.setOnSingleClickListener {
+            if (checkCondition()) {
+                toPwdLogin()
+            }
+        }
+        mBinding.etPhone.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
+
             override fun afterTextChanged(s: Editable?) {
                 if (RegexUtils.isMobileExact(s.toString())) {
                     mBinding.bgCode.alpha = 1.0f
@@ -124,6 +130,12 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
         }
     }
 
+    private fun toPwdLogin() {
+        LoginResultManager.checkPwd(
+            mContext,
+            mBinding.etPhone.text.toString().trim())
+    }
+
 
     private fun checkCondition(): Boolean {
         val phone = mBinding.etPhone.text.toString()
@@ -142,13 +154,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
     }
 
     private fun setAgreementInfo() {
-        val build = Spans.builder()
-            .text("同意并接受").color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor))
-            .text("用户服务协议")
-            .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.white)).style(BOLD)
-            .click(
-                mBinding.tvAgreement,
-                CustomClickSpan(
+        val build = Spans.builder().text("同意并接受")
+            .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor))
+            .text("用户服务协议").color(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
+            .style(BOLD).click(
+                mBinding.tvAgreement, CustomClickSpan(
                     mContext,
                     CommonUtils.getColor(cn.yanhu.baselib.R.color.white),
                     object : CustomClickSpan.OnAllSpanClickListener {
@@ -157,12 +167,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
                         }
 
                     })
-            )
-            .text("、").color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor))
-            .text("隐私政策").color(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
-            .click(
-                mBinding.tvAgreement,
-                CustomClickSpan(
+            ).text("、").color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor))
+            .text("隐私政策").color(CommonUtils.getColor(cn.yanhu.baselib.R.color.white)).click(
+                mBinding.tvAgreement, CustomClickSpan(
                     mContext,
                     CommonUtils.getColor(cn.yanhu.baselib.R.color.white),
                     object : CustomClickSpan.OnAllSpanClickListener {
@@ -171,13 +178,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
                         }
 
                     })
-            )
-            .style(BOLD)
-            .text("、").color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor))
-            .text("号码认证协议")
-            .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.white)).style(BOLD).click(
-                mBinding.tvAgreement,
-                CustomClickSpan(
+            ).style(BOLD).text("、")
+            .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.fontGrayColor))
+            .text("号码认证协议").color(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
+            .style(BOLD).click(
+                mBinding.tvAgreement, CustomClickSpan(
                     mContext,
                     CommonUtils.getColor(cn.yanhu.baselib.R.color.white),
                     object : CustomClickSpan.OnAllSpanClickListener {
@@ -186,8 +191,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
                         }
 
                     })
-            )
-            .build()
+            ).build()
         mBinding.tvAgreement.text = build
     }
 

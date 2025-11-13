@@ -2,15 +2,20 @@ package cn.yanhu.commonres.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isGone
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.R
+import cn.yanhu.commonres.bean.PkUserInfo
+import cn.yanhu.commonres.bean.SeatUserInfo
 import com.bumptech.glide.Glide
 import com.makeramen.roundedimageview.RoundedImageView
 import kotlin.math.max
-import androidx.core.view.isGone
 import kotlin.math.min
 
 /**
@@ -213,6 +218,31 @@ class OverlapFlowLayout @JvmOverloads constructor(
         }
     }
 
+    fun setAvatarUrls(urls: List<PkUserInfo>, strokeColor:Int=0, strokeWidth:Int=0,isRedUser: Boolean) {
+        removeAllViews()
+        for (url in urls) {
+            addAvatar(url,strokeColor,strokeWidth,isRedUser)
+        }
+    }
+
+    /**
+     * 添加单个头像
+     */
+    fun addAvatar(userInfo: PkUserInfo,strokeColor:Int,strokeWidth:Int,isRedUser: Boolean) {
+        val relativeLayout = RelativeLayout(context).apply {
+            layoutParams = LayoutParams(avatarSize, avatarSize)
+        }
+        val imageView = createAvatarImageView(strokeColor,strokeWidth)
+        Glide.with(this)
+            .load(userInfo.avatar)
+            .circleCrop()
+            .into(imageView)
+        relativeLayout.addView(imageView)
+        relativeLayout.addView(createTextView(userInfo.id,isRedUser))
+        addView(relativeLayout)
+        requestLayout()
+    }
+
     /**
      * 添加单个头像
      */
@@ -224,6 +254,35 @@ class OverlapFlowLayout @JvmOverloads constructor(
             .into(imageView)
         addView(imageView)
         requestLayout()
+    }
+
+    private fun createTextView(index:Int,isRedUser: Boolean): AppCompatTextView {
+        return AppCompatTextView(context).apply {
+            // 设置 LayoutParams
+            val params = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+            )
+            // 关键：设置底部居中规则
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL)
+            layoutParams = params
+            setPadding(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_3),0,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_3),0) ;
+            textSize = 9f
+            minWidth = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_12)
+            setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
+            setBackgroundResource(cn.yanhu.baselib.R.drawable.white_corner_10)
+            backgroundTintList = if (isRedUser){
+                ColorStateList.valueOf(CommonUtils.getColor(cn.yanhu.baselib.R.color.colorMain))
+            }else{
+                ColorStateList.valueOf(CommonUtils.getColor(cn.yanhu.baselib.R.color.colorBlue))
+            }
+            text = if (index==1){
+                "主持"
+            }else{
+                (index-1).toString()
+            }
+        }
     }
 
     private fun createAvatarImageView(strokeColor:Int,strokeWidth:Int): RoundedImageView {
@@ -243,6 +302,6 @@ class OverlapFlowLayout @JvmOverloads constructor(
      */
     fun clearAvatars() {
         removeAllViews()
-        requestLayout()
+        //requestLayout()
     }
 }

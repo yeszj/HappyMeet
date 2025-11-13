@@ -1,13 +1,16 @@
 package cn.huanyuan.sweetlove.func.manager
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.text.TextUtils
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.net.rxApi
 import cn.huanyuan.sweetlove.ui.login.LoginActivity
+import cn.huanyuan.sweetlove.ui.login.PwdLoginActivity
 import cn.huanyuan.sweetlove.ui.login.profile.CompleteProfileActivity
 import cn.huanyuan.sweetlove.ui.main.MainActivity
 import cn.jiguang.verifysdk.api.JVerificationInterface
+import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.LoginSuccessInfo
 import cn.yanhu.commonres.config.ConfigParamsManager
 import cn.yanhu.commonres.manager.AppCacheManager
@@ -29,6 +32,9 @@ import com.umeng.analytics.MobclickAgent
 object LoginResultManager {
     const val SOURCE_EMS = 0
     const val SOURCE_JIGUANG = 1
+
+    const val SOURCE_PWD = 2
+
     fun loginSuccess(mContext: FragmentActivity, loginSuccessInfo: LoginSuccessInfo) {
         if (!TextUtils.isEmpty(loginSuccessInfo.phoneEndNum)) {
             AppCacheManager.phoneEndNum = loginSuccessInfo.phoneEndNum
@@ -137,6 +143,24 @@ object LoginResultManager {
             }
 
             override fun onError(code: Int, message: String) {
+            }
+        })
+    }
+
+    fun checkPwd(mContext: FragmentActivity, phone: String){
+        request({ rxApi.checkPassword(phone) }, object : OnRequestResultListener<String> {
+            override fun onSuccess(data: BaseBean<String>) {
+                when(data.data){
+                    "1","2" ->{
+                        showToast("请用验证码登录")
+                    }
+                    else -> {
+                        PwdLoginActivity.lunch(mContext,phone)
+                    }
+                }
+            }
+            override fun onFail(code: Int?, msg: String?) {
+                showToast(msg)
             }
         })
     }

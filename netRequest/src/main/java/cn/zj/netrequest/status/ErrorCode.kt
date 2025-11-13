@@ -32,5 +32,9 @@ object ErrorCode {
 
     const val COMMON_TIP_SKIP = 354 //被房主踢出过房间
 
+    const val CODE_SET_PWD = 5000
+
+    const val CODE_VERIFY_LOGIN = 5002
+
 
 }

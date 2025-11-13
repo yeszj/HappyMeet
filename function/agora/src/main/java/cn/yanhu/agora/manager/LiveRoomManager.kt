@@ -1,6 +1,7 @@
 package cn.yanhu.agora.manager
 
 import android.graphics.Color
+import android.text.TextUtils
 import androidx.fragment.app.FragmentActivity
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.EnterCheckResponse
@@ -25,6 +26,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
+import com.hyphenate.chat.EMClient
 import com.pcl.sdklib.listener.OnPayResultListener
 import com.pcl.sdklib.manager.PayManager
 
@@ -37,7 +39,7 @@ object LiveRoomManager {
     const val HOUSE_ADMINISTRATOR_OFF = 1005 //管理员强制关闭直播间
     const val HOUSE_CALL_OFF = 1006 //通话结束
     const val HOUSE_CALL_PRICE_OFF = 1007 //通话余额不足结束
-
+    var chatRoomId = ""
     @JvmStatic
     fun toLiveRoomPage(context: FragmentActivity, applyRoomId: String) {
         toLiveRoomPage(context, applyRoomId, null)
@@ -72,7 +74,10 @@ object LiveRoomManager {
                         liveRoomActivity
                     )
                 } else {
-                    showToast("房间数据异常")
+                    //liveRoomActivity 被系统销毁了 重新进入房间
+                    AgoraManager.isLiveRoom = false
+                    AgoraManager.getInstance().leaveChannel()
+                    enterCheck(context, applyRoomId, onRoomNoExitListener)
                 }
                 DialogUtils.dismissLoading()
             } else {
@@ -93,6 +98,9 @@ object LiveRoomManager {
     ) {
         if (isRequestCheck) {
             return
+        }
+        if (!TextUtils.isEmpty(chatRoomId)){
+            EMClient.getInstance().chatroomManager().leaveChatRoom(chatRoomId)
         }
         DialogUtils.showLoading(hasShadow = false)
         isRequestCheck = true

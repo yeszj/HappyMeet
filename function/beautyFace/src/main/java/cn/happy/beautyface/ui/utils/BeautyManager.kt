@@ -90,10 +90,13 @@ object BeautyManager {
 
 
     fun setStickerItem(stickerItem: SenseTimeBeautySDK.StickerItem?) {
-        when (beautyType) {
-            BeautyType.SenseTime -> SenseTimeBeautySDK.beautyConfig.sticker = stickerItem
-            BeautyType.Agora -> {}
+        if (SenseTimeBeautySDK.isInitBeautyConfig()){
+            when (beautyType) {
+                BeautyType.SenseTime -> SenseTimeBeautySDK.beautyConfig.sticker = stickerItem
+                BeautyType.Agora -> {}
+            }
         }
+
     }
 
     @JvmStatic

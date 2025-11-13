@@ -48,8 +48,8 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
 ) {
     private lateinit var helper: QuickAdapterHelper
     private val editBasicUserInfoAdapter by lazy { EditUserInfoAdapter(false) }
-    private val detailUserInfoAdapter by lazy { EditUserInfoAdapter(false) }
-    private val friendInfoAdapter by lazy { EditUserInfoAdapter(false) }
+//    private val detailUserInfoAdapter by lazy { EditUserInfoAdapter(false) }
+//    private val friendInfoAdapter by lazy { EditUserInfoAdapter(false) }
     private val editUserInfoHeadAdapter by lazy { EditUserInfoHeadAdapter(this) }
     private var editInfo: EditUserInfo? = null
      var hasChange:Boolean = false
@@ -72,8 +72,8 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
             R.id.iv_more
         ) { _, _, position ->
             editBasicUserInfoAdapter.notifyItemChanged(position, true)
-            addDetailUserAdapter()
-            addFriendInfoAdapter()
+//            addDetailUserAdapter()
+//            addFriendInfoAdapter()
         }
         editBasicUserInfoAdapter.registerOnEdiItemClickListener(object :
             EditUserInfoAdapter.OnEditItemClickListener {
@@ -88,35 +88,35 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
         })
     }
 
-    private fun addFriendInfoAdapter() {
-        helper.addAfterAdapter(friendInfoAdapter)
-        friendInfoAdapter.registerOnEdiItemClickListener(object :
-            EditUserInfoAdapter.OnEditItemClickListener {
-            override fun onItemClick(
-                adapter: BaseQuickAdapter<UserInfoItem, *>,
-                view: View,
-                position: Int
-            ) {
-                selectBasicUserInfo(adapter, position)
-            }
+//    private fun addFriendInfoAdapter() {
+//        helper.addAfterAdapter(friendInfoAdapter)
+//        friendInfoAdapter.registerOnEdiItemClickListener(object :
+//            EditUserInfoAdapter.OnEditItemClickListener {
+//            override fun onItemClick(
+//                adapter: BaseQuickAdapter<UserInfoItem, *>,
+//                view: View,
+//                position: Int
+//            ) {
+//                selectBasicUserInfo(adapter, position)
+//            }
+//
+//        })
+//    }
 
-        })
-    }
-
-    private fun addDetailUserAdapter() {
-        helper.addAfterAdapter(detailUserInfoAdapter)
-        detailUserInfoAdapter.registerOnEdiItemClickListener(object :
-            EditUserInfoAdapter.OnEditItemClickListener {
-            override fun onItemClick(
-                adapter: BaseQuickAdapter<UserInfoItem, *>,
-                view: View,
-                position: Int
-            ) {
-                selectBasicUserInfo(adapter, position)
-            }
-
-        })
-    }
+//    private fun addDetailUserAdapter() {
+//        helper.addAfterAdapter(detailUserInfoAdapter)
+//        detailUserInfoAdapter.registerOnEdiItemClickListener(object :
+//            EditUserInfoAdapter.OnEditItemClickListener {
+//            override fun onItemClick(
+//                adapter: BaseQuickAdapter<UserInfoItem, *>,
+//                view: View,
+//                position: Int
+//            ) {
+//                selectBasicUserInfo(adapter, position)
+//            }
+//
+//        })
+//    }
 
     private var editPosition: Int = 0
     private var editAdapter: EditUserItemAdapter? = null
@@ -326,13 +326,13 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
 
                 val info = EditIUserItemInfo("基本信息（必填）", it.basicInfo)
                 editBasicUserInfoAdapter.item = info
-
-//                val info2 = EditIUserItemInfo("详细信息", it.detailInfo)
-//                detailUserInfoAdapter.item = info2
-
-                val info3 = EditIUserItemInfo("征友条件", it.friendInfo)
-                friendInfoAdapter.item = info3
-                addFriendInfoAdapter()
+//bao
+////                val info2 = EditIUserItemInfo("详细信息", it.detailInfo)
+////                detailUserInfoAdapter.item = info2
+//
+//                val info3 = EditIUserItemInfo("征友条件", it.friendInfo)
+//                friendInfoAdapter.item = info3
+//                addFriendInfoAdapter()
 
             })
         }
@@ -340,7 +340,7 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             if (requestCode == RequestCodeManager.REQUEST_CODE_INPUT_CONTENT) {
                 data?.apply {
                     val type = getIntExtra(IntentKeyConfig.TYPE, -1)

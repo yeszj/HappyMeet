@@ -12,16 +12,16 @@ data class LoverInfo(val userId: String, val nickName: String, val loversType: I
     fun loverDesc():String{
         return when (loversType) {
             1 -> {
-                "黄金情侣"
+                "黄金CP"
             }
             2 -> {
-                "水晶情侣"
+                "水晶CP"
             }
             3 -> {
-                "钻石情侣"
+                "钻石CP"
             }
             else -> {
-                "永久情侣"
+                "永久CP"
             }
         }
     }

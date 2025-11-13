@@ -124,11 +124,11 @@
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{msgInfo.sendUserInfo.loverInfo.nickName+"的情侣"}'
+                android:text='@{msgInfo.sendUserInfo.loverInfo.nickName+"的CP"}'
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_11"
                 app:fontType="@string/fontMedium"
-                tools:text="用户昵称的情侣" />
+                tools:text="用户昵称的CP" />
         </LinearLayout>
 
 

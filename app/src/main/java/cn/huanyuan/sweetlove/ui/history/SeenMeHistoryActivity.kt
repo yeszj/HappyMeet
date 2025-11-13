@@ -10,6 +10,7 @@ import cn.huanyuan.sweetlove.ui.history.adapter.SeenMeHistoryAdapter
 import cn.huanyuan.sweetlove.ui.userinfo.level.UserLevelActivity
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
+import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.ext.parseState
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -32,6 +33,10 @@ class SeenMeHistoryActivity : BaseActivity<ActivitySeenMeHistoryBinding, History
         historyAdapter.isStateViewEnable = true
         historyAdapter.stateView = getEmptyView()
         mBinding.rvHistory.adapter = historyAdapter
+        historyAdapter.setOnItemClickListener { adapter, view, position ->
+            val seenMeHistoryInfo = adapter.getItem(position)?:return@setOnItemClickListener
+            RouteIntent.lunchPersonHomePage(seenMeHistoryInfo.userId)
+        }
         requestData()
     }
 

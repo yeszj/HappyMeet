@@ -25,7 +25,10 @@ import com.kingja.loadsir.callback.Callback
 import com.kingja.loadsir.callback.SuccessCallback
 import com.kingja.loadsir.core.LoadService
 import com.kingja.loadsir.core.LoadSir
-import java.util.*
+import com.opensource.svgaplayer.SVGAImageView
+import com.opensource.svgaplayer.SVGAParser.Companion.shareParser
+import com.opensource.svgaplayer.SVGAParser.ParseCompletion
+import com.opensource.svgaplayer.SVGAVideoEntity
 
 @Suppress("DEPRECATION")
 abstract class BaseFragment<DB : ViewDataBinding, VM : BaseViewModel>(
@@ -164,11 +167,30 @@ abstract class BaseFragment<DB : ViewDataBinding, VM : BaseViewModel>(
         loadService.setCallBack(LoadingHasContentCallBack::class.java
         ) { _, view ->
             val tvMyDialog = view?.findViewById<TextView>(R.id.tv_MyDialog)
+            val ivWait = view?.findViewById<SVGAImageView>(R.id.iv_wait)
+            loadAssetsSVGAAnim(ivWait,"loading_dark.svga")
             tvMyDialog?.text = content
         }
         loadService.showCallback(LoadingHasContentCallBack::class.java)
     }
+    fun loadAssetsSVGAAnim(svgaImageView: SVGAImageView?, svgaName: String) {
+        try {
+            if (svgaImageView==null){
+                return
+            }
+            shareParser().decodeFromAssets(svgaName, object : ParseCompletion {
+                override fun onComplete(svgaVideoEntity: SVGAVideoEntity) {
+                    svgaImageView.setVideoItem(svgaVideoEntity)
+                    svgaImageView.startAnimation()
+                }
 
+                override fun onError() {
+                }
+            }, null)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     override fun showError(content: String) {
         loadService.setCallBack(ErrorCallback::class.java

@@ -8,6 +8,7 @@ import cn.huanyuan.sweetlove.net.rxApi
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.LoginSuccessInfo
 import cn.zj.netrequest.BaseViewModel
+import cn.zj.netrequest.encrypt.RSAUtils
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.ResultState
 
@@ -20,6 +21,7 @@ class LoginViewModel : BaseViewModel() {
     var phoneExt = ObservableField<String>()
     var codeExt = ObservableField<String>()
     var inviteCode = ObservableField<String>()
+    var pwdExt = ObservableField<String>()
 
     var personInfo: MutableLiveData<BaseUserInfo> = MutableLiveData()
     var loginSuccessInfo: MutableLiveData<LoginSuccessInfo> = MutableLiveData()
@@ -30,17 +32,31 @@ class LoginViewModel : BaseViewModel() {
     val inviteCodeLivedata = MutableLiveData<ResultState<Boolean>>()
     val saveBasicInfoLivedata = MutableLiveData<ResultState<Boolean>>()
 
-    fun sendVerifyCode() {
-        request({ rxApi.sendVerifyCode(phoneExt.get().toString()) }, codeLivedata, false)
+    fun sendVerifyCode(type :Int = 0) {
+        request({ rxApi.sendVerifyCode(phoneExt.get().toString(),type) }, codeLivedata, false)
     }
 
     fun login(source: Int) {
         val phone = phoneExt.get().toString()
+        val pwd = pwdExt.get().toString()
+        val encodeToString = RSAUtils.getEncryptResult(pwd)
         request(
-            { rxApi.login(phone, source, codeExt.get().toString()) },
+            { rxApi.login(phone, source, codeExt.get().toString(),encodeToString) },
             loginLivedata,
             true,
             loadingHasContent = true
+        )
+    }
+
+    val setPwdLivedata = MutableLiveData<ResultState<String>>()
+    fun setPassword() {
+        val phone = phoneExt.get().toString()
+        val pwd = pwdExt.get().toString()
+        val encodeToString = RSAUtils.getEncryptResult(pwd)
+        request(
+            { rxApi.setPassword(phone,codeExt.get().toString(),encodeToString) },
+            setPwdLivedata,
+            false
         )
     }
 

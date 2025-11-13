@@ -125,6 +125,55 @@
                     android:textSize="@dimen/sp_13"
                     tools:textColor="@color/colorMain" />
 
+
+                <View
+                    android:id="@+id/bg_Pwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:layout_marginHorizontal="@dimen/dp_12"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/white_corner_10"
+                    app:layout_constraintTop_toBottomOf="@+id/bg_phone" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_pwd"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/dp_12"
+                    android:src="@drawable/svg_pwd_icon"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_Pwd"
+                    app:layout_constraintStart_toStartOf="@+id/bg_Pwd"
+                    app:layout_constraintTop_toTopOf="@+id/bg_Pwd" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_8"
+                    android:textColor="@color/fontTextColor"
+                    android:textSize="@dimen/sp_15"
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_Pwd"
+                    app:layout_constraintStart_toEndOf="@+id/iv_pwd"
+                    app:layout_constraintTop_toTopOf="@+id/bg_Pwd"
+                    android:text="登录密码" />
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_12"
+                    android:drawableEnd="@drawable/ic_right_arrow"
+                    android:drawablePadding="@dimen/dp_4"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/sp_13"
+                    android:text='@{authInfo.passwordAuth?"已设置":"未设置"}'
+                    android:textColor='@{authInfo.passwordAuth?@color/fontGrayColor:@color/colorMain}'
+                    app:layout_constraintBottom_toBottomOf="@+id/bg_Pwd"
+                    app:layout_constraintEnd_toEndOf="@+id/bg_Pwd"
+                    app:layout_constraintTop_toTopOf="@+id/bg_Pwd"
+                    tools:text="未设置"
+                    tools:textColor="@color/colorMain" />
+
+
+
                 <View
                     android:id="@+id/bg_realName"
                     android:layout_width="match_parent"
@@ -132,7 +181,7 @@
                     android:layout_marginHorizontal="@dimen/dp_12"
                     android:layout_marginTop="@dimen/dp_10"
                     android:background="@drawable/white_corner_10"
-                    app:layout_constraintTop_toBottomOf="@+id/bg_phone" />
+                    app:layout_constraintTop_toBottomOf="@+id/bg_Pwd" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_realName"

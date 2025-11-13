@@ -73,32 +73,32 @@ class UserHomePageHeadAdapter :
                 }
             }
             bindAvatar(item)
-            bindPersonInfoTag(item)
-            bindConditioinTag(item)
+//            bindPersonInfoTag(item)
+//            bindConditioinTag(item)
             executePendingBindings()
         }
     }
 
 
-    private fun AdapterHomepageHeadBinding.bindPersonInfoTag(item: UserDetailInfo?) {
-        val personInfo = item?.personInfo
-        flowLayoutInfo.removeAllViews()
-        personInfo?.forEach {
-            val tagView = IconTagInfoView(context)
-            tagView.setTagValue(it)
-            flowLayoutInfo.addView(tagView)
-        }
-    }
+//    private fun AdapterHomepageHeadBinding.bindPersonInfoTag(item: UserDetailInfo?) {
+//        val personInfo = item?.personInfo
+//        flowLayoutInfo.removeAllViews()
+//        personInfo?.forEach {
+//            val tagView = IconTagInfoView(context)
+//            tagView.setTagValue(it)
+//            flowLayoutInfo.addView(tagView)
+//        }
+//    }
 
-    private fun AdapterHomepageHeadBinding.bindConditioinTag(item: UserDetailInfo?) {
-        val friendCondition = item?.friendCondition
-        flowLayoutCondition.removeAllViews()
-        friendCondition?.forEach {
-            val tagView = IconTagInfoView(context)
-            tagView.setTagValue(it)
-            flowLayoutCondition.addView(tagView)
-        }
-    }
+//    private fun AdapterHomepageHeadBinding.bindConditioinTag(item: UserDetailInfo?) {
+//        val friendCondition = item?.friendCondition
+//        flowLayoutCondition.removeAllViews()
+//        friendCondition?.forEach {
+//            val tagView = IconTagInfoView(context)
+//            tagView.setTagValue(it)
+//            flowLayoutCondition.addView(tagView)
+//        }
+//    }
 
     private var selectPosition = 0
     private fun AdapterHomepageHeadBinding.bindAvatar(item: UserDetailInfo?) {

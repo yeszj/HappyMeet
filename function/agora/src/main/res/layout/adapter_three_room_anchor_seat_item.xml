@@ -146,19 +146,19 @@
             tools:visibility="visible">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_enterAnim"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="进场特效"
+                android:text="进场动画"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12" />
-
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icon_enter"
+                android:id="@+id/iv_enter"
                 android:layout_width="@dimen/dp_14"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_2"
                 android:adjustViewBounds="true"
-                android:src="@drawable/svg_voice_on" />
+                android:src="@drawable/svg_voice_on"
+                android:layout_marginStart="@dimen/dp_2" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/vg_autoSeat"

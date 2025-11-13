@@ -107,10 +107,8 @@ class UserTagView : LinearLayout {
         }
         TextViewDrawableUtils.setDrawableLeft(
             tvTag,
-            ContextCompat.getDrawable(context, R.drawable.svg_location_white)
+            null
         )
-        ViewUtils.setPaddingHorizontal(tvTag,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_1),CommonUtils.getDimension(
-            com.zj.dimens.R.dimen.dp_3))
         tvTag.backgroundTintList =
             ColorStateList.valueOf(CommonUtils.getColor(cn.yanhu.baselib.R.color.locationTagColor))
         tvTag.text = province

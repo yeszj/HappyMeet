@@ -44,7 +44,6 @@ import cn.yanhu.commonres.bean.response.RoseRechargeResponse
 import cn.yanhu.commonres.bean.response.SameCityUserResponse
 import cn.yanhu.commonres.bean.response.SeenMeHistoryResponse
 import cn.yanhu.commonres.bean.response.WithdrawResponse
-import cn.yanhu.imchat.bean.SystemMsgUnReadInfo
 import cn.zj.netrequest.status.BaseBean
 import com.pcl.sdklib.bean.CheckFaceAuthResult
 import com.pcl.sdklib.bean.FaceAuthInfo
@@ -116,15 +115,25 @@ interface ApiService : CommonApiService {
     @FormUrlEncoded
     @POST("app/v1/user/sendCode")
     suspend fun sendVerifyCode(
-        @Field("phone") phone: String
+        @Field("phone") phone: String, @Field("type")  type :Int = 0
     ): BaseBean<String>
+
+    @GET("app/v1/user/checkPassword")
+    suspend fun checkPassword(@Query("phone") phone: String): BaseBean<String>
 
     @FormUrlEncoded
     @POST("app/v1/user/login")
     suspend fun login(
-        @Field("phone") phone: String, @Field("source") source: Int, @Field("code") code: String
+        @Field("phone") phone: String, @Field("source") source: Int, @Field("code") code: String,@Field("password") password: String=""
     ): BaseBean<LoginSuccessInfo>
 
+    @FormUrlEncoded
+    @POST("app/v1/auth/setPassword")
+    suspend fun setPassword(
+        @Field("phone") phone: String,
+        @Field("code") code: String,
+        @Field("password") password: String
+    ): BaseBean<String>
 
     @FormUrlEncoded
     @POST("app/v1/user/bindInviteCode")

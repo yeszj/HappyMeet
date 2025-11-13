@@ -16,7 +16,7 @@
         android:orientation="vertical">
     <cn.yanhu.baselib.view.CustomFontTextView
         android:layout_width="wrap_content"
-        android:text="绑定情侣"
+        android:text="绑定CP"
         android:textColor="@color/white"
         android:paddingTop="@dimen/dp_20"
         android:textSize="@dimen/sp_16"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"/>
         <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="wrap_content"
-            android:text="请选择情侣等级，赠送礼物后自动绑定"
+            android:text="请选择CP等级，赠送礼物后自动绑定"
             android:textColor="@color/whiteColorAlpha60"
             android:textSize="@dimen/sp_13"
             android:paddingTop="@dimen/dp_8"

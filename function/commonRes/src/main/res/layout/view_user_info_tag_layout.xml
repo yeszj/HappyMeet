@@ -35,9 +35,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_4" />
 
-        <cn.yanhu.commonres.view.UserTagView
-            android:layout_width="wrap_content"
-            userHomeTown="@{userinfo.hometown}"
-            android:layout_height="wrap_content" />
+<!--        <cn.yanhu.commonres.view.UserTagView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            userHomeTown="@{userinfo.hometown}"-->
+<!--            android:layout_height="wrap_content" />-->
     </cn.yanhu.baselib.widget.CustomFlowLayout>
 </layout>

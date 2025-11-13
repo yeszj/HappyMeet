@@ -130,7 +130,7 @@
                         android:button="@null"
                         android:gravity="center_vertical"
                         android:paddingHorizontal="@dimen/dp_12"
-                        android:text="情侣"
+                        android:text="CP"
                         android:textColor="@color/color_gift_tab"
                         android:textSize="@dimen/sp_13"
                         app:fontType="@string/fontMedium" />

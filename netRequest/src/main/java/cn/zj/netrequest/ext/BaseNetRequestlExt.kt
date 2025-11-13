@@ -39,9 +39,7 @@ fun <T> request2(
                 } else {
                     listener.onFail(-1, it.message)
                 }
-                if (isShowToast && it !is CancellationException) {
-                    ToastUtils.show(it.message)
-                }
+                dealNetException(it, isShowToast)
             }
         }
     }
@@ -82,9 +80,8 @@ fun <T> request2(
                 } else {
                     listener.onFail(-1, it.message)
                 }
-                if (isShowToast && it !is CancellationException) {
-                    ToastUtils.show(it.message)
-                }
+                dealNetException(it, isShowToast)
+
             }
         }
     }
@@ -118,9 +115,7 @@ fun <T> request(
                         } else {
                             listener.onFail(-1, it.message)
                         }
-                        if (isShowToast && it !is CancellationException) {
-                            ToastUtils.show(it.message)
-                        }
+                        dealNetException(it, isShowToast)
                     }
                 }
             }
@@ -158,9 +153,7 @@ fun <T> request(
                     } else {
                         Log.d(TAG, "request：bean:${it} errorMs:${it.message}")
                         listener.onFail(-1, it.message)
-                        if (isShowToast && it !is CancellationException) {
-                            ToastUtils.show(it.message)
-                        }
+                        dealNetException(it, isShowToast)
                     }
                 }
             }
@@ -201,9 +194,7 @@ fun <T> request(
                     ThreadUtils.runOnUiThread {
                         Log.d(TAG, "request：bean:${it} errorMs:${it.message}")
                         listener.onFail(-1, it.message)
-                        if (isShowToast && it !is CancellationException) {
-                            ToastUtils.show(it.message)
-                        }
+                        dealNetException(it, isShowToast)
                     }
                 }
             }

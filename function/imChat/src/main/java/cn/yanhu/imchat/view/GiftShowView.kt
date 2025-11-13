@@ -132,7 +132,7 @@ class GiftShowView : LinearLayout {
         const val TYPE_GIFT = 1
         const val TYPE_SONG = 11 //点歌礼物
         const val TYPE_FACE = 12 //贴脸
-        const val TYPE_LOVER = 14 //情侣
+        const val TYPE_LOVER = 14 //CP
 
     }
 

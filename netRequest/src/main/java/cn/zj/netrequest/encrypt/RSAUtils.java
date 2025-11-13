@@ -90,7 +90,18 @@ public class RSAUtils {
             return null;
         }
     }
-
+    public static String getEncryptResult(String value){
+        byte[] encryptRSA;
+        try {
+            encryptRSA = RSAUtils.encryptData(
+                    value.getBytes(),
+                    RSAUtils.loadPublicKey(RSAKey.public_key)
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return Base64.encodeToString(encryptRSA, 0);
+    }
     /**
      * 用私钥解密
      *

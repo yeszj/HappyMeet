@@ -55,7 +55,7 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
 
         }
         addItemClickListener()
-       // checkVersion()
+        checkVersion()
     }
 
     private var appVersionInfo: AppVersionInfo? = null
@@ -201,11 +201,16 @@ class AppSettingActivity : BaseActivity<ActivityAppSettingBinding, SettingViewMo
                 name = "隐私协议", pageUrl = WebUrlManager.PRIVACY_AGREEMENT
             )
         )
-//        list.add(
-//            SettingItemInfo(
-//                name = "检查更新", desc = "当前已是最新版本", pageUrl = "checkVersion"
-//            )
-//        )
+        list.add(
+            SettingItemInfo(
+                name = "平台规范", pageUrl = WebUrlManager.APP_STANDARD
+            )
+        )
+        list.add(
+            SettingItemInfo(
+                name = "检查更新", desc = "当前已是最新版本", pageUrl = "checkVersion"
+            )
+        )
         list.add(
             SettingItemInfo(
                 name = "清理缓存",

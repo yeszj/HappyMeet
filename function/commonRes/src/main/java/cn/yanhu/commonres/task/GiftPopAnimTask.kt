@@ -63,7 +63,6 @@ class GiftPopAnimTask(
                 randomGift =
                     GsonUtils.fromJson(giftInfo.randomBoxGiftInfo, GiftInfo::class.java)
             }
-            //logComToFile("memoryInfo","送礼："+getMemoryStatus()+"\nanimUrl="+giftInfo.svga)
             svgaImageView?.apply {
                 if (giftInfo.type == GiftInfo.TYPE_FRAME){
                     val width = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_100)
@@ -193,6 +192,7 @@ class GiftPopAnimTask(
     }
 
     private fun playGiftAnim(giftInfo: GiftInfo,isBox: Boolean = false) {
+        logComToFile("memoryInfo","送礼："+getMemoryStatus()+"\nanimUrl="+giftInfo.svga+"giftName="+giftInfo.name)
         val svga = giftInfo.svga
         if (isMp4(svga) || isBox) {
             logcom("播放视频礼物特效")

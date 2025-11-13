@@ -15,7 +15,8 @@ data class RoseRechargeResponse(
     val defaultSelect: Int,
     val list: MutableList<RoseRechargeBean>,
     val bannerBean: BannerBean?,
-    val rewardInfo: RewardInfo?
+    val rewardInfo: RewardInfo?,
+    val scrollText: String?
 ) {
     data class RewardInfo(val rewardIcon: String, val rewardDesc: String, var title:String, var btn:String)
 }

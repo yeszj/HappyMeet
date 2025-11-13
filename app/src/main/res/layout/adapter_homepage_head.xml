@@ -157,11 +157,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingStart="@dimen/dp_5"
-                android:text='@{TextUtils.isEmpty(userinfo.loverInfo.nickName)?"暂无情侣":userinfo.loverInfo.loverDesc()}'
+                android:text='@{TextUtils.isEmpty(userinfo.loverInfo.nickName)?"暂无CP":userinfo.loverInfo.loverDesc()}'
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_13"
                 app:fontType="@string/fontMedium"
-                tools:text="黄金情侣" />
+                tools:text="黄金CP" />
 
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
@@ -181,52 +181,7 @@
             android:background="@color/blackAlpha96"
             app:layout_constraintTop_toBottomOf="@+id/vg_lovers" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_20"
-            android:gravity="center_vertical"
-            android:text="资料"
-            android:textColor="@color/fontTextColor"
-            android:textSize="@dimen/sp_16"
-            app:fontType="@string/fontBold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_personInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_20"
-            android:gravity="center_vertical"
-            android:text="个人信息"
-            android:textColor="@color/fontGrayColor"
-            android:textSize="@dimen/sp_14"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_info" />
-
-        <com.zhy.view.flowlayout.FlowLayout
-            android:id="@+id/flowLayoutInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_2"
-            android:paddingStart="@dimen/dp_12"
-            android:paddingEnd="@dimen/dp_2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_personInfo" />
-
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:layout_marginHorizontal="@dimen/dp_12"
-            android:layout_marginTop="@dimen/dp_20"
-            android:background="@color/blackAlpha96"
-            app:layout_constraintTop_toBottomOf="@+id/flowLayoutInfo" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_desc"
@@ -239,7 +194,7 @@
             android:textColor="@color/fontGrayColor"
             android:textSize="@dimen/sp_14"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider2" />
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_description"
@@ -256,59 +211,5 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_desc"
             tools:text="世上无难事只怕有钱人，物以类聚人以穷分。世上无难事只怕有钱人，物以类聚人以穷分。" />
 
-        <View
-            android:id="@+id/divider3"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:layout_marginHorizontal="@dimen/dp_12"
-            android:layout_marginTop="@dimen/dp_20"
-            android:background="@color/blackAlpha96"
-            app:layout_constraintTop_toBottomOf="@+id/tv_description" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_condition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_20"
-            android:gravity="center_vertical"
-            android:text="征友条件"
-            android:textColor="@color/fontGrayColor"
-            android:textSize="@dimen/sp_14"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider3" />
-
-        <com.zhy.view.flowlayout.FlowLayout
-            android:id="@+id/flowLayoutCondition"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_2"
-            android:paddingStart="@dimen/dp_12"
-            android:paddingEnd="@dimen/dp_2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_condition" />
-
-        <View
-            android:id="@+id/divider4"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:layout_marginTop="@dimen/dp_20"
-            android:background="@color/blackAlpha96"
-            app:layout_constraintTop_toBottomOf="@+id/flowLayoutCondition" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_20"
-            android:gravity="center_vertical"
-            android:text="动态"
-            android:textColor="@color/fontTextColor"
-            android:textSize="@dimen/sp_16"
-            android:visibility="gone"
-            app:fontType="@string/fontBold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider4" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

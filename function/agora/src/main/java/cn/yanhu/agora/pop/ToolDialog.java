@@ -73,6 +73,7 @@ public class ToolDialog extends BaseSheetDialog<DialogToolBinding> {
             toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_warning, "发送警告"));
             toolBeanList.add(new ToolBean(cn.yanhu.commonres.R.drawable.svg_room_close, "强制关房"));
         }
+
         ToolsAdapter toolAdapter = new ToolsAdapter();
         binding.dgToolRv.setAdapter(toolAdapter);
         toolAdapter.submitList(toolBeanList);

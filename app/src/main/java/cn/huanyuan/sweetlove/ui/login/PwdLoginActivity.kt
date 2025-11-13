@@ -3,32 +3,37 @@ package cn.huanyuan.sweetlove.ui.login
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.text.Editable
+import android.text.InputType
 import android.text.TextUtils
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.R
+import cn.huanyuan.sweetlove.databinding.ActivityPwdLoginBinding
 import cn.huanyuan.sweetlove.databinding.ActivityVerifyCodeBinding
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
 import cn.yanhu.baselib.base.BaseActivity
+import cn.yanhu.baselib.utils.TextViewDrawableUtils
 import cn.yanhu.baselib.utils.ext.countDown
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.baselib.view.CustomFontEditText
+import cn.yanhu.baselib.view.CustomFontEditText.OnClickRightDrawableListener
 import cn.yanhu.baselib.widget.SimpleTextWatcher
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
+import cn.zj.netrequest.status.ErrorCode
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 
 /**
  * @author: zhengjun
  * created: 2024/2/28
  * desc:
  */
-class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewModel>(
-    R.layout.activity_verify_code,
+class PwdLoginActivity : BaseActivity<ActivityPwdLoginBinding, LoginViewModel>(
+    R.layout.activity_pwd_login,
     LoginViewModel::class.java
 ) {
     override fun initData() {
@@ -39,69 +44,76 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
         val phone = intent.getStringExtra(IntentKeyConfig.DATA)
         if (!TextUtils.isEmpty(phone)){
             mViewModel.phoneExt.set(phone)
-            sendVerifyCode()
         }
     }
 
     override fun initListener() {
         super.initListener()
-        mBinding.btnCode.setOnSingleClickListener {
-            if (checkInputValue()) {
-                sendVerifyCode()
-            }
-        }
         mBinding.btnNext.setOnSingleClickListener {
             startPhoneLogin()
         }
         mBinding.connectedService.setOnSingleClickListener {
             ApplicationProxy.instance.askCustomer()
         }
+        mBinding.etPwd.clickRightDrawableListener = object : OnClickRightDrawableListener{
+            override fun clickRightDrawable() {
+                switchInputType(mBinding.etPwd)
+            }
+        }
     }
 
-    private fun sendVerifyCode(){
-        mViewModel.sendVerifyCode()
+    private fun switchInputType(editText: CustomFontEditText) {
+        val inputType: Int = editText.inputType
+        if (inputType == (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+            // 切换到明文
+            editText.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD)
+            TextViewDrawableUtils.setDrawableRight(
+                mContext,
+                editText,
+                cn.yanhu.commonres.R.drawable.svg_eye_open
+            )
+        } else {
+            // 切换回密文
+            editText.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
+            TextViewDrawableUtils.setDrawableRight(
+                mContext,
+                editText,
+                cn.yanhu.commonres.R.drawable.svg_eye_close
+            )
+        }
+        editText.setSelection(editText.text.toString().length)
     }
+
 
     @SuppressLint("SetTextI18n")
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
-        mViewModel.codeLivedata.observe(this){ it ->
-            parseState(it,{
-                if (it=="白名单用户"){
-                    mBinding.etCode.setText("2024")
-                    startPhoneLogin()
-                }else{
-                    showToast(it)
-                    KeyboardUtils.showSoftInput(mBinding.etCode)
-                }
-                startCodeTimeDown()
-            })
-        }
         mViewModel.loginLivedata.observe(this){ it ->
             parseState(it,{
                 LoginResultManager.loginSuccess(mContext,it)
+            },{
+                if (it.code == ErrorCode.CODE_VERIFY_LOGIN){
+                    VerifyCodeActivity.lunch(mContext,mBinding.etPhone.text.toString().trim())
+                    finish()
+                }
             })
         }
     }
 
-    override fun exactDestroy() {
-        super.exactDestroy()
-        timeDownScope?.cancel()
-    }
 
     private fun startPhoneLogin(){
-        mViewModel.login(LoginResultManager.SOURCE_EMS)
+        mViewModel.login(LoginResultManager.SOURCE_PWD)
     }
 
     private fun checkInputListener() {
         mBinding.etPhone.addTextChangedListener(object : SimpleTextWatcher() {
             override fun afterTextChanged(s: Editable?) {
-                val code = mBinding.etCode.text.toString()
+                val code = mBinding.etPwd.text.toString()
                 setBtnEnable(s, code )
             }
         })
 
-        mBinding.etCode.addTextChangedListener(object : SimpleTextWatcher() {
+        mBinding.etPwd.addTextChangedListener(object : SimpleTextWatcher() {
             override fun afterTextChanged(s: Editable?) {
                 val phone = mBinding.etPhone.text.toString()
                 setBtnEnable(phone, s )
@@ -121,41 +133,10 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
         }
     }
 
-    private fun checkInputValue(): Boolean {
-        val phone = mBinding.etPhone.text.toString()
-        if (TextUtils.isEmpty(phone)) {
-            showToast("请输入手机号码")
-            return false
-        } else if (!RegexUtils.isMobileSimple(phone)) {
-            showToast("请输入正确的手机号码")
-            return false
-        }
-        return true
-    }
-
-    private var timeDownScope: CoroutineScope? = null
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @SuppressLint("SetTextI18n")
-    private fun startCodeTimeDown() {
-        mContext.countDown(start = {
-            timeDownScope = it
-            mBinding.btnCode.alpha = 0.3f
-            mBinding.btnCode.isEnabled = false
-            mBinding.btnCode.text = "60s"
-        }, end = {
-            mBinding.btnCode.alpha = 1f
-            mBinding.btnCode.isEnabled = true
-            mBinding.btnCode.text = "获取验证码"
-        }, next = {
-            mBinding.btnCode.text = "${it}s"
-        }, cancel = {})
-    }
-
 
     companion object {
         fun lunch(context: FragmentActivity, phone: String = "") {
-            val intent = Intent(context, VerifyCodeActivity::class.java)
+            val intent = Intent(context, PwdLoginActivity::class.java)
             intent.putExtra(IntentKeyConfig.DATA, phone)
             context.startActivity(intent)
         }

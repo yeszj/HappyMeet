@@ -3,6 +3,7 @@ package cn.yanhu.imchat.api
 import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.ChatPriceItemInfo
+import cn.yanhu.commonres.bean.CommonErrorTipsInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.SmCheckResult
 import cn.yanhu.commonres.bean.UserDetailInfo
@@ -40,6 +41,13 @@ interface ImChatApiService : CommonApiService {
      */
     @POST("app/v1/room/gift/send")
     suspend fun sendGift(@Body sendGiftRequest: SendGiftRequest): BaseBean<String>
+
+    @POST("app/v1/room/checkSendGift")
+    suspend fun checkSendGift(@Body sendGiftRequest: SendGiftRequest): BaseBean<CommonErrorTipsInfo>
+
+    @POST("app/v1/room/clickConfirm")
+    suspend fun clickConfirm(@Body sendGiftRequest: SendGiftRequest): BaseBean<String>
+
 
     @GET("app/v1/chat/check")
     suspend fun sendCheck(

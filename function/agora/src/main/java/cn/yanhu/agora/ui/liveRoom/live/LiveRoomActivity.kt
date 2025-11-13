@@ -7,6 +7,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.ActivityLiveRoomBinding
 import cn.yanhu.agora.manager.AgoraManager
+import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.agora.manager.monitor.ComprehensiveFrameRateMonitor
 import cn.yanhu.agora.manager.monitor.MemoryMonitor
 import cn.yanhu.agora.manager.refreshRate.SmartRefreshRateManager
@@ -114,6 +115,7 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
 
     override fun exactDestroy() {
         super.exactDestroy()
+        AgoraManager.isLiveRoom = false
         checkMemoryScope?.cancel()
         if (LocalRecordingService.isRunning) {
             LocalServiceManager.stopLocalService(mContext)
@@ -124,7 +126,6 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
             logComToFile(LIVE_ROOM_TAG, "系统回收销毁")
         }
         liveRoomFrg?.exitRoom()
-        AgoraManager.isLiveRoom = false
     }
 
 

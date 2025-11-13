@@ -28,4 +28,7 @@ object WebUrlManager {
 
     const val URL_BEIAN = "https://beian.miit.gov.cn/"
 
+    const val APP_STANDARD= "https://thread.grecocount.com/agreement/sweetlove-gf.html"
+
+
 }

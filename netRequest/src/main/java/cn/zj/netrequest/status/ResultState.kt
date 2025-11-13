@@ -106,7 +106,7 @@ fun dealNetException(e: Throwable, isShowToast: Boolean = true) {
             e.printStackTrace()
             var message = e.message
             if (e is UnknownHostException || e is UnknownServiceException || e is URISyntaxException) {
-                message = ""
+                message = getString(R.string.net_load_error)
             } else if (e is SocketTimeoutException || e is ConnectException) {
                 message = getString(R.string.tips_timeout)
             }

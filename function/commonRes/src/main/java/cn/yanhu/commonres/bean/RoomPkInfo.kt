@@ -14,6 +14,8 @@ data class RoomPkInfo(
     val blueCnt: Int,
     val redMemberAvatarList: MutableList<String>,
     val blueMemberAvatarList: MutableList<String>,
+    val redMemberSeatList: MutableList<PkUserInfo>,
+    val blueMemberSeatList: MutableList<PkUserInfo>,
     val redMemberList: MutableList<String>,
     val blueMemberList: MutableList<String>,
     val showPkStart: String?,//0（展示）、1（不展示）

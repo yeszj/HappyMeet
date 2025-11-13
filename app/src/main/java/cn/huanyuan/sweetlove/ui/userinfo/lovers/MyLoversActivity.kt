@@ -7,6 +7,7 @@ import cn.huanyuan.sweetlove.databinding.ActivityMyLoversBinding
 import cn.yanhu.baselib.base.BaseActivity
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.func.dialog.BindLoversPop
+import cn.yanhu.imchat.manager.SendGiftCheckManager
 import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
@@ -17,7 +18,9 @@ import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.bean.BaseUserInfo
+import cn.yanhu.commonres.bean.CommonErrorTipsInfo
 import cn.yanhu.commonres.bean.GiftInfo
+import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.response.LoversResponse
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.IntentKeyConfig
@@ -25,14 +28,21 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.task.GiftPopAnimTask
+import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.manager.EmMsgManager
+import cn.yanhu.imchat.pop.SendGiftPop.Companion.SOURCE_CHAT
+import cn.yanhu.imchat.pop.SendGiftPop.Companion.SOURCE_VIDEO
 import cn.zj.netrequest.application.ApplicationProxy
+import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.parseState
+import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.CustomException
 import cn.zj.netrequest.status.ErrorCode
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.utils.TextUtils
 import com.lxj.xpopup.core.BasePopupView
+import okio.`-DeprecatedOkio`.source
 
 /**
  * @author: zhengjun
@@ -74,7 +84,7 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
         }
         mViewModel.cancelLoversObservable.observe(this) { it ->
             parseState(it, {
-                showToast("解除情侣成功～")
+                showToast("解除CP成功～")
                 DialogUtils.dismissLoading()
                 EmMsgManager.sendCmdMessagePeople(
                     loversInfo!!.viewInfo.userId,
@@ -110,15 +120,15 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
     private fun bindTips(it: LoversResponse) {
         if (it.loversType != null && it.loversType!! >= 1) {
             if (it.viewInfo.userId == AppCacheManager.userId) {
-                mBinding.titleBar.setTitleRightText("解除情侣")
+                mBinding.titleBar.setTitleRightText("解除CP")
                 mBinding.tvTips.visibility = View.VISIBLE
                 mBinding.tvTips.text =
-                    "你和${it.loverInfo!!.nickName}的情侣关系将在${it.remainDay}天后失效"
+                    "你和${it.loverInfo!!.nickName}的CP关系将在${it.remainDay}天后失效"
             } else if (it.loverInfo!!.userId == AppCacheManager.userId) {
-                mBinding.titleBar.setTitleRightText("解除情侣")
+                mBinding.titleBar.setTitleRightText("解除CP")
                 mBinding.tvTips.visibility = View.VISIBLE
                 mBinding.tvTips.text =
-                    "你和${it.viewInfo.nickName}的情侣关系将在${it.remainDay}天后失效"
+                    "你和${it.viewInfo.nickName}的CP关系将在${it.remainDay}天后失效"
             } else {
                 mBinding.titleBar.setTitleRightText("")
                 mBinding.tvTips.visibility = View.INVISIBLE
@@ -162,12 +172,23 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
             object : BindLoversPop.OnSendListener {
                 override fun onSendGift(giftInfo: GiftInfo) {
                     sendGiftInfo = giftInfo
-                    DialogUtils.showLoading()
-                    mViewModel.bindLovers(viewUserId, giftInfo.id.toString())
+                    checkSendGift(giftInfo)
                 }
             })
     }
 
+    private fun bindLovers(giftInfo: GiftInfo) {
+        DialogUtils.showLoading()
+        mViewModel.bindLovers(viewUserId, giftInfo.id.toString())
+    }
+
+    private fun checkSendGift(giftInfo: GiftInfo){
+        SendGiftCheckManager.checkSendGift(viewUserId,giftInfo.id,object : SendGiftCheckManager.OnCheckGiftListener{
+            override fun onCanSend() {
+                bindLovers(giftInfo)
+            }
+        })
+    }
     private val giftAnimTaskManager: TaskQueueManagerImpl = TaskQueueManagerImpl()
     private fun showGiftSvgAnim() {
         if (sendGiftInfo == null || TextUtils.isEmpty(sendGiftInfo?.svga)) {
@@ -183,7 +204,7 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
     private fun bindLoversSuccess() {
         showGiftSvgAnim()
         DialogUtils.dismissLoading()
-        showToast("绑定情侣成功～")
+        showToast("绑定CP成功～")
         requestData()
         bindLoversPop?.dismiss()
         LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
@@ -196,7 +217,7 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
             loversInfo!!.viewInfo.nickName
         }
         val spansBuilder = Spans.builder()
-            .text("确认要解除你和${nickName}的情侣关系吗？");
+            .text("确认要解除你和${nickName}的CP关系吗？");
         if (loversInfo?.isFree == 0) {
             spansBuilder.text("\n\n温馨提示：需支付${loversInfo?.cancalPrice}玫瑰")
                 .color(
@@ -208,7 +229,7 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
 
         val content = spansBuilder.build()
         return DialogUtils.showConfirmDialog(
-            "解除情侣",
+            "解除CP",
             {
                 DialogUtils.showLoading()
                 val cancelUserId = if (loversInfo!!.viewInfo.userId == AppCacheManager.userId) {

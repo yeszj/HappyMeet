@@ -22,7 +22,7 @@ public class GiftInfo implements Serializable {
 
     public static final int TYPE_ROSE = 13;
 
-    public static final int TYPE_LOVER = 14 ;//情侣
+    public static final int TYPE_LOVER = 14 ;//CP
 
     private String name;
     private int price;
@@ -53,15 +53,15 @@ public class GiftInfo implements Serializable {
 
     public String getLoversDesc() {
         if (loversType == 1) {
-            return "黄金情侣";
+            return "黄金CP";
         } else if (loversType == 2) {
-            return "水晶情侣";
+            return "水晶CP";
 
         } else if (loversType == 3) {
-            return "钻石情侣";
+            return "钻石CP";
 
         } else {
-            return "永久情侣";
+            return "永久CP";
         }
     }
 

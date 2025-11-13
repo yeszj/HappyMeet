@@ -200,11 +200,12 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
             val chatContent: ChatTipContent? = smCheckResult!!.chatContent
             val systemTipContent: CommonSystemMsgInfo? = smCheckResult!!.systemTipContent
             if (systemTipContent != null) {
-                EmMsgManager.sendCustomMsg(
+                val customMsg = EmMsgManager.getCustomMsg(
                     conversationId,
                     ChatConstant.MSG_COMMON_SYSTEM,
                     GsonUtils.toJson(systemTipContent)
                 )
+                sendChatMessage(customMsg)
             } else if (chatContent != null) {
                 saveSystemMsgFail(chatContent)
             }
