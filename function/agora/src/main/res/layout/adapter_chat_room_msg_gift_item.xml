@@ -11,7 +11,7 @@
 
         <variable
             name="userInfo"
-            type="cn.yanhu.commonres.bean.BaseUserInfo" />
+            type="cn.yanhu.commonres.bean.UserDetailInfo" />
 
         <import type="android.view.View" />
     </data>

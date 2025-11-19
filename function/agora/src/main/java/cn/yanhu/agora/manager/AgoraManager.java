@@ -73,20 +73,20 @@ public class AgoraManager implements IMediaExtensionObserver {
 
     private IRtcEngineEventHandlerListener iRtcEngineEventHandlerListener;
 
-    public void setRtcEngineEventHandlerListener(IRtcEngineEventHandlerListener iRtcEngineEventHandlerListener){
+    public void setRtcEngineEventHandlerListener(IRtcEngineEventHandlerListener iRtcEngineEventHandlerListener) {
         this.iRtcEngineEventHandlerListener = iRtcEngineEventHandlerListener;
     }
 
     public void init(Activity baseContext, Integer userRole, View surfaceView) {
         mRtcEngine = RtcEngineInit.INSTANCE.getMRtcEngine();
-        if (mRtcEngine==null){
+        if (mRtcEngine == null) {
             RtcEngine.destroy();
             mRtcEngine = RtcEngineInit.INSTANCE.initRtcEngine(baseContext);
-            if (mRtcEngine==null){
+            if (mRtcEngine == null) {
                 return;
             }
         }
-        if (iRtcEngineEventHandlerListener!=null){
+        if (iRtcEngineEventHandlerListener != null) {
             mRtcEngine.addHandler(mRtcEventHandler);
         }
         mRtcEngine.enableAudioVolumeIndication(2000, 3, false);
@@ -107,6 +107,7 @@ public class AgoraManager implements IMediaExtensionObserver {
             setupLocalVideo(surfaceView);
         }
     }
+
     private void setupLocalVideo(View surfaceView) {
         mRtcEngine.startPreview();
         // BeautySetManager.getInstance().enableBeauty(true);
@@ -127,14 +128,14 @@ public class AgoraManager implements IMediaExtensionObserver {
 
 
     public void setVideoEncoderConfiguration(int width, int height) {
-        if (mRtcEngine==null){
+        if (mRtcEngine == null) {
             return;
         }
         VideoEncoderConfiguration videoEncoderConfiguration = new VideoEncoderConfiguration();
         videoEncoderConfiguration.dimensions = new VideoEncoderConfiguration.VideoDimensions(width, height);
         videoEncoderConfiguration.degradationPrefer = VideoEncoderConfiguration.DEGRADATION_PREFERENCE.MAINTAIN_FRAMERATE;
         videoEncoderConfiguration.orientationMode = VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE;
-        CameraCapturerConfiguration cameraCapturerConfiguration = new CameraCapturerConfiguration(new CameraCapturerConfiguration.CaptureFormat(width,height,VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15.getValue()));
+        CameraCapturerConfiguration cameraCapturerConfiguration = new CameraCapturerConfiguration(new CameraCapturerConfiguration.CaptureFormat(width, height, VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15.getValue()));
         mRtcEngine.setCameraCapturerConfiguration(cameraCapturerConfiguration);
         mRtcEngine.setVideoEncoderConfiguration(videoEncoderConfiguration);
     }
@@ -159,8 +160,9 @@ public class AgoraManager implements IMediaExtensionObserver {
         ThreadUtils.executeByIo(new ThreadUtils.SimpleTask<Integer>() {
             @Override
             public Integer doInBackground() {
-                return mRtcEngine.preloadChannel(token, roomID,Integer.parseInt( AppCacheManager.INSTANCE.getUserId()));
+                return mRtcEngine.preloadChannel(token, roomID, Integer.parseInt(AppCacheManager.INSTANCE.getUserId()));
             }
+
             @Override
             public void onSuccess(Integer result) {
 
@@ -197,7 +199,7 @@ public class AgoraManager implements IMediaExtensionObserver {
     }
 
     public void leaveChannel() {
-        if (mRtcEngine != null ) {
+        if (mRtcEngine != null) {
             mRtcEngine.leaveChannel();
         }
     }
@@ -339,17 +341,22 @@ public class AgoraManager implements IMediaExtensionObserver {
         @Override
         public void onTokenPrivilegeWillExpire(String token) {
             logcom("onTokenPrivilegeWillExpire");
-            if (iRtcEngineEventHandlerListener!=null){
+            if (iRtcEngineEventHandlerListener != null) {
                 iRtcEngineEventHandlerListener.agoraListener(TOKEN_WILL_EXPIRE, 0);
             }
             super.onTokenPrivilegeWillExpire(token);
+        }
+
+        @Override
+        public void onRemoteVideoStats(RemoteVideoStats stats) {
+            super.onRemoteVideoStats(stats);
         }
 
         //token过期回调
         @Override
         public void onRequestToken() {
             logcom("onRequestToken");
-            if (iRtcEngineEventHandlerListener!=null) {
+            if (iRtcEngineEventHandlerListener != null) {
                 iRtcEngineEventHandlerListener.agoraListener(TOKEN_EXPIRE, 0);
             }
             super.onRequestToken();
@@ -360,7 +367,7 @@ public class AgoraManager implements IMediaExtensionObserver {
             logcom("有人上麦：" + uid);
             if (isInitSuccess) {
                 logcom("上麦：" + uid);
-                if (iRtcEngineEventHandlerListener!=null) {
+                if (iRtcEngineEventHandlerListener != null) {
                     iRtcEngineEventHandlerListener.agoraListener(USER_SET_UP, uid);
                 }
             }
@@ -370,7 +377,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         @Override
         public void onUserOffline(int uid, int reason) {
             logcom("onUserOffline：" + uid + "  reason：" + reason);
-            if (iRtcEngineEventHandlerListener!=null){
+            if (iRtcEngineEventHandlerListener != null) {
 
                 if (reason == Constants.USER_OFFLINE_BECOME_AUDIENCE) {//用户下麦
                     logcom("下麦：" + uid);
@@ -408,7 +415,7 @@ public class AgoraManager implements IMediaExtensionObserver {
             writeRtcLog("onLocalVideoStateChanged %s %d %d", source.toString(), state, error);
             if (source.getValue() == VIDEO_SOURCE_CAMERA_PRIMARY && state == 3 && error == 4) {
                 mRtcEngine.enableLocalVideo(true);
-                if (iRtcEngineEventHandlerListener!=null) {
+                if (iRtcEngineEventHandlerListener != null) {
                     iRtcEngineEventHandlerListener.agoraListener(USER_ERROR_CAMERA_DISABLED, -1);
                 }
             }
@@ -424,7 +431,7 @@ public class AgoraManager implements IMediaExtensionObserver {
             super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
             logcom(String.format("远端视频回调 uid=%d state=%d reason=%d elapsed=%d", uid, state, reason, elapsed));
             writeRtcLog("远端视频回调 uid=%d state=%d reason=%d elapsed=%d", uid, state, reason, elapsed);
-            if (iRtcEngineEventHandlerListener!=null) {
+            if (iRtcEngineEventHandlerListener != null) {
                 if (state == 2) {
                     if (reason == 2) {
                         logcom("远端视频恢复正常播放   uid：" + uid + "————elapsed：" + elapsed);
@@ -445,11 +452,12 @@ public class AgoraManager implements IMediaExtensionObserver {
             }
         }
 
+
         @Override
         public void onFirstRemoteVideoFrame(int uid, int width, int height, int elapsed) {
             super.onFirstRemoteVideoFrame(uid, width, height, elapsed);
             logcom("远端视频初始化完成   uid：" + uid + "————elapsed：" + elapsed);
-            if (iRtcEngineEventHandlerListener!=null) {
+            if (iRtcEngineEventHandlerListener != null) {
                 iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_INIT_FINISH, uid);
             }
         }
@@ -457,7 +465,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         @Override
         public void onFirstLocalVideoFrame(Constants.VideoSourceType source, int width, int height, int elapsed) {
             super.onFirstLocalVideoFrame(source, width, height, elapsed);
-            if (iRtcEngineEventHandlerListener!=null) {
+            if (iRtcEngineEventHandlerListener != null) {
                 iRtcEngineEventHandlerListener.agoraListener(USER_REMOTE_VIDEO_INIT_FINISH, -1);
             }
         }
@@ -466,18 +474,20 @@ public class AgoraManager implements IMediaExtensionObserver {
         public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
             super.onNetworkQuality(uid, txQuality, rxQuality);
             logcom("网络状态，uid：" + uid + "————txQuality：" + txQuality + "————rxQuality：" + rxQuality);
-            if (iRtcEngineEventHandlerListener!=null) {
-                if (uid == 0) {
-                    if (txQuality >= 4 || rxQuality >= 4) {
-                        if (txQuality == 6 || rxQuality == 6) {
-                            iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_DOWN, uid);
-                        } else {
-                            iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_BAD, uid);
-                        }
-                    } else {
-                        iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_GOOD, uid);
-
+            if (iRtcEngineEventHandlerListener != null) {
+                if ((txQuality > 4 || rxQuality > 4) || (txQuality == 0 && rxQuality == 0)) {
+                    if (txQuality == 8 && rxQuality == 8) {
+                        //网络质量检测进行中
+                        return;
                     }
+                    if (txQuality == 6 || rxQuality == 6) {
+                        iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_DOWN, uid);
+                    } else {
+                        iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_BAD, uid);
+                    }
+                } else {
+                    iRtcEngineEventHandlerListener.agoraListener(USER_NETWOKR_GOOD, uid);
+
                 }
             }
         }
@@ -491,7 +501,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         @Override
         public void onAudioVolumeIndication(AudioVolumeInfo[] speakers, int totalVolume) {
             super.onAudioVolumeIndication(speakers, totalVolume);
-            if (iRtcEngineEventHandlerListener!=null) {
+            if (iRtcEngineEventHandlerListener != null) {
                 if (speakers != null && speakers.length > 0) {
                     int uid = speakers[0].uid;
                     if (uid != 0) {
@@ -514,7 +524,7 @@ public class AgoraManager implements IMediaExtensionObserver {
             mRtcEngine.disableVideo();
             BeautyManager.INSTANCE.destroy();
         }
-       // mRtcEngine = null;
+        // mRtcEngine = null;
         isInitSuccess = false;
         iRtcEngineEventHandlerListener = null;
     }

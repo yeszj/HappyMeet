@@ -152,7 +152,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         return
                     }
                     liveRoomUserListPop = LiveRoomSeatManagerPop.showDialog(
-                        mContext,
+                        this@ThreeLiveRoomFrg,
                         userList,
                         roomSourceBean, gender, onSendSeatInviteListener = inviteSeatListener
                     )
@@ -194,9 +194,9 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         topTitleBinding.tvJoinGroup.visibility = View.VISIBLE
     }
 
-    override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {
-        super.refreshOnlineUser(onlineResponse)
-        topTitleBinding.tvOnlineNum.text = onlineResponse.onlineNum.toString()
+    override fun refreshOnlineUser(onlineNum: Int) {
+        super.refreshOnlineUser(onlineNum)
+        topTitleBinding.tvOnlineNum.text = onlineNum.toString()
     }
 
     override fun getRoomInfoSuccess() {
@@ -418,7 +418,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
 
     override fun refreshSeatInfo(it: MutableList<RoomSeatInfo>, uid: Int) {
         val items = seatUserAdapter.items
-        if (items==null){
+        if (items.isNullOrEmpty()){
             return
         }
         ThreadUtils.getMainHandler().post {
@@ -486,7 +486,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     override fun userNetChanged(uid: String, ifNetDisConnect: Boolean) {
-        var list =   seatUserAdapter.items.toMutableList()
+        var list =   seatUserAdapter.items
         list.forEach {
             if (it.roomUserSeatInfo?.userId == uid && it.ifNetDisConnect != ifNetDisConnect) {
                 it.ifNetDisConnect = ifNetDisConnect

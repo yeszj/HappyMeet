@@ -32,9 +32,14 @@ import java.net.URL
  * desc:
  */
 object AgoraSdkDownloadManager {
+    @SuppressLint("SdCardPath")
     @JvmStatic
     fun getSoPath(): String {
-        return ActivityUtils.getTopActivity().getDir("libs", MODE_PRIVATE).absolutePath
+        val topActivity = ActivityUtils.getTopActivity()
+        if (topActivity==null){
+            return "/data/data/cn.huanyuan.sweetlove/app_libs"
+        }
+        return topActivity.getDir("libs", MODE_PRIVATE).absolutePath
     }
 
     private var downloadFailCount = 0

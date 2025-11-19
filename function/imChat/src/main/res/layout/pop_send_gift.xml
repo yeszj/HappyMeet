@@ -164,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_13"
-                    tools:text="200" />
+                    android:text="0" />
 
                 <cn.yanhu.baselib.view.CustomFontTextView
                     android:id="@+id/tv_recharge"

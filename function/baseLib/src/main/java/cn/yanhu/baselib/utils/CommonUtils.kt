@@ -143,7 +143,16 @@ object CommonUtils {
     }
 
     fun compareString(startValue: String?, endValue: String?): Boolean {
-        return BigDecimal(startValue) >= BigDecimal(endValue)
+        var finalValue = startValue
+        if (TextUtils.isEmpty(startValue)) {
+            finalValue = "0"
+        }
+
+        var endFinalValue = endValue
+        if (TextUtils.isEmpty(endValue)) {
+            endFinalValue = "0"
+        }
+        return BigDecimal(finalValue) >= BigDecimal(endFinalValue)
     }
 
     fun compareString(startValue: String?, endValue: BigDecimal?): Boolean {

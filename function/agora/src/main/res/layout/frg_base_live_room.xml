@@ -211,7 +211,7 @@
             android:src="@drawable/ic_free_seat_room"
             app:layout_constraintBottom_toTopOf="@+id/bgInput"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:visibility="visible" />
+            tools:visibility="invisible" />
 
         <LinearLayout
             android:id="@+id/vg_applySeat"
@@ -244,7 +244,38 @@
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/vg_applyList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/bg_gradient_seat_btn"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:paddingVertical="@dimen/dp_4"
+            tools:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vg_applySeat">
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="申请列表"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_applyNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0人"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                app:fontType="@string/fontMedium" />
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/vg_song"
             android:layout_width="wrap_content"
@@ -257,7 +288,7 @@
             android:paddingVertical="@dimen/dp_4"
             android:visibility="@{roomInfo.songRoom?View.VISIBLE:View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vg_applySeat">
+            app:layout_constraintTop_toBottomOf="@+id/vg_applyList">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
@@ -345,7 +376,7 @@
             app:layout_constraintTop_toTopOf="@+id/vg_clickRose"
             app:layout_constraintBottom_toBottomOf="@+id/vg_clickRose"
             android:visibility="invisible"
-            tools:visibility="visible">
+            tools:visibility="invisible">
 
             <cn.yanhu.baselib.view.StrokeGradientTextView
                 android:id="@+id/tv_faceTip1"
@@ -398,7 +429,7 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:visibility="visible">
+            tools:visibility="invisible">
 
             <cn.yanhu.commonres.view.CircularCountdownTimer
                 android:id="@+id/progress"

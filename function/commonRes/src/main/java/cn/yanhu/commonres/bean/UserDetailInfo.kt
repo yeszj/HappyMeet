@@ -1,5 +1,6 @@
 package cn.yanhu.commonres.bean
 
+import android.text.TextUtils
 import androidx.databinding.Bindable
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.RoomTypeManager
@@ -35,6 +36,14 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var guardNickName: String = ""
     var loverInfo: LoverInfo? = null
     var guardInfo: BaseUserInfo? = null
+    var avatarFrameCover: String?=""
+
+    fun getAvatarFramePic(): String?{
+        if (TextUtils.isEmpty(avatarFrameCover)){
+            return avatarFrame
+        }
+        return avatarFrameCover
+    }
 
     @Bindable
     var ifMute: Boolean = false //true:禁言了 false:未禁言

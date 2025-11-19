@@ -75,11 +75,14 @@ object CacheSizeManager {
      * 清除所有缓存
      */
     fun clearAllCache(context: Context,onClearCacheListener: OnClearCacheListener?=null) {
-
-        DialogUtils.showLoading("正在清除...")
+        if (onClearCacheListener!=null){
+            DialogUtils.showLoading("正在清除...")
+        }
         ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
             override fun onSuccess(result: Boolean) {
-                showToast("清除成功")
+                if (onClearCacheListener!=null){
+                    showToast("清除成功")
+                }
                 GlideHealthMonitor.recoverGlide()
                 onClearCacheListener?.onClearSuccess()
                 DialogUtils.dismissLoading()

@@ -442,8 +442,6 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     override fun userLeaveChanged(uid: Int) {
-        getOnlineUser()
-
         ThreadUtils.getMainHandler().post {
             for (i in 0 until seatList.size) {
                 val item = seatList[i]
@@ -791,11 +789,11 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
         }
     }
 
-    override fun refreshOnlineUser(onlineResponse: RoomOnlineResponse) {
+    override fun refreshOnlineUser(onlineNum:Int) {
         if (isSevenRoom()) {
-            rankViewBinding.tvOnlineNum.text = onlineResponse.onlineNum.toString()
+            rankViewBinding.tvOnlineNum.text = onlineNum.toString()
         } else {
-            nineRankViewBinding.tvOnlineNum.text = onlineResponse.onlineNum.toString()
+            nineRankViewBinding.tvOnlineNum.text = onlineNum.toString()
         }
     }
 

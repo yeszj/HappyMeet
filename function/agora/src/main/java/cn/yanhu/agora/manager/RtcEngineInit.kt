@@ -11,7 +11,6 @@ import io.agora.rtc2.IMediaExtensionObserver
 import io.agora.rtc2.IRtcEngineEventHandler
 import io.agora.rtc2.RtcEngineConfig
 import io.agora.rtc2.RtcEngineEx
-import io.agora.rtc2.video.VideoCanvas
 
 /**
  * @author: zhengjun

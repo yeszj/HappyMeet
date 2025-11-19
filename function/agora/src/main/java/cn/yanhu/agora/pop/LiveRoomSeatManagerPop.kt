@@ -8,6 +8,7 @@ import cn.yanhu.agora.adapter.liveRoom.LiveRoomUserListAdapter
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.databinding.PopLiveRoomUserListBinding
 import cn.yanhu.agora.listener.OnSendSeatInviteListener
+import cn.yanhu.agora.ui.liveRoom.live.BaseLiveRoomFrg
 import cn.yanhu.baselib.refresh.NoMoreDataFootView
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
@@ -21,6 +22,7 @@ import com.chad.library.adapter4.BaseQuickAdapter
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.BottomPopupView
 import com.scwang.smart.refresh.footer.BallPulseFooter
+import com.umeng.socialize.utils.DeviceConfigInternal.context
 
 /**
  * @author: zhengjun
@@ -29,21 +31,21 @@ import com.scwang.smart.refresh.footer.BallPulseFooter
  */
 @SuppressLint("ViewConstructor")
 class LiveRoomSeatManagerPop(
-    context: Context,
+    val fragment: BaseLiveRoomFrg,
     private val userList: MutableList<UserDetailInfo>,
     val roomDetailInfo: RoomDetailInfo,
-    val gender:String,
+    val gender: String,
     val onSendSeatInviteListener: OnSendSeatInviteListener
 
-) : BottomPopupView(context) {
+) : BottomPopupView(fragment.requireActivity()) {
     private val userAdapter by lazy { LiveRoomUserListAdapter() }
     override fun getImplLayoutId(): Int {
         return R.layout.pop_live_room_user_list
     }
 
     private lateinit var mBiding: PopLiveRoomUserListBinding
-    private var page:Int = 1
-    private var type :Int =0
+    private var page: Int = 1
+    private var type: Int = 0
     private var inRoomUserList: MutableList<UserDetailInfo> = mutableListOf()
     private var onlineUserList: MutableList<UserDetailInfo> = mutableListOf()
     private var friendUserList: MutableList<UserDetailInfo> = mutableListOf()
@@ -59,15 +61,16 @@ class LiveRoomSeatManagerPop(
         mBiding.rvUser.adapter = userAdapter
         inRoomUserList = userList
         userAdapter.submitList(userList)
-        userAdapter.isStateViewEnable = userList.size <= 0
-        userAdapter.addOnItemChildClickListener(R.id.tv_invite,
+        userAdapter.isStateViewEnable = userList.isEmpty()
+        userAdapter.addOnItemChildClickListener(
+            R.id.tv_invite,
             object : BaseQuickAdapter.OnItemChildClickListener<UserDetailInfo> {
                 override fun onItemClick(
                     adapter: BaseQuickAdapter<UserDetailInfo, *>,
                     view: View,
                     position: Int
                 ) {
-                    val ownerInfo = roomDetailInfo.ownerInfo?:return
+                    val ownerInfo = roomDetailInfo.ownerInfo ?: return
                     val map: MutableMap<String, Any> = HashMap()
                     map["fromNickName"] = ownerInfo.nickName
                     map["portrait"] = ownerInfo.portrait
@@ -80,9 +83,10 @@ class LiveRoomSeatManagerPop(
                             item.seatNum.toString()
                         )
                         userAdapter.removeAt(position)
+                        fragment.setApplyNum()
                         showToast("已同意")
                     } else {
-                        onSendSeatInviteListener.onSendInvite(map,item)
+                        onSendSeatInviteListener.onSendInvite(map, item)
                     }
                 }
 
@@ -102,14 +106,17 @@ class LiveRoomSeatManagerPop(
                     userAdapter.submitList(inRoomUserList)
                     type = 0
                 }
+
                 R.id.rb2 -> {
                     userAdapter.submitList(onlineUserList)
                     type = 1
                 }
+
                 R.id.rb3 -> {
                     userAdapter.submitList(friendUserList)
                     type = 2
                 }
+
                 R.id.rb4 -> {
                     userAdapter.submitList(groupMemberUserList)
                     type = 3
@@ -125,46 +132,53 @@ class LiveRoomSeatManagerPop(
     }
 
     private fun getUserList() {
-        request({ agoraRxApi.getInviteList(roomDetailInfo.roomId, gender, type.toString(),page) },
+        request(
+            { agoraRxApi.getInviteList(roomDetailInfo.roomId, gender, type.toString(), page) },
             object : OnRequestResultListener<MutableList<UserDetailInfo>> {
                 override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
                     val userList = data.data ?: return
-                    if (page == 1){
+                    if (page == 1) {
                         when (type) {
                             0 -> {
                                 inRoomUserList = userList
                             }
+
                             1 -> {
                                 onlineUserList = userList
                             }
+
                             2 -> {
                                 friendUserList = userList
                             }
-                            3->{
+
+                            3 -> {
                                 groupMemberUserList = userList
                             }
                         }
                         userAdapter.submitList(userList)
                         mBiding.refresh.finishRefresh()
-                    }else{
+                    } else {
                         when (type) {
                             0 -> {
                                 inRoomUserList.addAll(userList)
                             }
+
                             1 -> {
                                 onlineUserList.addAll(userList)
                             }
+
                             2 -> {
                                 friendUserList.addAll(userList)
                             }
-                            3 ->{
+
+                            3 -> {
                                 groupMemberUserList.addAll(userList)
                             }
                         }
                         userAdapter.addAll(userList)
-                        if (userList.size<10){
+                        if (userList.size < 10) {
                             mBiding.refresh.finishLoadMoreWithNoMoreData()
-                        }else{
+                        } else {
                             mBiding.refresh.finishLoadMore()
                         }
                     }
@@ -175,15 +189,21 @@ class LiveRoomSeatManagerPop(
     companion object {
         @JvmStatic
         fun showDialog(
-            mContext: Context,
+            mContext: BaseLiveRoomFrg,
             userList: MutableList<UserDetailInfo>,
             ownerInfo: RoomDetailInfo,
             gender: String = "0",
             onSendSeatInviteListener: OnSendSeatInviteListener
         ): LiveRoomSeatManagerPop {
-            val matchPop = LiveRoomSeatManagerPop(mContext, userList, ownerInfo,gender,onSendSeatInviteListener)
+            val matchPop = LiveRoomSeatManagerPop(
+                mContext,
+                userList,
+                ownerInfo,
+                gender,
+                onSendSeatInviteListener
+            )
             val builder =
-                XPopup.Builder(mContext)
+                XPopup.Builder(mContext.requireActivity())
             builder.enableDrag(false).asCustom(matchPop).show()
             return matchPop
         }

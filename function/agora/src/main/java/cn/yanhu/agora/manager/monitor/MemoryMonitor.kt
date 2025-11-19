@@ -3,8 +3,10 @@ package cn.yanhu.agora.manager.monitor
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Debug
+import cn.yanhu.baselib.utils.CacheSizeManager
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
+import com.blankj.utilcode.util.CacheMemoryUtils
 
 object MemoryMonitor {
 

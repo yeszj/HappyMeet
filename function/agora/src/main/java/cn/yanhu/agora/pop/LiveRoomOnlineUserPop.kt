@@ -62,9 +62,8 @@ class LiveRoomOnlineUserPop(
         userAdapter.refreshRoomInfo(roomDetailInfo)
         userAdapter.stateView = emptyView
         mBiding.rvUser.adapter = userAdapter
-        removeSameUser(userList)
-        userAdapter.submitList(userList)
-        userAdapter.isStateViewEnable = userList.size <= 0
+//        removeSameUser(userList)
+//        userAdapter.submitList(userList)
         userAdapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener<UserDetailInfo>{
             override fun onClick(
                 adapter: BaseQuickAdapter<UserDetailInfo, *>,
@@ -190,6 +189,7 @@ class LiveRoomOnlineUserPop(
                     }
                     removeSameUser(onlineUsers)
                     if (page == 1) {
+                        userAdapter.isStateViewEnable = onlineUsers.isEmpty()
                         userAdapter.submitList(onlineUsers)
                         mBiding.refresh.finishRefresh()
                     } else {

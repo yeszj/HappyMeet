@@ -36,7 +36,7 @@
 
                 <cn.yanhu.commonres.view.UserAvatarView
                     android:id="@+id/avatarView"
-                    avatarFrameUrl="@{userinfo.avatarFrame}"
+                    avatarFrameUrl="@{userinfo.avatarFramePic}"
                     avatarUrl="@{userinfo.portrait}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
