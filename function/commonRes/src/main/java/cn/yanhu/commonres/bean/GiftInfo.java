@@ -13,14 +13,14 @@ import java.util.Objects;
  * @date 2021/10/9
  */
 public class GiftInfo implements Serializable {
-    public static final int TYPE_GIFT = 1;
+    public static final int TYPE_GIFT = 1;//普通礼物
     public static final int TYPE_FRAME = 5;//花环礼物
     public static final int TYPE_RANDOM_BOX = 10;//随机礼物
     public static final int TYPE_SONG = 11;//点歌礼物
 
     public static final int TYPE_FACE = 12;//贴脸礼物
 
-    public static final int TYPE_ROSE = 13;
+    public static final int TYPE_ROSE = 13;//玫瑰
 
     public static final int TYPE_LOVER = 14 ;//CP
 

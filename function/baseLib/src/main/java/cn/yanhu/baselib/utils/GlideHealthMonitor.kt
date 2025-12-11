@@ -131,7 +131,7 @@ object GlideHealthMonitor {
                 Thread.sleep(100)
 
                 // 4.安全销毁旧实例
-                safeTearDown()
+                //safeTearDown()
 
                 // 5.重新初始化 Glide
                 Glide.init(appContext, GlideBuilder().apply {

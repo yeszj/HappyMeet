@@ -32,8 +32,8 @@ import com.umeng.analytics.MobclickAgent
 object LoginResultManager {
     const val SOURCE_EMS = 0
     const val SOURCE_JIGUANG = 1
-
     const val SOURCE_PWD = 2
+    const val SOURCE_WX = 4
 
     fun loginSuccess(mContext: FragmentActivity, loginSuccessInfo: LoginSuccessInfo) {
         if (!TextUtils.isEmpty(loginSuccessInfo.phoneEndNum)) {

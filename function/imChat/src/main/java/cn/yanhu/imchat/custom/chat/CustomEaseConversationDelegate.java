@@ -70,43 +70,34 @@ public class CustomEaseConversationDelegate extends EaseDefaultConversationDeleg
         Context context = holder.itemView.getContext();
         holder.listIteaseLayout.setBackground(bean.isTop() ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg) : ContextCompat.getDrawable(context, cn.yanhu.commonres.R.drawable.shape_transparent));
         String conversationId;
-        if (conversationInfo.isLoadCache()) {
-            CacheConversationInfo cacheConversationInfo = conversationInfo.getCacheConversationInfo();
-            conversationId = cacheConversationInfo.getConversationId();
-            ConversationFinalMessageInfo cacheMessage = cacheConversationInfo.getCacheMessage();
-            ConversationFinalMessageInfo finalMessage = conversationInfo.getFinalMessage();
-            bindFinalMessage(holder, context, Objects.requireNonNullElse(finalMessage, cacheMessage));
-            showUnreadNum(holder, cacheConversationInfo.getUnReadMsgCount());
-        } else {
-            EMConversation item = (EMConversation) bean.getInfo();
-            conversationId = item.conversationId();
-            if (!setModel.isHideUnreadDot()) {
-                if (conversationInfo.isClearUnReadCount()) {
-                    showUnreadNum(holder, 0);
-                } else {
-                    showUnreadNum(holder, item.getUnreadMsgCount());
-                }
+        EMConversation item = (EMConversation) bean.getInfo();
+        conversationId = item.conversationId();
+        if (!setModel.isHideUnreadDot()) {
+            if (conversationInfo.isClearUnReadCount()) {
+                showUnreadNum(holder, 0);
+            } else {
+                showUnreadNum(holder, item.getUnreadMsgCount());
+            }
+        }
+
+        EMMessage lastMessage = item.getLastMessage();
+
+        if (lastMessage != null) {
+            setContent(holder, context, lastMessage, conversationInfo.isGroup());
+            if (!conversationInfo.isGroup()) {
+                ConversationFinalMessageInfo finalMessage = conversationInfo.getFinalMessage();
+                bindFinalMessage(holder, context, finalMessage);
             }
 
-            EMMessage lastMessage = item.getLastMessage();
-
-            if (lastMessage != null) {
-                setContent(holder, context, lastMessage, conversationInfo.isGroup());
-                if (!conversationInfo.isGroup()) {
-                    ConversationFinalMessageInfo finalMessage = conversationInfo.getFinalMessage();
-                    bindFinalMessage(holder, context, finalMessage);
-                }
-
-                if (lastMessage.direct() == EMMessage.Direct.SEND && lastMessage.status() == EMMessage.Status.FAIL) {
-                    binding.tvFail.setVisibility(View.VISIBLE);
-                } else {
-                    binding.tvFail.setVisibility(View.GONE);
-                }
+            if (lastMessage.direct() == EMMessage.Direct.SEND && lastMessage.status() == EMMessage.Status.FAIL) {
+                binding.tvFail.setVisibility(View.VISIBLE);
             } else {
-                holder.message.setText("");
-                holder.time.setText("");
                 binding.tvFail.setVisibility(View.GONE);
             }
+        } else {
+            holder.message.setText("");
+            holder.time.setText("");
+            binding.tvFail.setVisibility(View.GONE);
         }
 
         setConversationUserInfo(holder, conversationInfo, conversationId);
@@ -195,12 +186,12 @@ public class CustomEaseConversationDelegate extends EaseDefaultConversationDeleg
         if (dataBean != null) {
             if (dataBean.isAuth()) {
                 binding.ivAuth.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 binding.ivAuth.setVisibility(View.GONE);
             }
             if (dataBean.isFriend()) {
                 binding.tvTagFriend.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 binding.tvTagFriend.setVisibility(View.GONE);
             }
             holder.name.setText(dataBean.getNickName());

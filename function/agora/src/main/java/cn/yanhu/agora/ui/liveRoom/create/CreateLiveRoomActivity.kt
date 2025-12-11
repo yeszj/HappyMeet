@@ -2,6 +2,7 @@ package cn.yanhu.agora.ui.liveRoom.create
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.text.Html
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
@@ -12,7 +13,6 @@ import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomTypeInfo
 import cn.yanhu.agora.bean.request.CreateRoomRequest
 import cn.yanhu.agora.databinding.ActivityCreateLiveRoomBinding
-import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.agora.manager.dbCache.AgoraSdkCacheManager
 import cn.yanhu.agora.manager.dbCache.BeautyCacheManager
 import cn.yanhu.agora.pop.BuyLiveTimePop
@@ -26,6 +26,7 @@ import cn.yanhu.baselib.widget.spans.CustomClickSpan
 import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.adapter.MyBannerImageAdapter
 import cn.yanhu.commonres.bean.BannerBean
+import cn.yanhu.commonres.bean.RoomListBean
 import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.LiveDataEventManager
@@ -34,7 +35,9 @@ import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.utils.PermissionXUtils
+import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
+import cn.zj.netrequest.status.ErrorCode
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.GsonUtils
@@ -66,7 +69,7 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
             roomTypeAdapter.setSelectPosition(
                 position
             )
-            setRestTime()
+            setPrivateRoomTip()
         }
         val stringExtra = intent.getStringExtra(IntentKeyConfig.DATA)
         if (TextUtils.isEmpty(stringExtra) || stringExtra == "null") {
@@ -78,10 +81,21 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
         createRoomRequest.welcomeMsg = roomConfigInfo.welcomeMsg
         rechargeAgreement = roomConfigInfo.liveAgreement
         mBinding.roomInfo = createRoomRequest
+
+        val html =  if (roomConfigInfo.exclusiveRoomPrice>0){
+            "1.开启专属房<font color = '#F8459B'>主持需支付${roomConfigInfo.exclusiveRoomPrice}玫瑰/次</font>；男嘉宾上麦需<font color = '#F8459B'>按${roomConfigInfo.exclusiveSeatPrice}玫瑰/分钟计费</font>；<br/>" +
+                    "2.主持中途若切换为公开房间，再次转专属时，<font color = '#F8459B'>需重新支付${roomConfigInfo.exclusiveRoomPrice}玫瑰/次</font>(每次转换专属需单独计费)"
+        }else{
+            "1.开启专属房男嘉宾上麦需<font color = '#F8459B'>按${roomConfigInfo.exclusiveSeatPrice}玫瑰/分钟计费</font>"
+        }
+
+
+        mBinding.tvPriceTips.text = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
+
         roomTypeAdapter.submitList(roomConfigInfo.types)
         bindBanner(roomConfigInfo.banners)
         setAgreementInfo()
-        setRestTime()
+        setPrivateRoomTip()
     }
 
     private fun setAgreementInfo() {
@@ -119,13 +133,17 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
     private var selectTypeItem: RoomTypeInfo? = null
 
     @SuppressLint("SetTextI18n")
-    private fun setRestTime() {
+    private fun setPrivateRoomTip() {
         selectTypeItem = roomTypeAdapter.getSelectItem()
         selectTypeItem?.apply {
             createRoomRequest.roomType = this.type
-//            mBinding.tvTimeType.text = "${this.name}开播时长"
-//            mBinding.tvRestTime.text = "剩余 ${this.restDay} 天"
-//            mBinding.isFree = this.isFree
+            if (this.type == RoomListBean.TYPE_PRIVATE){
+                mBinding.tvPriceTips.visibility = View.VISIBLE
+                mBinding.tvPriceTitle.visibility = View.VISIBLE
+            }else{
+                mBinding.tvPriceTips.visibility = View.GONE
+                mBinding.tvPriceTitle.visibility = View.GONE
+            }
         }
     }
 
@@ -136,7 +154,6 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
             checkBeautyPermission()
         }
         mBinding.bgCreate.setOnSingleClickListener { createRoom() }
-        mBinding.tvBuyTime.setOnSingleClickListener { showBuyLiveTimePop() }
         mBinding.ivAgreement.setOnSingleClickListener {
             if (isCheck) {
                 isCheck = false
@@ -264,6 +281,10 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
                     roomInfo.roomId.toString()
                 )
                 finish()
+            },{
+                if (it.code == ErrorCode.CODE_NO_BALANCE){
+                    ApplicationProxy.instance.showRechargePop(mContext,true)
+                }
             })
         }
     }

@@ -3,6 +3,7 @@ package cn.yanhu.baselib.utils.ext
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
+import android.text.TextUtils
 
 /**
  * 检测目标字符串是否为空
@@ -41,4 +42,8 @@ fun String.toHtml(): Spanned {
     } else {
         Html.fromHtml(this)
     }
+}
+
+fun isEmpty(value: String): Boolean {
+    return TextUtils.isEmpty(value) || value == "null"
 }

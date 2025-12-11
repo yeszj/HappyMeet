@@ -5,6 +5,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
 import cn.huanyuan.sweetlove.net.rxApi
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.LoginSuccessInfo
 import cn.zj.netrequest.BaseViewModel
@@ -63,6 +64,24 @@ class LoginViewModel : BaseViewModel() {
     fun jiGuangLogin(phone:String) {
         request(
             { rxApi.login(phone, LoginResultManager.SOURCE_JIGUANG, codeExt.get().toString()) },
+            loginLivedata,
+            true,
+            loadingHasContent = true
+        )
+    }
+
+    fun wxLogin(map: MutableMap<String,String>) {
+        val phone = phoneExt.get()
+        val code = codeExt.get()
+        map.put("source", LoginResultManager.SOURCE_WX.toString())
+        if (!TextUtils.isEmpty(phone)){
+            map.put("phone", phone!!)
+        }
+        if (!TextUtils.isEmpty(code)){
+            map.put("code", code!!)
+        }
+        request(
+            { rxApi.wxLogin(map) },
             loginLivedata,
             true,
             loadingHasContent = true

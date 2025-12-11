@@ -36,5 +36,7 @@ object ErrorCode {
 
     const val CODE_VERIFY_LOGIN = 5002
 
+    const val TO_BIND_PHONE = 3004
+
 
 }

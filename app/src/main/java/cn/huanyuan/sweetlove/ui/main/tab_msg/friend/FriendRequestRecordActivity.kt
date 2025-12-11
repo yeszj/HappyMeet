@@ -109,12 +109,21 @@ class FriendRequestRecordActivity : BaseActivity<ActivityFriendRequestRecordBind
             parseState(it, {
                 val list = it.list
                 if (page == 1) {
-                    friendRequestAdapter.isStateViewEnable = list.size == 0
+                    friendRequestAdapter.isStateViewEnable = list.isEmpty()
                     friendRequestAdapter.submitList(list)
+                    if (list.size<10){
+                        mBinding.refresh.finishRefreshWithNoMoreData()
+                    }else{
+                        endRefreshing(mBinding.refresh)
+                    }
                 } else {
                     friendRequestAdapter.addAll(list)
+                    if (list.size<10){
+                        mBinding.refresh.finishLoadMoreWithNoMoreData()
+                    }else{
+                        endLoadingMore(mBinding.refresh)
+                    }
                 }
-                setDataLoadFinish(page, list.size, mBinding.refresh)
             }, {
                 endLoad(page, mBinding.refresh)
             })

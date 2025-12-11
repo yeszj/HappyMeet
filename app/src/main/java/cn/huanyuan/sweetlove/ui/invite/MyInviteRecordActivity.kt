@@ -2,6 +2,9 @@ package cn.huanyuan.sweetlove.ui.invite
 
 import android.content.Context
 import android.content.Intent
+import android.text.Html
+import android.text.TextUtils
+import android.view.Gravity
 import android.view.View
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.ActivityMyInviteRecordBinding
@@ -11,13 +14,18 @@ import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.NoMoreDataFootView
 import cn.yanhu.baselib.refresh.RefreshManager
+import cn.yanhu.baselib.utils.DialogUtils
+import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.commonres.bean.FilterInfo
+import cn.yanhu.commonres.pop.CommonImagePop
+import cn.yanhu.commonres.pop.CommonTipDialog
 import cn.yanhu.commonres.pop.CommonTypeFilterPop
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.ext.parseState
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter4.QuickAdapterHelper
+import com.umeng.analytics.pro.dd
 
 /**
  * @author: zhengjun
@@ -48,13 +56,37 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
 
     override fun initListener() {
         super.initListener()
+        mBinding.titleBar.setTitleButtonOnClickListener(object :
+            TitleBar.TitleButtonOnClickListener {
+            override fun leftButtonOnClick(v: View?) {
+                finish()
+            }
+
+            override fun rightButtonOnClick(v: View?) {
+                if (!TextUtils.isEmpty(inviteRules)) {
+                    val content = Html.fromHtml(inviteRules, Html.FROM_HTML_MODE_LEGACY)
+                    DialogUtils.showConfirmDialog(
+                        "邀请规则",
+                        {},
+                        {},
+                        content = content,
+                        cancel = "",
+                        confirm = "我知道了",
+                        isHideCancel = true,
+                        gravity = Gravity.START
+                    )
+                }
+            }
+        })
         recordAdapter.setOnItemClickListener { adapter, _, position ->
             val item = adapter.getItem(position)
             RouteIntent.lunchPersonHomePage(item?.userId)
         }
-        recordHeadAdapter.addOnItemChildClickListener(R.id.tv_filter
+        recordHeadAdapter.addOnItemChildClickListener(
+            R.id.tv_filter
         ) { _, _, _ -> showFilterPop() }
-        recordHeadAdapter.addOnItemChildClickListener(R.id.tv_filterTime
+        recordHeadAdapter.addOnItemChildClickListener(
+            R.id.tv_filterTime
         ) { _, _, _ -> showFilterTimePop() }
     }
 
@@ -73,7 +105,7 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
                         filterTimeId = filterInfo?.id.toString()
                         val filterName = filterInfo?.name.toString()
                         recordHeadAdapter.filterTimeName = filterName
-                        recordHeadAdapter.notifyItemChanged(0,true)
+                        recordHeadAdapter.notifyItemChanged(0, true)
                         page = 1
                         requestData()
                     }
@@ -96,7 +128,7 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
                         val filterName = filterInfo?.name.toString()
                         recordHeadAdapter.filterName = filterName
                         recordAdapter.filterName = filterName
-                        recordHeadAdapter.notifyItemChanged(0,true)
+                        recordHeadAdapter.notifyItemChanged(0, true)
                         page = 1
                         requestData()
                     }
@@ -122,21 +154,23 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
 
     override fun requestData() {
         super.requestData()
-        mViewModel.getMyInviteUser(page,filterId,filterTimeId)
+        mViewModel.getMyInviteUser(page, filterId, filterTimeId)
     }
 
+    private var inviteRules: String? = ""
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
         mViewModel.myInviteInfoObservable.observe(this) { it ->
             parseState(it, {
+                inviteRules = it.inviteRules
                 val list = it.list
                 filterList = it.filterList
                 filterTimeList = it.inviteFilterList
                 if (page == 1) {
-                    if (list.size<=0){
+                    if (list.isEmpty()) {
                         mBinding.emptyView.visibility = View.VISIBLE
                         mBinding.emptyView.footViewState(NoMoreDataFootView.FOOT_NO_DATA)
-                    }else{
+                    } else {
                         mBinding.emptyView.visibility = View.GONE
                     }
                     recordHeadAdapter.item = it
@@ -151,8 +185,8 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
         }
     }
 
-    companion object{
-        fun lunch(context: Context){
+    companion object {
+        fun lunch(context: Context) {
             context.startActivity(Intent(context, MyInviteRecordActivity::class.java))
         }
     }

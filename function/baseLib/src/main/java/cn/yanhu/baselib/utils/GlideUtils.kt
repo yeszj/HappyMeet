@@ -14,15 +14,14 @@ import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
-import com.luck.picture.lib.utils.ActivityCompatHelper.isDestroy
 import jp.wasabeef.glide.transformations.BlurTransformation
-import java.util.concurrent.RejectedExecutionException
 
 /**
  * @author: zhengjun
@@ -75,11 +74,17 @@ object GlideUtils {
             if (url == null || (url is String && TextUtils.isEmpty(url.toString()))) {
                 return
             }
-            if (imageView == null) return
-            if (isDestroy(context)) return
+            if (imageView == null){
+                logComToFile("glide", "加载失败：url=${url},imageView==null")
+                return
+            }
+            if (isDestroy(context)){
+                logComToFile("glide", "加载失败：url=${url},isDestroy")
+                return
+            }
             val requestOptions = RequestOptions().diskCacheStrategy(
-                DiskCacheStrategy.AUTOMATIC
-            ).skipMemoryCache(false)
+                DiskCacheStrategy.ALL
+            ).skipMemoryCache(false).format(DecodeFormat.PREFER_RGB_565)
             requestOptions.centerCrop()
             if (transformations != null) requestOptions.transform(transformations)
             if (placeholderId != null && placeholderId != -1) {
@@ -95,11 +100,6 @@ object GlideUtils {
                         target: com.bumptech.glide.request.target.Target<Drawable?>,
                         isFirstResource: Boolean
                     ): Boolean {
-                        if (e != null && e.causes is RejectedExecutionException) {
-                            // 忽略线程池拒绝异常
-                            Log.w("SafeGlide", "Glide task rejected, context might be destroyed");
-                            return true; // 表示已处理该异常
-                        }
                         logComToFile("glide", "加载失败：url=${url},error=${e?.message}")
                        // GlideHealthMonitor.onLoadFailed(e)
                         return false // 继续交给 Glide 默认逻辑
@@ -117,6 +117,7 @@ object GlideUtils {
                 })
                 .into(imageView)
         } catch (e: Exception) {
+            logComToFile("glide", "加载失败：url=${url},error=${e.message}")
             e.printStackTrace()
         }
 

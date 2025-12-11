@@ -41,7 +41,7 @@ import java.math.BigDecimal
  */
 class ApplicationRouterImpl : IApplication {
 
-    override fun loginInvalid() {
+    override fun loginInvalid(msg: String?) {
         val topActivity = ActivityUtils.getTopActivity()
         if (topActivity!=null && topActivity is LoginActivity){
             return
@@ -49,19 +49,19 @@ class ApplicationRouterImpl : IApplication {
         JiGuangSDKUtils.getInstance().initJVerificationSDk()
         EMClient.getInstance().logout(true, object : EMCallBack {
             override fun onSuccess() {
-                logoutSuccess()
+                logoutSuccess(msg)
             }
 
             override fun onError(code: Int, error: String?) {
-                logoutSuccess()
+                logoutSuccess(msg)
             }
         })
     }
 
-    private fun logoutSuccess() {
+    private fun logoutSuccess(msg: String?="") {
         UserPref.clear()
       //  LocationCacheManager.mapLocation = null
-        RouteIntent.lunchLoginPage()
+        RouteIntent.lunchLoginPage(msg)
         for (activity in ActivityUtils.getActivityList()) {
             if (activity !is LoginActivity) {
                 activity.finish()

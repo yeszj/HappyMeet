@@ -1,5 +1,6 @@
 package cn.yanhu.agora.manager;
 
+import static cn.yanhu.baselib.utils.ext.LogExtKt.logComToFile;
 import static cn.yanhu.baselib.utils.ext.LogExtKt.logcom;
 import static io.agora.rtc2.Constants.REMOTE_VIDEO_STATE_FAILED;
 import static io.agora.rtc2.Constants.VIDEO_SOURCE_CAMERA_PRIMARY;
@@ -10,8 +11,16 @@ import android.view.View;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import cn.happy.beautyface.ui.utils.BeautyManager;
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener;
@@ -49,6 +58,7 @@ public class AgoraManager implements IMediaExtensionObserver {
     public static final int USER_REMOTE_VIDEO_PLAY_FAIL = 14;//远端用户视频播放失败
     public String currentRoomID = "";
 
+    public Map<Integer,Boolean> subScribeUserList = new ConcurrentHashMap<>();
 
     private AgoraManager() {
 
@@ -78,6 +88,7 @@ public class AgoraManager implements IMediaExtensionObserver {
     }
 
     public void init(Activity baseContext, Integer userRole, View surfaceView) {
+        subScribeUserList.clear();
         mRtcEngine = RtcEngineInit.INSTANCE.getMRtcEngine();
         if (mRtcEngine == null) {
             RtcEngine.destroy();
@@ -235,7 +246,11 @@ public class AgoraManager implements IMediaExtensionObserver {
                 publishPkVideo();
             } else {
                 VideoCanvas videoCanvas = VideoCanvasPool.INSTANCE.obtainVideoCanvas(uid, surfaceView);
-                mRtcEngine.setupRemoteVideo(videoCanvas);
+                int result = mRtcEngine.setupRemoteVideo(videoCanvas);
+                subScribeUserList.put(uid,true);
+                if (result != 0) {
+                    logComToFile("liveRoom", "setupRemoteVideo:" + "uid=" + uid + "result=" + result);
+                }
             }
         }
     }
@@ -271,16 +286,21 @@ public class AgoraManager implements IMediaExtensionObserver {
 
     //用户下麦
     public void setDownVideo(int uid, boolean isLocal) {
-        logcom("下麦信息:" + uid + "是否本地" + isLocal);
+        logComToFile("liveRoom", "下麦信息:" + uid + "是否本地" + isLocal);
         if (mRtcEngine != null) {
             if (isLocal) {
-                mRtcEngine.setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
+                int result = mRtcEngine.setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
+                if (result!=0){
+                    logComToFile("liveRoom", "切换为观众失败:setClientRole:" + "uid=" + uid + "result=" + result);
+                }
                 enableLocalVideo(false);
                 BeautyManager.setupLocalVideo(null, VideoCanvas.RENDER_MODE_HIDDEN);
                 cancelPublishPkVideo();
             } else {
-                mRtcEngine.setupRemoteVideo(null);
+                VideoCanvas videoCanvas = VideoCanvasPool.INSTANCE.obtainVideoCanvas(uid, null);
+                mRtcEngine.setupRemoteVideo(videoCanvas);
                 VideoCanvasPool.INSTANCE.recycleVideoCanvas(uid);
+                subScribeUserList.remove(uid);
             }
         }
     }
@@ -345,6 +365,15 @@ public class AgoraManager implements IMediaExtensionObserver {
                 iRtcEngineEventHandlerListener.agoraListener(TOKEN_WILL_EXPIRE, 0);
             }
             super.onTokenPrivilegeWillExpire(token);
+        }
+
+        @Override
+        public void onLocalVideoStats(Constants.VideoSourceType source, LocalVideoStats stats) {
+            super.onLocalVideoStats(source, stats);
+            logcom("liveRoom", "onLocalVideoStats="+ GsonUtils.toJson(stats));
+            if (iRtcEngineEventHandlerListener != null) {
+                iRtcEngineEventHandlerListener.onLocalVideoStats(source, stats);
+            }
         }
 
         @Override
@@ -515,6 +544,7 @@ public class AgoraManager implements IMediaExtensionObserver {
     public void onDestroy() {
         logcom("离开");
         isLiveRoom = false;
+        subScribeUserList.clear();
         if (mRtcEngine != null) {
             removeHandler();
             setupLocalAudio(false);

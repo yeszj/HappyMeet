@@ -167,6 +167,6 @@ class SenseTimeBeautySetActivity :
 
     override fun exactDestroy() {
         super.exactDestroy()
-        BeautyManager.destroy()
+        AgoraManager.getInstance().onDestroy()
     }
 }

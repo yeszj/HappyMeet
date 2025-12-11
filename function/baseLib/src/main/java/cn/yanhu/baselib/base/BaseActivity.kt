@@ -327,11 +327,11 @@ abstract class BaseActivity<DB : ViewDataBinding, VM : BaseViewModel>(
         if (pageNum == 1) {
             if (size > 0) {
                 footView.footViewState(NoMoreDataFootView.FOOT_HIDE)
+                endRefreshing(bgRefresh)
             } else {
                 footView.footViewState(NoMoreDataFootView.FOOT_NO_DATA)
-                bgRefresh.finishLoadMoreWithNoMoreData()
+                bgRefresh.finishRefreshWithNoMoreData()
             }
-            endRefreshing(bgRefresh)
         } else {
             if (size <= 0) {
                 footView.footViewState(NoMoreDataFootView.FOOT_NO_MORE)

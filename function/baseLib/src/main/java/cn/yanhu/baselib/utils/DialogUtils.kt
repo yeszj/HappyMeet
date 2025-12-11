@@ -2,28 +2,29 @@ package cn.yanhu.baselib.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.Html
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.ThreadUtils
-import com.lxj.xpopup.XPopup
-import com.lxj.xpopup.core.BasePopupView
-import com.lxj.xpopup.interfaces.OnCancelListener
-import com.lxj.xpopup.interfaces.OnSelectListener
-import com.lxj.xpopup.interfaces.OnConfirmListener
-import com.lxj.xpopup.interfaces.OnImageViewerLongPressListener
-import com.lxj.xpopup.interfaces.OnSrcViewUpdateListener
-import com.lxj.xpopup.util.SmartGlideImageLoader
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.bean.AttachParamsInfo
 import cn.yanhu.baselib.pop.CommonAttachListPopupView
 import cn.yanhu.baselib.utils.ext.showToast
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ClipboardUtils
+import com.blankj.utilcode.util.ThreadUtils
+import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.enums.PopupAnimation
+import com.lxj.xpopup.interfaces.OnCancelListener
+import com.lxj.xpopup.interfaces.OnConfirmListener
+import com.lxj.xpopup.interfaces.OnImageViewerLongPressListener
 import com.lxj.xpopup.interfaces.OnInputConfirmListener
+import com.lxj.xpopup.interfaces.OnSelectListener
+import com.lxj.xpopup.interfaces.OnSrcViewUpdateListener
 import com.lxj.xpopup.interfaces.XPopupCallback
+import com.lxj.xpopup.util.SmartGlideImageLoader
 
 /**
  * @author: witness

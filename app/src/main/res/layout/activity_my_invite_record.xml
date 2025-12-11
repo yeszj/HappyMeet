@@ -20,6 +20,8 @@
             app:titleColor="@color/fontTextColor"
             app:titleLeftIco="@drawable/svg_black_back"
             app:titleLeftName="邀请收益排行"
+            app:titleRightName="邀请规则"
+            app:titleRightColor="@color/color_888888"
             tools:layout_marginTop="@dimen/dp_40" />
 
         <cn.yanhu.baselib.refresh.MyRefreshLayout

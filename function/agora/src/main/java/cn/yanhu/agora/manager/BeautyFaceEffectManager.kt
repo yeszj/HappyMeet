@@ -141,18 +141,16 @@ class BeautyFaceEffectManager {
 
 
     private fun getAssetsFile(): File {
-        val unZipPath: String =
-            ActivityUtils.getTopActivity()
-                .getExternalFilesDir(null)?.absolutePath + File.separator + "/assets"
+        val topActivity = ActivityUtils.getTopActivity()
+        val unZipPath: String = if(topActivity!=null){
+                topActivity
+                    .getExternalFilesDir(null)?.absolutePath + File.separator + "/assets"
+        }else{
+            "/storage/emulated/0/Android/data/cn.huanyuan.sweetlove/files/assets"
+        }
         return File(unZipPath)
     }
 
-    private fun getFile(path: String): File {
-        val topActivity = ActivityUtils.getTopActivity()
-        return File(
-            topActivity.getExternalFilesDir("assets"), path
-        )
-    }
 
     companion object {
         @SuppressLint("StaticFieldLeak")

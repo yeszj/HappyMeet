@@ -4,10 +4,13 @@ import android.content.Context
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.bean.WalletRecordInfo
 import cn.huanyuan.sweetlove.databinding.AdapterWalletDetailItemBinding
 import cn.huanyuan.sweetlove.databinding.AdapterWalletDetailStickyHeadItemBinding
+import cn.yanhu.baselib.utils.TextViewDrawableUtils
+import cn.yanhu.commonres.R
 import com.chad.library.adapter4.BaseMultiItemAdapter
 
 /**
@@ -45,6 +48,11 @@ class WalletDetailAdapter : BaseMultiItemAdapter<WalletRecordInfo>() {
             override fun onBind(holder: VH, position: Int, item: WalletRecordInfo?) {
                 holder.binding.apply {
                     recordInfo = item
+                    if (item?.withDrawInfo?.status==2){
+                        TextViewDrawableUtils.setDrawableRight(tvStatus, ContextCompat.getDrawable(context,R.drawable.svg_gray_question))
+                    }else{
+                        TextViewDrawableUtils.setDrawableRight(tvStatus, null)
+                    }
                     executePendingBindings()
                 }
             }

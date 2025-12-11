@@ -14,9 +14,11 @@ import cn.yanhu.baselib.func.sticky.StickyHeadContainer
 import cn.yanhu.baselib.func.sticky.StickyItemDecoration
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.commonres.bean.FilterInfo
 import cn.yanhu.commonres.config.IntentKeyConfig
+import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
 
 /**
@@ -53,6 +55,16 @@ class WalletDetailActivity : BaseActivity<ActivityWalletDetailBinding, WalletVie
                 mBinding.stickHead.recordInfo = item
             }
         })
+        detailAdapter.addOnItemChildClickListener(R.id.tv_status) { _, _, position ->
+            val item = detailAdapter.getItem(position)?:return@addOnItemChildClickListener
+            val withDrawInfo = item.withDrawInfo?:return@addOnItemChildClickListener
+            if (withDrawInfo.status==2){
+                DialogUtils.showConfirmDialog("提现提示",{
+                    ApplicationProxy.instance.askCustomer()
+                },{
+                },withDrawInfo.reason, cancel = "我知道了", confirm = "联系客服")
+            }
+        }
         requestData()
     }
 

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import cn.yanhu.baselib.utils.GlideUtils
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.toHtml
 import cn.yanhu.baselib.view.CustomFontTextView
 import com.bumptech.glide.request.target.CustomTarget

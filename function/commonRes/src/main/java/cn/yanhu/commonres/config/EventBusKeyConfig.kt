@@ -37,4 +37,8 @@ object EventBusKeyConfig {
 
     const val BINDBANKSUCCESS = "bindBankSuccess"
 
+    const val CHANGEAPPLYPOPSTATUS = "changeApplyPopStatus"
+    const val SWITCH_TO_FOREGROUND = "switchToForeground"
+
+
 }

@@ -18,6 +18,7 @@ import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.BaseViewModel
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ResultState
 
@@ -37,7 +38,7 @@ class LiveRoomViewModel : BaseViewModel() {
         seatNum: String,
         onRequestResultListener: OnRequestResultListener<String>
     ) {
-        request(
+        request2(
             { agoraRxApi.userSetSeat(roomId, operate, seatNum, AppCacheManager.userId) },
             onRequestResultListener,false
         )

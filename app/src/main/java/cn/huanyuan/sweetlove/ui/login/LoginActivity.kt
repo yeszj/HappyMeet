@@ -1,7 +1,9 @@
 package cn.huanyuan.sweetlove.ui.login
 
+import android.content.Intent
 import android.graphics.Typeface.BOLD
 import android.text.Editable
+import android.text.Html
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -9,26 +11,33 @@ import android.view.View
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.ActivityLoginBinding
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
+import cn.huanyuan.sweetlove.func.manager.UMenLoginManager
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import cn.yanhu.baselib.anim.AnimUtils
 import cn.yanhu.baselib.anim.ShakeAnimator
 import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.SoftHideKeyBoardUtil
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.CustomClickSpan
 import cn.yanhu.baselib.widget.spans.Spans
+import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
+import cn.zj.netrequest.status.ErrorCode
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
+import com.pcl.sdklib.listener.OnAuthResultListener
 import com.pcl.sdklib.sdk.jverrify.JiGuangSDKUtils
+import com.pcl.sdklib.sdk.wechat.WxAuthUtils
+import kotlin.math.log
 import kotlin.system.exitProcess
 
 /**
@@ -47,6 +56,22 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
         setFullScreenStatusBar(true)
         setAgreementInfo()
         initJiGuangLogin()
+        showErrorTips(intent)
+    }
+
+    private fun showErrorTips(intent: Intent?) {
+        val msg = intent?.getStringExtra(IntentKeyConfig.DATA)
+        if (!TextUtils.isEmpty(msg)) {
+            val fromHtml = Html.fromHtml(msg, Html.FROM_HTML_MODE_LEGACY)
+            DialogUtils.showConfirmDialog("封号提示", {
+                ApplicationProxy.instance.askCustomer()
+            }, {}, fromHtml, cancel = "我知道了", confirm = "联系客服")
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        showErrorTips(intent)
     }
 
     private fun initJiGuangLogin() {
@@ -66,6 +91,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
                     JVerificationInterface.clearPreLoginCache() //清除预取号缓存
                     JVerificationInterface.dismissLoginAuthActivity() //关闭授权页
                 }
+
+                override fun jumpWxLogin() {
+                    super.jumpWxLogin()
+                    startWxLogin()
+                }
             })
         JiGuangSDKUtils.getInstance().startLogin()
     }
@@ -79,17 +109,51 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
         }
     }
 
-    private fun startLogin(it: String) {
-        mViewModel.jiGuangLogin(it)
+    val loginMap = hashMapOf<String, String>()
+    private fun startWxLogin() {
+        UMenLoginManager.startLogin(
+            mContext,
+            onUMengLoginSuccessListener = object : UMenLoginManager.OnUMengLoginSuccessListener {
+                override fun onAuthSuccess(p2: MutableMap<String, String>?) {
+                    val openid = p2!!["openid"].toString()
+                    val nickName = p2["name"].toString() //昵称
+                    val portraitUrl = p2["iconurl"].toString()//头像
+                    loginMap.put("wxOpenId", openid)
+                    loginMap.put("nickName", nickName)
+                    loginMap.put("portrait", portraitUrl)
+                    mViewModel.wxLogin(loginMap)
+                }
+            })
+    }
+
+    override fun registerNecessaryObserver() {
+        super.registerNecessaryObserver()
         mViewModel.loginLivedata.observe(this@LoginActivity) { it ->
             parseState(it, {
                 LoginResultManager.loginSuccess(mContext, it)
+            }, {
+                val code = it.code
+                if (code == ErrorCode.TO_BIND_PHONE) {
+                    VerifyCodeActivity.lunch(mContext, "", loginMap)
+                }
             })
         }
     }
 
+    private fun startLogin(it: String) {
+        mViewModel.jiGuangLogin(it)
+    }
+
     override fun initListener() {
         super.initListener()
+        mBinding.ivWxLogin.setOnSingleClickListener {
+            if (!isPrivacyCheck) {
+                showToast("请同意并勾选我们的协议")
+                AnimUtils.with(ShakeAnimator()).playOn(mBinding.ivTips)
+            } else {
+                startWxLogin()
+            }
+        }
         mBinding.tvPwdLogin.setOnSingleClickListener {
             if (checkCondition()) {
                 toPwdLogin()
@@ -133,7 +197,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
     private fun toPwdLogin() {
         LoginResultManager.checkPwd(
             mContext,
-            mBinding.etPhone.text.toString().trim())
+            mBinding.etPhone.text.toString().trim()
+        )
     }
 
 

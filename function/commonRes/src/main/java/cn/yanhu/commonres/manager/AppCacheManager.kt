@@ -51,6 +51,9 @@ object AppCacheManager {
     var selectTimeIndex by ConfigPref("selectTimeIndex",-1)
 
     @JvmStatic
+    var openWhitenSkinMask by ConfigPref("openWhitenSkinMask",false)
+
+    @JvmStatic
     fun isWoman():Boolean{
         return gender == 2
     }

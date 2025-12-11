@@ -42,10 +42,10 @@ object ChatUserInfoManager {
             val list = LitePal.where("userId = ?", userId).limit(1).find(
                 UserDetailInfo::class.java
             )
-            if (list != null && list.size > 0) {
-                return list[0]
+            return if (list != null && list.isNotEmpty()) {
+                list[0]
             } else {
-                return null
+                null
             }
         } catch (e: Exception) {
             null

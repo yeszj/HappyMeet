@@ -13,5 +13,7 @@ data class RoomConfigInfo(
     val name: String,
     val welcomeMsg:String,
     val liveAgreement: String,
-    val timePriceList: MutableList<LiveTimePriceInfo>
+    val timePriceList: MutableList<LiveTimePriceInfo>,
+    val exclusiveRoomPrice:Int,
+    val exclusiveSeatPrice:Int
 )

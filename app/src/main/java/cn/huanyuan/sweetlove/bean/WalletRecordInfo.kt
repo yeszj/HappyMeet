@@ -14,11 +14,12 @@ data class WalletRecordInfo(
     val num: String,
     val desc: String,
     val list: MutableList<WalletRecordInfo>,
-    val withDrawInfo: WithDrawInfo,
+    val withDrawInfo: WithDrawInfo?,
 ) {
     data class WithDrawInfo(
         val status: Int,//0提现中 1提现成功 2提现被驳回
-        val balanceDesc: String //余额描述 当前余额：122.24元
+        val balanceDesc: String, //余额描述 当前余额：122.24元
+        val reason: String
     ){
         fun getStatusDesc():String {
             return when (status) {

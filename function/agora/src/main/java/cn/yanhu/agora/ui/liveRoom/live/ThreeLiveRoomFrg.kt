@@ -6,7 +6,6 @@ import android.view.View.GONE
 import androidx.databinding.DataBindingUtil
 import cn.yanhu.agora.adapter.liveRoom.ThreeRoomSeatAdapter
 import cn.yanhu.agora.api.agoraRxApi
-import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.ViewThreeRoomTopViewBinding
 import cn.yanhu.agora.pop.LiveRoomSeatManagerPop
 import cn.yanhu.agora.pop.RoomWishListPop
@@ -24,7 +23,6 @@ import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.manager.AppCacheManager
-import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.zj.netrequest.application.ApplicationProxy
@@ -35,11 +33,9 @@ import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.VibrateUtils
-import com.chad.library.adapter4.BaseMultiItemAdapter
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager
 import com.hyphenate.chat.EMMessage
-import org.json.JSONObject
 
 /**
  * @author: zhengjun
@@ -51,11 +47,12 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         mBinding.rvSeat.layoutManager = QuickGridLayoutManager(mContext, 2)
         seatUserAdapter =
             ThreeRoomSeatAdapter()
-        (seatUserAdapter as ThreeRoomSeatAdapter).onRoomItemClickListener = object : ThreeRoomSeatAdapter.OnRoomItemClickListener{
-            override fun onClickWish() {
-                showWishListPop()
+        (seatUserAdapter as ThreeRoomSeatAdapter).onRoomItemClickListener =
+            object : ThreeRoomSeatAdapter.OnRoomItemClickListener {
+                override fun onClickWish() {
+                    showWishListPop()
+                }
             }
-        }
         addTopTitleView()
         super.initData()
         mBinding.rvSeat.adapter = seatUserAdapter
@@ -68,11 +65,12 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
 
     override fun setSeatOutSuccess() {
         super.setSeatOutSuccess()
-        seatUserAdapter.notifyItemChanged(0,  "hideEnterAnim")
+        seatUserAdapter.notifyItemChanged(0, "hideEnterAnim")
     }
 
     private fun checkExclusiveSwitch() {
-        request({ commonRxApi.getConfigInfo("exclusive_room_switch") },
+        request(
+            { commonRxApi.getConfigInfo("exclusive_room_switch") },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     val switch = data.data ?: return
@@ -81,10 +79,10 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
             })
     }
 
-    private var roomWishListPop:RoomWishListPop?=null
+    private var roomWishListPop: RoomWishListPop? = null
     private fun showWishListPop() {
         roomSourceBean.wishInfo?.apply {
-            if (CommonUtils.isPopShow(roomWishListPop)){
+            if (CommonUtils.isPopShow(roomWishListPop)) {
                 return
             }
             startSendComboGift(chatRoomRoseGiftMsg)
@@ -114,13 +112,14 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
 
     override fun onReceiveCmdMsg(it: EMMessage) {
         val source = it.getIntAttribute("source", -1)
-         if(source == ChatConstant.ACTION_SET_WISH_SUCCESS){
+        if (source == ChatConstant.ACTION_SET_WISH_SUCCESS) {
             getRoomDetail()
         }
     }
 
     private fun sendGift(sendGiftRequest: SendGiftRequest, item: GiftInfo) {
-        request2({ imChatRxApi.sendGift(sendGiftRequest) },
+        request2(
+            { imChatRxApi.sendGift(sendGiftRequest) },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     showToast("赠送成功")
@@ -130,7 +129,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                     map["giftIcon"] = item.giftIcon
                     map["num"] = sendGiftRequest.num
                     map["svga"] = item.svga
-                    sendGiftSuccess(item,roomSourceBean.ownerInfo!!)
+                    sendGiftSuccess(item, roomSourceBean.ownerInfo!!)
                 }
 
                 override fun onFail(code: Int?, msg: String?) {
@@ -144,7 +143,8 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
 
     private var liveRoomUserListPop: LiveRoomSeatManagerPop? = null
     fun showUserList(gender: String) {
-        request({ agoraRxApi.getInviteList(roomId, gender, "0", 1) },
+        request(
+            { agoraRxApi.getInviteList(roomId, gender, "0", 1) },
             object : OnRequestResultListener<MutableList<UserDetailInfo>> {
                 override fun onSuccess(data: BaseBean<MutableList<UserDetailInfo>>) {
                     val userList = data.data ?: return
@@ -205,7 +205,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         val wishInfo = roomSourceBean.wishInfo
         if (wishInfo != null) {
             (seatUserAdapter as ThreeRoomSeatAdapter).updateWishInfo(wishInfo)
-            if (CommonUtils.isPopShow(roomWishListPop)){
+            if (CommonUtils.isPopShow(roomWishListPop)) {
                 roomWishListPop?.refreshWishList(wishInfo)
             }
         }
@@ -216,12 +216,12 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
             topTitleBinding.tvGroupMember.visibility = View.INVISIBLE
             topTitleBinding.tvJoinGroup.visibility = View.VISIBLE
         }
-        if (roomSourceBean.isPrivateRoom()){
+        if (roomSourceBean.isPrivateRoom()) {
             checkGiftSwitch()
-        }else{
+        } else {
             mBinding.ivSendGift.visibility = View.VISIBLE
         }
-        if (isOwner){
+        if (isOwner) {
             checkExclusiveSwitch()
         }
     }
@@ -287,14 +287,17 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                             }
                         }
                     }
-                    cn.yanhu.agora.R.id.iv_avatar ->{
+
+                    cn.yanhu.agora.R.id.iv_avatar -> {
                         val roomUserSeatInfo = item.roomUserSeatInfo ?: return
                         showUserPop(roomUserSeatInfo.userId)
                     }
+
                     cn.yanhu.agora.R.id.iv_rose -> {
                         val roomUserSeatInfo = item.roomUserSeatInfo ?: return
-                        checkSendGift(roomUserSeatInfo,roseGiftInfo!!)
+                        checkSendGift(roomUserSeatInfo, roseGiftInfo!!)
                     }
+
                     cn.yanhu.agora.R.id.vg_autoSeat -> {
                         showSetAutoSeat()
                     }
@@ -306,7 +309,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     override fun refreshAutoSeat() {
         super.refreshAutoSeat()
         (seatUserAdapter as ThreeRoomSeatAdapter).roomDetailInfo = roomSourceBean
-        seatUserAdapter.notifyItemChanged(0,"updateToggleAuto")
+        seatUserAdapter.notifyItemChanged(0, "updateToggleAuto")
     }
 
     override fun initListener() {
@@ -341,16 +344,40 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     private fun showSwitchRoomTypePop() {
-        val content = Spans.builder()
-            .text(if (roomSourceBean.isPrivateRoom()) "确定要转为大厅直播吗？" else "转为专属房间后只保留麦上的男女嘉宾，确认要转换吗？\n\n").size(
-                CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_14))
-            .text(if (roomSourceBean.isPrivateRoom()) "" else "专属房需付费，男嘉宾同意才可转换，房间内禁止涉黄、涉政等违规行为").size(CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_13))
-            .color(
-                CommonUtils.getColor(
-                    R.color.colorMain
+        val content = if (roomSourceBean.isPrivateRoom()) {
+            "确定要转为大厅直播吗？"
+        } else {
+            val spans = Spans.builder()
+                .text("转为专属房间后只保留麦上的男女嘉宾，确认要转换吗？\n\n").size(
+                    CommonUtils.getSpByDimen(com.zj.dimens.R.dimen.sp_15)
                 )
-            ).build()
+                .text("温馨提示：")
+                .color(
+                    CommonUtils.getColor(
+                        R.color.colorMain
+                    )
+                )
+            if (roomSourceBean.exclusiveRoomPrice > 0) {
+                spans.text("转专属房间")
+                    .text("主持需支付${roomSourceBean.exclusiveRoomPrice}玫瑰/次")
+                    .color(
+                        CommonUtils.getColor(
+                            R.color.colorMain
+                        )
+                    )
+                    .text("，且")
+            }
 
+            spans.text("男嘉宾需支付${roomSourceBean.exclusiveSeatPrice}玫瑰/分钟")
+                .color(
+                    CommonUtils.getColor(
+                        R.color.colorMain
+                    )
+                )
+                .text("，男嘉宾同意后可转换成功")
+
+            spans.build()
+        }
         DialogUtils.showConfirmDialog(
             if (roomSourceBean.isPrivateRoom()) "转为大厅房间" else "转为专属房间",
             {
@@ -366,7 +393,8 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
 
     private fun switchRoomType() {
         val type = if (roomSourceBean.isPrivateRoom()) 1 else 2
-        mViewModel.switchRoomType(roomId,
+        mViewModel.switchRoomType(
+            roomId,
             type.toString(),
             object : OnRequestResultListener<Boolean> {
                 override fun onSuccess(data: BaseBean<Boolean>) {
@@ -380,6 +408,12 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         showToast("房间已切换为大厅")
                     } else {
                         showToast("已发送消息至男嘉宾，男嘉宾同意后可转至专属房间")
+                    }
+                }
+
+                override fun onFail(code: Int?, msg: String?) {
+                    if (code == ErrorCode.CODE_NO_BALANCE){
+                        showRechargePop()
                     }
                 }
             })
@@ -418,7 +452,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
 
     override fun refreshSeatInfo(it: MutableList<RoomSeatInfo>, uid: Int) {
         val items = seatUserAdapter.items
-        if (items.isNullOrEmpty()){
+        if (items.isNullOrEmpty()) {
             return
         }
         ThreadUtils.getMainHandler().post {
@@ -486,7 +520,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     override fun userNetChanged(uid: String, ifNetDisConnect: Boolean) {
-        var list =   seatUserAdapter.items
+        var list = seatUserAdapter.items
         list.forEach {
             if (it.roomUserSeatInfo?.userId == uid && it.ifNetDisConnect != ifNetDisConnect) {
                 it.ifNetDisConnect = ifNetDisConnect

@@ -13,4 +13,6 @@ class InviteRecordInfo : BaseUserInfo() {
     var isRealNameAuth:Boolean = false
     var inviteTime:String = ""
     var contributionIncome:String = ""
+    var activeDesc: String = ""
+    var showActiveTip: Boolean = false
 }

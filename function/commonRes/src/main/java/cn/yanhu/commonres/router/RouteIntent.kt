@@ -73,8 +73,9 @@ object RouteIntent {
     }
 
     //登录页面
-    fun lunchLoginPage() {
-        ARouter.getInstance().build(RouterPath.ROUTER_LOGIN).navigation()
+    fun lunchLoginPage(msg: String?="") {
+        ARouter.getInstance().build(RouterPath.ROUTER_LOGIN)
+            .withString(IntentKeyConfig.DATA,msg).navigation()
     }
 
     fun lunchSystemMsgPage() {

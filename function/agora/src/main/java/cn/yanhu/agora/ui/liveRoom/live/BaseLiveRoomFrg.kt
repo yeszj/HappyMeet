@@ -14,7 +14,12 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
+import cn.happy.beautyface.ui.utils.BeautyManager
+import cn.happy.beautyface.ui.utils.SenseTimeBeautySDK
 import cn.yanhu.agora.R
 import cn.yanhu.agora.adapter.UserEnterAdapter
 import cn.yanhu.agora.adapter.liveRoom.LiveRoomChatMessageAdapter
@@ -23,16 +28,19 @@ import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.bean.AngleRoomResultInfo
 import cn.yanhu.agora.bean.ChatRoomMsgInfo
+import cn.yanhu.agora.bean.GiftSendCntInfo
 import cn.yanhu.agora.bean.InviteSeatRecord
+import cn.yanhu.agora.bean.PkConfigInfo
+import cn.yanhu.agora.bean.PkSeatUserInfo
 import cn.yanhu.agora.bean.RoomExtraInfo
 import cn.yanhu.agora.bean.RoomGroupMemberRes
 import cn.yanhu.agora.bean.RoomLeaveResponse
-import cn.yanhu.agora.bean.RoomOnlineResponse
 import cn.yanhu.agora.databinding.FrgBaseLiveRoomBinding
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener
 import cn.yanhu.agora.listener.OnSendSeatInviteListener
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.LiveRoomManager
+import cn.yanhu.agora.manager.VideoCanvasPool
 import cn.yanhu.agora.manager.dbCache.InviteRecordCacheManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
 import cn.yanhu.agora.miniwindow.MiniWindowManager
@@ -44,10 +52,13 @@ import cn.yanhu.agora.pop.LiveRoomSeatManagerPop
 import cn.yanhu.agora.pop.ReceiveInviteSeatPop
 import cn.yanhu.agora.pop.RoomAngleResultPop
 import cn.yanhu.agora.pop.RoomGroupMemberPop
+import cn.yanhu.agora.pop.RoomPkSendPop
 import cn.yanhu.agora.pop.SeatUserOperatePop
+import cn.yanhu.agora.pop.SelectPkUserPop
 import cn.yanhu.agora.pop.SendMessagePop
 import cn.yanhu.agora.pop.ToolDialog
 import cn.yanhu.agora.queuetask.ApplySeatTask
+import cn.yanhu.agora.queuetask.SendCmdTask
 import cn.yanhu.agora.ui.liveRoom.LiveRoomViewModel
 import cn.yanhu.baselib.anim.AnimManager
 import cn.yanhu.baselib.base.BaseFragment
@@ -56,18 +67,24 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.countDown
+import cn.yanhu.baselib.utils.ext.logComToFile
+import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setClickScaleListener
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.adapter.GiftAnimAdapter
+import cn.yanhu.commonres.api.commonRxApi
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.ChatRoomGiftMsg
 import cn.yanhu.commonres.bean.CommonTipsInfo
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.RoomDetailInfo
 import cn.yanhu.commonres.bean.RoomListBean
+import cn.yanhu.commonres.bean.RoomListBean.Companion.TYPE_SEVEN_SONG
+import cn.yanhu.commonres.bean.RoomPkInfo
 import cn.yanhu.commonres.bean.RoomSeatInfo
+import cn.yanhu.commonres.bean.SeatUserInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.StickyInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
@@ -79,6 +96,7 @@ import cn.yanhu.commonres.config.ImMessageParamsConfig
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
+import cn.yanhu.commonres.manager.RoomSwitchCacheManager
 import cn.yanhu.commonres.manager.ServiceConfigKeyManager
 import cn.yanhu.commonres.pop.CommonTipDialog
 import cn.yanhu.commonres.router.RouteIntent
@@ -89,8 +107,10 @@ import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.CutLiveRoomUtils
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.yanhu.imchat.manager.ImUserManager
+import cn.yanhu.imchat.manager.SendGiftCheckManager
 import cn.yanhu.imchat.pop.ChatListDialog
 import cn.yanhu.imchat.pop.SendGiftPop
+import cn.zj.netrequest.BuildConfig
 import cn.zj.netrequest.OnRoomLeaveListener
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.application.OnImLoginListener
@@ -113,6 +133,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hyphenate.EMCallBack
 import com.hyphenate.EMChatRoomChangeListener
+import com.hyphenate.EMError
 import com.hyphenate.EMValueCallBack
 import com.hyphenate.chat.EMChatRoom
 import com.hyphenate.chat.EMClient
@@ -121,46 +142,22 @@ import com.hyphenate.chat.EMTextMessageBody
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
+import com.pcl.sdklib.listener.OnPayResultListener
+import com.pcl.sdklib.manager.PayManager
 import com.yhao.floatwindow.PermissionListener
 import io.agora.rtc2.Constants
 import io.agora.rtc2.IRtcEngineEventHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
-import org.json.JSONObject
-import java.math.BigDecimal
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
-import cn.happy.beautyface.ui.utils.BeautyManager
-import cn.happy.beautyface.ui.utils.SenseTimeBeautySDK
-import cn.yanhu.agora.bean.GiftSendCntInfo
-import cn.yanhu.agora.bean.PkConfigInfo
-import cn.yanhu.agora.bean.PkSeatUserInfo
-import cn.yanhu.agora.manager.VideoCanvasPool
-import cn.yanhu.agora.pop.RoomPkSendPop
-import cn.yanhu.agora.pop.SelectPkUserPop
-import cn.yanhu.agora.queuetask.SendCmdTask
-import cn.yanhu.commonres.bean.RoomPkInfo
-import cn.yanhu.commonres.manager.RoomSwitchCacheManager
-import cn.yanhu.baselib.utils.ext.logComToFile
-import cn.yanhu.baselib.utils.ext.logcom
-import cn.yanhu.commonres.api.commonRxApi
-import cn.yanhu.commonres.bean.RoomListBean.Companion.TYPE_SEVEN_SONG
-import cn.yanhu.commonres.bean.SeatUserInfo
-import cn.zj.netrequest.BuildConfig
-import com.hyphenate.EMError
-import com.pcl.sdklib.listener.OnPayResultListener
-import com.pcl.sdklib.manager.PayManager
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.lang.ref.WeakReference
+import java.math.BigDecimal
 import kotlin.math.abs
 import kotlin.math.ceil
-import kotlin.toString
-import cn.yanhu.imchat.manager.SendGiftCheckManager
-import com.hyphenate.chat.EMChatManager
 
 
 /**
@@ -381,7 +378,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
 
-
     open fun refreshOnlineUser(onlineNum: Int) {}
 
     private var onlineUserListPop: LiveRoomOnlineUserPop? = null
@@ -586,6 +582,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             setUnReadMsgCount()
             updateReceivedMsg(it)
         }
+//        LiveEventBus.get<Int>(EventBusKeyConfig.UNREAD_COUNT).observe(this) {
+//        }
         LiveEventBus.get<String>(LiveDataEventManager.UPDATE_LIVE_ROOM_SELF_INFO).observe(this) {
             selfUserInfo = ImUserManager.getSelfUserInfo()
         }
@@ -638,6 +636,16 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 getRoseGift()
             }
         })
+        LiveEventBus.get<Boolean>(EventBusKeyConfig.CHANGEAPPLYPOPSTATUS).observe(this) {
+            isCloseApplySeatPop = it
+            if (isCloseApplySeatPop) {
+                applyQueueTask.clear()
+            }
+        }
+        LiveEventBus.get<Boolean>(EventBusKeyConfig.SWITCH_TO_FOREGROUND).observe(this) {
+            //app从后台切换到前台 更新麦位
+            refreshSeatInfo()
+        }
         registerNetChange()
     }
 
@@ -1328,7 +1336,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 mContext, angleUser, guardUser, type, object : SimpleCallback() {
                     override fun onDismiss(popupView: BasePopupView?) {
                         super.onDismiss(popupView)
-                        if (angelAnimList.size > 0) {
+                        if (angelAnimList.isNotEmpty()) {
                             val get = angelAnimList[0]
                             showAngleResultTip(get, type)
                             angelAnimList.removeAt(0)
@@ -1496,6 +1504,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         mBinding.tvApplyNum.text = "${applySeatCount}人"
     }
 
+    private var isCloseApplySeatPop = false
+
     /**
      * 透传消息处理逻辑
      */
@@ -1515,11 +1525,13 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 runOnUiThread {
                     if (roomSourceBean.isThreeRoom()) {
                         //同时只弹出一个申请弹窗，
-                        applyQueueTask.addTask(ApplySeatTask(it, roomId))
+                        applyQueueTask.addTask(ApplySeatTask(it, roomId, roomType))
                     } else {
+                        if (!isCloseApplySeatPop) {
+                            applyQueueTask.addTask(ApplySeatTask(it, roomId, roomType))
+                        }
                         applySeatCount++
                         mBinding.tvApplyNum.text = "${applySeatCount}人"
-                        VibrateUtils.vibrate(1000L)
                     }
                 }
                 refreshThreeRoomInfo()
@@ -1642,8 +1654,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         getRoseGift()
                         getRoomDetail()
                     } else {
-                        val bundle = Bundle()
-                        bundle.putInt("type", LiveRoomManager.HOUSE_CUT_EXTRA_KICK)
                         LiveRoomEndActivity.lunch(
                             mContext, LiveRoomManager.HOUSE_CUT_EXTRA_KICK, "", roomId
                         )
@@ -1859,7 +1869,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (LiveRoomVideoMiniManager.getInstance().isShowing) { //下麦时关闭悬浮窗，回到直播间
             LiveRoomVideoMiniManager.getInstance().closeFloat(1)
         }
-        if (roomSourceBean.roomType == 2) { //专属房间下麦直接离开
+        if (roomSourceBean.roomType == RoomListBean.TYPE_PRIVATE) { //专属房间下麦直接离开
             AgoraManager.getInstance().setDownVideo(localUserId, true)
             logInfoCom(value = "专属房间下麦直接离开，调用离开接口")
             roomLeave()
@@ -1867,6 +1877,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
         val mySeatId = getMySeatId()
         if (mySeatId == -1) {
+            logComToFile(TAG, "出现鬼麦现象，被踢下麦成功uid=$localUserId")
+            AgoraManager.getInstance().setDownVideo(localUserId, true)
             refreshSeatInfo()
             return
         }
@@ -1882,6 +1894,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     protected open fun setSeatOutSuccess() {
+        checkTime = 0L
         foreverFaceEffect = ""
         foreverFacePrice = 0
         setSeatStatus()
@@ -1919,6 +1932,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             roomId, roomSourceBean.uuid, object : OnRequestResultListener<RoomLeaveResponse> {
                 override fun onSuccess(data: BaseBean<RoomLeaveResponse>) {
                     roomLeaveInfo = data.data
+                    AgoraManager.getInstance().setDownVideo(localUserId, true)
                     destroyRoom()
                     onRoomLeaveListener?.onLeaveSuccess()
                     leaveRoomFinish()
@@ -1970,6 +1984,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 } else if (operate == SEAT_TYPE_AUTO) {
                     //自动上麦
                     AgoraManager.getInstance().setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
+                    checkTime = 0L
                     refreshSeatInfo(localUserId)
                     setHasSeatUpStatus()
                     balanceRose = CommonUtils.subBigDecimal(
@@ -2673,7 +2688,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         )
     }
 
-    private fun showRechargePop() {
+     fun showRechargePop() {
         ApplicationProxy.instance.showRechargePop(mContext, true, balanceRose)
     }
 
@@ -2953,7 +2968,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
         // 移除聊天室回调
         if (localUserId > 0) {
-            AgoraManager.getInstance().setDownVideo(localUserId, true)
+            AgoraManager.getInstance().enableLocalVideo(false)
         }
         BeautyManager.setStickerItem(null)
         AgoraManager.getInstance().leaveChannel()
@@ -3291,6 +3306,48 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     override fun onAudioVolumeIndication(
         speakers: Array<out IRtcEngineEventHandler.AudioVolumeInfo>?, totalVolume: Int
     ) {
+//        if (isOwner) {
+//            for (speaker in speakers!!) {
+//                val uid = speaker.uid
+//                if (!isInSeatByUserId(uid)) {
+//                    //不在座位上 还有声音 出现了鬼麦现象 踢下麦
+//                    logComToFile(TAG,"出现鬼麦现象，踢下麦uid=$uid")
+//                    EmMsgManager.sendCmdMessagePeople(
+//                        uid.toString(), "", ChatConstant.ACTION_MSG_SIT_DOWN
+//                    )
+//                }
+//            }
+//        }
+    }
+
+    var checkTime = 0L
+    override fun onLocalVideoStats(
+        source: Constants.VideoSourceType?,
+        stats: IRtcEngineEventHandler.LocalVideoStats?
+    ) {
+        if (isOwner){
+            return
+        }
+        if (checkTime == 0L) {
+            checkTime = System.currentTimeMillis()
+            return
+        }
+        if (System.currentTimeMillis() - checkTime > 60000) {
+            //1分钟检测一次
+            checkTime = System.currentTimeMillis()
+            val uid = stats?.uid ?: return
+            logComToFile(TAG, "检测鬼麦现象uid=$uid")
+            if (!isInSeatByUserId(uid)) {
+                //不在座位上 还有声音 出现了鬼麦现象 下麦
+                checkTime = 0L
+                logComToFile(TAG, "出现鬼麦现象，触发下麦uid=$uid")
+                userDownSeat()
+//            EmMsgManager.sendCmdMessagePeople(
+//                uid.toString(), "", ChatConstant.ACTION_MSG_SIT_DOWN
+//            )
+            }
+        }
+
     }
 
     private fun getSeatUserInfoUserId(uid: Int): SeatUserInfo? {

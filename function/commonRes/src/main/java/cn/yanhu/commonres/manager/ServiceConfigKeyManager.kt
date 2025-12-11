@@ -18,4 +18,6 @@ object ServiceConfigKeyManager {
     //礼物连击配置
     const val GIF_COMBO_SWITCH = "gift_combo_switch_new"
 
+    //开启皮肤分割
+    const val OPEN_WHITEN_SKIN_MASK = "open_whiten_skin_mask"
 }

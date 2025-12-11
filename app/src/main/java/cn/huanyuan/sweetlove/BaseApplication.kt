@@ -7,7 +7,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
-import android.content.ComponentCallbacks2
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -22,8 +21,10 @@ import android.text.TextUtils
 import android.view.Gravity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.func.ApplicationRouterImpl
+import cn.huanyuan.sweetlove.func.manager.AppLogManager
 import cn.huanyuan.sweetlove.func.manager.ChannelUtils
 import cn.huanyuan.sweetlove.func.manager.LoginResultManager
 import cn.huanyuan.sweetlove.func.task.AppPopTask
@@ -42,11 +43,13 @@ import cn.yanhu.agora.ui.liveRoom.live.BaseLiveRoomFrg
 import cn.yanhu.agora.ui.liveRoom.live.LiveRoomActivity
 import cn.yanhu.baselib.crash.CrashUtils
 import cn.yanhu.baselib.crash.ExceptionHandler
+import cn.yanhu.baselib.queue.TaskQueueManager
 import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.refresh.SmartRefreshProcessor
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
+import cn.yanhu.baselib.utils.GlideHealthMonitor
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.showToast
@@ -99,12 +102,15 @@ import com.hyphenate.chat.EMMessage
 import com.hyphenate.chat.EMUserInfo
 import com.hyphenate.easeui.constants.EaseConstant
 import com.hyphenate.util.VersionUtils
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.opensource.svgaplayer.SVGAParser
 import com.opensource.svgaplayer.SVGASoundManager
 import com.pcl.sdklib.manager.SdkParamsManager
 import com.permissionx.guolindev.PermissionX
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
+import com.umeng.socialize.UMShareAPI
+import com.umeng.socialize.UMShareConfig
 import com.umeng.umcrash.UMCrash
 import okhttp3.Interceptor
 import org.litepal.LitePal
@@ -112,10 +118,6 @@ import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
 import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
 import java.io.File
-import androidx.core.graphics.toColorInt
-import cn.huanyuan.sweetlove.func.manager.AppLogManager
-import cn.yanhu.baselib.queue.TaskQueueManager
-import cn.yanhu.baselib.utils.GlideHealthMonitor
 
 
 @Suppress("DEPRECATION")
@@ -148,6 +150,7 @@ class BaseApplication : Application() {
                         PermissionX.areNotificationsEnabled(activity)
                     )
                     reInitImSdk()
+                    LiveEventBus.get<Boolean>(EventBusKeyConfig.SWITCH_TO_FOREGROUND).post(true)
                 }
                 logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"App切换到前台")
                 checkAlertPermission(activity)
@@ -303,6 +306,7 @@ class BaseApplication : Application() {
             if (BuildConfig.DEBUG) "debug" else "release",
             BuildConfig.VERSION_CODE.toString()
         )
+
         // 微信设置
         PlatformConfig.setWeixin(SdkParamsManager.WX_APP_ID, SdkParamsManager.WX_APP_SECRET)
         PlatformConfig.setWXFileProvider(BuildConfig.APPLICATION_ID + ".fileprovider")
@@ -899,10 +903,8 @@ class BaseApplication : Application() {
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        // 系统内存不足时自动清理
-        if (level >= TRIM_MEMORY_MODERATE) {
-            clearMemory()
-        }
+        logComToFile("memoryInfo","onTrimMemory")
+        Glide.get(this).onTrimMemory(level)
     }
 
     override fun onLowMemory() {

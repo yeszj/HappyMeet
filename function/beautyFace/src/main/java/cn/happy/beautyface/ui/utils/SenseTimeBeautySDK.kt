@@ -13,6 +13,7 @@ import com.softsugar.stmobile.STMobileAuthentificationNative
 import com.softsugar.stmobile.STMobileEffectNative
 import com.softsugar.stmobile.STMobileEffectParams
 import com.softsugar.stmobile.STMobileHumanActionNative
+import com.softsugar.stmobile.params.STEffectBeautyParams
 import com.softsugar.stmobile.params.STEffectBeautyType
 import com.softsugar.stmobile.params.STSmoothMode
 import kotlin.jvm.java
@@ -32,7 +33,7 @@ object SenseTimeBeautySDK {
     val mobileEffectNative
         get() = _mobileEffectNative ?: throw RuntimeException("Please initMobileEffect firstly!")
 
-    // 人脸识别句柄
+    // 人脸识别句柄mSTMobileEffectNative
     private var _humanActionNative: STMobileHumanActionNative? = null
     val humanActionNative
         get() = _humanActionNative ?: throw RuntimeException("Please initBeautySDK firstly!")
@@ -289,6 +290,9 @@ object SenseTimeBeautySDK {
                 field = value
                 val effectNative = _mobileEffectNative ?: return
                 runOnBeautyThread {
+                    if (AppCacheManager.openWhitenSkinMask){
+                        effectNative.setBeautyParam(STEffectBeautyParams.ENABLE_WHITEN_SKIN_MASK, 1f)
+                    }
                     beautyConfigCache.whiten = value
                     beautyConfigCache.beautyEnable = true
                     effectNative.setBeautyMode(

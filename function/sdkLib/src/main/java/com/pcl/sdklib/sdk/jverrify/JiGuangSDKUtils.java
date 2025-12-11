@@ -74,7 +74,7 @@ public class JiGuangSDKUtils {
                 }
                 return;
             }
-            getPreLogin( );
+            getPreLogin();
         });
     }
 
@@ -98,7 +98,7 @@ public class JiGuangSDKUtils {
                     jiGuangSDKListener.onPreLoginSuccess();
                 }
             } else {
-                if (jiGuangSDKListener != null ) {
+                if (jiGuangSDKListener != null) {
                     jiGuangSDKListener.fail("");
                 }
 
@@ -118,8 +118,6 @@ public class JiGuangSDKUtils {
         jVerificationViewConfig();
         startLoginAuth();
     }
-
-
 
 
     private void startLoginAuth() {
@@ -170,6 +168,7 @@ public class JiGuangSDKUtils {
         int numberTop = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_430);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView ivPhoneLogin = loginWaysView.findViewById(R.id.iv_phoneLogin);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ViewGroup vgParent = loginWaysView.findViewById(R.id.vg_parent);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView ivWxLogin = loginWaysView.findViewById(R.id.iv_wxLogin);
 
         RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         mLayoutParams.setMargins(0, numberTop + CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_145), 0, 0);
@@ -177,6 +176,10 @@ public class JiGuangSDKUtils {
         ivPhoneLogin.setOnClickListener(v -> {
             if (checkAgreement(1)) return;
             jiGuangSDKListener.jumpPhoneLogin();
+        });
+        ivWxLogin.setOnClickListener(v -> {
+            if (checkAgreement(2)) return;
+            jiGuangSDKListener.jumpWxLogin();
         });
 
         RelativeLayout.LayoutParams mLayoutParams2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -251,7 +254,7 @@ public class JiGuangSDKUtils {
                 if (type == 1) {
                     jiGuangSDKListener.jumpPhoneLogin();
                 } else if (type == 2) {
-                   // jiGuangSDKListener.jumpWxLogin();
+                    jiGuangSDKListener.jumpWxLogin();
                 }
             });
             return true;
@@ -279,8 +282,6 @@ public class JiGuangSDKUtils {
     }
 
 
-
-
     public interface JiGuangSDKListener {
 
         void successLoginToken(String loginToken, String operator);
@@ -288,6 +289,8 @@ public class JiGuangSDKUtils {
         void cancel();
 
         void jumpPhoneLogin();
+        void jumpWxLogin();
+
 
         void fail(String msg);
 
@@ -313,6 +316,11 @@ public class JiGuangSDKUtils {
 
         @Override
         public void jumpPhoneLogin() {
+
+        }
+
+        @Override
+        public void jumpWxLogin() {
 
         }
 

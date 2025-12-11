@@ -18,9 +18,11 @@ import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
+import com.pcl.sdklib.sdk.wechat.WxAuthUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+
 
 /**
  * @author: zhengjun
@@ -31,12 +33,20 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
     R.layout.activity_verify_code,
     LoginViewModel::class.java
 ) {
+    var loginMap  = hashMapOf<String, String>()
+    private var isWxLoginBindPhone = false
     override fun initData() {
         setFullScreenStatusBar(true)
         setStatusBarStyle(false)
         checkInputListener()
         mBinding.viewModel = mViewModel
         val phone = intent.getStringExtra(IntentKeyConfig.DATA)
+        if (intent.hasExtra(IntentKeyConfig.MAP_INFO)){
+            mBinding.tvPhone.text  = "绑定手机号"
+            isWxLoginBindPhone = true
+            loginMap = intent
+                .getSerializableExtra(IntentKeyConfig.MAP_INFO) as HashMap<String, String>
+        }
         if (!TextUtils.isEmpty(phone)){
             mViewModel.phoneExt.set(phone)
             sendVerifyCode()
@@ -51,7 +61,7 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
             }
         }
         mBinding.btnNext.setOnSingleClickListener {
-            startPhoneLogin()
+            startLogin()
         }
         mBinding.connectedService.setOnSingleClickListener {
             ApplicationProxy.instance.askCustomer()
@@ -69,7 +79,7 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
             parseState(it,{
                 if (it=="白名单用户"){
                     mBinding.etCode.setText("2024")
-                    startPhoneLogin()
+                    startLogin()
                 }else{
                     showToast(it)
                     KeyboardUtils.showSoftInput(mBinding.etCode)
@@ -89,8 +99,12 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
         timeDownScope?.cancel()
     }
 
-    private fun startPhoneLogin(){
-        mViewModel.login(LoginResultManager.SOURCE_EMS)
+    private fun startLogin(){
+        if (isWxLoginBindPhone){
+            mViewModel.wxLogin(loginMap)
+        }else{
+            mViewModel.login(LoginResultManager.SOURCE_EMS)
+        }
     }
 
     private fun checkInputListener() {
@@ -154,9 +168,12 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
 
 
     companion object {
-        fun lunch(context: FragmentActivity, phone: String = "") {
+        fun lunch(context: FragmentActivity, phone: String = "",map: HashMap<String,String>?=null) {
             val intent = Intent(context, VerifyCodeActivity::class.java)
             intent.putExtra(IntentKeyConfig.DATA, phone)
+            if (map!=null){
+                intent.putExtra(IntentKeyConfig.MAP_INFO,map)
+            }
             context.startActivity(intent)
         }
     }

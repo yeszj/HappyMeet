@@ -252,11 +252,11 @@ open class NineRoomSeatView(
         setItemStyle(position)
 
         item.apply {
+            tvSeatIndex.text = (item!!.id-1).toString()
             seatInfo = item
             executePendingBindings()
+            upDataSeatVideo(item, position)
         }
-        upDataSeatVideo(item!!, position)
-
     }
 
 
@@ -267,7 +267,6 @@ open class NineRoomSeatView(
             return
         }
         vgParent.setTag(cn.yanhu.commonres.R.id.tag_set_style,true)
-        tvSeatIndex.text = position.toString()
         this.currentRoomType = roomType
         this.isOwner = isRoomOwner
         if (position == 0) {
@@ -416,14 +415,7 @@ open class NineRoomSeatView(
             }
         }
 
-//        if (itemVideoSf.isNotEmpty() ){
-//            val view = itemVideoSf.getChildAt(0) as TextureView?
-//            if (view != null) {
-//                TextureViewPool.recycleTextureView(view)
-//            }
-//        }
-
-//        // 先移除父视图
+        // 先移除父视图
         ViewUtils.removeViewFormParent(surfaceView)
         itemVideoSf.removeAllViews()
         itemVideoSf.addView(surfaceView)
@@ -431,12 +423,13 @@ open class NineRoomSeatView(
         MoreSeatLiveRoomFrg.surfaceViewList[dto.id - 1] =
             LiveRoomSeatBean(userId.toInt(), surfaceView)
 
-
-        AgoraManager.getInstance().setupVideo(
-            userId.toInt(),
-            userId == localUserId,
-            surfaceView
-        )
+        if (!AgoraManager.getInstance().subScribeUserList.containsKey(userId.toInt())) {
+            AgoraManager.getInstance().setupVideo(
+                userId.toInt(),
+                userId == localUserId,
+                surfaceView
+            )
+        }
         if (userId == localUserId) {
             AgoraManager.getInstance().muteLocalAudioStream(!dto.mikeUser)
         }

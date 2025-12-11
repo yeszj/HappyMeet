@@ -16,6 +16,7 @@ data class InviteRecordResponse(
     val filterList: MutableList<FilterInfo>,
     val bannerList: MutableList<BannerBean>,
     val inviteFilterList: MutableList<FilterInfo>,
-    val monthInviteIncome: String
+    val monthInviteIncome: String,
+    val inviteRules: String?=""
 
 )

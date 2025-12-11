@@ -7,7 +7,6 @@ import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.core.view.isNotEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import cn.yanhu.agora.databinding.ViewSevenSongRoomSeatBinding
@@ -20,7 +19,6 @@ import cn.yanhu.agora.databinding.ViewSevenSongRoomScaleSeatBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.agora.ui.liveRoom.TextureViewPool
-import cn.yanhu.agora.ui.liveRoom.live.MoreSeatLiveRoomFrg
 import cn.yanhu.agora.ui.liveRoom.live.MoreSeatLiveRoomFrg.Companion.surfaceViewList
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
@@ -240,10 +238,12 @@ open class SevenRoomSeatView(
     ) {
         setItemListener(position)
         setItemStyle( position)
-
-        upDataSeatVideo(item!!, position)
-        seatInfo = item
-
+        item.apply {
+            tvSeatIndex.text = (item!!.id-1).toString()
+            seatInfo = item
+            executePendingBindings()
+            upDataSeatVideo(item, position)
+        }
     }
 
     private fun AdapterLiveRoomUserSeatItemBinding.setItemStyle(
@@ -253,8 +253,6 @@ open class SevenRoomSeatView(
             return
         }
         vgParent.setTag(cn.yanhu.commonres.R.id.tag_set_style,true)
-
-        tvSeatIndex.text = position.toString()
         this.currentRoomType = roomType
         this.isOwner = isRoomOwner
         if (position == 0) {
@@ -335,7 +333,6 @@ open class SevenRoomSeatView(
 
             val surfaceView =
                 getOrCreateSurfaceView(liveRoomSeatBean,seatInfo)
-
             //处理SurfaceView的添加
             addVideoSf(surfaceView, dto)
             itemVideoSf.tag = surfaceView
@@ -408,9 +405,11 @@ open class SevenRoomSeatView(
         surfaceViewList[dto.id-1] =
             LiveRoomSeatBean(userId.toInt(), surfaceView)
 
-        AgoraManager.getInstance().setupVideo(
-            userId.toInt(), userId == localUserId, surfaceView
-        )
+        if (!AgoraManager.getInstance().subScribeUserList.containsKey(userId.toInt())){
+            AgoraManager.getInstance().setupVideo(
+                userId.toInt(), userId == localUserId, surfaceView
+            )
+        }
         if (userId == localUserId) {
             AgoraManager.getInstance().muteLocalAudioStream(!dto.mikeUser)
         }

@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import cn.happy.beautyface.ui.utils.BeautyConfigManager
 import cn.huanyuan.sweetlove.BaseApplication
+import cn.huanyuan.sweetlove.BuildConfig
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.AppStartResponse
 import cn.huanyuan.sweetlove.bean.AppVersionInfo
@@ -41,6 +42,7 @@ import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.adapter.CircleBannerImageAdapter
+import cn.yanhu.commonres.api.commonRxApi
 import cn.yanhu.commonres.bean.AppPopResponse
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.bean.response.RoseRechargeResponse
@@ -50,6 +52,7 @@ import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.loading.MainLoadingCallBack
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.manager.AppManager
+import cn.yanhu.commonres.manager.ServiceConfigKeyManager
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.task.AppPopTypeManager
 import cn.yanhu.imchat.api.imChatRxApi
@@ -108,11 +111,22 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         getGiftInfo()
         mViewModel.getMainTabInfo()
         BaseApplication.clearTask()
-        checkOaId()
+        if (!BuildConfig.DEBUG){
+            checkOaId()
+        }
+        getSkinMaskConfig()
         checkInit()
         appStart()
         BeautyConfigManager.getNetBeautyConfig()
         clearOldLogFile()
+    }
+
+    private fun getSkinMaskConfig(){
+        request({ commonRxApi.getConfigInfo(ServiceConfigKeyManager.OPEN_WHITEN_SKIN_MASK) },object : OnRequestResultListener<String>{
+            override fun onSuccess(data: BaseBean<String>) {
+                AppCacheManager.openWhitenSkinMask = data.data == "1"
+            }
+        })
     }
 
     private fun clearOldLogFile() {

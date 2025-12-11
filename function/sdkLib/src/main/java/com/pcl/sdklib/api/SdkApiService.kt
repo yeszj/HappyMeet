@@ -5,6 +5,7 @@ import com.pcl.sdklib.bean.CheckFaceAuthResult
 import com.pcl.sdklib.bean.FaceParamsBody
 import com.pcl.sdklib.bean.PayRequest
 import com.pcl.sdklib.bean.PostBaiduAuthBean
+import com.pcl.sdklib.bean.ServiceInfo
 import com.pcl.sdklib.bean.WechatPayData
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -65,4 +66,7 @@ interface SdkApiService {
     @FormUrlEncoded
     @POST("/app/v1/userCenter/updatePersonalPageSingle")
     suspend fun updatePersonalPageSingle(@Field("type") type:Int,@Field("content") content:String): BaseBean<String>
+
+    @GET("app/v1/user/getServiceInfo")
+    suspend fun getServiceInfo(): BaseBean<ServiceInfo>
 }

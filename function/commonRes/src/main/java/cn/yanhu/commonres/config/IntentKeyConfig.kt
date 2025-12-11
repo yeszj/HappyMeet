@@ -19,5 +19,6 @@ object IntentKeyConfig {
     const val POSITION = "position"
     const val ACTIVITY_ID = "activityId"
     const val SOURCE = "source"
+    const val MAP_INFO = "mapInfo"
 
 }

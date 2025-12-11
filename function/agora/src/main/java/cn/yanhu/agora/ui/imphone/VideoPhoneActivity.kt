@@ -69,6 +69,7 @@ import java.util.TimerTask
 import androidx.core.view.isVisible
 import cn.yanhu.agora.service.LocalRecordingService
 import cn.yanhu.agora.service.LocalServiceManager
+import io.agora.rtc2.Constants
 
 /**
  * @author: zhengjun
@@ -723,6 +724,13 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
     override fun onAudioVolumeIndication(
         speakers: Array<out IRtcEngineEventHandler.AudioVolumeInfo>?, totalVolume: Int
     ) {
+    }
+
+    override fun onLocalVideoStats(
+        source: Constants.VideoSourceType?,
+        stats: IRtcEngineEventHandler.LocalVideoStats?
+    ) {
+
     }
 
 

@@ -33,7 +33,7 @@ ext {
     rxbinding = "4.0.0"
     roundimageview = "2.3.0"
     baseAdapter = "3.0.7"
-    smartRefresh = "2.1.0"
+    smartRefresh = "3.0.0-alpha"
     floatWindow = "1.0.9"
     lombok_version = "1.18.26"
     //动态配置

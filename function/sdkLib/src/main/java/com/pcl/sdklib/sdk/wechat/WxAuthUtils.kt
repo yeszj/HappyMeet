@@ -4,7 +4,7 @@ import androidx.fragment.app.FragmentActivity
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.zj.netrequest.ext.OnRequestResultListener
-import cn.zj.netrequest.ext.request
+import cn.zj.netrequest.ext.request2
 import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ThreadUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
@@ -40,14 +40,21 @@ object WxAuthUtils {
         onAuthResultListener: OnAuthResultListener
     ) {
         LiveEventBus.get<String>(LiveDataEventManager.WX_AUTH_SUCCESS).observe(context) {
-            request(
-                { sdkRxApi.wxAuth(it) },
-                object : OnRequestResultListener<Boolean> {
-                    override fun onSuccess(data: BaseBean<Boolean>) {
-                        onAuthResultListener.onAuthSuccess()
-                    }
-                }, activity = context
-            )
+            startWxAuth(it,onAuthResultListener)
         }
+    }
+
+     fun startWxAuth(
+        code: String?,
+        onAuthResultListener: OnAuthResultListener?=null
+     ) {
+        request2(
+            { sdkRxApi.wxAuth(code) },
+            object : OnRequestResultListener<Boolean> {
+                override fun onSuccess(data: BaseBean<Boolean>) {
+                    onAuthResultListener?.onAuthSuccess()
+                }
+            }
+        )
     }
 }

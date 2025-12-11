@@ -19,7 +19,6 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var needEditNickName = false
     var isAuth = false
     var personInfo: MutableList<TagInfo> = mutableListOf()
-    var friendCondition: MutableList<TagInfo> = mutableListOf()
     var roomId: Int = 0
     var roomType: Int = 0
     var isAdmin: Boolean = false
@@ -29,7 +28,6 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var needRoseNum: Int = 0
     var colseVideo: Boolean = false
     var colseMic: Boolean = false
-    var sameSex: Boolean = false
     var seatNum: Int = 0
     var addFriendWay: Int = 0
     var seatId: Int = 0

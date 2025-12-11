@@ -9,6 +9,7 @@ import com.umeng.socialize.weixin.view.WXCallbackActivity
 
 class WXEntryActivity : WXCallbackActivity() {
     override fun onResp(resp: BaseResp) {
+        super.onResp(resp)
         when (resp.errCode) {
             BaseResp.ErrCode.ERR_OK -> {
                 if (resp is SendAuth.Resp) {

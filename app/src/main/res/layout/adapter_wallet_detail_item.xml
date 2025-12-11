@@ -104,12 +104,15 @@
             tools:visibility="visible">
 
             <cn.yanhu.baselib.widget.FontWeightValueTextView
+                android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp_15"
                 app:fontWeightValue="medium"
+                android:drawablePadding="@dimen/dp_3"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_time"
                 app:layout_constraintEnd_toEndOf="parent"
+                tools:textColor="@color/fontGrayColor"
                 app:layout_constraintTop_toTopOf="parent"
                 android:textColor="@{recordInfo.withDrawInfo.status ==1?@color/fontGreenColor:@color/fontGrayColor}"
                 android:text='@{recordInfo.withDrawInfo.statusDesc}'

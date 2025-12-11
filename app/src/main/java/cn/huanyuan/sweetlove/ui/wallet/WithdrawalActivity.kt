@@ -52,6 +52,7 @@ import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ActivityUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.lxj.xpopup.interfaces.OnConfirmListener
 import com.youth.banner.listener.OnBannerListener
 
 /**
@@ -325,7 +326,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                     showToast("请先进行实名认证")
                     toRealName()
                 } else {
-                    toBindBankCard()
+                    showBindTipPop()
                 }
             }
         } else {
@@ -335,13 +336,35 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             mBinding.bgAccountInfo.visibility = View.VISIBLE
             mBinding.vgNoBind.visibility = View.GONE
             mBinding.tvAccount.text = bankCard
-            mBinding.tvBind.setOnSingleClickListener { toBindBankCard() }
+            mBinding.tvBind.setOnSingleClickListener { showBindTipPop() }
         }
     }
 
 
-    private fun WithdrawResponse.toBindBankCard(){
-        BindBankActivity.lunch(mContext, realName)
+
+
+    private fun showBindTipPop(){
+         DialogUtils.showConfirmDialog(
+            "温馨提示",{
+                 if (selectAccountType == PayWayInfo.TYPE_ALIPAY) {
+                     toAliAuth()
+                 } else if (selectAccountType == PayWayInfo.TYPE_WXPAY) {
+                     toWxAuth()
+                 }else{
+                     toBindBankCard()
+                 }
+             },{
+
+             },
+            "您好！请确认绑定的提现账号与平台的实名认证一致避免提现失败",
+            "取消",
+            "去绑定"
+        )
+    }
+
+
+    private fun toBindBankCard(){
+        BindBankActivity.lunch(mContext, withDrawInfo!!.realName)
     }
 
     private fun WithdrawResponse.bindWxStyle() {
@@ -359,7 +382,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                     showToast("请先进行实名认证")
                     toRealName()
                 } else {
-                    toWxAuth()
+                    showBindTipPop()
                 }
             }
         } else {
@@ -369,7 +392,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             mBinding.bgAccountInfo.visibility = View.VISIBLE
             mBinding.vgNoBind.visibility = View.GONE
             mBinding.tvAccount.text = wxNickName
-            mBinding.tvBind.setOnSingleClickListener { toWxAuth() }
+            mBinding.tvBind.setOnSingleClickListener { showBindTipPop() }
         }
     }
 
@@ -388,7 +411,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                     showToast("请先进行实名认证")
                     toRealName()
                 } else {
-                    toAliAuth()
+                    showBindTipPop()
                 }
             }
         } else {
@@ -398,7 +421,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             mBinding.bgAccountInfo.visibility = View.VISIBLE
             mBinding.vgNoBind.visibility = View.GONE
             mBinding.tvAccount.text = aliAccount
-            mBinding.tvBind.setOnSingleClickListener { toAliAuth() }
+            mBinding.tvBind.setOnSingleClickListener { showBindTipPop() }
         }
     }
 

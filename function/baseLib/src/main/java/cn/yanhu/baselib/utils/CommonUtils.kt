@@ -24,6 +24,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
+import com.google.android.material.internal.ContextUtils
 import com.lxj.xpopup.core.BasePopupView
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -37,6 +38,8 @@ import java.util.regex.Pattern
  * desc:
  */
 object CommonUtils {
+
+
     @JvmStatic
     fun isScreenOff(): Boolean {
         val topActivity = ActivityUtils.getTopActivity() ?: return false

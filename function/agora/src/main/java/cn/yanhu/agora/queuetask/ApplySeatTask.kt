@@ -11,10 +11,10 @@ import com.lxj.xpopup.interfaces.SimpleCallback
  * @author: zhengjun
  * created: 2023/5/29
  */
-class ApplySeatTask(private val it: EMMessage,val roomId:String): BaseQueueTask() {
+class ApplySeatTask(private val it: EMMessage,val roomId:String,val roomType:Int): BaseQueueTask() {
     override fun doTask() {
         val topActivity = ActivityUtils.getTopActivity()
-        UserApplySeatPop.showDialog(topActivity,it,roomId,object : SimpleCallback() {
+        UserApplySeatPop.showDialog(topActivity,it,roomId,roomType,object : SimpleCallback() {
             override fun onDismiss(popupView: BasePopupView?) {
                 doNextTask()
             }

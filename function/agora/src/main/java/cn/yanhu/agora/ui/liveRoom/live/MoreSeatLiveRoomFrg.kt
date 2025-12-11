@@ -28,6 +28,7 @@ import cn.yanhu.agora.ui.liveRoom.view.OnClickSeatListener
 import cn.yanhu.agora.ui.liveRoom.view.SevenRoomSeatView
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
+import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.OperateInfo
@@ -355,6 +356,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
             for (i in 0 until it.size) {
                 val seatInfo = it[i]
                 if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
+                    logComToFile(TAG, "更新麦位userId=$uid,seatIndex = ${seatInfo.id-1}")
                     if (isSevenRoom()) {
                         if (hasExpand) {
                             sevenSongRoomScaleView?.bindScaleByPosition(i, seatInfo)
@@ -448,6 +450,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                 if (item.roomUserSeatInfo?.userId?.toInt() == uid) {
                     if (roomSourceBean.ownerInfo?.userId != uid.toString()) {
                         item.roomUserSeatInfo = null
+                        logComToFile(TAG, "用户下麦userId=$uid,更新麦位，seatIndex = ${item.id-1}")
                     }
                     if (isSevenRoom()) {
                         if (hasExpand) {
@@ -789,7 +792,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
         }
     }
 
-    override fun refreshOnlineUser(onlineNum:Int) {
+    override fun refreshOnlineUser(onlineNum: Int) {
         if (isSevenRoom()) {
             rankViewBinding.tvOnlineNum.text = onlineNum.toString()
         } else {

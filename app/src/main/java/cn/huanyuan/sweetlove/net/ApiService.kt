@@ -128,6 +128,12 @@ interface ApiService : CommonApiService {
     ): BaseBean<LoginSuccessInfo>
 
     @FormUrlEncoded
+    @POST("app/v1/user/login")
+    suspend fun wxLogin(
+        @FieldMap map: Map<String, String>
+    ): BaseBean<LoginSuccessInfo>
+
+    @FormUrlEncoded
     @POST("app/v1/auth/setPassword")
     suspend fun setPassword(
         @Field("phone") phone: String,

@@ -52,7 +52,7 @@ class LiveRoomEndActivity : BaseActivity<ActivityLiveRoomEndBinding, LiveRoomVie
                 mBinding.info = data
             }
         } else if (type == LiveRoomManager.HOUSE_CUT_EXTRA_KICK) {
-            mBinding.liveRoomEndTxtTwo.text = "直播已结束"
+            mBinding.liveRoomEndTxtTwo.text = "主持已转专属房，您已离开该房间"
         } else if (type == LiveRoomManager.HOUSE_NOT_FUNDS) {
             mBinding.liveRoomEndTxtTwo.text = "专属房间所需玫瑰余额不足\n" + "私密约会已结束"
         } else if (type == LiveRoomManager.HOUSE_ADMINISTRATOR_OFF) {

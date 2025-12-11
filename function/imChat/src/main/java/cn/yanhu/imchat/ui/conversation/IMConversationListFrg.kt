@@ -158,37 +158,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
             })
     }
 
-    private fun loadServerMsgToDb(
-        conversations: MutableList<EMConversation>
-    ) {
-        val emFetchMessageOption = EMFetchMessageOption()
-        emFetchMessageOption.setIsSave(true)
-        conversations.forEach { it ->
-            EMClient.getInstance().chatManager()
-                .asyncFetchHistoryMessages(it.conversationId(),
-                    EMConversation.EMConversationType.Chat,
-                    10,
-                    "",
-                    emFetchMessageOption,
-                    object : EMValueCallBack<EMCursorResult<EMMessage>?> {
-                        override fun onSuccess(value: EMCursorResult<EMMessage>?) {
-                        }
 
-                        override fun onError(error: Int, errorMsg: String) {
-                        }
-                    })
-        }
-    }
-
-    private fun addCacheConversationInfo(
-        info: EMConversation, conversationInfo: CustomConversationInfo
-    ) {
-        val cacheMessage = getCustomMessage(info.lastMessage)
-        val cacheConversationInfo = CacheConversationInfo(
-            info.unreadMsgCount, info.conversationId(), cacheMessage
-        )
-        conversationInfo.cacheConversationInfo = cacheConversationInfo
-    }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         userIdList.clear()
@@ -229,9 +199,7 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                         if (conversation.type == EMConversation.EMConversationType.ChatRoom) {
                             continue
                         }
-                        val lastMessage = conversation.lastMessage ?: continue
-                        // if (deleteHistoryConversation(conversation, lastMessage)) continue
-                        //if (filterSystemSendMsg(conversation, lastMessage)) continue
+                        conversation.lastMessage ?: continue
                         val info = EaseConversationInfo()
                         info.info = conversation
                         info.isTop = conversation.isPinned
@@ -247,7 +215,6 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                         ConfigParamsManager.HAS_LOAD_CHAT = true
                         updateFinalConversationList(listOf(), listOf())
                     } else {
-                        //conversationListLayout.setData(conversationList)
                         getUserInfoList(conversationList)
                     }
                 }
@@ -255,93 +222,6 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
         ThreadUtils.executeByIo(conversationListTask)
     }
 
-    /**
-     * 删除5天内未聊过天的会话
-     */
-    private fun deleteHistoryConversation(
-        conversation: EMConversation, lastMessage: EMMessage
-    ): Boolean {
-        if (conversation.type != EMConversation.EMConversationType.Chat) {
-            return false
-        }
-        val startTime = DateUtils.getYestodyStr(-5, "yyyy-MM-dd")
-        val timeMillis = TimeUtils.date2Millis(TimeUtils.string2Date(startTime, "yyyy-MM-dd"))
-        if (lastMessage.msgTime < timeMillis) {
-            val conversationId = conversation.conversationId()
-            EMLog.e(
-                "EMUnRead",
-                "deleteHistoryConversation，消息全部设为已读，会话ID：" + conversationId + " 未读消息数：" + conversation.unreadMsgCount + "会话类型：" + conversation.type
-            )
-            conversation.markAllMessagesAsRead()
-            EMClient.getInstance().chatManager()
-                .deleteConversation(conversationId, false)
-            if (!deleterConversationList.contains(conversationId)) {
-                deleterConversationList.add(conversation.conversationId())
-            }
-            return true
-        }
-        return false
-    }
-
-    /**
-     * 过滤牵线会话 判断最后一条消息是否是牵线消息(自定义消息event为MSG_QIANXIAN，loveString参数为1)
-     * 1.删除一个月以前收到的牵线消息且还未建立关系的会话
-     * 2.系统替自己发送的牵线消息且对方未回复不显示
-     */
-    private fun filterSystemSendMsg(
-        conversation: EMConversation, lastMessage: EMMessage
-    ): Boolean {
-        if (lastMessage.type == EMMessage.Type.CUSTOM) {
-            val messageBody = lastMessage.body as EMCustomMessageBody
-            val event = messageBody.event()
-            if (ChatConstant.MSG_QIANXIAN == event) {
-                //系统发送的自定义牵线消息
-                val params = messageBody.params
-                val content = params["content"]
-                if (!TextUtils.isEmpty(content) && (content!!.contains("为爱牵线") || content.contains(
-                        "缘分牵线"
-                    )) && lastMessage.from == AppCacheManager.userId
-                ) {
-                    val allMessages = conversation.searchMsgFromDB(
-                        System.currentTimeMillis(), 5, EMConversation.EMSearchDirection.UP
-                    )
-                    return isAllQianXianMsg(allMessages)
-                }
-            }
-        } else {
-            //牵线时系统替自己发送的文本消息
-            val loveString = lastMessage.getIntAttribute("loveString", -1)
-            if (loveString == 1 && lastMessage.from == AppCacheManager.userId) {
-                //最后一条是为爱牵线系统自动发的文本消息 且是我自己发的,总消息数量小于2条(一条是牵线提示消息，一条系统发的文本消息) 则会话记录不显示
-                val allMessages = conversation.searchMsgFromDB(
-                    System.currentTimeMillis(), 3, EMConversation.EMSearchDirection.UP
-                )
-                return allMessages.size <= 2
-            }
-        }
-        return false
-    }
-
-    private fun isAllQianXianMsg(allMessages: MutableList<EMMessage>): Boolean {
-        allMessages.forEach {
-            if (!isQianXianMsg(it) || it.from != AppCacheManager.userId) {
-                return false
-            }
-        }
-        return true
-    }
-
-    private fun isQianXianMsg(emMessage: EMMessage): Boolean {
-        var loveString = emMessage.getIntAttribute("loveString", -1)
-        if (emMessage.type == EMMessage.Type.CUSTOM) {
-            val messageBody2 = emMessage.body as EMCustomMessageBody
-            val event2 = messageBody2.event()
-            if (ChatConstant.MSG_QIANXIAN == event2) {
-                loveString = 1
-            }
-        }
-        return loveString == 1
-    }
 
     private var userIdList = mutableListOf<String>()
 
@@ -462,9 +342,6 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
         ThreadUtils.executeByIo(finalConversationListTask)
     }
 
-
-
-
     private fun getFinalConversationList(
         data: List<UserDetailInfo>, list: List<EaseConversationInfo>
     ): MutableList<EaseConversationInfo> {
@@ -488,7 +365,6 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
                 conversationInfo.isGroup = easeConversationInfo.isGroup
                 conversationInfo.isTop = easeConversationInfo.isTop
                 conversationInfo.dataBean = dataBean
-                addCacheConversationInfo(emConversation, conversationInfo)
                 infoList.add(conversationInfo)
                 unReadCount += emConversation.unreadMsgCount
             }
@@ -502,35 +378,6 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
     override fun loadDataFinish(data: MutableList<EaseConversationInfo>?) {
         super.loadDataFinish(data)
     }
-
-
-
-
-    private fun getCustomMessage(
-        emMessage: EMMessage
-    ): ConversationFinalMessageInfo {
-        val finalMessage = ConversationFinalMessageInfo()
-        finalMessage.msgId = emMessage.msgId
-        finalMessage.msgTime = emMessage.msgTime
-        val body = emMessage.body
-        if (body is EMCustomMessageBody) {
-            val event = body.event()
-            if (event == ImMsgManager.MSG_CUSTOM_EMOJI) {
-                finalMessage.custom_msg = emMessage.getStringAttribute(
-                    ChatConstant.CUSTOM_MSG, ""
-                )
-            } else {
-                val messageDigest = EaseCommonUtils.getMessageDigest(emMessage, context)
-                finalMessage.content = messageDigest
-            }
-        } else {
-            val messageDigest = EaseCommonUtils.getMessageDigest(emMessage, context)
-            finalMessage.content = messageDigest
-        }
-        return finalMessage
-
-    }
-
 
     override fun onItemClick(view: View, position: Int) {
         super.onItemClick(view, position)
@@ -633,8 +480,6 @@ class IMConversationListFrg : CustomEaseConversationListFragment() {
         }
     }
 
-
-    private val deleterConversationList = mutableListOf<String>()
 
     companion object {
         const val TYPE_ALL = 1

@@ -59,7 +59,9 @@ fun <T> MutableLiveData<ResultState<T>>.paresResult(result: T) {
  */
 fun <T> MutableLiveData<ResultState<T>>.paresException(e: Throwable, isShowToast: Boolean = true) {
     if (e is CustomException) {
-        if ((e.code == ErrorCode.TOKEN_INVALID || e.code == ErrorCode.TOKEN_FAIL || e.code == ErrorCode.UNLOGIN || e.code == ErrorCode.CODE_DEVICE_CHANGE || e.code == ErrorCode.ACCOUNT_BLOCK)) {
+        if (e.code == ErrorCode.ACCOUNT_BLOCK){
+            ApplicationProxy.instance.loginInvalid(e.msg)
+        } else if ((e.code == ErrorCode.TOKEN_INVALID || e.code == ErrorCode.TOKEN_FAIL || e.code == ErrorCode.UNLOGIN || e.code == ErrorCode.CODE_DEVICE_CHANGE )) {
             //token失效，重新登录
             ApplicationProxy.instance.loginInvalid()
             if (isShowToast) {

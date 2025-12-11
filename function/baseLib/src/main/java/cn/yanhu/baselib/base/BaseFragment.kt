@@ -232,9 +232,10 @@ abstract class BaseFragment<DB : ViewDataBinding, VM : BaseViewModel>(
     open fun setDataLoadFinish(pageNum: Int, size: Int, bgRefresh: MyRefreshLayout) {
         if (pageNum == 1) {
             if (size <= 0) {
-                bgRefresh.finishLoadMoreWithNoMoreData()
+                bgRefresh.finishRefreshWithNoMoreData()
+            }else{
+                endRefreshing(bgRefresh)
             }
-            endRefreshing(bgRefresh)
         } else {
             if (size <= 0) {
                 bgRefresh.finishLoadMoreWithNoMoreData()

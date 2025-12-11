@@ -8,7 +8,7 @@ import cn.zj.netrequest.OnRoomLeaveListener
 import java.math.BigDecimal
 
 interface IApplication {
-    fun loginInvalid()
+    fun loginInvalid(msg: String?="")
     fun getApplication(): Application
     fun isLogin(): Boolean
     fun getHead(): MutableMap<String, String?>

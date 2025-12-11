@@ -117,7 +117,6 @@
             android:textSize="@dimen/sp_12"
             app:layout_constraintTop_toBottomOf="@+id/divider"
             android:paddingVertical="@dimen/dp_10"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/avatarView" />
         <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="wrap_content"
@@ -140,7 +139,6 @@
             android:textSize="@dimen/sp_12"
             app:layout_constraintTop_toBottomOf="@+id/divider"
             android:paddingVertical="@dimen/dp_10"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_income" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
@@ -155,5 +153,25 @@
             android:textSize="@dimen/sp_14"
             app:layout_constraintTop_toTopOf="@+id/tv_totalDesc"
             app:layout_constraintBottom_toBottomOf="@+id/tv_totalDesc"   />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_clearTips"
+            android:visibility="@{userinfo.showActiveTip?View.VISIBLE:View.GONE}"
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_totalDesc"
+            app:layout_constraintStart_toStartOf="@+id/tv_totalDesc"
+            tools:text="89天未活跃 邀请关系将在1天后失效"
+            android:layout_marginTop="@dimen/dp_m_2"
+            android:textSize="@dimen/sp_12"
+            android:paddingBottom="@dimen/dp_10"
+            tools:visibility="gone"
+            android:text="@{userinfo.activeDesc}"
+            android:drawableStart="@drawable/svg_gantan_orange_16"
+            android:drawableTint="@color/bgOrangeColor"
+            android:drawablePadding="@dimen/dp_3"
+            android:textColor="#FF8C00"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
