@@ -146,7 +146,7 @@ object DialogUtils {
         title: CharSequence,
         onConfirmListener: OnConfirmListener? = null,
         onCancelListener: OnCancelListener? = null,
-        content: CharSequence = "",
+        content: CharSequence? = "",
         cancel: String? = CommonUtils.getString(R.string.cancel),
         confirm: String? = CommonUtils.getString(R.string.confirm),
         isHideCancel: Boolean = false,

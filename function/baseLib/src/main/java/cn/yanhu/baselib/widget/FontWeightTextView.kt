@@ -10,8 +10,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.IntRange
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.graphics.TypefaceCompat
 import cn.yanhu.baselib.R
+import cn.yanhu.baselib.utils.TypefaceUtils
 
 open class FontWeightTextView @JvmOverloads constructor(
     context: Context,
@@ -50,8 +50,6 @@ open class FontWeightTextView @JvmOverloads constructor(
         @IntRange(from = 1, to = 1000) weight: Int
     ) {
         mFontWeight = weight
-        TypefaceCompat.create(context, typeface, weight, typeface.isItalic).let {
-            typeface = it
-        }
+        this.typeface = TypefaceUtils.getTypeface(weight,context,false)
     }
 }

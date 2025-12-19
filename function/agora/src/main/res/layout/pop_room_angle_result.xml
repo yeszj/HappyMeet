@@ -18,9 +18,13 @@
 
         <com.opensource.svgaplayer.SVGAImageView
             android:id="@+id/svgaImage"
-            app:loopCount="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:loopCount="1" />
+
+        <com.tencent.qgame.animplayer.AnimView
+            android:id="@+id/animView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

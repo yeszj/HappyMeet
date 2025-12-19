@@ -1,5 +1,6 @@
 package cn.yanhu.agora.pop
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import com.lxj.xpopup.core.BottomPopupView
@@ -23,7 +24,8 @@ import com.lxj.xpopup.XPopup
  * created: 2025/1/15
  * desc:可加冕用户列表
  */
-class CrownedUserListPop(context: Context,val list:MutableList<AngleRankInfo>,val onClickCrownedListener: OnClickCrownedListener,val roomId:String,val type:Int) : BottomPopupView(context){
+@SuppressLint("ViewConstructor")
+class CrownedUserListPop(context: Context, val list:MutableList<AngleRankInfo>, val onClickCrownedListener: OnClickCrownedListener, val roomId:String, val type:Int) : BottomPopupView(context){
     companion object {
         const val TYPE_SONG = 1
         const val TYPE_ANGLE = 2

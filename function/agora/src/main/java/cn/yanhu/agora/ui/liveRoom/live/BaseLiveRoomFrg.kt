@@ -1691,11 +1691,13 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 //设置管理员
                 showToast("你已被房主设为管理员")
                 roomSourceBean.roomAdmin = true
+                userRoomAdminChanger(true)
                 onlineUserListPop?.refreshRoomInfo(roomSourceBean)
             } else if (source == ChatConstant.ACTION_CANCEL_ADMIN) {
                 //取消管理员
                 showToast("你已被房主移除管理员")
                 roomSourceBean.roomAdmin = false
+                userRoomAdminChanger(false)
                 onlineUserListPop?.refreshRoomInfo(roomSourceBean)
             } else if (source == ChatConstant.ACTION_SKIP_ROOM) {
                 //踢出房间
@@ -1739,6 +1741,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
     }
 
+    protected open fun userRoomAdminChanger(isRoomAdmin: Boolean) {}
     private fun bindPkInfo(roomPkInfo: RoomPkInfo?) {
         if (isOwner && roomSourceBean.isShowPkFunc() && (roomPkInfo == null || roomPkInfo.status == RoomPkInfo.STATUS_END)) {
             mBinding.btnPk.visibility = View.VISIBLE
@@ -1760,6 +1763,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         } else {
             updatePkResult(roomPkInfo, true)
         }
+
         if (isOwner && roomPkInfo?.showPkStart == "0") {
             sendPkNotice("PK开始啦！")
         }
@@ -1914,7 +1918,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         } else {
             mBinding.tvApply.text = "申请上麦"
             mBinding.tvRoseSeatNum.visibility = View.VISIBLE
-            mBinding.tvRoseSeatNum.text = "${seatList[1].seatRoseNum}玫瑰/次"
+            mBinding.tvRoseSeatNum.text = "${getSeatInRoseNum()}玫瑰/次"
             mBinding.ivSeatStatus.setImageResource(R.drawable.ic_apply_seat_room)
         }
     }
@@ -2688,7 +2692,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         )
     }
 
-     fun showRechargePop() {
+    fun showRechargePop() {
         ApplicationProxy.instance.showRechargePop(mContext, true, balanceRose)
     }
 
@@ -2772,6 +2776,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 getRoomInfoSuccess()
                 bindPkInfo(pkDetail)
                 getGiftComboSwitch()
+                userRoomAdminChanger(roomSourceBean.roomAdmin)
             })
         }
         mViewModel.closeRoomObserver.observe(this) {
@@ -2787,15 +2792,14 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         EMClient.getInstance().chatroomManager()
             .joinChatRoom(roomSourceBean.uid, object : EMValueCallBack<EMChatRoom> {
                 override fun onSuccess(value: EMChatRoom?) {
-                    emChatRoom = value
                     LiveRoomManager.chatRoomId = roomSourceBean.uid
                     logInfoCom("加入聊天室成功")
                     if (!roomSourceBean.isAdmin()) {
                         sendMessage("进入了房间", ChatRoomMsgInfo.ITEM_WELCOME_TYPE)
                     }
-                    runOnUiThread {
+                    ThreadUtils.getMainHandler().postDelayed({
                         refreshOnlineUser(getChatRoom().memberCount)
-                    }
+                    }, 1000)
                     AgoraManager.getInstance().isInitSuccess = true
                 }
 
@@ -3325,7 +3329,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         source: Constants.VideoSourceType?,
         stats: IRtcEngineEventHandler.LocalVideoStats?
     ) {
-        if (isOwner){
+        if (isOwner) {
             return
         }
         if (checkTime == 0L) {

@@ -83,7 +83,7 @@ object CacheSizeManager {
                 if (onClearCacheListener!=null){
                     showToast("清除成功")
                 }
-                GlideHealthMonitor.recoverGlide()
+               // GlideHealthMonitor.recoverGlide()
                 onClearCacheListener?.onClearSuccess()
                 DialogUtils.dismissLoading()
             }

@@ -12,8 +12,10 @@ import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.utils.WebViewUtil
 import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.baselib.widget.MyWebViewClient
+import cn.yanhu.commonres.config.EventBusKeyConfig
 import cn.yanhu.commonres.router.RouterPath
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.jeremyliao.liveeventbus.LiveEventBus
 
 /**
  * @author: witness
@@ -28,6 +30,13 @@ class WebViewActivity : BaseActivity<ActivityWebviewBinding, WebViewModel>(
     override fun initBeforeContentView() {
         // 开启 WebView 长截图，在 setContentView() 方法前面设置才有效
         WebView.enableSlowWholeDocumentDraw()
+    }
+
+    override fun initListener() {
+        super.initListener()
+        LiveEventBus.get<Boolean>(EventBusKeyConfig.REQUESTMERCHANTTRANSFERSUCCESS)
+            .observe(this) { o -> back() }
+
     }
 
     override fun initData() {
@@ -46,6 +55,14 @@ class WebViewActivity : BaseActivity<ActivityWebviewBinding, WebViewModel>(
             override fun rightButtonOnClick(v: View?) {
             }
         })
+    }
+
+    override fun back() {
+        if (mBinding.webView.canGoBack()) {
+            mBinding.webView.goBack()
+        } else {
+            finish()
+        }
     }
 
     override fun initStatusBar() {

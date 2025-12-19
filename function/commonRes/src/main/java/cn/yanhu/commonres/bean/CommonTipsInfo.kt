@@ -11,5 +11,7 @@ data class CommonTipsInfo(
     val btn: String,
     val isAutoDismiss: Boolean = true,
     var drawableId:Int = 0,
-    var showClose:Boolean = true
+    var showClose:Boolean = true,
+    var icon: String = "",
+    val url: String = ""
 )

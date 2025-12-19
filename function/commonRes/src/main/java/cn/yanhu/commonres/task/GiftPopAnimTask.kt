@@ -157,6 +157,7 @@ class GiftPopAnimTask(
             videoAnimView?.setAnimListener(object : IAnimListener {
                 override fun onFailed(errorType: Int, errorMsg: String?) {
                     logComToFile("playGift","视频礼物特效播放失败:errorType=$errorType，errorMsg=$errorMsg")
+                    doNextTask()
                 }
 
                 override fun onVideoComplete() {
@@ -192,15 +193,20 @@ class GiftPopAnimTask(
     }
 
     private fun playGiftAnim(giftInfo: GiftInfo,isBox: Boolean = false) {
-        logComToFile("memoryInfo","送礼："+getMemoryStatus()+"\nanimUrl="+giftInfo.svga+"giftName="+giftInfo.name)
-        val svga = giftInfo.svga
-        if (isMp4(svga) || isBox) {
-            logcom("播放视频礼物特效")
-            playVideoAnim(svga,isBox)
-        } else {
-            logcom("播放svga礼物特效")
-            playSvgaAnim(svga, giftInfo)
+        try {
+            logComToFile("memoryInfo","送礼："+getMemoryStatus()+"\nanimUrl="+giftInfo.svga+"giftName="+giftInfo.name)
+            val svga = giftInfo.svga
+            if (isMp4(svga) || isBox) {
+                logcom("播放视频礼物特效")
+                playVideoAnim(svga,isBox)
+            } else {
+                logcom("播放svga礼物特效")
+                playSvgaAnim(svga, giftInfo)
+            }
+        }catch (e: Exception){
+            logComToFile("memoryInfo","playGiftAnim异常："+e.message)
         }
+
     }
 
     private fun playSvgaAnim(svga: String?, giftInfo: GiftInfo) {

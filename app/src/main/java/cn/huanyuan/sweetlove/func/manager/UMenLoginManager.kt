@@ -4,6 +4,7 @@ import android.app.Activity
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.showToast
 import com.blankj.utilcode.util.GsonUtils
+import com.pcl.sdklib.sdk.wechat.WxAuthUtils
 import com.umeng.socialize.UMAuthListener
 import com.umeng.socialize.UMShareAPI
 import com.umeng.socialize.bean.SHARE_MEDIA
@@ -15,6 +16,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA
  */
 object UMenLoginManager {
     fun startLogin(context: Activity,shareMedia: SHARE_MEDIA = SHARE_MEDIA.WEIXIN,onUMengLoginSuccessListener: OnUMengLoginSuccessListener){
+        WxAuthUtils.isWxAuth = false
         val umShareApi = UMShareAPI.get(context)
         umShareApi.getPlatformInfo(context, shareMedia,object : UMAuthListener{
             override fun onStart(p0: SHARE_MEDIA?) {

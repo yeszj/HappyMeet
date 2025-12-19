@@ -374,7 +374,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                         R.color.colorMain
                     )
                 )
-                .text("，男嘉宾同意后可转换成功")
+                .text("，男嘉宾同意后可转换成功。专属房超过15分钟没有男嘉宾上麦，将会自动关房")
 
             spans.build()
         }

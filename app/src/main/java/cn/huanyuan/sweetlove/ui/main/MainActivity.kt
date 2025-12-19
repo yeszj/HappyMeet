@@ -268,6 +268,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                                 GsonUtils.toJson(appPopInfo!!.common)
                             )
                         }
+                        getPop()
                     }
                 } else {
                     showVersionPop(appVersionInfo!!)
@@ -278,6 +279,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         }
     }
 
+    private fun getPop(){
+        request({rxApi.getPop()},object : OnRequestResultListener<String>{
+            override fun onSuccess(data: BaseBean<String>) {
+            }
+        })
+    }
 
     override fun initListener() {
         super.initListener()

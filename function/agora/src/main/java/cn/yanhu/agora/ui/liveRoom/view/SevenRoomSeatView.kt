@@ -42,7 +42,8 @@ open class SevenRoomSeatView(
     private var isScaleStyle: Boolean,
     var roomType: Int,
     var currentRoomId: String,
-    var isRoomOwner: Boolean
+    var isRoomOwner: Boolean,
+    var roomAdmin: Boolean
 ) :
     LinearLayout(context) {
     init {
@@ -62,7 +63,19 @@ open class SevenRoomSeatView(
                 LayoutInflater.from(context), R.layout.view_seven_song_room_seat, this, true
             )
         }
+    }
 
+    fun updateRoomAdmin(isAdmin: Boolean){
+        roomAdmin = isAdmin
+        for (i in 0 until seatInfoList.size) {
+            if (mBinding is ViewSevenSongRoomSeatBinding) {
+                val seatBinding = getSeatBinding(i)
+                seatBinding?.isRoomAdmin = roomAdmin
+            } else {
+                val seatBinding = getSeatScaleBinding(i)
+                seatBinding?.isRoomAdmin = roomAdmin
+            }
+        }
     }
 
     private var seatInfoList: MutableList<RoomSeatInfo> = mutableListOf()
@@ -255,6 +268,7 @@ open class SevenRoomSeatView(
         vgParent.setTag(cn.yanhu.commonres.R.id.tag_set_style,true)
         this.currentRoomType = roomType
         this.isOwner = isRoomOwner
+        this.isRoomAdmin = roomAdmin
         if (position == 0) {
             tvOwner.visibility = VISIBLE
         } else {

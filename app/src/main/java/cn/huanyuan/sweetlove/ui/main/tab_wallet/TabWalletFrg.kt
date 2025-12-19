@@ -1,14 +1,16 @@
 package cn.huanyuan.sweetlove.ui.main.tab_wallet
 
+import android.annotation.SuppressLint
 import android.text.TextUtils
+import android.view.View
 import androidx.fragment.app.FragmentActivity
 import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.bean.WalletInfo
 import cn.huanyuan.sweetlove.databinding.FrgTabWalletBinding
-import cn.huanyuan.sweetlove.ui.invite.InviteMeUserActivity
-import cn.huanyuan.sweetlove.ui.invite.MyInviteRecordActivity
 import cn.huanyuan.sweetlove.ui.invite.BindInviteCodeActivity
 import cn.huanyuan.sweetlove.ui.invite.InviteMainActivity
+import cn.huanyuan.sweetlove.ui.invite.InviteMeUserActivity
+import cn.huanyuan.sweetlove.ui.invite.MyInviteRecordActivity
 import cn.huanyuan.sweetlove.ui.main.MainViewModel
 import cn.huanyuan.sweetlove.ui.wallet.RoseExchangeActivity
 import cn.huanyuan.sweetlove.ui.wallet.WithdrawalActivity
@@ -20,6 +22,7 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.adapter.CommonTxtBannerAdapter
+import cn.yanhu.commonres.router.PageIntentUtil
 import cn.zj.netrequest.ext.parseState
 import com.blankj.utilcode.util.ClipboardUtils
 
@@ -63,15 +66,29 @@ class TabWalletFrg : BaseFragment<FrgTabWalletBinding, MainViewModel>(
                 walletInfo = it
                 rewardBannerAdapter.setDatas(it.carouselList)
                 mBinding.walletInfo = it
+                bindConfirmNumTips(it)
             })
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun bindConfirmNumTips(data: WalletInfo) {
+        val needConfirmCnt: Int = data.needConfirmCnt
+        if (needConfirmCnt > 0) {
+            mBinding.tvWithDrawTips.text = "你有" + needConfirmCnt + "笔提现待确认"
+            mBinding.vgWithDrawTips.visibility = View.VISIBLE
+        } else {
+            mBinding.vgWithDrawTips.visibility = View.GONE
+        }
+    }
     override fun initListener() {
         super.initListener()
         mBinding.btnWithDraw.setOnSingleClickListener { WithdrawalActivity.lunch(mContext) }
         mBinding.btnExchange.setOnSingleClickListener {
             RoseExchangeActivity.lunch(mContext)
+        }
+        mBinding.tvWithdrawalDetail.setOnSingleClickListener {
+            PageIntentUtil.url2Page(mContext,walletInfo?.url)
         }
         mBinding.btnInvite.setOnSingleClickListener { InviteMainActivity.lunch(mContext) }
         mBinding.vgInvite.setOnSingleClickListener {

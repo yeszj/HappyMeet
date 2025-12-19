@@ -145,21 +145,29 @@ object CommonUtils {
         return Formatter.formatFileSize(context, target_size)
     }
 
+    fun isEmpty(value: String?): Boolean{
+        return TextUtils.isEmpty(value) || value == "null"
+    }
+
     fun compareString(startValue: String?, endValue: String?): Boolean {
         var finalValue = startValue
-        if (TextUtils.isEmpty(startValue)) {
+        if (isEmpty(startValue)) {
             finalValue = "0"
         }
 
         var endFinalValue = endValue
-        if (TextUtils.isEmpty(endValue)) {
+        if (isEmpty(endValue)) {
             endFinalValue = "0"
         }
         return BigDecimal(finalValue) >= BigDecimal(endFinalValue)
     }
 
     fun compareString(startValue: String?, endValue: BigDecimal?): Boolean {
-        return BigDecimal(startValue) > endValue
+        var finalValue = startValue
+        if (isEmpty(startValue)) {
+            finalValue = "0"
+        }
+        return BigDecimal(finalValue) > endValue
     }
 
     fun compareZero(startValue: String?): Boolean {

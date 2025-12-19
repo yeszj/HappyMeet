@@ -19,8 +19,8 @@ android {
         applicationId = "cn.huanyuan.sweetlove"
         minSdk = cfg["minSdkVersion"] as Int
         targetSdk = cfg["targetSdkVersion"] as Int
-        versionCode = 42
-        versionName = "1.4.2"
+        versionCode = 44
+        versionName = "1.4.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
@@ -66,7 +66,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_SERVER_ADDRESS", "\"http://qxq.hanyonjoy.com/\"")
+            buildConfigField("String", "BASE_SERVER_ADDRESS", "\"https://qxq.hanyonjoy.com/\"")
         }
     }
     compileOptions {

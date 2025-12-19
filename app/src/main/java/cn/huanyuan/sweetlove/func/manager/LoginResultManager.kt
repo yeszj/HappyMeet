@@ -22,6 +22,7 @@ import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ActivityUtils
 import com.hyphenate.EMCallBack
 import com.hyphenate.chat.EMClient
+import com.pcl.sdklib.sdk.wechat.WxAuthUtils
 import com.umeng.analytics.MobclickAgent
 
 /**
@@ -39,6 +40,7 @@ object LoginResultManager {
         if (!TextUtils.isEmpty(loginSuccessInfo.phoneEndNum)) {
             AppCacheManager.phoneEndNum = loginSuccessInfo.phoneEndNum
         }
+        WxAuthUtils.isWxAuth = true
         ConfigParamsManager.HAS_LOAD_CHAT = false
         AppCacheManager.userId = loginSuccessInfo.userId
         AppCacheManager.mToken = loginSuccessInfo.token

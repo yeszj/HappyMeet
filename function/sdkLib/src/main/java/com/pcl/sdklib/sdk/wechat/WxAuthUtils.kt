@@ -22,6 +22,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 object WxAuthUtils {
     const val TYPE_LOGIN = 1//登录
     const val TYPE_CASH_AUTH = 2//提现授权
+    var isWxAuth = true
     fun weChatAuth(context: FragmentActivity) {
         ThreadUtils.runOnUiThread {
             val api = WXAPIFactory.createWXAPI(context, SdkParamsManager.WX_APP_ID)

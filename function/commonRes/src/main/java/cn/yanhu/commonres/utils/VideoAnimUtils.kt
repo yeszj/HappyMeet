@@ -1,6 +1,7 @@
 package cn.yanhu.commonres.utils
 
 import android.content.Context
+import android.text.TextUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.commonres.bean.RoomSwitchCache
@@ -57,7 +58,9 @@ object VideoAnimUtils {
     ) {
 
         videoAnimView.setScaleType(ScaleType.CENTER_CROP)
-        videoAnimView.setMute(!RoomSwitchCacheManager.isOpenGiftVoice(roomId))
+        if (!TextUtils.isEmpty(roomId)){
+            videoAnimView.setMute(!RoomSwitchCacheManager.isOpenGiftVoice(roomId))
+        }
         val url = URL(animUrl)
         logcom(
             "urlParse",

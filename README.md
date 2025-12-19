@@ -4,7 +4,7 @@
 * 项目原型地址：https://www.figma.com/file/EZ3KVafM8YZiuQerLQ5qKN/%E8%B6%A3%E7%9B%B8%E4%BA%B2?type=design&node-id=1-80&mode=design&t=pwwyfQtOvusBgiRv-0
 
 
-http://dev-qxq.hanyonjoy.com/app/v1/test/testTc?userId=100394 测试新年红包弹框
+http://dev-qxq.hanyonjoy.com/app/v1/test/testTc?userId=100002 测试新年红包弹框
 
 ## 简介
 

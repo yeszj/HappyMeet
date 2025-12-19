@@ -27,6 +27,7 @@ import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.CommonEventPopInfo
+import cn.yanhu.commonres.bean.CommonPopInfo
 import cn.yanhu.commonres.bean.CommonTipsInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.pop.CommonImagePop
@@ -45,6 +46,7 @@ import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
 import com.pcl.sdklib.bean.CheckFaceAuthResult
 import com.pcl.sdklib.bean.FaceAuthInfo
+import kotlin.jvm.java
 
 
 /**
@@ -97,7 +99,28 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
                 //设备变更
                 showChangeDevicePop(topActivity)
             }
+
+            ChatConstant.ACTION_COMMON_POP ->{
+                showCommonTipPop(topActivity)
+            }
         }
+    }
+
+    private fun showCommonTipPop(topActivity: Activity?) {
+        if (topActivity == null) {
+            doNextTask()
+            return
+        }
+        val popInfo = GsonUtils.fromJson<CommonPopInfo>(info, CommonPopInfo::class.java)
+        val commonTipsInfo = CommonTipsInfo(
+            title = popInfo.content,
+            desc = "",
+            btn = popInfo.button,
+            showClose = false,
+            icon = popInfo.icon,
+            url = popInfo.url
+        )
+        CommonTipDialog.showDialog(topActivity, commonTipsInfo)
     }
 
     //设备改变安全认证提示

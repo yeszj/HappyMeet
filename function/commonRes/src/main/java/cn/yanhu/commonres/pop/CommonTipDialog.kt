@@ -2,8 +2,11 @@ package cn.yanhu.commonres.pop
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.text.TextUtils
 import android.view.View
 import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.commonres.bean.CommonTipsInfo
 import com.lxj.xpopup.XPopup
@@ -12,6 +15,9 @@ import com.lxj.xpopup.interfaces.SimpleCallback
 import cn.yanhu.commonres.R
 import cn.yanhu.commonres.databinding.DialogCommonTipsBinding
 import cn.yanhu.commonres.manager.LiveDataEventManager
+import cn.yanhu.commonres.router.PageIntentUtil
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.jeremyliao.liveeventbus.LiveEventBus
 
 /**
@@ -35,10 +41,43 @@ class CommonTipDialog(
         mBinding = DialogCommonTipsBinding.bind(popupImplView)
         mBinding?.apply {
             tipsInfo = commonTipsInfo
+            if (TextUtils.isEmpty(commonTipsInfo.desc)){
+                tvDesc.visibility = GONE
+            }else{
+                tvDesc.visibility = VISIBLE
+            }
             if (commonTipsInfo.drawableId==0){
-                ivTipIcon.visibility = View.GONE
-                ViewUtils.setMarginTop(viewBg,0)
-                ViewUtils.setPaddingTop(tvTitle, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20))
+                if (TextUtils.isEmpty(commonTipsInfo.icon)) {
+                    ivTipIcon.visibility = GONE
+                    ViewUtils.setMarginTop(viewBg, 0)
+                    ViewUtils.setPaddingTop(
+                        tvTitle,
+                        CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20)
+                    )
+                } else {
+                    GlideUtils.loadAsDrawable(
+                        context,
+                        commonTipsInfo.icon,
+                        object : CustomTarget<Drawable>() {
+                            override fun onResourceReady(
+                                resource: Drawable,
+                                transition: Transition<in Drawable>?
+                            ) {
+                                ivTipIcon.setImageDrawable(resource)
+                            }
+                            override fun onLoadCleared(placeholder: Drawable?) {
+                            }
+                        })
+                    ivTipIcon.visibility = VISIBLE
+                    ViewUtils.setPaddingTop(
+                        tvTitle,
+                        CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_10)
+                    )
+                    ViewUtils.setMarginTop(
+                        viewBg,
+                        CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_70)
+                    )
+                }
             }else{
                 ivTipIcon.setImageResource(commonTipsInfo.drawableId)
                 ivTipIcon.visibility = View.VISIBLE
@@ -53,8 +92,11 @@ class CommonTipDialog(
                 if (commonTipsInfo.isAutoDismiss) {
                     dismiss()
                 }
-                onClickBtnListener?.onClickBtn()
-            }
+                if (TextUtils.isEmpty(commonTipsInfo.url)) {
+                    onClickBtnListener?.onClickBtn()
+                } else {
+                    PageIntentUtil.url2Page(context, commonTipsInfo.url)
+                }            }
         }
         LiveEventBus.get<Boolean>(LiveDataEventManager.FACE_RESULT).observe(this) {
             if (it){

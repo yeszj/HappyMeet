@@ -84,9 +84,9 @@ class CreateLiveRoomActivity : BaseActivity<ActivityCreateLiveRoomBinding, LiveR
 
         val html =  if (roomConfigInfo.exclusiveRoomPrice>0){
             "1.开启专属房<font color = '#F8459B'>主持需支付${roomConfigInfo.exclusiveRoomPrice}玫瑰/次</font>；男嘉宾上麦需<font color = '#F8459B'>按${roomConfigInfo.exclusiveSeatPrice}玫瑰/分钟计费</font>；<br/>" +
-                    "2.主持中途若切换为公开房间，再次转专属时，<font color = '#F8459B'>需重新支付${roomConfigInfo.exclusiveRoomPrice}玫瑰/次</font>(每次转换专属需单独计费)"
+                    "2.主持中途若切换为公开房间，再次转专属时，<font color = '#F8459B'>需重新支付${roomConfigInfo.exclusiveRoomPrice}玫瑰/次</font>(每次转换专属需单独计费)；<br/>"+"3.注意：专属房超过15分钟没有男嘉宾上麦，将会自动关房"
         }else{
-            "1.开启专属房男嘉宾上麦需<font color = '#F8459B'>按${roomConfigInfo.exclusiveSeatPrice}玫瑰/分钟计费</font>"
+            "1.开启专属房男嘉宾上麦需<font color = '#F8459B'>按${roomConfigInfo.exclusiveSeatPrice}玫瑰/分钟计费</font>；<br/>"+"2.注意：专属房超过15分钟没有男嘉宾上麦，将会自动关房；"
         }
 
 

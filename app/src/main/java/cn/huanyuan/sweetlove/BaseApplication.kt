@@ -677,6 +677,12 @@ class BaseApplication : Application() {
             }else if (source == ChatConstant.ACTION_UPLOAD_LOG){
                 AppLogManager.uploadErrorFile("agorasdk.log","agorasdkCopy.log")
                 AppLogManager.uploadLocalLog()
+            }else if (source == ChatConstant.ACTION_COMMON_POP){
+                val data = message.getStringAttribute(ChatConstant.CUSTOM_DATA,"")
+                addPopTask(
+                    ChatConstant.ACTION_COMMON_POP,
+                    data
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -903,13 +909,13 @@ class BaseApplication : Application() {
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        logComToFile("memoryInfo","onTrimMemory")
+        //logComToFile("memoryInfo","onTrimMemory")
         Glide.get(this).onTrimMemory(level)
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        logComToFile("memoryInfo","onLowMemory")
+       // logComToFile("memoryInfo","onLowMemory")
         clearMemory()
     }
 

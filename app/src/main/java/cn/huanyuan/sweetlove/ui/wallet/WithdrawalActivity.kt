@@ -122,6 +122,12 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
         LiveEventBus.get<Boolean>(EventBusKeyConfig.BINDBANKSUCCESS).observe(this) {
             requestData()
         }
+        WxAuthUtils.registerAuthResultListener(mContext, object : OnAuthResultListener {
+            override fun onAuthSuccess() {
+                showToast("已绑定")
+                requestData()
+            }
+        })
     }
 
     private fun clickAgreement() {
@@ -206,12 +212,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     override fun requestData() {
         super.requestData()
         mViewModel.getWithdrawalInfo()
-        WxAuthUtils.registerAuthResultListener(mContext, object : OnAuthResultListener {
-            override fun onAuthSuccess() {
-                showToast("已绑定")
-                requestData()
-            }
-        })
+
     }
 
     private var withDrawInfo: WithdrawResponse? = null

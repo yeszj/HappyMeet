@@ -2,6 +2,7 @@ package com.pcl.sdklib.sdk.wechat
 import android.text.Html
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.manager.AppCacheManager
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean

@@ -87,6 +87,7 @@ object ChatConstant {
     const val ACTION_MSG_OPEN_MIKE_ASSIGN = 1008 //房主开指定嘉宾麦
     const val ACTION_MSG_CLOSE_MIKE_ASSIGN = 1009 //房主关指定嘉宾麦
     const val ACTION_MSG_SWITCH_TYPE_PLAZA = 1010 //切换房间为大厅房间
+
     const val ACTION_USER_OUT_TIME_LEAVE = 1011 //麦上用户离线超过1分钟 操作下麦
 
     const val ACTION_REFRESH_SEAT = 1012 //刷新麦位
@@ -133,13 +134,15 @@ object ChatConstant {
 
     const val ACTION_ROOM_CHECK = 74//房间检测
 
-    const val ACTION_ROOM_USER_OFFLINE_LEAVE = 75//离线下麦
+    const val ACTION_ROOM_USER_OFFLINE_LEAVE = 75
 
     const val REFRESH_SEAT_ROSE = 76
 
     const val ACTION_UPLOAD_LOG = 77//上传日志
 
     const val ACTION_SEND_GIFT = 78
+
+    const val ACTION_COMMON_POP: Int = 79
 
     const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位
 

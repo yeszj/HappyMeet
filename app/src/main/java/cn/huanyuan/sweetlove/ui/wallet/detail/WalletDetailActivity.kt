@@ -14,10 +14,12 @@ import cn.yanhu.baselib.func.sticky.StickyHeadContainer
 import cn.yanhu.baselib.func.sticky.StickyItemDecoration
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.RefreshManager
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.commonres.bean.FilterInfo
 import cn.yanhu.commonres.config.IntentKeyConfig
+import cn.yanhu.commonres.router.PageIntentUtil
 import cn.zj.netrequest.application.ApplicationProxy
 import cn.zj.netrequest.ext.parseState
 
@@ -64,6 +66,14 @@ class WalletDetailActivity : BaseActivity<ActivityWalletDetailBinding, WalletVie
                 },{
                 },withDrawInfo.reason, cancel = "我知道了", confirm = "联系客服")
             }
+        }
+        detailAdapter.setOnItemClickListener { _, _, position ->
+            val item = detailAdapter.getItem(position)?:return@setOnItemClickListener
+            val url = item.withDrawInfo?.url
+            if (!CommonUtils.isEmpty(url)) {
+                PageIntentUtil.url2Page(mContext,url)
+            }
+
         }
         requestData()
     }

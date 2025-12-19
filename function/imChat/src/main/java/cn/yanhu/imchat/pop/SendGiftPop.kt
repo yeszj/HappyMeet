@@ -310,7 +310,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     private fun showRechargePop(isDismiss: Boolean = false) {
         activity?.apply {
             val balanceRose = binding?.tvRoseNum?.text.toString()
-            if (TextUtils.isEmpty(balanceRose)){
+            if (CommonUtils.isEmpty(balanceRose)){
                 return
             }
             ApplicationProxy.instance.showRechargePop(

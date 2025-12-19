@@ -26,6 +26,7 @@ import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.AppPopResponse
 import cn.yanhu.commonres.bean.AuthCenterInfo
 import cn.yanhu.commonres.bean.BaseUserInfo
+import cn.yanhu.commonres.bean.CommonPopInfo
 import cn.yanhu.commonres.bean.EditUserInfo
 import cn.yanhu.commonres.bean.LoginSuccessInfo
 import cn.yanhu.commonres.bean.MineMenuBean
@@ -411,4 +412,7 @@ interface ApiService : CommonApiService {
 
     @GET("app/v1/home/getRecommendIndex")
     suspend fun getRecommendRoom(): BaseBean<RecommendRoomResponse>
+
+    @GET("app/v1/user/getPop")
+    suspend fun getPop(): BaseBean<String>
 }

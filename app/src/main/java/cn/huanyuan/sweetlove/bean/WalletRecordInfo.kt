@@ -17,18 +17,12 @@ data class WalletRecordInfo(
     val withDrawInfo: WithDrawInfo?,
 ) {
     data class WithDrawInfo(
-        val status: Int,//0提现中 1提现成功 2提现被驳回
+        val status: Int,//0提现中 1提现成功 2提现被驳回 3待确认
+        val statusDesc: String,
         val balanceDesc: String, //余额描述 当前余额：122.24元
-        val reason: String
-    ){
-        fun getStatusDesc():String {
-            return when (status) {
-                1 -> "提现成功"
-                2 -> "提现被驳回"
-                else -> "提现中"
-            }
-        }
-    }
+        val reason: String,
+        val url: String
+    )
 
     fun isIncome(): Boolean {
         return num.startsWith("+")

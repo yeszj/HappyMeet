@@ -266,13 +266,13 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
 
     private fun initSongView(loadVideo: Boolean = true) {
         if (isSevenRoom()) {
-            sevenSongRoomSeatView = SevenRoomSeatView(mContext, false, roomType, roomId, isOwner)
+            sevenSongRoomSeatView = SevenRoomSeatView(mContext, false, roomType, roomId, isOwner,roomSourceBean.roomAdmin)
             mBinding.seatContainer.removeAllViews()
             mBinding.seatContainer.addView(sevenSongRoomSeatView)
             sevenSongRoomSeatView?.setSeatList(seatList)
             sevenSongRoomSeatView?.setOnClickSeatListener(onClickSeatListener)
         } else {
-            nineSongRoomSeatView = NineRoomSeatView(mContext, false, roomType, roomId, isOwner)
+            nineSongRoomSeatView = NineRoomSeatView(mContext, false, roomType, roomId, isOwner,roomSourceBean.roomAdmin)
             mBinding.seatContainer.removeAllViews()
             mBinding.seatContainer.addView(nineSongRoomSeatView)
             nineSongRoomSeatView?.setSeatList(seatList)
@@ -282,18 +282,29 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
 
     private fun initSongScaleView(loadVideo: Boolean = true) {
         if (isSevenRoom()) {
-            sevenSongRoomScaleView = SevenRoomSeatView(mContext, true, roomType, roomId, isOwner)
+            sevenSongRoomScaleView = SevenRoomSeatView(mContext, true, roomType, roomId, isOwner,roomSourceBean.roomAdmin)
             mBinding.seatContainer.removeAllViews()
             mBinding.seatContainer.addView(sevenSongRoomScaleView)
             sevenSongRoomScaleView?.setSeatList(seatList)
             sevenSongRoomScaleView?.setOnClickSeatListener(onClickSeatListener)
         } else {
-            nineSongRoomScaleView = NineRoomSeatView(mContext, true, roomType, roomId, isOwner)
+            nineSongRoomScaleView = NineRoomSeatView(mContext, true, roomType, roomId, isOwner,roomSourceBean.roomAdmin)
             mBinding.seatContainer.removeAllViews()
             mBinding.seatContainer.addView(nineSongRoomScaleView)
             nineSongRoomScaleView?.setSeatList(seatList)
             nineSongRoomScaleView?.setOnClickSeatListener(onClickSeatListener)
         }
+    }
+
+    override fun userRoomAdminChanger(isRoomAdmin: Boolean) {
+        //TODO 管理员可以放大麦位和闭麦开麦功能 此功能暂时不做 先注释
+//        if (isSevenRoom()){
+//            sevenSongRoomSeatView?.updateRoomAdmin(isRoomAdmin)
+//            sevenSongRoomScaleView?.updateRoomAdmin(isRoomAdmin)
+//        }else{
+//            nineSongRoomSeatView?.updateRoomAdmin(isRoomAdmin)
+//            nineSongRoomScaleView?.updateRoomAdmin(isRoomAdmin)
+//        }
     }
 
 
@@ -427,12 +438,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                 }
 
                 R.id.iv_expand -> {
-                    expandSeat(position, item)
-                    EmMsgManager.sendCmdMessageToChatRoom(
-                        roomSourceBean.uid,
-                        position.toString(),
-                        ChatConstant.ACTION_EXPAND_SEAT_ITEM
-                    )
+                    expandSeat(position, item,true)
                 }
 
                 R.id.iv_sendRose -> {
@@ -467,7 +473,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                     }
 
                     if (item.isExpand) {
-                        expandSeat(i, item)
+                        expandSeat(i, item,false)
                     }
                 }
             }
@@ -476,13 +482,20 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
         }
     }
 
-    private fun expandSeat(position: Int, item: RoomSeatInfo) {
-        if (isOwner) {
+    private fun expandSeat(position: Int, item: RoomSeatInfo,isOperateScale: Boolean) {
+        if (isOwner ) {
             request(
                 { agoraRxApi.setExpand(roomId, item.id) },
                 object : OnRequestResultListener<String> {
                     override fun onSuccess(data: BaseBean<String>) {
                         startExpandItem(item, position)
+                        if (isOperateScale){
+                            EmMsgManager.sendCmdMessageToChatRoom(
+                                roomSourceBean.uid,
+                                position.toString(),
+                                ChatConstant.ACTION_EXPAND_SEAT_ITEM
+                            )
+                        }
                     }
                 })
         } else {
@@ -558,6 +571,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                 ViewUtils.removeViewFormParent(nineSongRoomSeatView)
                 mBinding.seatContainer.removeAllViews()
                 mBinding.seatContainer.addView(nineSongRoomSeatView)
+
             }
         }
     }

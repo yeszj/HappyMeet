@@ -18,4 +18,6 @@ data class WalletInfo(
     val ifEdit:Boolean,
     val carouselList:MutableList<String>,
     val monthInviteIncome: String,
+    val needConfirmCnt:Int,
+    val url: String?
 )

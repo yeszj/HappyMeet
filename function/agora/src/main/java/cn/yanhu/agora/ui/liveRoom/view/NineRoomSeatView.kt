@@ -16,6 +16,7 @@ import cn.yanhu.agora.bean.UserReceiveRoseInfo
 import cn.yanhu.agora.databinding.AdapterLiveRoomUserSeatItemBinding
 import cn.yanhu.agora.databinding.ViewNineSongRoomSeatBinding
 import cn.yanhu.agora.databinding.ViewNineSongScaleRoomSeatBinding
+import cn.yanhu.agora.databinding.ViewSevenSongRoomSeatBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.pop.LiveRoomUserRoseRankPop
 import cn.yanhu.agora.ui.liveRoom.TextureViewPool
@@ -43,7 +44,8 @@ open class NineRoomSeatView(
     private var isScaleStyle: Boolean,
     var roomType: Int,
     var currentRoomId: String,
-    var isRoomOwner: Boolean
+    var isRoomOwner: Boolean,
+    var roomAdmin: Boolean
 ) :
     LinearLayout(context) {
 
@@ -114,7 +116,7 @@ open class NineRoomSeatView(
     ) {
         val seatScaleBinding = getSeatScaleBinding(i)
         seatScaleBinding?.apply {
-            bindSeatInfo(i,seatInfo,isReload)
+            bindSeatInfo(i, seatInfo, isReload)
         }
     }
 
@@ -224,10 +226,15 @@ open class NineRoomSeatView(
     ) {
         val seatBinding = getSeatBinding(i)
         seatBinding?.apply {
-            bindSeatInfo(i,seatInfo,isReload)
+            bindSeatInfo(i, seatInfo, isReload)
         }
     }
-    private fun AdapterLiveRoomUserSeatItemBinding.bindSeatInfo(  i: Int, seatInfo: RoomSeatInfo, isReload: Boolean = false){
+
+    private fun AdapterLiveRoomUserSeatItemBinding.bindSeatInfo(
+        i: Int,
+        seatInfo: RoomSeatInfo,
+        isReload: Boolean = false
+    ) {
         seatInfoList[i] = seatInfo
         val tag = this.vgParent.tag as RoomSeatInfo?
         val tagUserInfo = tag?.roomUserSeatInfo
@@ -252,23 +259,36 @@ open class NineRoomSeatView(
         setItemStyle(position)
 
         item.apply {
-            tvSeatIndex.text = (item!!.id-1).toString()
+            tvSeatIndex.text = (item!!.id - 1).toString()
             seatInfo = item
             executePendingBindings()
             upDataSeatVideo(item, position)
         }
     }
 
+    fun updateRoomAdmin(isAdmin: Boolean){
+        roomAdmin = isAdmin
+        for (i in 0 until seatInfoList.size) {
+            if (mBinding is ViewNineSongRoomSeatBinding) {
+                val seatBinding = getSeatBinding(i)
+                seatBinding?.isRoomAdmin = roomAdmin
+            } else {
+                val seatBinding = getSeatScaleBinding(i)
+                seatBinding?.isRoomAdmin = roomAdmin
+            }
+        }
+    }
 
     private fun AdapterLiveRoomUserSeatItemBinding.setItemStyle(
         position: Int
     ) {
-        if (vgParent.getTag(cn.yanhu.commonres.R.id.tag_set_style) as Boolean? ==true){
+        if (vgParent.getTag(cn.yanhu.commonres.R.id.tag_set_style) as Boolean? == true) {
             return
         }
-        vgParent.setTag(cn.yanhu.commonres.R.id.tag_set_style,true)
+        vgParent.setTag(cn.yanhu.commonres.R.id.tag_set_style, true)
         this.currentRoomType = roomType
         this.isOwner = isRoomOwner
+        this.isRoomAdmin = roomAdmin
         if (position == 0) {
             tvOwner.visibility = VISIBLE
         } else {
@@ -350,7 +370,7 @@ open class NineRoomSeatView(
             val liveRoomSeatBean = MoreSeatLiveRoomFrg.surfaceViewList[dto.id - 1]
 
             val surfaceView =
-                getOrCreateSurfaceView(liveRoomSeatBean,seatInfo)
+                getOrCreateSurfaceView(liveRoomSeatBean, seatInfo)
 
             //处理SurfaceView的添加
             addVideoSf(surfaceView, dto, position)
@@ -362,15 +382,15 @@ open class NineRoomSeatView(
 
 
     private fun AdapterLiveRoomUserSeatItemBinding.getOrCreateSurfaceView(
-        liveRoomSeatBean: LiveRoomSeatBean?,seatUserInfo: SeatUserInfo
+        liveRoomSeatBean: LiveRoomSeatBean?, seatUserInfo: SeatUserInfo
     ): View {
         val cacheSurfaceView = liveRoomSeatBean?.surfaceView
         if (cacheSurfaceView != null
         ) {
-            if (seatUserInfo.userId == liveRoomSeatBean.uid.toString()){
-                logcom("addSurfaceView","使用缓存中的SurfaceView")
+            if (seatUserInfo.userId == liveRoomSeatBean.uid.toString()) {
+                logcom("addSurfaceView", "使用缓存中的SurfaceView")
                 return cacheSurfaceView
-            }else{
+            } else {
                 TextureViewPool.recycleTextureView(cacheSurfaceView as TextureView)
                 liveRoomSeatBean.surfaceView = null
             }
@@ -382,7 +402,7 @@ open class NineRoomSeatView(
                 LayoutParams.MATCH_PARENT
             )
         )
-        logcom("addSurfaceView","新建SurfaceView")
+        logcom("addSurfaceView", "新建SurfaceView")
         return surfaceView
     }
 

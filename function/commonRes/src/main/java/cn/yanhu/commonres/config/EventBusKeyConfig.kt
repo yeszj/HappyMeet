@@ -40,5 +40,7 @@ object EventBusKeyConfig {
     const val CHANGEAPPLYPOPSTATUS = "changeApplyPopStatus"
     const val SWITCH_TO_FOREGROUND = "switchToForeground"
 
+    const val REQUESTMERCHANTTRANSFERSUCCESS = "request_merchant_transfer_success"
+
 
 }

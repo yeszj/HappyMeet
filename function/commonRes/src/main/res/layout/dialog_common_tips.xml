@@ -8,7 +8,8 @@
         <variable
             name="tipsInfo"
             type="cn.yanhu.commonres.bean.CommonTipsInfo" />
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,31 +28,34 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/dp_10"
             android:text="@{tipsInfo.title}"
-            android:textColor="#FF2A68"
-            android:textSize="@dimen/sp_20"
-            android:textStyle="bold"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/viewBg"
+            app:layout_constraintStart_toStartOf="@+id/viewBg"
+            android:paddingHorizontal="@dimen/dp_15"
+            android:textColor="@color/cl_common"
+            android:textSize="@dimen/sp_16"
+            app:fontWeightValue="medium"
             app:layout_constraintTop_toBottomOf="@+id/iv_tipIcon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             tools:text="设置备注名" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:lineSpacingExtra="@dimen/dp_5"
             android:paddingHorizontal="@dimen/dp_20"
             android:paddingTop="@dimen/dp_20"
             android:text="@{tipsInfo.desc}"
             android:textColor="@color/cl_common"
             android:textSize="@dimen/sp_14"
-            android:gravity="center"
             app:layout_constraintEnd_toEndOf="@+id/viewBg"
             app:layout_constraintStart_toStartOf="@+id/viewBg"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
@@ -84,15 +88,16 @@
             android:layout_width="@dimen/dp_58"
             android:layout_height="@dimen/dp_58"
             android:padding="@dimen/dp_15"
-            android:visibility="@{tipsInfo.showClose?View.VISIBLE:View.GONE}"
             android:src="@mipmap/ic_pop_close"
+            android:visibility="@{tipsInfo.showClose?View.VISIBLE:View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewBg" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_tipIcon"
-            android:layout_width="@dimen/dp_143"
-            android:layout_height="@dimen/dp_143"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_120"
             android:src="@drawable/icon_secure_tip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
