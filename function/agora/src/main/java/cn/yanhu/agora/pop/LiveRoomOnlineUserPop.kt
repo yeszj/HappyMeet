@@ -189,6 +189,7 @@ class LiveRoomOnlineUserPop(
                     }
                     removeSameUser(onlineUsers)
                     if (page == 1) {
+                        onSendSeatInviteListener.onOnlineCount(onlineResponse.onlineNum)
                         userAdapter.isStateViewEnable = onlineUsers.isEmpty()
                         userAdapter.submitList(onlineUsers)
                         mBiding.refresh.finishRefresh()

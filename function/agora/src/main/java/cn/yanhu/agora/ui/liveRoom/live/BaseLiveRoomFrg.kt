@@ -37,6 +37,7 @@ import cn.yanhu.agora.bean.RoomGroupMemberRes
 import cn.yanhu.agora.bean.RoomLeaveResponse
 import cn.yanhu.agora.databinding.FrgBaseLiveRoomBinding
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener
+import cn.yanhu.agora.listener.OnJoinChatRoomListener
 import cn.yanhu.agora.listener.OnSendSeatInviteListener
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.LiveRoomManager
@@ -378,7 +379,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
 
-    open fun refreshOnlineUser(onlineNum: Int) {}
+    open fun refreshOnlineUser(onlineNum: Int?) {}
 
     private var onlineUserListPop: LiveRoomOnlineUserPop? = null
 
@@ -428,6 +429,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
         override fun onClickUser(userId: String) {
             showUserPop(userId)
+        }
+
+        override fun onOnlineCount(onlineCount: Int) {
+            super.onOnlineCount(onlineCount)
+            refreshOnlineUser(onlineCount)
         }
     }
 
@@ -1627,8 +1633,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 roomSourceBean.autoSeat = false
             } else if (source == ChatConstant.ACTION_MSG_SWITCH_TYPE_PLAZA) { //房间类型切换至大厅
                 showToast("房主已将房间类型切换至大厅")
-                roomSourceBean.roomType = 1
-                roomType = 1
+                roomSourceBean.roomType = RoomListBean.TYPE_PUBLIC
+                roomType = RoomListBean.TYPE_PUBLIC
                 getRoomDetail()
             } else if (source == ChatConstant.ACTION_MSG_SWITCH_MIKE) { //开/关麦
                 val seatId: Int = it.getIntAttribute("position")
@@ -1647,8 +1653,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 updateMyMicStatus(1, seatId)
             } else if (source == ChatConstant.ACTION_MSG_SWITCH_TYPE_CONFIRM) { //切换房间为专属房间,通知用户房间结束
                 runOnUiThread {
-                    roomSourceBean.roomType = 2
-                    roomType = 2
+                    roomSourceBean.roomType = RoomListBean.TYPE_PRIVATE
+                    roomType = RoomListBean.TYPE_PRIVATE
                     if (isOwner || isInSeatByUserId(localUserId)) {
                         showToast("房间已切换至专属房间")
                         getRoseGift()
@@ -2306,7 +2312,12 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 logComToFile(TAG, "发送失败，code=$code, error=$error, 耗时: ${costTime}ms")
                 runOnUiThread {
                     if (code == EMError.CHATROOM_NOT_JOINED) {
-                        joinChatRoom()
+                        joinChatRoom(object : OnJoinChatRoomListener {
+                            override fun onJoinSuccess() {
+                                logComToFile(TAG, "重连成功,重新发送消息")
+                                EMClient.getInstance().chatManager().sendMessage(message)
+                            }
+                        })
                     } else if (code == EMError.MESSAGE_INVALID) {
                         ApplicationProxy.instance.reLoginImSdk(object : OnImLoginListener {
                             override fun onSuccess() {
@@ -2787,18 +2798,19 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
 
-    private fun joinChatRoom() {
+    private fun joinChatRoom(onJoinChatRoomListener: OnJoinChatRoomListener? = null) {
         EMClient.getInstance().chatroomManager().addChatRoomChangeListener(this)
         EMClient.getInstance().chatroomManager()
             .joinChatRoom(roomSourceBean.uid, object : EMValueCallBack<EMChatRoom> {
                 override fun onSuccess(value: EMChatRoom?) {
                     LiveRoomManager.chatRoomId = roomSourceBean.uid
                     logInfoCom("加入聊天室成功")
-                    if (!roomSourceBean.isAdmin()) {
+                    if (!roomSourceBean.isAdmin() && onJoinChatRoomListener == null) {
                         sendMessage("进入了房间", ChatRoomMsgInfo.ITEM_WELCOME_TYPE)
                     }
+                    onJoinChatRoomListener?.onJoinSuccess()
                     ThreadUtils.getMainHandler().postDelayed({
-                        refreshOnlineUser(getChatRoom().memberCount)
+                        refreshOnlineUser(getChatRoom()?.memberCount)
                     }, 1000)
                     AgoraManager.getInstance().isInitSuccess = true
                 }
@@ -2809,7 +2821,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     }
                     logInfoCom("加入聊天室失败，$error————msg$errorMsg")
                     if (error == 201 && !hasReLogin) {
-                        reLoginIm()
+                        reLoginIm(onJoinChatRoomListener)
                     } else {
                         showToast("直播间异常，请重新尝试进入直播间")
                         logComToFile(
@@ -2823,11 +2835,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private var hasReLogin = false
-    private fun reLoginIm() {
+    private fun reLoginIm(onJoinChatRoomListener: OnJoinChatRoomListener? = null) {
         hasReLogin = true
         ApplicationProxy.instance.reLoginImSdk(object : OnImLoginListener {
             override fun onSuccess() {
-                joinChatRoom()
+                joinChatRoom(onJoinChatRoomListener)
             }
 
             override fun onError(code: Int, error: String?) {
@@ -2991,6 +3003,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         EMClient.getInstance().chatroomManager().removeChatRoomListener(this@BaseLiveRoomFrg)
         handler.removeCallbacksAndMessages(null)
         closeMiniWindow()
+        ThreadUtils.getMainHandler().removeCallbacksAndMessages(null)
         // clearAgora()
     }
 
@@ -3467,6 +3480,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         return roomSourceBean.uid != roomId
     }
 
+
     override fun onChatRoomDestroyed(roomId: String?, roomName: String?) {
         logInfoCom("房主解散聊天室：$roomId")
         if (isNotMyRoom(roomId)) {
@@ -3595,11 +3609,17 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private var emChatRoom: EMChatRoom? = null
-    private fun getChatRoom(): EMChatRoom {
+    private fun getChatRoom(): EMChatRoom? {
+        if (mContext.isFinishing) {
+            return null
+        }
+        if (CommonUtils.isEmpty(roomSourceBean.uid)) {
+            return null
+        }
         if (emChatRoom == null) {
             emChatRoom = EMClient.getInstance().chatroomManager().getChatRoom(roomSourceBean.uid)
         }
-        return emChatRoom!!
+        return emChatRoom
     }
 
     override fun onMemberJoined(roomId: String?, participant: String?) {
@@ -3608,7 +3628,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             return
         }
         runOnUiThread {
-            refreshOnlineUser(getChatRoom().memberCount)
+            refreshOnlineUser(getChatRoom()?.memberCount)
             refreshThreeRoomInfo()
         }
 
@@ -3620,7 +3640,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             return
         }
         runOnUiThread {
-            refreshOnlineUser(getChatRoom().memberCount)
+            refreshOnlineUser(getChatRoom()?.memberCount)
         }
 
 //        val userId = participant!!.toInt()

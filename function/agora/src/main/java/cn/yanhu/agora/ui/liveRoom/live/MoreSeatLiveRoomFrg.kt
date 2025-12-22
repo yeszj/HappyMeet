@@ -806,7 +806,10 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
         }
     }
 
-    override fun refreshOnlineUser(onlineNum: Int) {
+    override fun refreshOnlineUser(onlineNum: Int?) {
+        if (onlineNum == null){
+            return
+        }
         if (isSevenRoom()) {
             rankViewBinding.tvOnlineNum.text = onlineNum.toString()
         } else {

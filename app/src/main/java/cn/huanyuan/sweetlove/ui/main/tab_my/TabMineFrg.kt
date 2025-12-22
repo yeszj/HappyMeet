@@ -21,6 +21,7 @@ import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.adapter.MyBannerImageAdapter
 import cn.yanhu.commonres.bean.BannerBean
+import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.EditPhotoInfo
 import cn.yanhu.commonres.bean.OperateInfo
 import cn.yanhu.commonres.bean.UserDetailInfo
@@ -179,9 +180,11 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         emUserInfo.avatarUrl = it.portrait
         emUserInfo.nickname = it.nickName
         emUserInfo.gender = it.gender
-        emUserInfo.ext = GsonUtils.toJson(it)
+        val toJson = GsonUtils.toJson(it)
+        val userInfo = GsonUtils.fromJson(toJson,BaseUserInfo::class.java)
+        emUserInfo.ext = GsonUtils.toJson(userInfo)
         ImUserManager.updateUserInfo(emUserInfo)
-        AppCacheManager.userInfo = emUserInfo.ext
+        AppCacheManager.userInfo = toJson
         LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.UPDATE_LIVE_ROOM_SELF_INFO)
         AppCacheManager.isAdmin = it.isAdmin
         AppCacheManager.gender = it.gender

@@ -194,8 +194,11 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
         topTitleBinding.tvJoinGroup.visibility = View.VISIBLE
     }
 
-    override fun refreshOnlineUser(onlineNum: Int) {
+    override fun refreshOnlineUser(onlineNum: Int?) {
         super.refreshOnlineUser(onlineNum)
+        if (onlineNum == null){
+            return
+        }
         topTitleBinding.tvOnlineNum.text = onlineNum.toString()
     }
 
