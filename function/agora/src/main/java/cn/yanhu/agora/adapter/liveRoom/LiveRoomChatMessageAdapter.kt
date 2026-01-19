@@ -2,7 +2,9 @@ package cn.yanhu.agora.adapter.liveRoom
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import cn.yanhu.agora.bean.ChatRoomMsgInfo
 import cn.yanhu.agora.bean.GiftMsgInfo
@@ -17,6 +19,7 @@ import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.widget.spans.Spans
 import com.blankj.utilcode.util.GsonUtils
 import com.chad.library.adapter4.BaseMultiItemAdapter
+import com.lihang.ShadowLayout
 import com.zj.dimens.R
 
 /**
@@ -59,7 +62,11 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
             object : OnMultiItemAdapterListener<ChatRoomMsgInfo, VH6> {
                 override fun onBind(holder: VH6, position: Int, item: ChatRoomMsgInfo?) {
                     holder.binding.tvNotice.text = "此版本暂不支持此消息"
-                    ViewUtils.setMarginVertical(holder.binding.vgNotice,0, CommonUtils.getDimension(R.dimen.dp_10))
+                    ViewUtils.setMarginVertical(
+                        holder.binding.vgNotice,
+                        0,
+                        CommonUtils.getDimension(R.dimen.dp_10)
+                    )
                 }
 
                 override fun onCreate(context: Context, parent: ViewGroup, viewType: Int): VH6 {
@@ -130,6 +137,7 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
                             e.printStackTrace()
                         }
                         userInfo = item?.sendUserInfo
+                        setChatBgStyle(item, tvContent, tvChatStyle)
                         executePendingBindings()
                     }
 
@@ -203,6 +211,7 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
                         } else {
                             tvContent.text = msgInfo?.content
                         }
+                        setChatBgStyle(item, tvContent, tvChatStyle)
                         executePendingBindings()
                     }
                 }
@@ -222,6 +231,49 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
             } else {
                 -1
             }
+        }
+    }
+
+    private fun setChatBgStyle(item: ChatRoomMsgInfo?, tvContent: View, tvChatStyle: ShadowLayout) {
+        val sendUserInfo = item?.sendUserInfo
+        val bubbleInfo = sendUserInfo?.bubbleInfo
+        if (bubbleInfo != null) {
+            val type = bubbleInfo.type
+            if ("ninePatch" == type) {
+                tvChatStyle.visibility = View.INVISIBLE
+                tvContent.setBackgroundResource(cn.yanhu.agora.R.drawable.chatbg)
+            } else {
+                tvChatStyle.visibility = View.VISIBLE
+                tvContent.background = null
+                val content = bubbleInfo.content
+                val gradientList = content.gradientList
+                val startColor = gradientList[0].color
+                var centerColor = ""
+                var endColor = startColor
+                if (gradientList.size == 2) {
+                    endColor = gradientList[1].color
+                } else if (gradientList.size >= 3) {
+                    centerColor = gradientList[1].color
+                    endColor = gradientList[2].color
+                }
+                if (!CommonUtils.isEmpty(centerColor)) {
+                    tvChatStyle.setGradientColor(
+                        bubbleInfo.content.angle,
+                        startColor.toColorInt(),
+                        centerColor.toColorInt(),
+                        endColor.toColorInt()
+                    )
+                } else {
+                    tvChatStyle.setGradientColor(
+                        bubbleInfo.content.angle,
+                        startColor.toColorInt(),
+                        endColor.toColorInt()
+                    )
+                }
+            }
+        } else {
+            tvChatStyle.visibility = View.INVISIBLE
+            tvContent.setBackgroundResource(cn.yanhu.commonres.R.drawable.black_alpha80_corner_10)
         }
     }
 }

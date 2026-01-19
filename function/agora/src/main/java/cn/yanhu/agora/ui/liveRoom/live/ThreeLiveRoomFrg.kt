@@ -486,6 +486,7 @@ class ThreeLiveRoomFrg : BaseLiveRoomFrg() {
                 if (item != null) {
                     item.roomUserSeatInfo?.roseNum = roomUserSeatInfo.roseNum
                     item.roomUserSeatInfo?.userList = roomUserSeatInfo.userList
+                    seatUserAdapter.notifyItemChanged(i,true)
                 }
             }
         }

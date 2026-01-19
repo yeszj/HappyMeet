@@ -23,7 +23,7 @@ object GlideHealthMonitor {
 
     private const val TAG = "GlideHealthMonitor"
     private const val FAIL_THRESHOLD = 5
-    private const val RESET_WINDOW_MS = 10_000L // 10秒内累计失败
+    private const val RESET_WINDOW_MS = 10000L // 10秒内累计失败
 
     private var lastFailTimestamp = 0L
     private val failCounter = AtomicInteger(0)

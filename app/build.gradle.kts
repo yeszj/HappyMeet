@@ -19,12 +19,12 @@ android {
         applicationId = "cn.huanyuan.sweetlove"
         minSdk = cfg["minSdkVersion"] as Int
         targetSdk = cfg["targetSdkVersion"] as Int
-        versionCode = 45
-        versionName = "1.4.5"
+        versionCode = 46
+        versionName = "1.4.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
-            //abiFilters.add("armeabi-v7a")
+            abiFilters.add("armeabi-v7a")
             abiFilters.add("arm64-v8a")
         }
         // resourceConfigurations.add("zh")
@@ -51,6 +51,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            //http://dev-qxq.hanyonjoy.com
             buildConfigField(
                 "String",
                 "BASE_SERVER_ADDRESS",
@@ -66,7 +67,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_SERVER_ADDRESS", "\"https://qxq.hanyonjoy.com/\"")
+            buildConfigField("String", "BASE_SERVER_ADDRESS", "\"https://qxq.whhanyon.com/\"")
         }
     }
     compileOptions {

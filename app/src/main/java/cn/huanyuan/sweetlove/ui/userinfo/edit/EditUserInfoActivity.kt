@@ -158,9 +158,11 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
             }
 
             UserParamType.TYPE_ADDRESS.type -> {
-                val stringArray =
-                    StringUtils.getStringArray(cn.yanhu.commonres.R.array.address_list)
-                showSelectItemInfoPop(item, stringArray.toMutableList())
+                //所在地
+                updateIpAddress(item)
+//                val stringArray =
+//                    StringUtils.getStringArray(cn.yanhu.commonres.R.array.address_list)
+//                showSelectItemInfoPop(item, stringArray.toMutableList())
             }
 
             UserParamType.TYPE_WORK.type -> {
@@ -215,6 +217,24 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
                 showSelectItemInfoPop(item, stringArray)
             }
         }
+    }
+
+    private fun updateIpAddress(item: UserInfoItem) {
+        mViewModel.updateUserIpAddress(object : OnRequestResultListener<String> {
+            override fun onSuccess(data: BaseBean<String>) {
+                val value = data.data ?: return
+                hasChange = true
+                item.value = value
+                editAdapter?.notifyItemChanged(editPosition, true)
+                AppCacheManager.province = value
+                showToast("IP地址已更新")
+                LiveDataEventManager.sendLiveDataMessage(
+                    LiveDataEventManager.REFRESH_SAMECITY_TAB,
+                    value
+                )
+            }
+
+        })
     }
 
     private fun showSelectItemInfoPop(item: UserInfoItem, list: MutableList<String>,selectValue:String?=null) {

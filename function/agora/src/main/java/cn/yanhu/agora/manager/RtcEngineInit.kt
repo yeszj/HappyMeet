@@ -70,7 +70,8 @@ object RtcEngineInit {
             mRtcEngine = RtcEngineEx.create(config) as RtcEngineEx
             // 启用插件
             //  mRtcEngine!!.enableExtension("FaceUnity", "Effect", true)
-            mRtcEngine!!.setAudioScenario(Constants.AudioScenario.getValue(Constants.AudioScenario.GAME_STREAMING))
+            mRtcEngine?.setAudioProfile(Constants.AudioProfile.getValue(Constants.AudioProfile.MUSIC_STANDARD_STEREO));
+            mRtcEngine?.setAudioScenario(Constants.AudioScenario.getValue(Constants.AudioScenario.GAME_STREAMING))
             return mRtcEngine
         } catch (e: Exception) {
             // TraceUtils.getInstance().onEventObject("app_agora_fail", e.getMessage());

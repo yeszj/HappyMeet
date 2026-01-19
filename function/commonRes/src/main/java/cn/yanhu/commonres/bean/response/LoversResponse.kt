@@ -30,7 +30,7 @@ data class LoversResponse(
                 "钻石CP"
             }
             else -> {
-                "永久CP"
+                "星耀CP"
             }
         }
     }

@@ -196,6 +196,9 @@
             android:layout_marginEnd="@dimen/dp_20"
             android:layout_marginBottom="@dimen/dp_8"
             android:paddingStart="@dimen/dp_10"
+            tools:listitem="@layout/adapter_chat_room_msg_txt_item"
+            android:fadingEdgeLength="@dimen/dp_10"
+            android:requiresFadingEdge="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/bgInput"
             app:layout_constraintTop_toTopOf="parent" />

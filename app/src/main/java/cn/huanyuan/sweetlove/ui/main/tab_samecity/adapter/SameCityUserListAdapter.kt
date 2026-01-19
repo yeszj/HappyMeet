@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.databinding.AdapterSameCityUserItemBinding
 import cn.yanhu.commonres.bean.SameCityUserInfo
+import cn.yanhu.commonres.utils.SVGAUtils
 import com.chad.library.adapter4.BaseQuickAdapter
 
 /**
@@ -24,28 +25,24 @@ class SameCityUserListAdapter : BaseQuickAdapter<SameCityUserInfo, SameCityUserL
     override fun onBindViewHolder(holder: VH, position: Int, item: SameCityUserInfo?) {
         holder.binding.apply {
             userinfo = item
-//            val thumbnail = item?.thumbnail?.toMutableList()
-//            val take = thumbnail?.take(3)
-//            if (!take.isNullOrEmpty()) {
-//                picGridLayout.visibility = View.VISIBLE
-//                picGridLayout.setImageUrls(take)
-//                picGridLayout.setNineGridImgListener { index, imageViewList ->
-//                    val imageView = imageViewList[index]
-//                    DialogUtils.showImageViewerDialog(imageView,index, take.toMutableList()
-//                    ) { popupView, position ->
-//                        try {
-//                            val ivBg2 = imageViewList[position]
-//                            popupView.updateSrcView(ivBg2)
-//                        } catch (e: Exception) {
-//                            e.printStackTrace()
-//                        }
-//                    }
-//                }
-//            } else {
-//                picGridLayout.visibility = View.GONE
-//            }
+            if (item?.roomId != 0) {
+                SVGAUtils.loadAssetsSVGAAnim(svgaLive, "play_white.svga")
+            } else {
+                svgaLive.clear()
+            }
             executePendingBindings()
         }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        // 回收时释放资源
+        if (holder is VH){
+            holder.binding.apply {
+                avatarView.controller = null
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {

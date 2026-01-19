@@ -80,6 +80,8 @@ interface ApiService : CommonApiService {
         @Field("type") type: Int, @Field("content") content: String
     ): BaseBean<String>
 
+    @POST("/app/v1/userCenter/updateUserIpAddr")
+    suspend fun updateUserIpAddress(): BaseBean<String>
 
     @GET("app/v1/user/getAuthCenterInfo")
     suspend fun getAuthCenterInfo(): BaseBean<AuthCenterInfo>

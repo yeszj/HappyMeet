@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 import com.blankj.utilcode.util.ActivityUtils;
 import com.pcl.sdklib.R;
 
@@ -166,9 +168,9 @@ public class JiGuangSDKUtils {
 
         View loginWaysView = LayoutInflater.from(ApplicationProxy.instance.getApplication()).inflate(R.layout.ji_guang_other_ui, null);
         int numberTop = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_430);
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView ivPhoneLogin = loginWaysView.findViewById(R.id.iv_phoneLogin);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) AppCompatTextView ivPhoneLogin = loginWaysView.findViewById(R.id.iv_phoneLogin);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ViewGroup vgParent = loginWaysView.findViewById(R.id.vg_parent);
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView ivWxLogin = loginWaysView.findViewById(R.id.iv_wxLogin);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) AppCompatTextView ivWxLogin = loginWaysView.findViewById(R.id.iv_wxLogin);
 
         RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         mLayoutParams.setMargins(0, numberTop + CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_145), 0, 0);

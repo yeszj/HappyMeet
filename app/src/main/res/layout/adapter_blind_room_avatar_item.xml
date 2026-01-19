@@ -18,6 +18,6 @@
             app:riv_oval="true"
             app:riv_border_width="@dimen/dp_1"
             app:riv_border_color="@color/white"
-            tools:src="@drawable/icon_portrait" />
+            tools:src="@drawable/ease_default_avatar" />
     </FrameLayout>
 </layout>

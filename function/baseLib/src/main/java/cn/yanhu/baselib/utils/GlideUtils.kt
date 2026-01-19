@@ -6,12 +6,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
-import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.utils.ext.logComToFile
-import cn.yanhu.baselib.utils.ext.logcom
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.DecodeFormat
@@ -31,6 +29,9 @@ import jp.wasabeef.glide.transformations.BlurTransformation
 object GlideUtils {
     fun loadAsDrawable(context: Context, imgUrl: Any, listener: CustomTarget<Drawable>) {
         try {
+            if (isUrlNull(imgUrl)) {
+                return
+            }
             if (isDestroy(context)) return
             Glide.with(context).asDrawable().load(imgUrl).dontAnimate()
                 .into(listener)
@@ -42,6 +43,9 @@ object GlideUtils {
 
     fun loadAsBitmap(context: Context, imgUrl: Any, listener: CustomTarget<Bitmap>) {
         try {
+            if (isUrlNull(imgUrl)) {
+                return
+            }
             if (isDestroy(context)) return
             Glide.with(context).asBitmap().load(imgUrl).dontAnimate()
                 .into(listener)
@@ -71,7 +75,7 @@ object GlideUtils {
         transformations: MultiTransformation<Bitmap>? = null,
     ) {
         try {
-            if (url == null || (url is String && TextUtils.isEmpty(url.toString()))) {
+            if (isUrlNull(url)) {
                 return
             }
             if (imageView == null){
@@ -101,7 +105,7 @@ object GlideUtils {
                         isFirstResource: Boolean
                     ): Boolean {
                         logComToFile("glide", "加载失败：url=${url},error=${e?.message}")
-                       // GlideHealthMonitor.onLoadFailed(e)
+                        GlideHealthMonitor.onLoadFailed(e)
                         return false // 继续交给 Glide 默认逻辑
                     }
 
@@ -122,7 +126,9 @@ object GlideUtils {
         }
 
     }
-
+    private fun isUrlNull(url: Any?): Boolean {
+        return url == null || (url is String && TextUtils.isEmpty(url.toString()))
+    }
     private fun isDestroy(context: Context): Boolean {
         return context is Activity && context.isDestroyed
     }
@@ -133,6 +139,9 @@ object GlideUtils {
     ) {
         try {
             if (isDestroy(context)) return
+            if (isUrlNull(imgUrl)) {
+                return
+            }
             val requestOptions =
                 RequestOptions.bitmapTransform(BlurTransformation(maskRadius, maskSampling))
             Glide.with(context).load(imgUrl).apply(requestOptions)

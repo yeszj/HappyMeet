@@ -76,19 +76,19 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
                     }
                 }
             })
-        adapter.addOnDebouncedChildClick(
-            R.id.iv_accost,
-            1000,
-            object : BaseQuickAdapter.OnItemChildClickListener<SameCityUserInfo> {
-                override fun onItemClick(
-                    adapter: BaseQuickAdapter<SameCityUserInfo, *>,
-                    view: View,
-                    position: Int
-                ) {
-                    val item = adapter.getItem(position) ?: return
-                    ImChatActivity.lunch(mContext, item.userId)
-                }
-            })
+//        adapter.addOnDebouncedChildClick(
+//            R.id.iv_accost,
+//            1000,
+//            object : BaseQuickAdapter.OnItemChildClickListener<SameCityUserInfo> {
+//                override fun onItemClick(
+//                    adapter: BaseQuickAdapter<SameCityUserInfo, *>,
+//                    view: View,
+//                    position: Int
+//                ) {
+//                    val item = adapter.getItem(position) ?: return
+//                    ImChatActivity.lunch(mContext, item.userId)
+//                }
+//            })
         LiveEventBus.get<String>(EventBusKeyConfig.CLOSELIVEROOM).observe(this) {
             page = 1
             requestData()

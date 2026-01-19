@@ -23,17 +23,18 @@
         android:layout_marginEnd="@dimen/dp_8"
         android:paddingBottom="@dimen/dp_12">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_cover"
             imageUrl="@{roomBean.coverUrl}"
-            placeholderId="@{R.drawable.pic_default_bg}"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_166"
-            android:scaleType="centerCrop"
+            app:actualImageScaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:riv_corner_radius="@dimen/dp_10" />
+            app:placeholderImage="@drawable/pic_default_bg"
+            app:placeholderImageScaleType="centerCrop"
+            app:roundedCornerRadius="@dimen/dp_10" />
 
         <View
             android:id="@+id/viewBg"
@@ -52,12 +53,11 @@
             android:layout_width="@dimen/dp_58"
             android:layout_height="@dimen/dp_58"
             android:scaleType="centerCrop"
-            android:src="@drawable/ease_default_avatar"
             app:layout_constraintBottom_toBottomOf="@+id/viewBg"
             app:layout_constraintEnd_toEndOf="@+id/viewBg"
             app:layout_constraintStart_toStartOf="@+id/viewBg"
             app:layout_constraintTop_toTopOf="@+id/viewBg"
-            app:riv_oval="true" />
+            app:riv_oval="true"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_avatar"
@@ -72,7 +72,7 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:listitem="@layout/adapter_blind_room_avatar_item" />
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_avatar2"
             imageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.ownerInfo.portrait)}"
             android:layout_width="@dimen/dp_20"
@@ -82,7 +82,9 @@
             android:src="@drawable/icon_portrait"
             app:layout_constraintStart_toStartOf="@+id/iv_cover"
             app:layout_constraintTop_toBottomOf="@+id/iv_cover"
-            app:riv_oval="true" />
+            app:placeholderImage="@drawable/pic_default_bg"
+            app:placeholderImageScaleType="centerCrop"
+            app:roundAsCircle="true" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="0dp"

@@ -65,7 +65,7 @@ dependencies {
     implementation(project(mapOf("path" to ":function:imChat")))
     implementation(project(mapOf("path" to ":function:localRepo:extension_aar")))
     api(project(mapOf("path" to ":function:beautyFace")))
-
+    api("com.neovisionaries:nv-websocket-client:2.14")
 //    dependencies {
 //        debugImplementation ("com.squareup.leakcanary:leakcanary-android:2.12")
 //    }

@@ -8,6 +8,7 @@ import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
+import cn.zj.netrequest.status.ErrorCode
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.pcl.sdklib.api.sdkRxApi
 import com.pcl.sdklib.listener.OnPayResultListener
@@ -55,7 +56,7 @@ object PayManager {
             override fun onFail(code: Int?, msg: String?) {
                 super.onFail(code, msg)
                 when (code) {
-                    324 -> {
+                    ErrorCode.CODE_PAY_TIP -> {
                         DialogUtils.showConfirmDialog("温馨提示",{
                             toPay(selectType, rechargeId, activity, rechargeType)
                         },{

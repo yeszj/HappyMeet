@@ -56,12 +56,10 @@ public class GiftInfo implements Serializable {
             return "黄金CP";
         } else if (loversType == 2) {
             return "水晶CP";
-
         } else if (loversType == 3) {
             return "钻石CP";
-
         } else {
-            return "永久CP";
+            return "星耀cp";
         }
     }
 

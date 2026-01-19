@@ -1,5 +1,6 @@
 package cn.yanhu.commonres.bean
 
+import android.R.attr.value
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import cn.zj.netrequest.BR
@@ -20,6 +21,7 @@ class DressUpInfo : BaseObservable() {
     val priceList: MutableList<StorePriceInfo> = mutableListOf()
     var sourceDesc: String? = ""
     var restTime: String? = ""
+    val bubble: BubbleInfo? = null
 
     @Bindable
     var isWear: Boolean = false

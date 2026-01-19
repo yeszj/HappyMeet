@@ -7,18 +7,26 @@
     tools:background="@drawable/bg_login_bg">
 
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/iv_phoneLogin"
-        android:layout_width="@dimen/dp_54"
-        android:layout_height="@dimen/dp_80"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_80"
-        android:src="@drawable/svg_phone_login" />
+        android:drawableTop="@drawable/svg_phone_login"
+        android:drawablePadding="@dimen/dp_10"
+        android:text="其它账号"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_13" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/iv_wxLogin"
-        android:layout_width="@dimen/dp_55"
-        android:layout_height="@dimen/dp_79"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/dp_80"
-        android:src="@drawable/svg_jiguang_wx_login" />
+        android:drawableTop="@drawable/svg_jiguang_wx_login"
+        android:drawablePadding="@dimen/dp_10"
+        android:text="微信登录"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_13" />
 </RelativeLayout>

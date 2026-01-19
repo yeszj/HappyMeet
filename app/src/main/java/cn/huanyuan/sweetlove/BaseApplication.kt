@@ -47,6 +47,7 @@ import cn.yanhu.baselib.queue.TaskQueueManager
 import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.refresh.SmartRefreshProcessor
+import cn.yanhu.baselib.utils.CacheSizeManager
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.GlideHealthMonitor
@@ -64,6 +65,7 @@ import cn.yanhu.commonres.manager.AppManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.utils.PermissionXUtils
+import cn.yanhu.commonres.view.svg.SvgModule
 import cn.yanhu.imchat.custom.chat.EaseCommonUtils
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EMInitUtils
@@ -92,6 +94,13 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.facebook.cache.disk.DiskCacheConfig
+import com.facebook.common.internal.Supplier
+import com.facebook.common.memory.NoOpMemoryTrimmableRegistry
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.cache.MemoryCacheParams
+import com.facebook.imagepipeline.core.ImagePipelineConfig
+import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
 import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.hjq.toast.style.BlackToastStyle
 import com.hyphenate.EMCallBack
@@ -109,8 +118,6 @@ import com.pcl.sdklib.manager.SdkParamsManager
 import com.permissionx.guolindev.PermissionX
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
-import com.umeng.socialize.UMShareAPI
-import com.umeng.socialize.UMShareConfig
 import com.umeng.umcrash.UMCrash
 import okhttp3.Interceptor
 import org.litepal.LitePal
@@ -125,7 +132,7 @@ class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         if (ProcessUtils.isMainProcess()) {
-           // AppSecurityManager.checkDynamicDebug()
+            // AppSecurityManager.checkDynamicDebug()
             Utils.init(this)
             ApplicationProxy.instance = ApplicationRouterImpl.getInstance()
             init()
@@ -152,7 +159,8 @@ class BaseApplication : Application() {
                     reInitImSdk()
                     LiveEventBus.get<Boolean>(EventBusKeyConfig.SWITCH_TO_FOREGROUND).post(true)
                 }
-                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"App切换到前台")
+                SvgModule.adjustForAppState(activity, false)
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "App切换到前台")
                 checkAlertPermission(activity)
             }
 
@@ -162,8 +170,9 @@ class BaseApplication : Application() {
                         AppManager.STATE_BACKGROUND,
                         PermissionX.areNotificationsEnabled(activity)
                     )
+                    SvgModule.adjustForAppState(activity, true)
                 }
-                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG,"App切换到后台")
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "App切换到后台")
 
 
             }
@@ -172,7 +181,7 @@ class BaseApplication : Application() {
 
     private fun checkAlertPermission(activity: Activity) {
         val isFloatPermission = Settings.canDrawOverlays(this)
-        if ((activity is VideoPhoneActivity || activity is LiveRoomActivity) && !isFloatPermission && AppCacheManager.alertCheckCount<2) {
+        if ((activity is VideoPhoneActivity || activity is LiveRoomActivity) && !isFloatPermission && AppCacheManager.alertCheckCount < 2) {
             val tips = if (activity is VideoPhoneActivity) {
                 "开启悬浮窗播放功能，退出通话界面也能继续保持通话"
             } else {
@@ -255,6 +264,7 @@ class BaseApplication : Application() {
             ChannelUtils.getChannel()
         )
         ARouterWrapper.init(this)
+        initFrescoImg()
         initRetrofit()
         setVideoFactory()
         Looper.myQueue().addIdleHandler {
@@ -262,6 +272,54 @@ class BaseApplication : Application() {
             initToastStyle()
             false
         }
+    }
+
+    private fun initFrescoImg(){
+        val config = ImagePipelineConfig.newBuilder(this)
+            // 内存缓存配置
+            .setBitmapMemoryCacheParamsSupplier(getMemoryCacheParamsSupplier())
+
+            // 禁用一些可能导致闪烁的功能
+            .setDownsampleEnabled(true)  // 启用向下采样
+            .setResizeAndRotateEnabledForNetwork(true)
+
+            // 渐进式 JPEG 配置
+            .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
+
+            // 缓存配置
+            .setMainDiskCacheConfig(getDiskCacheConfig())
+            .setSmallImageDiskCacheConfig(getDiskCacheConfig())
+
+            // 其他优化
+            .setBitmapsConfig(Bitmap.Config.RGB_565)  // 使用节省内存的格式
+            .setMemoryTrimmableRegistry(NoOpMemoryTrimmableRegistry())  // 不自动清理内存
+
+            .build()
+
+        Fresco.initialize(this, config)
+    }
+
+
+    private fun getMemoryCacheParamsSupplier(): Supplier<MemoryCacheParams> {
+        return Supplier {
+            MemoryCacheParams(
+                (Runtime.getRuntime().maxMemory() / 4).toInt(),  // 最大缓存大小
+                Integer.MAX_VALUE,  // 最大条目数
+                Integer.MAX_VALUE,  // 最大缓存未命中时的大小
+                Integer.MAX_VALUE,  // 最大缓存未命中时的条目数
+                Integer.MAX_VALUE   // 最大缓存条目数的限制
+            )
+        }
+    }
+
+    private fun getDiskCacheConfig(): DiskCacheConfig {
+        return DiskCacheConfig.newBuilder(this)
+            .setBaseDirectoryPath(cacheDir)
+            .setBaseDirectoryName("fresco_cache")
+            .setMaxCacheSize(200 * 1024 * 1024)  // 200MB
+            .setMaxCacheSizeOnLowDiskSpace(100 * 1024 * 1024)
+            .setMaxCacheSizeOnVeryLowDiskSpace(50 * 1024 * 1024)
+            .build()
     }
 
     private fun setVideoFactory() {
@@ -280,7 +338,7 @@ class BaseApplication : Application() {
         initUm()
         SVGASoundManager.init()
         SVGAParser.shareParser().init(this)
-       // SVGAParser.shareParser().fileDownloader  = CachedSVGAFileDownloader(this)
+        // SVGAParser.shareParser().fileDownloader  = CachedSVGAFileDownloader(this)
     }
 
     /*
@@ -564,7 +622,7 @@ class BaseApplication : Application() {
         try {
             val source = message.getIntAttribute("source", -1)
             val attributes = message.attributes
-            if (BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 logcom("收到透传消息${GsonUtils.toJson(attributes)}")
             }
             if (source == CmdMsgTypeConfig.ADD_FRIEND) {
@@ -663,9 +721,9 @@ class BaseApplication : Application() {
                     ChatConstant.ACTION_NEW_YEAR_RED_PACKET,
                     data.optString("url")
                 )
-            }else if(source == ChatConstant.ACTION_CANCEL_LOVERS){
+            } else if (source == ChatConstant.ACTION_CANCEL_LOVERS) {
                 LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
-            }else if (source == ChatConstant.ACTION_USER_ONLINE) {
+            } else if (source == ChatConstant.ACTION_USER_ONLINE) {
                 if (CommonUtils.isScreenOff() || !AppUtils.isAppForeground()) {
                     return
                 }
@@ -674,11 +732,11 @@ class BaseApplication : Application() {
                     ChatConstant.ACTION_USER_ONLINE,
                     data.toString()
                 )
-            }else if (source == ChatConstant.ACTION_UPLOAD_LOG){
-                AppLogManager.uploadErrorFile("agorasdk.log","agorasdkCopy.log")
+            } else if (source == ChatConstant.ACTION_UPLOAD_LOG) {
+                AppLogManager.uploadErrorFile("agorasdk.log", "agorasdkCopy.log")
                 AppLogManager.uploadLocalLog()
-            }else if (source == ChatConstant.ACTION_COMMON_POP){
-                val data = message.getStringAttribute(ChatConstant.CUSTOM_DATA,"")
+            } else if (source == ChatConstant.ACTION_COMMON_POP) {
+                val data = message.getStringAttribute(ChatConstant.CUSTOM_DATA, "")
                 addPopTask(
                     ChatConstant.ACTION_COMMON_POP,
                     data
@@ -780,14 +838,15 @@ class BaseApplication : Application() {
 
     private fun userSetSeat(roomId: String, seatId: String) {
         DialogUtils.showLoading(hasShadow = false)
-        request({
-            agoraRxApi.userSetSeat(
-                roomId,
-                BaseLiveRoomFrg.SEAT_TYPE_AUTO,
-                seatId,
-                AppCacheManager.userId
-            )
-        },
+        request(
+            {
+                agoraRxApi.userSetSeat(
+                    roomId,
+                    BaseLiveRoomFrg.SEAT_TYPE_AUTO,
+                    seatId,
+                    AppCacheManager.userId
+                )
+            },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     LiveRoomManager.toLiveRoomPage(
@@ -909,19 +968,20 @@ class BaseApplication : Application() {
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        //logComToFile("memoryInfo","onTrimMemory")
-        Glide.get(this).onTrimMemory(level)
+        logComToFile("memoryInfo", "onTrimMemory")
+        clearMemory()
+
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-       // logComToFile("memoryInfo","onLowMemory")
+        logcom("memoryInfo", "onLowMemory")
         clearMemory()
     }
 
     private fun clearMemory() {
-        logComToFile("memoryInfo","clearMemory")
-        Glide.get(this).clearMemory()
+        logComToFile("memoryInfo", "clearMemory")
+        CacheSizeManager.clearAllCache(this, null)
     }
 
 
@@ -935,14 +995,14 @@ class BaseApplication : Application() {
 
         fun addPopTask(type: Int, content: String) {
             val task = AppPopTask(type, content)
-            if (TaskQueueManager.hasTask(task) && type !=  ChatConstant.GLOBAL_GIFT_ALERT && type !=  ChatConstant.ACTION_USER_ONLINE) {
+            if (TaskQueueManager.hasTask(task) && type != ChatConstant.GLOBAL_GIFT_ALERT && type != ChatConstant.ACTION_USER_ONLINE) {
                 logcom("已经存在该任务：taskName = ${task.getTaskName()} ")
                 return
             }
             appPopTaskQueueManagerImpl.addTask(AppPopTask(type, content))
         }
 
-        fun clearTask(){
+        fun clearTask() {
             appPopTaskQueueManagerImpl.clear()
             globalTaskQueueManagerImpl.clear()
         }

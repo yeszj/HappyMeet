@@ -1,6 +1,9 @@
 package cn.yanhu.commonres.bind
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.text.Spanned
 import android.text.TextUtils
 import android.widget.ImageView
@@ -11,6 +14,12 @@ import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.toHtml
 import cn.yanhu.baselib.view.CustomFontTextView
 import com.bumptech.glide.request.target.CustomTarget
+import com.facebook.drawee.view.SimpleDraweeView
+import androidx.core.net.toUri
+import cn.yanhu.baselib.utils.FrescoUtils
+import cn.yanhu.baselib.utils.ext.logcom
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
+import com.facebook.drawee.generic.RoundingParams
 
 /**
  *
@@ -75,13 +84,19 @@ fun loadImage(
     } else {
         placeholderId
     }
-    GlideUtils.load(
-        view.context,
-        url,
-        view,
-        placeholderId = placeholderIds,
-        errorId = placeholderIds
-    )
+    if (view is SimpleDraweeView){
+        logcom("fresco图片加载")
+        FrescoUtils.load(view.context, url, view,placeholderIds)
+    }else{
+        GlideUtils.load(
+            view.context,
+            url,
+            view,
+            placeholderId = placeholderIds,
+            errorId = placeholderIds
+        )
+    }
+
 }
 
 @BindingAdapter(

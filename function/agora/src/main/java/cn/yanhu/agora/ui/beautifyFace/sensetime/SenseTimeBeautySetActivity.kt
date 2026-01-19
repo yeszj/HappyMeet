@@ -50,6 +50,10 @@ class SenseTimeBeautySetActivity :
             finish()
             LiveEventBus.get<Any?>(EventBusKeyConfig.SHOW_BEAUTY_SDK_DOWNLOAD_PROGRESS).post(true)
             return
+        }else if (AgoraManager.isLiveRoom){
+            showToast("正在通话中,无法进行美颜设置")
+            finish()
+            return
         }
         mBinding.beautySetSf.setOnSingleClickListener {
             if (mBinding.controllerContainer.isVisible) {

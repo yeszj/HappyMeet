@@ -52,3 +52,16 @@
 
 -keep class cn.yanhu.commonres.bean.** { *; }
 
+# Fresco 混淆规则
+-keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
+
+# 保留 native 方法
+-keepclassmembers class * {
+    @com.facebook.common.internal.DoNotStrip *;
+}
+
+# 保留 Fresco 需要的类
+-keep class com.facebook.imagepipeline.systrace.FrescoSystrace { *; }
+-keep class com.facebook.crypto.** { *; }
+-keep class com.facebook.imagepipeline.core.ImagePipelineConfig { *; }
+

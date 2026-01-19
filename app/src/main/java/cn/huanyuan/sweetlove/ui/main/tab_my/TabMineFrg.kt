@@ -86,9 +86,6 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
         mBinding.viewInfo.setOnSingleClickListener {
             RouteIntent.lunchPersonHomePage(AppCacheManager.userId)
         }
-//        LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO).observe(this) {
-//            getData()
-//        }
         LiveEventBus.get<String>(LiveDataEventManager.REFRESH_USER_CACHE).observe(this) {
             refreshUserInfo()
         }

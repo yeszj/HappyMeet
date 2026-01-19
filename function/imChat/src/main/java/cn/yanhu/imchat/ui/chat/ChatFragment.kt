@@ -36,6 +36,7 @@ import cn.yanhu.imchat.custom.chat.CustomEaseChatPrimaryMenu
 import cn.yanhu.imchat.custom.chat.CustomEaseChatPrimaryMenu.OnChatTypeClickListener
 import cn.yanhu.imchat.custom.chat.CustomEaseHandleMessagePresenterImpl
 import cn.yanhu.imchat.listener.CallBackListener
+import cn.yanhu.imchat.manager.EaseHelper
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.yanhu.imchat.manager.EmMsgManager.isFateMessage
 import cn.yanhu.imchat.manager.ImCallManager
@@ -45,6 +46,7 @@ import cn.yanhu.imchat.pop.ChatSelectImagePop
 import cn.yanhu.imchat.pop.ChatSelectImagePop.Companion.showDialog
 import cn.yanhu.imchat.pop.SendGiftPop
 import cn.zj.netrequest.application.ApplicationProxy
+import cn.zj.netrequest.application.OnImLoginListener
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
@@ -52,11 +54,14 @@ import cn.zj.netrequest.status.ErrorCode
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.UriUtils
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hjq.toast.ToastUtils
+import com.hyphenate.EMError
 import com.hyphenate.chat.EMClient
 import com.hyphenate.chat.EMCustomMessageBody
 import com.hyphenate.chat.EMMessage
@@ -214,8 +219,25 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     }
 
     override fun onChatError(code: Int, errorMsg: String) {
-        if (code == -2) {
-            showFailTips(errorMsg, code)
+        try {
+            if (code == EMError.MESSAGE_INVALID) {
+                showToast("登录异常,请重新登录")
+                ApplicationProxy.instance.loginInvalid()
+            } else if (code == EMError.USER_NOT_LOGIN) {
+                LogUtils.d("未登录")
+            } else if (code == EMError.USER_PERMISSION_DENIED) {
+                showToast("您已被对方拉黑")
+                if (mContext != null && !mContext.isDestroyed) {
+                    KeyboardUtils.hideSoftInput(mContext)
+                }
+                EaseHelper.setUserIsBlackSuccess(conversationId)
+            } else {
+                if (code == -2 && !errorMsg.contains("User is not logged in")) {
+                    showFailTips(errorMsg)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

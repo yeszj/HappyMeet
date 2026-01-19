@@ -132,15 +132,27 @@
         </LinearLayout>
 
 
+        <com.lihang.ShadowLayout
+            android:id="@+id/tv_chatStyle"
+            android:layout_width="0dp"
+            app:layout_constraintTop_toTopOf="@+id/tv_content"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_content"
+            app:layout_constraintStart_toStartOf="@+id/tv_content"
+            app:layout_constraintEnd_toEndOf="@+id/tv_content"
+            app:hl_cornerRadius="@dimen/dp_10"
+            app:hl_startColor="#AC0072"
+            app:hl_centerColor="#FA5363"
+            app:hl_endColor="#FF9900"
+            app:hl_angle="45"
+            android:layout_height="0dp"/>
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
-            android:background="@{msgInfo.sendUserInfo.showChatBg?@drawable/chatbg:@drawable/black_alpha80_corner_10}"
             android:maxWidth="@dimen/dp_220"
             android:paddingVertical="@dimen/dp_10"
-            tools:background="@drawable/chatbg"
             android:paddingStart="@dimen/dp_10"
             android:paddingEnd="@dimen/dp_20"
             android:textColor="@color/white"

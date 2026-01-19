@@ -17,6 +17,7 @@ import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.bean.DressUpInfo
 import cn.yanhu.commonres.bean.request.DressUpRequest
 import cn.yanhu.commonres.config.EventBusKeyConfig
+import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.utils.SVGAUtils
 import cn.yanhu.commonres.utils.VideoAnimUtils
 import cn.zj.netrequest.ext.OnBooleanResultListener
@@ -130,7 +131,7 @@ class DressUpOperatePop(
                 } else {
                     showToast("佩戴成功")
                 }
-                LiveEventBus.get<Boolean>(EventBusKeyConfig.REFRESH_USER_INFO).post(true)
+                LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
                 item.isWear = !isWear
                 mBinding?.itemInfo = item
                 onDressUpListener.onDressUpSuccess(item.id)

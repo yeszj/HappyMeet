@@ -13,5 +13,6 @@ data class CommonTipsInfo(
     var drawableId:Int = 0,
     var showClose:Boolean = true,
     var icon: String = "",
-    val url: String = ""
+    val url: String = "",
+    val isShowService: Boolean = false
 )

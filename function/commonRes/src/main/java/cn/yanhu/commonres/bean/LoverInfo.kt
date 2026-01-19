@@ -21,7 +21,7 @@ data class LoverInfo(val userId: String, val nickName: String, val loversType: I
                 "钻石CP"
             }
             else -> {
-                "永久CP"
+                "星耀CP"
             }
         }
     }

@@ -238,7 +238,7 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
             "立即完善",
             type == 2,
             cn.yanhu.commonres.R.drawable.icon_secure_tip,
-            type == 2
+            type == 2, isShowService = true
         )
         forceAuthTipDialog =
             CommonTipDialog.showDialog(

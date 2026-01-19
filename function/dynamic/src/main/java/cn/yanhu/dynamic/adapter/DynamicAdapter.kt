@@ -69,9 +69,9 @@ class DynamicAdapter : BaseQuickAdapter<DynamicInfo, DynamicAdapter.VH>() {
             dynamicInfo = item
             isPersonHomePage = isHomePage
             if (TextUtils.isEmpty(item?.roomId)){
-                avatarView.getAvatarView().setBorderWidth(com.zj.dimens.R.dimen.dp_0)
+                avatarView.setAvatarBorder(com.zj.dimens.R.dimen.dp_0)
             }else{
-                avatarView.getAvatarView().setBorderWidth(com.zj.dimens.R.dimen.dp_1)
+                avatarView.setAvatarBorder(com.zj.dimens.R.dimen.dp_1)
             }
             bindPic(item)
 

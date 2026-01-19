@@ -8,6 +8,7 @@ import android.view.View
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ViewUtils
+import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.CommonTipsInfo
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.CenterPopupView
@@ -46,6 +47,15 @@ class CommonTipDialog(
             }else{
                 tvDesc.visibility = VISIBLE
             }
+            if (commonTipsInfo.isShowService){
+                tvService.visibility = VISIBLE
+                tvService.setOnSingleClickListener {
+                    PageIntentUtil.url2Page(context, PageIntentUtil.TYPE_CONTACT_UNION)
+                }
+            }else{
+                tvService.visibility = GONE
+            }
+
             if (commonTipsInfo.drawableId==0){
                 if (TextUtils.isEmpty(commonTipsInfo.icon)) {
                     ivTipIcon.visibility = GONE

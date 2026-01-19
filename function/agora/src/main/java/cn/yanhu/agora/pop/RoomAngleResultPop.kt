@@ -81,6 +81,7 @@ class RoomAngleResultPop(
                     }
 
                     override fun onError() {
+                        dismiss()
                     }
                 })
             mBinding.svgaImage.callback = object : SVGACallback {
@@ -102,8 +103,7 @@ class RoomAngleResultPop(
             mBinding.animView.visibility = VISIBLE
             mBinding.animView.setFetchResource(object : IFetchResource {
                 override fun fetchImage(
-                    resource: Resource,
-                    result: (Bitmap?) -> Unit
+                    resource: Resource, result: (Bitmap?) -> Unit
                 ) {
                     val srcTag = resource.tag
                     if (srcTag.isNotEmpty()) {
@@ -119,13 +119,9 @@ class RoomAngleResultPop(
                         } else if ("tianshi" == srcTag) {
                             val portrait = angleUser.portrait
                             GlideUtils.loadAsBitmap(
-                                context,
-                                portrait,
-                                object :
-                                    CustomTarget<Bitmap>() {
+                                context, portrait, object : CustomTarget<Bitmap>() {
                                     override fun onResourceReady(
-                                        resource: Bitmap,
-                                        transition: Transition<in Bitmap>?
+                                        resource: Bitmap, transition: Transition<in Bitmap>?
                                     ) {
                                         result(resource)
                                     }
@@ -141,13 +137,9 @@ class RoomAngleResultPop(
                             if (guardUser != null) {
                                 val portrait = guardUser.portrait
                                 GlideUtils.loadAsBitmap(
-                                    context,
-                                    portrait,
-                                    object :
-                                        CustomTarget<Bitmap>() {
+                                    context, portrait, object : CustomTarget<Bitmap>() {
                                         override fun onResourceReady(
-                                            resource: Bitmap,
-                                            transition: Transition<in Bitmap>?
+                                            resource: Bitmap, transition: Transition<in Bitmap>?
                                         ) {
                                             result(resource)
                                         }
@@ -169,8 +161,7 @@ class RoomAngleResultPop(
                 }
 
                 override fun fetchText(
-                    resource: Resource,
-                    result: (String?) -> Unit
+                    resource: Resource, result: (String?) -> Unit
                 ) {
                     result(null)
                 }
@@ -205,7 +196,7 @@ class RoomAngleResultPop(
                 override fun onVideoStart() {
                 }
             })
-            val animAssetsName =  "singer_anim_" + angleUser.level+".mp4"
+            val animAssetsName = "singer_anim_" + angleUser.level + ".mp4"
             VideoAnimUtils.loadAssetsVideoAnim(
                 context,
                 animAssetsName,
@@ -234,11 +225,8 @@ class RoomAngleResultPop(
             simpleCallback: SimpleCallback
         ): RoomAngleResultPop {
             val matchPop = RoomAngleResultPop(mContext, angleUser, guardUser, type)
-            val builder =
-                XPopup.Builder(mContext)
-                    .setPopupCallback(simpleCallback)
-                    .dismissOnBackPressed(false)
-                    .dismissOnTouchOutside(false)
+            val builder = XPopup.Builder(mContext).setPopupCallback(simpleCallback)
+                .dismissOnBackPressed(false).dismissOnTouchOutside(false)
             builder.asCustom(matchPop).show()
             return matchPop
         }

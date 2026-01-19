@@ -29,6 +29,7 @@ import cn.yanhu.agora.ui.liveRoom.view.SevenRoomSeatView
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.logComToFile
+import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.OperateInfo
@@ -48,6 +49,7 @@ import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.efs.sdk.memleaksdk.monitor.internal.be
 import com.hyphenate.chat.EMMessage
@@ -366,7 +368,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
         ThreadUtils.getMainHandler().post {
             for (i in 0 until it.size) {
                 val seatInfo = it[i]
-                if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
+                // if (seatInfo.roomUserSeatInfo?.userId?.toInt() == uid) {
                     logComToFile(TAG, "更新麦位userId=$uid,seatIndex = ${seatInfo.id-1}")
                     if (isSevenRoom()) {
                         if (hasExpand) {
@@ -381,8 +383,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
                             nineSongRoomSeatView?.bindSeatByPosition(i, seatInfo)
                         }
                     }
-                    return@post
-                }
+               // }
             }
         }
     }
@@ -577,6 +578,7 @@ open class MoreSeatLiveRoomFrg : BaseLiveRoomFrg() {
     }
 
     override fun updatePkResult(roomPkInfo: RoomPkInfo?, isClear: Boolean) {
+        logcom("LiveWebSocketManager","updatePkResult=${GsonUtils.toJson(roomPkInfo)},isClear=${isClear}")
         for (i in 0 until seatList.size) {
             val seatInfo = seatList[i]
             seatInfo.roomUserSeatInfo ?: continue

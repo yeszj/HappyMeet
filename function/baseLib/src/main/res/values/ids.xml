@@ -2,4 +2,5 @@
 <resources>
     <item name="containerLayout" type="id"/>
     <item name="titleBar" type="id"/>
+    <item name="previous_placeholder" type="id"/>
 </resources>

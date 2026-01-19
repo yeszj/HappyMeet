@@ -122,5 +122,9 @@ dependencies {
     //https://gitcode.com/gh_mirrors/va/vap/?utm_source=artical_gitcode&index=bottom&type=card&&uuid_tt_dd=10_20863010430-1766028197000-395214&isLogin=9&from_id=142837787&from_link=b6b87e57d6c3d783027e1b4ec6566308
     api ("io.github.tencent:vap:2.0.28")
 
+    api ("com.facebook.fresco:fresco:3.6.0")
+    api ("com.facebook.fresco:webpsupport:3.6.0")           // 静态 WebP 支持
+    api ("com.facebook.fresco:imagepipeline-okhttp3:3.6.0")  // 使用 OkHttp 网络层
+
 //    api ("com.tencent.qcloud:VAPSDK:2.0.28")
 }

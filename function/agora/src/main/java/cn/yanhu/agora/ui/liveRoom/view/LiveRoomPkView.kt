@@ -87,7 +87,7 @@ class LiveRoomPkView : LinearLayout {
             mBinding.pkProgress.max = redCnt+blueCnt
             mBinding.pkProgress.setProgress(redCnt,true)
         }
-        if (blueMemberList.contains(AppCacheManager.userId)){
+        if (blueMemberList!=null && blueMemberList.contains(AppCacheManager.userId)){
             mBinding.pkProgress.progressDrawable = ContextCompat.getDrawable(context,R.drawable.pk_progress_blue_bg)
         }else{
             mBinding.pkProgress.progressDrawable = ContextCompat.getDrawable(context,R.drawable.pk_progress_red_bg)
@@ -179,7 +179,7 @@ class LiveRoomPkView : LinearLayout {
         request({ agoraRxApi.endPk(roomId = roomDetailInfo.roomId,roomPkInfo.pkId) },object : OnRequestResultListener<String>{
             override fun onSuccess(data: BaseBean<String>) {
             }
-        })
+        }, isShowToast = false)
     }
 
     @SuppressLint("SetTextI18n")

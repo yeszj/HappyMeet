@@ -7,6 +7,7 @@ import cn.yanhu.baselib.utils.ext.showToast
 import com.blankj.utilcode.util.ThreadUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
+import com.facebook.drawee.backends.pipeline.Fresco
 import java.io.File
 
 /**
@@ -83,7 +84,6 @@ object CacheSizeManager {
                 if (onClearCacheListener!=null){
                     showToast("清除成功")
                 }
-               // GlideHealthMonitor.recoverGlide()
                 onClearCacheListener?.onClearSuccess()
                 DialogUtils.dismissLoading()
             }
@@ -91,9 +91,11 @@ object CacheSizeManager {
                 try {
                     clearImageDiskCache(context)
                     clearImageMemoryCache(context)
+                    Fresco.getImagePipeline().clearCaches()
                     val imageExternalCatchDir =
                         context.externalCacheDir.toString()
                     deleteFolderFile(imageExternalCatchDir)
+                   // GlideHealthMonitor.recoverGlide()
                 }catch (e:Exception){
                     return false
                 }

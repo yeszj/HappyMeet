@@ -88,6 +88,12 @@ class UserViewModel : BaseViewModel() {
         )
     }
 
+    fun updateUserIpAddress(onRequestResultListener: OnRequestResultListener<String>) {
+        request(
+            { rxApi.updateUserIpAddress() }, onRequestResultListener
+        )
+    }
+
     fun getUserInfo(userId: String, loadingHasContent: Boolean) {
         request({ rxApi.getUserInfoByUserId(userId) }, userDetailObservable, !loadingHasContent)
     }

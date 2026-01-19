@@ -93,6 +93,7 @@ class ThreeRoomSeatAdapter :
                 seatInfo = item
                 if (item.roomUserSeatInfo == null) {
                     setEmptySeatInfo(position, item)
+                    surfaceViewMap[position] = null
                 }
 
             }
@@ -157,6 +158,7 @@ class ThreeRoomSeatAdapter :
                     } else {
                         holder.binding.apply {
                             this.roomInfo = roomDetailInfo
+                            this.anchorSeatInfo.seatInfo = item
                             bindWishInfo()
                             setApplyInfo()
                         }
@@ -297,6 +299,14 @@ class ThreeRoomSeatAdapter :
                 var surfaceView = liveRoomSeatBean.surfaceView
                 if (surfaceView == null) {
                     surfaceView = TextureView(context)
+                }else{
+                    if (liveRoomSeatBean.uid == dto.roomUserSeatInfo!!.userId.toInt()){
+                        AgoraManager.getInstance().setupVideo(
+                            dto.roomUserSeatInfo!!.userId.toInt(),
+                            dto.roomUserSeatInfo!!.userId == AppCacheManager.userId, surfaceView
+                        )
+                        return
+                    }
                 }
                 ViewUtils.removeViewFormParent(surfaceView)
                 this.itemVideoSf.removeAllViews()
@@ -304,6 +314,7 @@ class ThreeRoomSeatAdapter :
                 addVideoSf(surfaceView, dto)
             }
         } else {
+            surfaceViewMap[position] = null
             this.itemVideoSf.removeAllViews()
         }
     }

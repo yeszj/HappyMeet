@@ -205,6 +205,7 @@ class GiftPopAnimTask(
             }
         }catch (e: Exception){
             logComToFile("memoryInfo","playGiftAnim异常："+e.message)
+            doNextTask()
         }
 
     }

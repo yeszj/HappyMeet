@@ -18,8 +18,7 @@ enum class UserParamType(var type: Int) {
     TYPE_WORK(9),//职业
     TYPE_MONTY_INCOME(10),//月收入
     TYPE_HOMETOWN(11),//家乡
-
-    /**
+    /**a
      * 交友信息
      */
     TYPE_FRIEND_ADDRESS(21),   //所在地

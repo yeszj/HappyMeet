@@ -1,13 +1,16 @@
 package cn.yanhu.commonres.view
 
+import android.R.attr.radius
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.net.toUri
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
@@ -18,6 +21,10 @@ import cn.yanhu.commonres.utils.SVGAUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
+import com.facebook.drawee.generic.RoundingParams
+import com.facebook.drawee.view.SimpleDraweeView
 import com.makeramen.roundedimageview.RoundedImageView
 import com.opensource.svgaplayer.SVGAImageView
 import com.opensource.svgaplayer.SVGAParser
@@ -29,7 +36,7 @@ import com.opensource.svgaplayer.SVGAParser
  */
 class UserAvatarView : LinearLayout {
     private var avatarMarginLeft: Float = 0F
-    private lateinit var ivAvatar: RoundedImageView
+    private lateinit var ivAvatar: SimpleDraweeView
     private lateinit var svgAvatar: SVGAImageView
     private var isShowSvga: Boolean = false
     private var isCanClick:Boolean = true
@@ -71,8 +78,14 @@ class UserAvatarView : LinearLayout {
         layoutParams.height = avatarSize.toInt()
         ivAvatar.layoutParams = layoutParams
         if (avatarBorderColor != -1) {
-            ivAvatar.borderWidth = avatarBorderSize
-            ivAvatar.borderColor = avatarBorderColor
+            // 2. 设置圆角
+            val roundingParams = RoundingParams.asCircle()
+                .setBorder(avatarBorderColor, avatarBorderSize) // 设置边框（颜色，宽度）
+            val hierarchy = GenericDraweeHierarchyBuilder(context.resources)
+                .setRoundingParams(roundingParams)
+                .setFadeDuration(300) // 淡入淡出时间
+                .build()
+            ivAvatar.hierarchy = hierarchy
         }
         if (isShowSvga) {
             val layoutParams1 = svgAvatar.layoutParams
@@ -93,7 +106,7 @@ class UserAvatarView : LinearLayout {
         attrArray.recycle()
     }
 
-    fun getAvatarView(): RoundedImageView {
+    fun getAvatarView(): SimpleDraweeView {
         return ivAvatar
     }
 
@@ -103,6 +116,15 @@ class UserAvatarView : LinearLayout {
 
     fun setUserAvatar(item: BaseUserInfo) {
         setAvatar(item, null)
+    }
+
+    fun setAvatarBorder(avatarBorderSize: Int){
+        val roundingParams = RoundingParams.asCircle()
+            .setBorderWidth( avatarBorderSize.toFloat()) // 设置边框（颜色，宽度）
+        val hierarchy = GenericDraweeHierarchyBuilder(context.resources)
+            .setRoundingParams(roundingParams)
+            .build()
+        ivAvatar.hierarchy = hierarchy
     }
 
     fun setAvatarSize(avatarSize:Int){
@@ -115,11 +137,11 @@ class UserAvatarView : LinearLayout {
     @SuppressLint("CheckResult")
     private fun setAvatar(item: BaseUserInfo, parseCompletion: SVGAParser.ParseCompletion?) {
         ivAvatar.setImageResource(R.drawable.ease_default_avatar)
-        val requestOptions = RequestOptions().diskCacheStrategy(
-            DiskCacheStrategy.ALL
-        )
-        requestOptions.placeholder(R.drawable.ease_default_avatar)
-        Glide.with(context).load(item.portrait).apply(requestOptions).into(ivAvatar)
+        val portrait = item.portrait
+        if (TextUtils.isEmpty(portrait)){
+            return
+        }
+        ivAvatar.setImageURI(portrait.toUri())
 
         if (isShowSvga){
             if (!TextUtils.isEmpty(item.avatarFrame)) {

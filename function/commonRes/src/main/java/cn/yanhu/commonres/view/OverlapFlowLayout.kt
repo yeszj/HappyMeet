@@ -1,5 +1,6 @@
 package cn.yanhu.commonres.view
 
+import android.R.attr.strokeColor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
@@ -12,7 +13,6 @@ import androidx.core.view.isGone
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.R
 import cn.yanhu.commonres.bean.PkUserInfo
-import cn.yanhu.commonres.bean.SeatUserInfo
 import com.bumptech.glide.Glide
 import com.makeramen.roundedimageview.RoundedImageView
 import kotlin.math.max
@@ -218,7 +218,8 @@ class OverlapFlowLayout @JvmOverloads constructor(
         }
     }
 
-    fun setAvatarUrls(urls: List<PkUserInfo>, strokeColor:Int=0, strokeWidth:Int=0,isRedUser: Boolean) {
+    fun setAvatarUrls(urls: List<PkUserInfo>?, strokeColor:Int=0, strokeWidth:Int=0,isRedUser: Boolean) {
+        if (urls==null) return
         removeAllViews()
         for (url in urls) {
             addAvatar(url,strokeColor,strokeWidth,isRedUser)
@@ -268,7 +269,7 @@ class OverlapFlowLayout @JvmOverloads constructor(
             params.addRule(RelativeLayout.CENTER_HORIZONTAL)
             layoutParams = params
             setPadding(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_3),0,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_3),0) ;
-            textSize = 9f
+            textSize = 8f
             minWidth = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_12)
             setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
             setBackgroundResource(cn.yanhu.baselib.R.drawable.white_corner_10)
@@ -288,7 +289,6 @@ class OverlapFlowLayout @JvmOverloads constructor(
     private fun createAvatarImageView(strokeColor:Int,strokeWidth:Int): RoundedImageView {
         return RoundedImageView(context).apply {
             layoutParams = LayoutParams(avatarSize, avatarSize)
-            setOval(true)
             if (strokeWidth>0){
                 borderColor = strokeColor
                 setBorderWidth(strokeWidth)

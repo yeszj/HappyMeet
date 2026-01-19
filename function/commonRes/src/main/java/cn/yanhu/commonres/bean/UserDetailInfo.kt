@@ -35,6 +35,7 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var loverInfo: LoverInfo? = null
     var guardInfo: BaseUserInfo? = null
     var avatarFrameCover: String?=""
+    var bubbleInfo:BubbleInfo?=null
 
     fun getAvatarFramePic(): String?{
         if (TextUtils.isEmpty(avatarFrameCover)){

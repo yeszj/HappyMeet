@@ -1,5 +1,7 @@
 package cn.yanhu.agora.ui.liveRoom.live
 
+import android.Manifest
+import android.R.attr.data
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -13,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -29,18 +32,22 @@ import cn.yanhu.agora.bean.AngleRankInfo
 import cn.yanhu.agora.bean.AngleRoomResultInfo
 import cn.yanhu.agora.bean.ChatRoomMsgInfo
 import cn.yanhu.agora.bean.GiftSendCntInfo
+import cn.yanhu.agora.bean.GiftSettleInfo
 import cn.yanhu.agora.bean.InviteSeatRecord
 import cn.yanhu.agora.bean.PkConfigInfo
 import cn.yanhu.agora.bean.PkSeatUserInfo
 import cn.yanhu.agora.bean.RoomExtraInfo
 import cn.yanhu.agora.bean.RoomGroupMemberRes
 import cn.yanhu.agora.bean.RoomLeaveResponse
+import cn.yanhu.agora.bean.SocketSeatInfo
 import cn.yanhu.agora.databinding.FrgBaseLiveRoomBinding
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener
 import cn.yanhu.agora.listener.OnJoinChatRoomListener
 import cn.yanhu.agora.listener.OnSendSeatInviteListener
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.LiveRoomManager
+import cn.yanhu.agora.manager.LiveWebSocketManager
+import cn.yanhu.agora.manager.LiveWebSocketManager.MessageItem
 import cn.yanhu.agora.manager.VideoCanvasPool
 import cn.yanhu.agora.manager.dbCache.InviteRecordCacheManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
@@ -125,6 +132,7 @@ import com.alibaba.android.arouter.utils.TextUtils
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.ThreadUtils.runOnUiThread
 import com.blankj.utilcode.util.VibrateUtils
@@ -145,6 +153,7 @@ import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
 import com.pcl.sdklib.listener.OnPayResultListener
 import com.pcl.sdklib.manager.PayManager
+import com.vivo.push.b.r
 import com.yhao.floatwindow.PermissionListener
 import io.agora.rtc2.Constants
 import io.agora.rtc2.IRtcEngineEventHandler
@@ -157,6 +166,9 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.math.BigDecimal
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
+import java.util.concurrent.LinkedBlockingQueue
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -259,12 +271,16 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         request(
             { commonRxApi.getConfigInfo(ServiceConfigKeyManager.GIF_COMBO_SWITCH) },
             object : OnRequestResultListener<String> {
+                @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
                 override fun onSuccess(data: BaseBean<String>) {
                     val value = data.data
                     isShowContinueClick = if (roomSourceBean.isPrivateRoom()) {
                         false
                     } else {
                         value == "1"
+                    }
+                    if (isShowContinueClick && !LiveWebSocketManager.getInstance().isConnected()) {
+                        LiveWebSocketManager.getInstance().init(roomSourceBean.roomId!!)
                     }
                 }
             })
@@ -532,6 +548,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private var seatStatus = 0
+
+    @SuppressLint("MissingPermission")
     override fun initListener() {
         mBinding.vgApplyList.setOnSingleClickListener {
             showSeatUserList()
@@ -653,6 +671,83 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             refreshSeatInfo()
         }
         registerNetChange()
+        initWebSocket()
+    }
+
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    private fun initWebSocket() {
+        LiveWebSocketManager.getInstance().destroy()
+        LiveWebSocketManager.getInstance()
+            .addListener(object : LiveWebSocketManager.WebSocketListener {
+                override fun onConnected() {
+                }
+
+                override fun onMessage(message: String) {
+                }
+
+                override fun onDisconnected(reason: String, code: Int) {
+
+                }
+
+                override fun onError(errorCode: Int, error: String) {
+                    if (errorCode == ErrorCode.CODE_NO_BALANCE) {
+                        settleComboWhenNoBalance()
+                    } else {
+                        showToast(error)
+                    }
+                }
+
+                override fun onRefreshSeat(msgRoomId: String, seatInfo: SocketSeatInfo) {
+                    if (msgRoomId == roomId) {
+                        if (seatInfo.seatList != null && seatInfo.seatList.isNotEmpty()) {
+                            seatList = seatInfo.seatList
+                            refreshSeatInfo(seatList, localUserId)
+                        }
+
+                    }
+                }
+
+                override fun onRefreshPk(msgRoomId: String, pkInfo: RoomPkInfo) {
+                    if (msgRoomId == roomId) {
+                        bindPkInfo(pkInfo)
+                    }
+                }
+
+                override fun onRefreshComboCntId(msgRoomId: String, cntId: String) {
+                    chatRoomRoseGiftMsg?.sendCntId = cntId
+                    sendCntId = cntId
+                    if (sendCount > 0) {
+                        logInfoCom("sendCnt", "sendGiftRequest:首次送成功,sendCntId=${sendCntId}")
+                        for (i in 0 until sendCount) {
+                            logInfoCom("sendCnt", "遍历开始")
+                            sendCnt(chatRoomRoseGiftMsg!!, true)
+                        }
+                        sendCount = 0
+                    }
+                }
+
+                override fun onComboSettle(roomId: String, settleInfo: GiftSettleInfo) {
+                    //socket 连击结算成功
+                    val settleCntId = settleInfo.sendCntId
+                    val takeWhile = sendGiftQueue[settleCntId]
+                    takeWhile?.apply {
+                        this.giftInfo.sendNumber = settleInfo.totalNum
+                        comboSettleSuccess(this, true)
+                        sendGiftQueue.remove(settleCntId)
+                    }
+
+                }
+
+            })
+    }
+
+    private fun settleComboWhenNoBalance() {
+        showToast("余额不足")
+        showRechargePop()
+        if (countDown != null && chatRoomRoseGiftMsg != null) {
+            startSendComboGift(chatRoomRoseGiftMsg)
+            logInfoCom("startSendComboGift", "余额不足，开始结算")
+        }
     }
 
     private var roomPkSendPop: RoomPkSendPop? = null
@@ -1039,13 +1134,12 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             return
         }
         if (!CommonUtils.compareString(balanceRose.toPlainString(), giftInfo.price.toString())) {
-            showToast("余额不足")
-            showRechargePop()
+            settleComboWhenNoBalance()
             return
         }
         if (countDown != null && (sendTargetUser?.userId != roomUserSeatInfo.userId || chatRoomRoseGiftMsg?.giftInfo?.id != giftInfo.id) && chatRoomRoseGiftMsg != null) {
             startSendComboGift(chatRoomRoseGiftMsg)
-            logInfoCom("startSendComboGift", "赠送对象发生改变")
+            logInfoCom("startSendComboGift", "赠送对象发生改变,结算上一次连击")
         }
         chatRoomRoseGiftMsg =
             ChatRoomGiftMsg(selfUserInfo!!, roomUserSeatInfo, giftInfo)
@@ -1082,43 +1176,52 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     private var sendCount = 0
     private var sendCntId = ""
     private fun sendCnt(chatRoomGiftMsg: ChatRoomGiftMsg, isCombo: Boolean) {
+        if (!isCombo){
+            sendCntId = ""
+        }
         logInfoCom("sendCnt", "isCombo:$isCombo,sendCntId = $sendCntId")
-        if (!isCombo && TextUtils.isEmpty(sendCntId)) {
+        if (isCombo && TextUtils.isEmpty(sendCntId)) {
             sendCount++
             logInfoCom("sendCnt", "sendCount:$sendCount")
             return
         }
-        val sendGiftRequest = SendGiftRequest()
-        val giftInfo = chatRoomGiftMsg.giftInfo
-        val sendUserInfo = chatRoomGiftMsg.targetUserInfo
-        sendGiftRequest.roomId = roomId
-        sendGiftRequest.toUid = sendUserInfo.userId
-        sendGiftRequest.giftId = giftInfo.id
-        sendGiftRequest.num = 1
-        sendGiftRequest.source = SendGiftRequest.SOURCE_LIVE_ROOM
-        sendGiftRequest.sendCntId = sendCntId
-        sendGiftRequest.callId = 0
-        logInfoCom("sendCnt", "sendGiftRequest:${GsonUtils.toJson(sendGiftRequest)}")
-        request2(
-            { agoraRxApi.sendCnt(sendGiftRequest) },
-            object : OnRequestResultListener<GiftSendCntInfo> {
-                override fun onSuccess(data: BaseBean<GiftSendCntInfo>) {
-                    chatRoomRoseGiftMsg?.sendCntId = data.data!!.sendCntId
-                    sendCntId = data.data!!.sendCntId
-                    logInfoCom(
-                        "sendCnt",
-                        "sendGiftRequest:发送成功 isCombo = ${isCombo},sendCount=${sendCount},sendCntId = ${chatRoomRoseGiftMsg?.sendCntId}"
-                    )
-                    if (!isCombo && sendCount > 0) {
-                        logInfoCom("sendCnt", "sendGiftRequest:首次送成功")
-                        for (i in 0 until sendCount) {
-                            logInfoCom("sendCnt", "遍历开始")
-                            sendCnt(chatRoomGiftMsg, true)
+        if (isUseSocket()) {
+            chatRoomGiftMsg.sendCntId = sendCntId
+            LiveWebSocketManager.getInstance().sendComboGift(chatRoomGiftMsg)
+        } else {
+            val sendGiftRequest = SendGiftRequest()
+            val giftInfo = chatRoomGiftMsg.giftInfo
+            val sendUserInfo = chatRoomGiftMsg.targetUserInfo
+            sendGiftRequest.roomId = roomId
+            sendGiftRequest.toUid = sendUserInfo.userId
+            sendGiftRequest.giftId = giftInfo.id
+            sendGiftRequest.num = 1
+            sendGiftRequest.source = SendGiftRequest.SOURCE_LIVE_ROOM
+            sendGiftRequest.sendCntId = sendCntId
+            sendGiftRequest.callId = 0
+            logInfoCom("sendCnt", "sendGiftRequest:${GsonUtils.toJson(sendGiftRequest)}")
+            request2(
+                { agoraRxApi.sendCnt(sendGiftRequest) },
+                object : OnRequestResultListener<GiftSendCntInfo> {
+                    override fun onSuccess(data: BaseBean<GiftSendCntInfo>) {
+                        chatRoomRoseGiftMsg?.sendCntId = data.data!!.sendCntId
+                        sendCntId = data.data!!.sendCntId
+                        logInfoCom(
+                            "sendCnt",
+                            "sendGiftRequest:发送成功 isCombo = ${isCombo},sendCount=${sendCount},sendCntId = ${chatRoomRoseGiftMsg?.sendCntId}"
+                        )
+                        if (!isCombo && sendCount > 0) {
+                            logInfoCom("sendCnt", "sendGiftRequest:首次送成功")
+                            for (i in 0 until sendCount) {
+                                logInfoCom("sendCnt", "遍历开始")
+                                sendCnt(chatRoomGiftMsg, true)
+                            }
+                            sendCount = 0
                         }
-                        sendCount = 0
                     }
-                }
-            })
+                })
+        }
+
     }
 
 
@@ -1437,7 +1540,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             if (message.body is EMTextMessageBody) {
                 val content = (message.body as EMTextMessageBody).message
                 val sendType = message.getIntAttribute(ChatConstant.CUSTOM_SEND_TYPE)
-                val userInfo = message.getStringAttribute(ChatConstant.CUSTOM_SEND_USER_INFO)
+                val userInfo = message.getStringAttribute(ChatConstant.CUSTOM_SEND_USER_INFO, "")
+
                 val sendUserInfo = GsonUtils.fromJson(userInfo, UserDetailInfo::class.java)
                 val altInfo = message.getStringAttribute(ChatConstant.ATE_USER_INFO, "")
                 var altUserInfo: BaseUserInfo? = null
@@ -1732,6 +1836,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 val roomPkInfo = GsonUtils.fromJson(
                     it.getStringAttribute(ChatConstant.CUSTOM_DATA), RoomPkInfo::class.java
                 )
+                logcom("LiveWebSocketManager", "收到透传：pkInfo=${GsonUtils.toJson(roomPkInfo)}")
                 bindPkInfo(roomPkInfo)
             } else if (source == ChatConstant.ACTION_SEND_GIFT) {
                 val content = it.getStringAttribute(ChatConstant.CUSTOM_DATA)
@@ -1766,7 +1871,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 }
                 sendPkNotice(content)
             }
-        } else {
+        } else{
             updatePkResult(roomPkInfo, true)
         }
 
@@ -2195,37 +2300,56 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
     }
 
+    private fun isUseSocket(): Boolean {
+        return LiveWebSocketManager.getInstance().isConnected() && isShowContinueClick
+    }
+
+    private val sendGiftQueue = ConcurrentHashMap<String, ChatRoomGiftMsg>()
     private fun sendRoseGift(chatRoomGiftMsg: ChatRoomGiftMsg) {
-        val sendGiftRequest = SendGiftRequest()
-        val giftInfo = chatRoomGiftMsg.giftInfo
-        val sendUserInfo = chatRoomGiftMsg.targetUserInfo
-        sendGiftRequest.roomId = roomId
-        sendGiftRequest.toUid = sendUserInfo.userId
-        sendGiftRequest.giftId = giftInfo.id
-        sendGiftRequest.num = chatRoomGiftMsg.giftInfo.sendNumber
-        sendGiftRequest.source = SendGiftRequest.SOURCE_LIVE_ROOM
-        sendGiftRequest.sendCntId = sendCntId
-        sendGiftRequest.callId = 0
-        logInfoCom("startSendComboGift", "sendGiftInfo=${GsonUtils.toJson(sendGiftRequest)}")
-        sendCntId = ""
-        request2(
-            { imChatRxApi.sendGift(sendGiftRequest) },
-            object : OnRequestResultListener<String> {
-                override fun onSuccess(data: BaseBean<String>) {
-                    if (TextUtils.isEmpty(chatRoomGiftMsg.giftInfo.svga)) {
-                        showGiftFloatAnim(chatRoomGiftMsg)
-                        sendMessage(
-                            GsonUtils.toJson(chatRoomGiftMsg),
-                            ChatRoomMsgInfo.ITEM_GIFT_TYPE
-                        )
-                        logComToFile("startSendComboGift", "赠送玫瑰成功，发送玫瑰礼物消息")
-                        getRoseGift()
-                    } else {
-                        sendComboSuccess(chatRoomGiftMsg)
+        if (isUseSocket()) {
+            sendGiftQueue.put(sendCntId, chatRoomGiftMsg)
+            LiveWebSocketManager.getInstance().sendComboGiftSettle(sendCntId)
+            sendCntId = ""
+        } else {
+            val sendGiftRequest = SendGiftRequest()
+            val giftInfo = chatRoomGiftMsg.giftInfo
+            val sendUserInfo = chatRoomGiftMsg.targetUserInfo
+            sendGiftRequest.roomId = roomId
+            sendGiftRequest.toUid = sendUserInfo.userId
+            sendGiftRequest.giftId = giftInfo.id
+            sendGiftRequest.num = chatRoomGiftMsg.giftInfo.sendNumber
+            sendGiftRequest.source = SendGiftRequest.SOURCE_LIVE_ROOM
+            sendGiftRequest.sendCntId = sendCntId
+            sendGiftRequest.callId = 0
+            logInfoCom("startSendComboGift", "sendGiftInfo=${GsonUtils.toJson(sendGiftRequest)}")
+            sendCntId = ""
+            request2(
+                { imChatRxApi.sendGift(sendGiftRequest) },
+                object : OnRequestResultListener<String> {
+                    override fun onSuccess(data: BaseBean<String>) {
+                        comboSettleSuccess(chatRoomGiftMsg)
                     }
-                    refreshSeatRoseInfo()
-                }
-            })
+                })
+        }
+    }
+
+
+    //连击结算成功
+    private fun comboSettleSuccess(chatRoomGiftMsg: ChatRoomGiftMsg, isSocket: Boolean = false) {
+        if (TextUtils.isEmpty(chatRoomGiftMsg.giftInfo.svga)) {
+            showGiftFloatAnim(chatRoomGiftMsg)
+            sendMessage(
+                GsonUtils.toJson(chatRoomGiftMsg),
+                ChatRoomMsgInfo.ITEM_GIFT_TYPE
+            )
+            logComToFile("startSendComboGift", "赠送玫瑰成功，发送玫瑰礼物消息")
+            getRoseGift()
+        } else {
+            sendComboSuccess(chatRoomGiftMsg)
+        }
+        if (!isSocket) {
+            refreshSeatRoseInfo()
+        }
     }
 
     /**
@@ -2918,7 +3042,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     fun setRvChatMessageTop(isShow: Boolean) {
         mBinding.rvSeat.post {
             val maxTop: Int = getMaxTopHeight()
-            val minTop: Int = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20)
+            val minTop: Int = ScreenUtils.getAppScreenHeight() / 3
             if (isShow) {
                 if (mBinding.viewMask.isInvisible) {
                     mBinding.viewMask.visibility = View.VISIBLE
@@ -2981,7 +3105,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         chatRoomRoseGiftMsg?.apply {
             startSendComboGift(this)
         }
-
         // 移除聊天室回调
         if (localUserId > 0) {
             AgoraManager.getInstance().enableLocalVideo(false)
@@ -3178,7 +3301,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
 
     protected var networkType = 1
-
     private fun updateUserLeaveView(uid: Int) {
         removeUserLeaveRecord(uid)
         if (uid.toString() == roomSourceBean.ownerInfo?.userId) {

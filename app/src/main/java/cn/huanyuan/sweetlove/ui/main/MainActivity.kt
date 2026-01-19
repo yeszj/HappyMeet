@@ -474,7 +474,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         mViewModel.tabInfoObservable.observe(this) { it ->
             parseState(it, {
                 tabList = it
-                if (mFragmentList.size <= 0) {
+                if (mFragmentList.isEmpty()) {
                     initFrg()
                 }
                 showContent()

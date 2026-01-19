@@ -8,6 +8,7 @@ import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.ActivityLiveRoomBinding
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.LiveRoomManager
+import cn.yanhu.agora.manager.LiveWebSocketManager
 import cn.yanhu.agora.manager.monitor.ComprehensiveFrameRateMonitor
 import cn.yanhu.agora.manager.monitor.MemoryMonitor
 import cn.yanhu.agora.manager.refreshRate.SmartRefreshRateManager
@@ -115,6 +116,7 @@ class LiveRoomActivity : BaseActivity<ActivityLiveRoomBinding, LiveRoomViewModel
 
     override fun exactDestroy() {
         super.exactDestroy()
+        LiveWebSocketManager.getInstance().destroy()
         AgoraManager.isLiveRoom = false
         checkMemoryScope?.cancel()
         if (LocalRecordingService.isRunning) {

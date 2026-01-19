@@ -28,6 +28,18 @@
             android:textSize="@dimen/sp_15" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_refreshIp"
+            android:layout_width="wrap_content"
+            android:text="重新获取IP"
+            android:textSize="@dimen/sp_13"
+            android:background="@drawable/white_corner_5"
+            android:backgroundTint="#F6F6F6"
+            android:paddingHorizontal="@dimen/dp_6"
+            android:layout_marginEnd="@dimen/dp_9"
+            android:paddingVertical="@dimen/dp_2"
+            android:textColor="#C7C7C7"
+            android:layout_height="wrap_content"/>
+        <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -17,6 +17,7 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.config.IntentKeyConfig
+import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouteIntent
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.parseState

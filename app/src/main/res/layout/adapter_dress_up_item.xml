@@ -46,6 +46,32 @@
             app:layout_constraintTop_toTopOf="@+id/iv_goodsBg"
             tools:ignore="MissingConstraints"
             tools:src="@drawable/avatar_woman_normal" />
+<!--        <com.lihang.ShadowLayout-->
+<!--            android:id="@+id/tv_chatStyle"-->
+<!--            android:layout_width="@dimen/dp_75"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/iv_goodsBg"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/iv_goodsBg"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/iv_goodsBg"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/iv_goodsBg"-->
+<!--            app:hl_cornerRadius="@dimen/dp_10"-->
+<!--            app:hl_startColor="#AC0072"-->
+<!--            app:hl_centerColor="#FA5363"-->
+<!--            app:hl_endColor="#FF9900"-->
+<!--            android:visibility="invisible"-->
+<!--            app:hl_angle="45"-->
+<!--            android:layout_height="@dimen/dp_34"/>-->
+<!--        <androidx.appcompat.widget.AppCompatTextView-->
+<!--            android:id="@+id/tv_popTxt"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/tv_chatStyle"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/tv_chatStyle"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tv_chatStyle"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tv_chatStyle"-->
+<!--            android:textSize="@dimen/sp_12"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:visibility="invisible"-->
+<!--            android:text="你好呀~"-->
+<!--            android:layout_height="wrap_content"/>-->
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_name"

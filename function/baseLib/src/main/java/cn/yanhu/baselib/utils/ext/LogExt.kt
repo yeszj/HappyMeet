@@ -65,7 +65,10 @@ fun logComToFile(tag: String, msg: String?) {
  * 流程日志打印
  * 过滤关键字 logprocess
  */
-fun logprocess(msg: String?) {
-    if (BuildConfig.DEBUG && msg != null) Log.i("LogProcess", msg)
+fun logI(tag: String,msg: String?) {
+    if (BuildConfig.DEBUG && msg != null) Log.i(tag, msg)
+}
 
+fun logD(tag: String,msg: String?) {
+    if (BuildConfig.DEBUG && msg != null) Log.d(tag, msg)
 }

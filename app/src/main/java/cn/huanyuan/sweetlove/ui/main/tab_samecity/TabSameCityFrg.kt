@@ -80,7 +80,7 @@ class TabSameCityFrg : BaseFragment<FrgTabSameCityBinding, MainViewModel>(
         val magicIndicator = mBinding.tabLayout
         commonNavigator = CommonNavigator(mContext)
         val list = mutableListOf(
-            if (!TextUtils.isEmpty(AppCacheManager.province)) AppCacheManager.province else "缘分"
+            "发现"
         )
         commonNavigator.adapter = CommonIndicatorAdapter(
             mBinding.viewPager,
@@ -98,7 +98,7 @@ class TabSameCityFrg : BaseFragment<FrgTabSameCityBinding, MainViewModel>(
     private var frgList: MutableList<Fragment> = mutableListOf()
     private fun initVpData() {
         val fragments = childFragmentManager.fragments
-        if (fragments.size>0){
+        if (fragments.isNotEmpty()){
             frgList = fragments
         }else{
             frgList.add(UserListFrg())
@@ -123,9 +123,9 @@ class TabSameCityFrg : BaseFragment<FrgTabSameCityBinding, MainViewModel>(
 
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
-        LiveEventBus.get<String>(LiveDataEventManager.REFRESH_SAMECITY_TAB).observe(this) {
-            refreshLocationTab(it)
-        }
+//        LiveEventBus.get<String>(LiveDataEventManager.REFRESH_SAMECITY_TAB).observe(this) {
+//            refreshLocationTab(it)
+//        }
     }
 
 
