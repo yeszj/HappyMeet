@@ -16,15 +16,14 @@
         android:layout_height="@dimen/dp_28"
         android:layout_marginEnd="@dimen/dp_4">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/dp_28"
             android:layout_height="@dimen/dp_28"
             android:scaleType="centerCrop"
-            imageUrl="@{rankInfo.portrait}"
+            circleImageUrl="@{rankInfo.portrait}"
             android:src="@drawable/ease_default_avatar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:riv_oval="true" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="0dp"

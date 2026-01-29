@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.func.task
 
+import android.R.attr.resource
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
@@ -177,53 +178,38 @@ class AppPopTask(val type: Int, val info: String) : BaseQueueTask() {
     private fun showEventPop(topActivity: Activity) {
         val fromJson =
             GsonUtils.fromJson(info, CommonEventPopInfo::class.java)
-
+        if (CommonUtils.isEmpty(fromJson.bgImaUrl)){
+            doNextTask()
+            return
+        }
         GlideUtils.loadAsDrawable(
             topActivity,
-            fromJson.bgImaUrl,
-            object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    if (CommonUtils.isPopShow(commonImagePop)) {
-                        return
-                    }
-                    commonImagePop =
-                        CommonImagePop.showDialog(topActivity, fromJson, resource, dismissCallBack)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-
-                override fun onLoadFailed(errorDrawable: Drawable?) {
-                    doNextTask()
-                }
-            })
+            fromJson.bgImaUrl){
+            if (CommonUtils.isPopShow(commonImagePop)) {
+                return@loadAsDrawable
+            }
+            if (it ==null){
+                doNextTask()
+                return@loadAsDrawable
+            }
+            commonImagePop =
+                CommonImagePop.showDialog(topActivity, fromJson, it, dismissCallBack)
+        }
     }
 
     private var redPacketPop: NewYearRedPacketPop? = null
     private fun showNewYearRedPacketPop(topActivity: Activity) {
-        GlideUtils.loadAsDrawable(topActivity, info, object : CustomTarget<Drawable>() {
-            override fun onResourceReady(
-                resource: Drawable,
-                transition: Transition<in Drawable>?
-            ) {
-                if (CommonUtils.isPopShow(redPacketPop)) {
-                    return
-                }
-                redPacketPop =
-                    NewYearRedPacketPop.showDialog(topActivity, resource, dismissCallBack)
+        GlideUtils.loadAsDrawable(topActivity, info){
+            if (CommonUtils.isPopShow(redPacketPop)) {
+                return@loadAsDrawable
             }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-            }
-
-            override fun onLoadFailed(errorDrawable: Drawable?) {
-                super.onLoadFailed(errorDrawable)
+            if (it ==null){
                 doNextTask()
+                return@loadAsDrawable
             }
-        })
+            redPacketPop =
+                NewYearRedPacketPop.showDialog(topActivity, it, dismissCallBack)
+        }
     }
 
     private var forceAuthTipDialog: CommonTipDialog? = null

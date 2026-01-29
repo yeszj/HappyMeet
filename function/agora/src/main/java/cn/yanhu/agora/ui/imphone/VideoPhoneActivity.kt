@@ -726,11 +726,7 @@ class VideoPhoneActivity : BaseActivity<ActivityVideoPhoneBinding, ImPhoneViewMo
     ) {
     }
 
-    override fun onLocalVideoStats(
-        source: Constants.VideoSourceType?,
-        stats: IRtcEngineEventHandler.LocalVideoStats?
-    ) {
-
+    override fun onLocalAudioStats(stats: IRtcEngineEventHandler.LocalAudioStats?) {
     }
 
 

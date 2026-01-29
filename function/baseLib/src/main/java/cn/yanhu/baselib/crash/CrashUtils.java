@@ -9,6 +9,8 @@ import android.os.Message;
 import android.util.Log;
 
 
+import com.blankj.utilcode.util.LogUtils;
+
 import java.lang.reflect.Field;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -53,6 +55,7 @@ public final class CrashUtils {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             if (isGlideRelatedException(e)) {
                 // 处理 Glide 相关异常，不崩溃应用
+                LogUtils.file("Glide", "Glide task rejected, safe to ignore"+e.getMessage());
                 Log.w("Glide", "Glide task rejected, safe to ignore", e);
                 // 可以选择重启应用或恢复状态
             }else {

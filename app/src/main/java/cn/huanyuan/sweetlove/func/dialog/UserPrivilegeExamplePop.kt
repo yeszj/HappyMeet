@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.func.dialog
 
+import android.R.attr.resource
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -33,32 +34,16 @@ class UserPrivilegeExamplePop(context: Context, private var levelPrivilegeInfo: 
         mBinding = PopUserPrivilegeExampleBinding.bind(popupImplView)
         mBinding?.apply {
             privilegeInfo = levelPrivilegeInfo
-            GlideUtils.loadAsDrawable(context,levelPrivilegeInfo.privilegeShowExampleIcon,object :
-                CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                   ivExample.setImageDrawable(resource)
-                }
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
+            GlideUtils.loadAsDrawable(context,levelPrivilegeInfo.privilegeShowExampleIcon) {
+                ivExample.setImageDrawable(it)
+            }
             if (TextUtils.isEmpty(levelPrivilegeInfo.privilegeLevelAllStyleIcon)){
                 ivStyle.visibility = View.GONE
             }else{
                 ivStyle.visibility = View.VISIBLE
-                GlideUtils.loadAsDrawable(context,levelPrivilegeInfo.privilegeLevelAllStyleIcon,object :
-                    CustomTarget<Drawable>() {
-                    override fun onResourceReady(
-                        resource: Drawable,
-                        transition: Transition<in Drawable>?
-                    ) {
-                        ivStyle.setImageDrawable(resource)
-                    }
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-                })
+                GlideUtils.loadAsDrawable(context,levelPrivilegeInfo.privilegeLevelAllStyleIcon){
+                    ivStyle.setImageDrawable(it)
+                }
             }
             tvSure.setOnSingleClickListener { dismiss() }
         }

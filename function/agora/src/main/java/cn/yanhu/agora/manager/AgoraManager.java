@@ -58,7 +58,7 @@ public class AgoraManager implements IMediaExtensionObserver {
     public static final int USER_REMOTE_VIDEO_PLAY_FAIL = 14;//远端用户视频播放失败
     public String currentRoomID = "";
 
-    public Map<Integer,Boolean> subScribeUserList = new ConcurrentHashMap<>();
+    public Map<Integer, Boolean> subScribeUserList = new ConcurrentHashMap<>();
 
     private AgoraManager() {
 
@@ -247,7 +247,7 @@ public class AgoraManager implements IMediaExtensionObserver {
             } else {
                 VideoCanvas videoCanvas = VideoCanvasPool.INSTANCE.obtainVideoCanvas(uid, surfaceView);
                 int result = mRtcEngine.setupRemoteVideo(videoCanvas);
-                subScribeUserList.put(uid,true);
+                subScribeUserList.put(uid, true);
                 if (result != 0) {
                     logComToFile("liveRoom", "setupRemoteVideo:" + "uid=" + uid + "result=" + result);
                 }
@@ -290,7 +290,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         if (mRtcEngine != null) {
             if (isLocal) {
                 int result = mRtcEngine.setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
-                if (result!=0){
+                if (result != 0) {
                     logComToFile("liveRoom", "切换为观众失败:setClientRole:" + "uid=" + uid + "result=" + result);
                 }
                 enableLocalVideo(false);
@@ -368,12 +368,18 @@ public class AgoraManager implements IMediaExtensionObserver {
         }
 
         @Override
+        public void onLocalAudioStats(LocalAudioStats stats) {
+            super.onLocalAudioStats(stats);
+            logcom("liveRoom", "onLocalAudioStats=" + GsonUtils.toJson(stats));
+            if (iRtcEngineEventHandlerListener != null) {
+                iRtcEngineEventHandlerListener.onLocalAudioStats(stats);
+            }
+        }
+
+        @Override
         public void onLocalVideoStats(Constants.VideoSourceType source, LocalVideoStats stats) {
             super.onLocalVideoStats(source, stats);
-            logcom("liveRoom", "onLocalVideoStats="+ GsonUtils.toJson(stats));
-            if (iRtcEngineEventHandlerListener != null) {
-                iRtcEngineEventHandlerListener.onLocalVideoStats(source, stats);
-            }
+            logcom("liveRoom", "onLocalVideoStats=" + GsonUtils.toJson(stats));
         }
 
         @Override

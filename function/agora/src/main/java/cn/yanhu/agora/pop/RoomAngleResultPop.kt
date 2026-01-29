@@ -119,38 +119,18 @@ class RoomAngleResultPop(
                         } else if ("tianshi" == srcTag) {
                             val portrait = angleUser.portrait
                             GlideUtils.loadAsBitmap(
-                                context, portrait, object : CustomTarget<Bitmap>() {
-                                    override fun onResourceReady(
-                                        resource: Bitmap, transition: Transition<in Bitmap>?
-                                    ) {
-                                        result(resource)
-                                    }
-
-                                    override fun onLoadCleared(placeholder: Drawable?) {
-                                    }
-
-                                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                                        result(null)
-                                    }
-                                })
+                                context, portrait
+                            ) {
+                                result(it)
+                            }
                         } else if ("shouhu" == srcTag) {
                             if (guardUser != null) {
                                 val portrait = guardUser.portrait
                                 GlideUtils.loadAsBitmap(
-                                    context, portrait, object : CustomTarget<Bitmap>() {
-                                        override fun onResourceReady(
-                                            resource: Bitmap, transition: Transition<in Bitmap>?
-                                        ) {
-                                            result(resource)
-                                        }
-
-                                        override fun onLoadCleared(placeholder: Drawable?) {
-                                        }
-
-                                        override fun onLoadFailed(errorDrawable: Drawable?) {
-                                            result(null)
-                                        }
-                                    })
+                                    context, portrait
+                                ) {
+                                    result(it)
+                                }
                             } else {
                                 result(null)
                             }

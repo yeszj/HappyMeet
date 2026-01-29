@@ -1,25 +1,17 @@
 package cn.yanhu.commonres.bind
 
+import android.R.attr.resource
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.text.Spanned
 import android.text.TextUtils
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
+import cn.yanhu.baselib.utils.CoilImgUtils
 import cn.yanhu.baselib.utils.GlideUtils
-import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.toHtml
 import cn.yanhu.baselib.view.CustomFontTextView
-import com.bumptech.glide.request.target.CustomTarget
-import com.facebook.drawee.view.SimpleDraweeView
-import androidx.core.net.toUri
-import cn.yanhu.baselib.utils.FrescoUtils
-import cn.yanhu.baselib.utils.ext.logcom
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
-import com.facebook.drawee.generic.RoundingParams
+import coil.load
 
 /**
  *
@@ -68,8 +60,40 @@ private fun haveContentsChanged(str1: CharSequence?, str2: CharSequence?): Boole
 
 
 @BindingAdapter(
-    value = ["imageUrl", "placeholderId"],
+    value = ["circleImageUrl", "circlePlaceholderId"],
     requireAll = false
+)
+fun loadCircleImage(
+    view: ImageView,
+    url: Any?,
+    placeholderId: Int = cn.yanhu.baselib.R.drawable.icon_portrait,
+) {
+    CoilImgUtils.loadCircleImg(url,view, placeholderId, 0f, Color.WHITE)
+}
+
+@BindingAdapter(
+    value = ["coilImgUrl", "coilPlaceholderId"], requireAll = false
+)
+fun loadCoilImage(
+    view: ImageView,
+    url: Any?,
+    coilPlaceholderId: Int = cn.yanhu.commonres.R.drawable.pic_default_bg,
+) {
+    if (url is String && url.isEmpty()) {
+        return
+    }
+    val placeholderIds = if (coilPlaceholderId == 0) {
+        cn.yanhu.baselib.R.drawable.icon_portrait
+    } else {
+        coilPlaceholderId
+    }
+    view.load(url) {
+        placeholder(placeholderIds)
+    }
+}
+
+@BindingAdapter(
+    value = ["imageUrl", "placeholderId"], requireAll = false
 )
 fun loadImage(
     view: ImageView,
@@ -84,30 +108,16 @@ fun loadImage(
     } else {
         placeholderId
     }
-    if (view is SimpleDraweeView){
-        logcom("fresco图片加载")
-        FrescoUtils.load(view.context, url, view,placeholderIds)
-    }else{
-        GlideUtils.load(
-            view.context,
-            url,
-            view,
-            placeholderId = placeholderIds,
-            errorId = placeholderIds
-        )
-    }
-
+    GlideUtils.load(
+        view.context, url, view, placeholderId = placeholderIds, errorId = placeholderIds
+    )
 }
 
 @BindingAdapter(
-    value = ["maskUrl", "maskRadius", "maskSampling"],
-    requireAll = false
+    value = ["maskUrl", "maskRadius", "maskSampling"], requireAll = false
 )
 fun loadMaskImage(
-    view: AppCompatImageView,
-    maskUrl: Any?,
-    maskRadius: Int = 25,
-    maskSampling: Int = 3
+    view: AppCompatImageView, maskUrl: Any?, maskRadius: Int = 25, maskSampling: Int = 3
 ) {
     if (maskUrl is String && maskUrl.isEmpty()) {
         return
@@ -140,20 +150,11 @@ fun loadImage2(
 //    }
 
     view.setTag(cn.yanhu.commonres.R.id.tag_url, url)
-    GlideUtils.loadAsDrawable(view.context, url, object : CustomTarget<Drawable>() {
-        override fun onResourceReady(
-            resource: Drawable,
-            transition: com.bumptech.glide.request.transition.Transition<in Drawable>?
-        ) {
-            if (url == view.getTag(cn.yanhu.commonres.R.id.tag_url)) {
-                view.setTag(cn.yanhu.commonres.R.id.tag_drawable, resource)
-                view.setImageDrawable(resource)
-            }
+    GlideUtils.loadAsDrawable(view.context, url) {
+        if (url == view.getTag(cn.yanhu.commonres.R.id.tag_url)) {
+            view.setTag(cn.yanhu.commonres.R.id.tag_drawable, resource)
+            view.setImageDrawable(it)
         }
-
-        override fun onLoadCleared(placeholder: Drawable?) {
-        }
-
-    })
+    }
 }
 

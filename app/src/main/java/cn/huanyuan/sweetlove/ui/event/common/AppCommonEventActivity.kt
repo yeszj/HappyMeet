@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.event.common
 
+import android.R.attr.resource
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
@@ -24,6 +25,7 @@ import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.status.BaseBean
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import androidx.core.graphics.toColorInt
 
 
 /**
@@ -85,7 +87,7 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
             })
     }
 
-    private fun bindRank(commonRankRes:CommonEventRankResponse){
+    private fun bindRank(commonRankRes: CommonEventRankResponse) {
         val rankList = commonRankRes.list
         rankAdapter.setEventRankInfo(commonRankRes)
 
@@ -130,18 +132,9 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
     private fun loadRankDrawable(rankIcon: String) {
         mBinding.vgRank.visibility = View.VISIBLE
         mBinding.tvNum.visibility = View.GONE
-        GlideUtils.loadAsDrawable(mContext, rankIcon, object :
-            CustomTarget<Drawable>() {
-            override fun onResourceReady(
-                resource: Drawable,
-                transition: Transition<in Drawable>?
-            ) {
-                mBinding.ivRank.setImageDrawable(resource)
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-            }
-        })
+        GlideUtils.loadAsDrawable(mContext, rankIcon) {
+            mBinding.ivRank.setImageDrawable(it)
+        }
     }
 
     private fun bindRankInfo() {
@@ -149,20 +142,12 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
             val myRankBgColor = this.myInfo
             mBinding.bgMyInfo.setGradientColor(
                 270,
-                Color.parseColor(myRankBgColor.bgStart),
-                Color.parseColor(myRankBgColor.bgEnd)
+                myRankBgColor.bgStart.toColorInt(),
+                myRankBgColor.bgEnd.toColorInt()
             )
-            GlideUtils.loadAsDrawable(mContext, this.bgImg, object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    mBinding.ivRankBg.setImageDrawable(resource)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
+            GlideUtils.loadAsDrawable(mContext, this.bgImg) {
+                mBinding.ivRankBg.setImageDrawable(it)
+            }
             preloadTab1(false)
             preloadTab2(true)
 
@@ -183,7 +168,7 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
                     preloadTab1()
                 }
                 isLeftTab = true
-                if (charmRankRes!=null){
+                if (charmRankRes != null) {
                     bindRank(charmRankRes!!)
                 }
                 getEventRank(TYPE_CHARM)
@@ -191,14 +176,14 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
 
         }
         mBinding.rightTab.setOnSingleClickListener {
-            if (isLeftTab ) {
+            if (isLeftTab) {
                 if (tab2Drawable != null) {
                     mBinding.ivTab.setImageDrawable(tab2Drawable)
                 } else {
                     preloadTab2()
                 }
                 isLeftTab = false
-                if (contributeRankRes!=null){
+                if (contributeRankRes != null) {
                     bindRank(contributeRankRes!!)
                 }
                 getEventRank(TYPE_CONTRIBUTE)
@@ -213,20 +198,13 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
         }
         GlideUtils.loadAsDrawable(
             mContext,
-            charmRankRes!!.leftButton,
-            object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable, transition: Transition<in Drawable>?
-                ) {
-                    tab1Drawable = resource
-                    if (!isPreload) {
-                        mBinding.ivTab.setImageDrawable(tab1Drawable)
-                    }
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
+            charmRankRes!!.leftButton
+        ) {
+            tab1Drawable = it
+            if (!isPreload) {
+                mBinding.ivTab.setImageDrawable(tab1Drawable)
+            }
+        }
     }
 
     private fun preloadTab2(isPreload: Boolean = true) {
@@ -235,20 +213,13 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
         }
         GlideUtils.loadAsDrawable(
             mContext,
-            charmRankRes!!.rightButton,
-            object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable, transition: Transition<in Drawable>?
-                ) {
-                    tab2Drawable = resource
-                    if (!isPreload) {
-                        mBinding.ivTab.setImageDrawable(tab2Drawable)
-                    }
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
+            charmRankRes!!.rightButton
+        ) {
+            tab2Drawable = it
+            if (!isPreload) {
+                mBinding.ivTab.setImageDrawable(tab2Drawable)
+            }
+        }
     }
 
     private var commonEventImgConfig: CommonEventImgConfig? = null
@@ -261,14 +232,14 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
                 mBinding.eventImageConfig = it
                 mBinding.vgShadow.setGradientColor(
                     270,
-                    Color.parseColor(it.bgColor.start),
-                    Color.parseColor(it.bgColor.end)
+                    it.bgColor.start.toColorInt(),
+                    it.bgColor.end.toColorInt()
                 )
                 mBinding.tvReward.setShadowColor(
-                    Color.parseColor(it.rewardPool.activeNumColor.start),
-                    Color.parseColor(it.rewardPool.activeNumColor.end)
+                    it.rewardPool.activeNumColor.start.toColorInt(),
+                    it.rewardPool.activeNumColor.end.toColorInt()
                 )
-                mBinding.tvTips.setTextColor(Color.parseColor(it.copyrightColor))
+                mBinding.tvTips.setTextColor(it.copyrightColor.toColorInt())
                 mBinding.vgImg.removeAllViews()
                 it.eventImgs.forEach {
                     addImageView(it)
@@ -316,14 +287,9 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
         layoutParams.topMargin = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_12)
         imageView.layoutParams = layoutParams
         imageView.adjustViewBounds = true
-        GlideUtils.loadAsDrawable(mContext, url, object : CustomTarget<Drawable>() {
-            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                imageView.setImageDrawable(resource)
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-            }
-        })
+        GlideUtils.loadAsDrawable(mContext, url){
+            imageView.setImageDrawable(it)
+        }
         mBinding.vgImg.addView(imageView)
     }
 

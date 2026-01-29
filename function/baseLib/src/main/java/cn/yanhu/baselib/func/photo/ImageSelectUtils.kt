@@ -40,7 +40,7 @@ object ImageSelectUtils {
     ) {
         val cropEngine = PictureSelector.create(mContext)
             .openGallery(SelectMimeType.ofImage())
-            .setImageEngine(GlideEngine.createGlideEngine())
+            .setImageEngine(CoilEngine.createCoilEngine())
             .setSandboxFileEngine(MeSandboxFileEngine())
             .isDisplayCamera(false)
             .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
@@ -66,7 +66,7 @@ object ImageSelectUtils {
     ) {
         val cropEngine = PictureSelector.create(mContext)
             .openGallery(SelectMimeType.ofAll())
-            .setImageEngine(GlideEngine.createGlideEngine())
+            .setImageEngine(CoilEngine.createCoilEngine())
             .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             .setSandboxFileEngine(MeSandboxFileEngine())
             .setMaxSelectNum(1)
@@ -90,7 +90,7 @@ object ImageSelectUtils {
     ) {
         val cropEngine = PictureSelector.create(mContext)
             .openGallery(SelectMimeType.ofVideo())
-            .setImageEngine(GlideEngine.createGlideEngine())
+            .setImageEngine(CoilEngine.createCoilEngine())
             .setSandboxFileEngine(MeSandboxFileEngine())
             .setMaxSelectNum(maxSelectNum)
             .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
@@ -120,7 +120,7 @@ object ImageSelectUtils {
     ) {
         val cropEngine = PictureSelector.create(mContext)
             .openGallery(selectType)
-            .setImageEngine(GlideEngine.createGlideEngine())
+            .setImageEngine(CoilEngine.createCoilEngine())
             .setSandboxFileEngine(MeSandboxFileEngine())
             .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             .setMaxSelectNum(maxSelectNum)

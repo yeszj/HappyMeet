@@ -1,9 +1,6 @@
 package cn.yanhu.imchat.view.emojiicon;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.hyphenate.easeui.R;
+
 import cn.yanhu.baselib.utils.CommonUtils;
 import cn.yanhu.baselib.utils.GlideUtils;
 
@@ -64,11 +57,7 @@ public class CustomEaseEmojiconScrollTabBar extends RelativeLayout {
     public void addTab(String icon) {
         View tabView = View.inflate(context,R.layout.ease_scroll_tab_item, null);
         ImageView imageView = tabView.findViewById(R.id.iv_icon);
-        if (icon.endsWith(".svg")){
-            loadTabSvg(icon, imageView);
-        }else {
-            loadTabImage(icon, imageView);
-        }
+        loadTabImage(icon, imageView);
         tabView.setLayoutParams(new ViewGroup.LayoutParams(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_62),CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_44)));
         tabContainer.addView(tabView);
         tabList.add(tabView);
@@ -80,38 +69,11 @@ public class CustomEaseEmojiconScrollTabBar extends RelativeLayout {
         });
     }
 
-    private void loadTabSvg(String icon, ImageView imageView) {
-        if (context instanceof Activity && ((Activity) context).isDestroyed()){
-            return;
-        }
-        Glide.with(context).as(
-                        PictureDrawable.class
-                )
-                .load(icon).into(new CustomTarget<PictureDrawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull PictureDrawable resource, @Nullable Transition<? super PictureDrawable> transition) {
-                        imageView.setImageDrawable(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
-    }
 
     private void loadTabImage(String icon, ImageView imageView) {
-        GlideUtils.INSTANCE.loadAsDrawable(context, icon, new CustomTarget<Drawable>() {
-
-            @Override
-            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition transition) {
-                imageView.setImageDrawable(resource);
-            }
-
-            @Override
-            public void onLoadCleared(@Nullable Drawable placeholder) {
-
-            }
+        GlideUtils.INSTANCE.loadAsDrawable(context, icon, drawable -> {
+            imageView.setImageDrawable(drawable);
+            return null;
         });
     }
 

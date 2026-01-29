@@ -72,7 +72,7 @@ dependencies {
 
     //https://gitcode.com/lihangleo2/ViewPager2Demo/overview
     api("com.github.lihangleo2:SmartViewPager2Adapter:3.1.3")
-    api ("com.caverock:androidsvg:1.4")
+//    api ("com.caverock:androidsvg:1.4")
     api ("org.litepal.guolindev:core:3.2.3")
 
 

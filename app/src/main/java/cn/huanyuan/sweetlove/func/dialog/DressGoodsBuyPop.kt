@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.func.dialog
 
+import android.R.attr.resource
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
@@ -126,19 +127,9 @@ class DressGoodsBuyPop(
     }
 
     private fun loadDrawable() {
-        GlideUtils.loadAsDrawable(context, item.cover, object :
-            CustomTarget<Drawable>() {
-            override fun onResourceReady(
-                resource: Drawable,
-                transition: Transition<in Drawable>?
-            ) {
-                mBinding!!.ivGoods.setImageDrawable(resource)
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-            }
-
-        })
+        GlideUtils.loadAsDrawable(context, item.cover) {
+            mBinding!!.ivGoods.setImageDrawable(it)
+        }
     }
 
     private var friendsSelectPop:FriendsSelectPop?=null

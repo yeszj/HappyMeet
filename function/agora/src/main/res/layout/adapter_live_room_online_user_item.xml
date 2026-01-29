@@ -30,16 +30,15 @@
         android:paddingStart="@dimen/dp_12"
         android:paddingEnd="@dimen/dp_12">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/avatarView"
-            imageUrl="@{userinfo.portrait}"
+            circleImageUrl="@{userinfo.portrait}"
             android:layout_width="@dimen/dp_44"
             android:layout_height="@dimen/dp_44"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:riv_oval="true"
             tools:src="@drawable/ease_default_avatar" />
 
         <cn.yanhu.baselib.view.CustomFontTextView

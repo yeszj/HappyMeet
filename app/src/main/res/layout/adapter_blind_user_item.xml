@@ -22,19 +22,14 @@
         android:layout_marginEnd="@dimen/dp_8"
         android:paddingBottom="@dimen/dp_12">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_cover"
-            imageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.coverUrl)}"
             android:layout_width="match_parent"
-            app:placeholderImage="@drawable/pic_default_bg"
-            app:actualImageScaleType ="centerCrop"
-            app:placeholderImageScaleType="centerCrop"
             android:layout_height="@dimen/dp_166"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:roundedCornerRadius="@dimen/dp_10"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/statuBg"
@@ -123,19 +118,16 @@
             app:layout_constraintStart_toStartOf="@+id/iv_cover"
             tools:text="32岁 四川省" />
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_avatar"
-            imageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.ownerInfo.portrait)}"
+            circleImageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.ownerInfo.portrait)}"
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
             android:layout_marginStart="@dimen/dp_4"
             android:layout_marginTop="@dimen/dp_6"
             android:src="@drawable/icon_portrait"
-            app:placeholderImageScaleType="centerCrop"
-            app:placeholderImage="@drawable/icon_portrait"
             app:layout_constraintStart_toStartOf="@+id/iv_cover"
-            app:layout_constraintTop_toBottomOf="@+id/iv_cover"
-            app:roundAsCircle="true" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_cover" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="0dp"

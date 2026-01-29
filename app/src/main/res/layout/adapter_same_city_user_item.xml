@@ -18,20 +18,17 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_85">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/avatarView"
-            imageUrl="@{userinfo.portrait}"
+            circleImageUrl="@{userinfo.portrait}"
             android:layout_width="@dimen/dp_66"
             android:layout_height="@dimen/dp_66"
+            android:scaleType="centerCrop"
             android:layout_marginStart="@dimen/dp_12"
-            app:placeholderImage="@drawable/ease_default_avatar"
             android:src="@drawable/ease_default_avatar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:placeholderImageScaleType="focusCrop"
-            app:actualImageScaleType = "focusCrop"
-            app:roundAsCircle="true" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <cn.yanhu.baselib.widget.FontWeightValueTextView
             android:id="@+id/tv_nickName"

@@ -1,18 +1,16 @@
 package cn.yanhu.imchat.adapter
 
 import android.content.Context
-import android.graphics.drawable.PictureDrawable
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import cn.yanhu.baselib.utils.CoilImgUtils
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.commonres.utils.GifLoadUtils
-import cn.yanhu.commonres.view.svg.SvgSoftwareLayerSetter
 import cn.yanhu.imchat.databinding.AdapterEmojiTxtItemBinding
 import cn.yanhu.imchat.databinding.AdapterMessageExpressionBinding
-import com.bumptech.glide.Glide
 import com.chad.library.adapter4.BaseMultiItemAdapter
 import com.hyphenate.easeui.domain.EaseEmojicon
 
@@ -63,11 +61,8 @@ class MessageExpressionAdapter : BaseMultiItemAdapter<EaseEmojicon>() {
                             if (iconPath.endsWith(".gif")) {
                                 GifLoadUtils.loadGif(iconPath, animExpression)
                             } else {
-                                Glide.with(context).`as`(
-                                    PictureDrawable::class.java
-                                ).listener(SvgSoftwareLayerSetter())
-                                    .load(item.iconPath)
-                                    .into(animExpression)
+
+                                CoilImgUtils.loadImg(iconPath, animExpression)
                             }
                         }
 

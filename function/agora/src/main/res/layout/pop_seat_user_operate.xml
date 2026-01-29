@@ -16,7 +16,8 @@
             type="java.lang.Boolean" />
 
         <import type="android.text.TextUtils" />
-        <import type="cn.yanhu.commonres.manager.AppCacheManager"/>
+
+        <import type="cn.yanhu.commonres.manager.AppCacheManager" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +37,6 @@
             android:id="@+id/tv_nickName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/dp_15"
             android:text="@{userInfo.nickName}"
             android:textColor="@color/color_222222"
             android:textSize="@dimen/sp_16"
@@ -68,11 +68,11 @@
                 android:id="@+id/vg_guard"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_48"
-                android:paddingEnd="@dimen/dp_10"
-                android:minWidth="@dimen/dp_120"
                 android:background="@drawable/bg_gradient_guard_btn"
                 android:gravity="center_vertical"
+                android:minWidth="@dimen/dp_120"
                 android:orientation="horizontal"
+                android:paddingEnd="@dimen/dp_10"
                 android:visibility="@{userInfo.guardInfo==null ||  userInfo.showGuardInfo?View.VISIBLE:View.GONE}">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -95,13 +95,13 @@
             <LinearLayout
                 android:id="@+id/vg_lovers"
                 android:layout_width="wrap_content"
-                android:minWidth="@dimen/dp_120"
                 android:layout_height="@dimen/dp_48"
                 android:layout_marginStart="@dimen/dp_10"
-                android:paddingEnd="@dimen/dp_10"
                 android:background="@{userInfo.loverInfo.loversType==4?@drawable/bg_lovers4_tag:userInfo.loverInfo.loversType==3?@drawable/bg_lovers3_tag:userInfo.loverInfo.loversType==2?@drawable/bg_lovers2_tag:@drawable/bg_lovers1_tag}"
                 android:gravity="center_vertical"
+                android:minWidth="@dimen/dp_120"
                 android:orientation="horizontal"
+                android:paddingEnd="@dimen/dp_10"
                 android:visibility="@{userInfo.showLoverInfo?View.VISIBLE:View.GONE}"
                 tools:background="@drawable/bg_lovers1_tag">
 
@@ -203,18 +203,20 @@
         </LinearLayout>
 
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <cn.yanhu.commonres.view.UserAvatarView
             android:id="@+id/iv_avatar"
-            imageUrl="@{userInfo.portrait}"
-            android:layout_width="@dimen/dp_80"
-            android:layout_height="@dimen/dp_80"
+            avatarFrameUrl="@{userInfo.avatarFramePic}"
+            avatarUrl="@{userInfo.portrait}"
+            avatarUserId="@{userInfo.userId}"
+            app:avatarSize="@dimen/dp_80"
+            app:svgAvatarSize="@dimen/dp_120"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/ease_default_avatar"
+            app:isShowSvgAvatar="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:riv_border_color="@color/white"
-            app:riv_border_width="@dimen/dp_1"
-            app:riv_oval="true" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- android:visibility="@{isSelf?View.INVISIBLE:View.VISIBLE}"-->
         <cn.yanhu.baselib.view.CustomFontTextView
@@ -231,6 +233,7 @@
             app:drawableTint="@color/color_888888"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/viewBg" />
+
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_userDetail"
             android:layout_width="wrap_content"

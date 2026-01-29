@@ -1,6 +1,7 @@
 package cn.yanhu.imchat.ui.chat
 
 import android.Manifest
+import android.R.attr.resource
 import android.annotation.SuppressLint
 import android.content.ClipboardManager
 import android.content.Context
@@ -313,17 +314,9 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         //设置头像形状：0 为默认，1 为圆形，2 为方形
         messageListLayout.setAvatarShapeType(1)
         GlideUtils.loadAsDrawable(
-            mContext, getSelfUserInfo().portrait, object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable, transition: Transition<in Drawable>?
-                ) {
-                    chatLayout.chatMessageListLayout.setAvatarDefaultSrc(resource)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-
-            })
+            mContext, getSelfUserInfo().portrait){
+            chatLayout.chatMessageListLayout.setAvatarDefaultSrc(it)
+        }
     }
 
     /*

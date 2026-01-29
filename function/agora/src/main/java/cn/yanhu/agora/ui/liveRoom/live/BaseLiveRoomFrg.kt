@@ -3458,12 +3458,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 //            }
 //        }
     }
-
     var checkTime = 0L
-    override fun onLocalVideoStats(
-        source: Constants.VideoSourceType?,
-        stats: IRtcEngineEventHandler.LocalVideoStats?
-    ) {
+    override fun onLocalAudioStats(stats: IRtcEngineEventHandler.LocalAudioStats?) {
         if (isOwner) {
             return
         }
@@ -3474,20 +3470,20 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (System.currentTimeMillis() - checkTime > 60000) {
             //1分钟检测一次
             checkTime = System.currentTimeMillis()
-            val uid = stats?.uid ?: return
-            logComToFile(TAG, "检测鬼麦现象uid=$uid")
-            if (!isInSeatByUserId(uid)) {
+            logComToFile(TAG, "检测鬼麦现象uid=$localUserId")
+            if (!isInSeatByUserId(localUserId)) {
                 //不在座位上 还有声音 出现了鬼麦现象 下麦
                 checkTime = 0L
-                logComToFile(TAG, "出现鬼麦现象，触发下麦uid=$uid")
+                logComToFile(TAG, "出现鬼麦现象，触发下麦uid=$localUserId")
                 userDownSeat()
 //            EmMsgManager.sendCmdMessagePeople(
 //                uid.toString(), "", ChatConstant.ACTION_MSG_SIT_DOWN
 //            )
             }
         }
-
     }
+
+
 
     private fun getSeatUserInfoUserId(uid: Int): SeatUserInfo? {
         for (j in seatList.indices) {

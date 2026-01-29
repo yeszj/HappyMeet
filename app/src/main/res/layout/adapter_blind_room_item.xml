@@ -23,18 +23,13 @@
         android:layout_marginEnd="@dimen/dp_8"
         android:paddingBottom="@dimen/dp_12">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_cover"
-            imageUrl="@{roomBean.coverUrl}"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_166"
-            app:actualImageScaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:placeholderImage="@drawable/pic_default_bg"
-            app:placeholderImageScaleType="centerCrop"
-            app:roundedCornerRadius="@dimen/dp_10" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/viewBg"
@@ -47,17 +42,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_avatar"
-            imageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.ownerInfo.portrait)}"
+            circleImageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.ownerInfo.portrait)}"
             android:layout_width="@dimen/dp_58"
             android:layout_height="@dimen/dp_58"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/viewBg"
             app:layout_constraintEnd_toEndOf="@+id/viewBg"
             app:layout_constraintStart_toStartOf="@+id/viewBg"
-            app:layout_constraintTop_toTopOf="@+id/viewBg"
-            app:riv_oval="true"/>
+            app:layout_constraintTop_toTopOf="@+id/viewBg" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_avatar"
@@ -72,19 +66,16 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:listitem="@layout/adapter_blind_room_avatar_item" />
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_avatar2"
-            imageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.ownerInfo.portrait)}"
+            circleImageUrl="@{ImageThumbUtils.getThumbUrl(roomBean.ownerInfo.portrait)}"
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
             android:layout_marginStart="@dimen/dp_4"
             android:layout_marginTop="@dimen/dp_6"
             android:src="@drawable/icon_portrait"
             app:layout_constraintStart_toStartOf="@+id/iv_cover"
-            app:layout_constraintTop_toBottomOf="@+id/iv_cover"
-            app:placeholderImage="@drawable/pic_default_bg"
-            app:placeholderImageScaleType="centerCrop"
-            app:roundAsCircle="true" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_cover" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:layout_width="0dp"

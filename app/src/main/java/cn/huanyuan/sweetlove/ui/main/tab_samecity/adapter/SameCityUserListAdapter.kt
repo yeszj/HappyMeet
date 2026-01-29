@@ -34,17 +34,6 @@ class SameCityUserListAdapter : BaseQuickAdapter<SameCityUserInfo, SameCityUserL
         }
     }
 
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        super.onViewRecycled(holder)
-        // 回收时释放资源
-        if (holder is VH){
-            holder.binding.apply {
-                avatarView.controller = null
-            }
-        }
-
-    }
-
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
         return VH(parent)
     }

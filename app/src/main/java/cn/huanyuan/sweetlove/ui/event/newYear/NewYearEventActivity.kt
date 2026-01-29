@@ -1,6 +1,7 @@
 package cn.huanyuan.sweetlove.ui.event.newYear
 
 import android.Manifest
+import android.R.attr.resource
 import android.animation.AnimatorSet
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
@@ -51,7 +52,7 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
     private var dayRankList: MutableList<NewYearRankInfo> = mutableListOf()
     private var totalRankList: MutableList<NewYearRankInfo> = mutableListOf()
     private var isLeftTab = true
-    private var showScaleAnim:AnimatorSet?=null
+    private var showScaleAnim: AnimatorSet? = null
     override fun initData() {
         setFullScreenStatusBar()
         requestData()
@@ -61,11 +62,11 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
         rankAdapter.stateView = emptyView
         mBinding.rvRank.adapter = rankAdapter
         getNewYearRank(0)
-        getNewYearRank(1,true)
+        getNewYearRank(1, true)
         showScaleAnim = AnimManager.showScaleAnim(mBinding.btnShare, 1.1f)
     }
 
-    private fun getNewYearRank(type: Int,isPreload: Boolean = false) {
+    private fun getNewYearRank(type: Int, isPreload: Boolean = false) {
         mViewModel.getNewYearRank(type, object : OnRequestResultListener<NewYearRankResponse> {
             override fun onSuccess(data: BaseBean<NewYearRankResponse>) {
                 val newYearRankResponse = data.data
@@ -76,7 +77,7 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
                     } else {
                         totalRankList = rankList
                     }
-                    if (isPreload){
+                    if (isPreload) {
                         return
                     }
                     val index = rankList.indexOfLast {
@@ -98,7 +99,7 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
             ColorStateList.valueOf(Color.parseColor("#Fbebf0"))
         mBinding.selfRank.vgRank.visibility = View.GONE
         if (index >= 0) {
-            mBinding.selfRank.tvNum.text = (index+1).toString()
+            mBinding.selfRank.tvNum.text = (index + 1).toString()
         } else {
             mBinding.selfRank.tvNum.text = "-"
         }
@@ -131,20 +132,13 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
         }
         GlideUtils.loadAsDrawable(
             mContext,
-            imgConfig!!.rangTab1,
-            object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable, transition: Transition<in Drawable>?
-                ) {
-                    tab1Drawable = resource
-                    if (!isPreload) {
-                        mBinding.ivTab.setImageDrawable(tab1Drawable)
-                    }
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
+            imgConfig!!.rangTab1
+        ) {
+            tab1Drawable = it
+            if (!isPreload) {
+                mBinding.ivTab.setImageDrawable(tab1Drawable)
+            }
+        }
     }
 
     private fun preloadTab2(isPreload: Boolean = true) {
@@ -153,20 +147,13 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
         }
         GlideUtils.loadAsDrawable(
             mContext,
-            imgConfig!!.rangTab2,
-            object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable, transition: Transition<in Drawable>?
-                ) {
-                    tab2Drawable = resource
-                    if (!isPreload) {
-                        mBinding.ivTab.setImageDrawable(tab2Drawable)
-                    }
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
+            imgConfig!!.rangTab2
+        ) {
+            tab2Drawable = it
+            if (!isPreload) {
+                mBinding.ivTab.setImageDrawable(tab2Drawable)
+            }
+        }
     }
 
     override fun initListener() {
@@ -225,7 +212,8 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
         val permissions = arrayListOf<String>()
         permissions.add(Manifest.permission.READ_CALENDAR)
         permissions.add(Manifest.permission.WRITE_CALENDAR)
-        PermissionXUtils.checkPermission(mContext,
+        PermissionXUtils.checkPermission(
+            mContext,
             permissions,
             "为了设置抢红包提醒，我们需要申请您的日历权限",
             "您拒绝授权相关权限，无法设置提醒功能",
@@ -233,7 +221,8 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
                 override fun onSuccess() {
                     val startTime = CalendarUtils.remindTimeCalculator(2025, 1, 28, 20, 30)
                     val endTime = CalendarUtils.remindTimeCalculator(2025, 1, 28, 20, 40)
-                    CalendarUtils.addCalendarEventRemind(mContext,
+                    CalendarUtils.addCalendarEventRemind(
+                        mContext,
                         "【暖遇】抢红包提醒",
                         "点击抢红包https://n.huanyuan.cn/YGXJH",
                         startTime,
@@ -271,7 +260,7 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
                 newYearInfo = it
                 mBinding.tvTotalReward.text = it.sumRoseNum
                 mBinding.tvDivideNum.text = it.devideDesc
-                if (it.status !=-2) {
+                if (it.status != -2) {
                     startCountTime(it.remainSeconds)
                 } else {
                     showFinishView()
@@ -381,14 +370,14 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
         }
         mBinding.tvTimeDesc.text = value
 
-        if(daysDesc=="00"){
+        if (daysDesc == "00") {
             mBinding.tvDayUnit.text = "时"
             mBinding.tvHourUnit.text = "分"
             mBinding.tvMinuteUnit.text = "秒"
             mBinding.tvDay.text = hoursDesc
             mBinding.tvHour.text = minutesDesc
             mBinding.tvMinute.text = secsDesc
-        }else{
+        } else {
             mBinding.tvDayUnit.text = "天"
             mBinding.tvHourUnit.text = "时"
             mBinding.tvMinuteUnit.text = "分"

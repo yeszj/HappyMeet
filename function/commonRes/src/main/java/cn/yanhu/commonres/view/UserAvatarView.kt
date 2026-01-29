@@ -1,31 +1,24 @@
 package cn.yanhu.commonres.view
 
-import android.R.attr.radius
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.core.net.toUri
+import androidx.appcompat.widget.AppCompatImageView
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
+import cn.yanhu.baselib.view.CircleBorderTransformation
 import cn.yanhu.commonres.R
 import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.utils.SVGAUtils
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
-import com.facebook.drawee.generic.RoundingParams
-import com.facebook.drawee.view.SimpleDraweeView
-import com.makeramen.roundedimageview.RoundedImageView
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.opensource.svgaplayer.SVGAImageView
 import com.opensource.svgaplayer.SVGAParser
 
@@ -36,10 +29,13 @@ import com.opensource.svgaplayer.SVGAParser
  */
 class UserAvatarView : LinearLayout {
     private var avatarMarginLeft: Float = 0F
-    private lateinit var ivAvatar: SimpleDraweeView
+    private lateinit var ivAvatar: AppCompatImageView
     private lateinit var svgAvatar: SVGAImageView
     private var isShowSvga: Boolean = false
-    private var isCanClick:Boolean = true
+    private var isCanClick: Boolean = true
+    private var avatarBorderColor: Int = -1
+    var avatarBorderSize: Float = 0f
+
     constructor(context: Context) : super(context) {
         initView(context, null)
     }
@@ -65,11 +61,11 @@ class UserAvatarView : LinearLayout {
         isShowSvga = attrArray.getBoolean(R.styleable.UserAvatarView_isShowSvgAvatar, false)
         val avatarSize = attrArray.getDimension(R.styleable.UserAvatarView_avatarSize, 40f)
         val svgaAvatarSize = attrArray.getDimension(R.styleable.UserAvatarView_svgAvatarSize, 64f)
-        val avatarBorderSize =
+        avatarBorderSize =
             attrArray.getDimension(R.styleable.UserAvatarView_avatarBorderSize, 0f)
         avatarMarginLeft = attrArray.getDimension(R.styleable.UserAvatarView_avatarMarginLeft, 0f)
-        val avatarBorderColor = attrArray.getColor(R.styleable.UserAvatarView_avatarBorderColor, -1)
-        isCanClick = attrArray.getBoolean(R.styleable.UserAvatarView_isCanClick,true)
+        avatarBorderColor = attrArray.getColor(R.styleable.UserAvatarView_avatarBorderColor, -1)
+        isCanClick = attrArray.getBoolean(R.styleable.UserAvatarView_isCanClick, true)
         LayoutInflater.from(context).inflate(R.layout.view_user_avatar, this, true)
         ivAvatar = findViewById(R.id.iv_user_portrait)
         svgAvatar = findViewById(R.id.svg_portraitAnim)
@@ -77,16 +73,7 @@ class UserAvatarView : LinearLayout {
         layoutParams.width = avatarSize.toInt()
         layoutParams.height = avatarSize.toInt()
         ivAvatar.layoutParams = layoutParams
-        if (avatarBorderColor != -1) {
-            // 2. 设置圆角
-            val roundingParams = RoundingParams.asCircle()
-                .setBorder(avatarBorderColor, avatarBorderSize) // 设置边框（颜色，宽度）
-            val hierarchy = GenericDraweeHierarchyBuilder(context.resources)
-                .setRoundingParams(roundingParams)
-                .setFadeDuration(300) // 淡入淡出时间
-                .build()
-            ivAvatar.hierarchy = hierarchy
-        }
+
         if (isShowSvga) {
             val layoutParams1 = svgAvatar.layoutParams
             layoutParams1.width = svgaAvatarSize.toInt()
@@ -106,7 +93,7 @@ class UserAvatarView : LinearLayout {
         attrArray.recycle()
     }
 
-    fun getAvatarView(): SimpleDraweeView {
+    fun getAvatarView(): AppCompatImageView {
         return ivAvatar
     }
 
@@ -118,16 +105,18 @@ class UserAvatarView : LinearLayout {
         setAvatar(item, null)
     }
 
-    fun setAvatarBorder(avatarBorderSize: Int){
-        val roundingParams = RoundingParams.asCircle()
-            .setBorderWidth( avatarBorderSize.toFloat()) // 设置边框（颜色，宽度）
-        val hierarchy = GenericDraweeHierarchyBuilder(context.resources)
-            .setRoundingParams(roundingParams)
-            .build()
-        ivAvatar.hierarchy = hierarchy
+    fun setAvatarBorder(avatarBorderSize: Int) {
+        this.avatarBorderSize = avatarBorderSize.toFloat()
+        ivAvatar.load(ivAvatar.getTag(R.id.tag_url)) {
+            if (avatarBorderColor != -1) {
+                transformations(CircleBorderTransformation(this@UserAvatarView.avatarBorderSize, avatarBorderColor))
+            } else {
+                transformations(CircleCropTransformation())
+            }
+        }
     }
 
-    fun setAvatarSize(avatarSize:Int){
+    fun setAvatarSize(avatarSize: Int) {
         val layoutParams = ivAvatar.layoutParams
         layoutParams.width = avatarSize
         layoutParams.height = avatarSize
@@ -138,14 +127,21 @@ class UserAvatarView : LinearLayout {
     private fun setAvatar(item: BaseUserInfo, parseCompletion: SVGAParser.ParseCompletion?) {
         ivAvatar.setImageResource(R.drawable.ease_default_avatar)
         val portrait = item.portrait
-        if (TextUtils.isEmpty(portrait)){
+        if (TextUtils.isEmpty(portrait)) {
             return
         }
-        ivAvatar.setImageURI(portrait.toUri())
+        ivAvatar.setTag(R.id.tag_url,portrait)
+        ivAvatar.load(portrait) {
+            if (avatarBorderColor != -1) {
+                transformations(CircleBorderTransformation(avatarBorderSize, avatarBorderColor))
+            } else {
+                transformations(CircleCropTransformation())
+            }
+        }
 
-        if (isShowSvga){
+        if (isShowSvga) {
             if (!TextUtils.isEmpty(item.avatarFrame)) {
-                ViewUtils.setMarginLeft(this,0)
+                ViewUtils.setMarginLeft(this, 0)
                 svgAvatar.visibility = View.VISIBLE
                 svgAvatar.visibility = View.VISIBLE
                 if (!item.avatarFrame.endsWith(".svga")) {
@@ -164,10 +160,12 @@ class UserAvatarView : LinearLayout {
                         } else {
                             SVGAUtils.loadSVGAAnim(svgAvatar, item.avatarFrame)
                         }
-                        svgAvatar.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
+                        svgAvatar.addOnAttachStateChangeListener(object :
+                            OnAttachStateChangeListener {
                             override fun onViewAttachedToWindow(v: View) {
                                 svgAvatar.startAnimation()
                             }
+
                             override fun onViewDetachedFromWindow(v: View) {
                                 svgAvatar.pauseAnimation()
                             }
@@ -180,7 +178,7 @@ class UserAvatarView : LinearLayout {
 
                 }
             } else {
-                ViewUtils.setMarginLeft(this,avatarMarginLeft.toInt())
+                ViewUtils.setMarginLeft(this, avatarMarginLeft.toInt())
                 clearAnim()
             }
         }

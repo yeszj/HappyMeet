@@ -1,6 +1,5 @@
 package cn.yanhu.commonres.view
 
-import android.R.attr.strokeColor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
@@ -8,13 +7,14 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isGone
+import cn.yanhu.baselib.utils.CoilImgUtils
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.R
 import cn.yanhu.commonres.bean.PkUserInfo
-import com.bumptech.glide.Glide
-import com.makeramen.roundedimageview.RoundedImageView
+import cn.yanhu.commonres.manager.ImageThumbUtils
 import kotlin.math.max
 import kotlin.math.min
 
@@ -233,11 +233,9 @@ class OverlapFlowLayout @JvmOverloads constructor(
         val relativeLayout = RelativeLayout(context).apply {
             layoutParams = LayoutParams(avatarSize, avatarSize)
         }
-        val imageView = createAvatarImageView(strokeColor,strokeWidth)
-        Glide.with(this)
-            .load(userInfo.avatar)
-            .circleCrop()
-            .into(imageView)
+        val imageView = createAvatarImageView()
+        CoilImgUtils.loadCircleImg(ImageThumbUtils.getThumbUrl(userInfo.avatar),imageView, placeholderId = R.drawable.ease_default_avatar,strokeWidth.toFloat(),strokeColor)
+
         relativeLayout.addView(imageView)
         relativeLayout.addView(createTextView(userInfo.id,isRedUser))
         addView(relativeLayout)
@@ -248,11 +246,8 @@ class OverlapFlowLayout @JvmOverloads constructor(
      * 添加单个头像
      */
     fun addAvatar(url: String,strokeColor:Int,strokeWidth:Int) {
-        val imageView = createAvatarImageView(strokeColor,strokeWidth)
-        Glide.with(this)
-            .load(url)
-            .circleCrop()
-            .into(imageView)
+        val imageView = createAvatarImageView()
+        CoilImgUtils.loadCircleImg(ImageThumbUtils.getThumbUrl(url),imageView, placeholderId = R.drawable.ease_default_avatar,strokeWidth.toFloat(),strokeColor)
         addView(imageView)
         requestLayout()
     }
@@ -286,13 +281,9 @@ class OverlapFlowLayout @JvmOverloads constructor(
         }
     }
 
-    private fun createAvatarImageView(strokeColor:Int,strokeWidth:Int): RoundedImageView {
-        return RoundedImageView(context).apply {
+    private fun createAvatarImageView(): AppCompatImageView {
+        return AppCompatImageView(context).apply {
             layoutParams = LayoutParams(avatarSize, avatarSize)
-            if (strokeWidth>0){
-                borderColor = strokeColor
-                setBorderWidth(strokeWidth)
-            }
             scaleType = ImageView.ScaleType.CENTER_CROP
         }
     }

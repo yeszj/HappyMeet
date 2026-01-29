@@ -225,6 +225,9 @@ object MomentManager {
     ) {
         vgSingleVideo.vgVideoParent.visibility = View.VISIBLE
         val images = momentInfo.images
+        if (images.isEmpty()){
+            return
+        }
         val url = images[0]
         if (url.endsWith(".gif")) {
             vgSingleVideo.ivBg.maxWidth = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_240)

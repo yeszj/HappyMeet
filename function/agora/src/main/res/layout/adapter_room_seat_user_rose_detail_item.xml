@@ -58,15 +58,14 @@
                 tools:text="1" />
         </FrameLayout>
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/userAvatar"
-            imageUrl="@{rankInfo.portrait}"
+            circleImageUrl="@{rankInfo.portrait}"
             android:layout_width="@dimen/dp_44"
             android:layout_height="@dimen/dp_44"
             app:layout_constraintStart_toEndOf="@+id/tv_num"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:riv_oval="true"
             tools:src="@drawable/icon_portrait" />
 
 

@@ -3,9 +3,8 @@ package cn.yanhu.baselib.func.photo
 import android.content.Context
 import android.widget.ImageView
 import cn.yanhu.baselib.R
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.luck.picture.lib.engine.ImageEngine
 import com.luck.picture.lib.utils.ActivityCompatHelper
 
@@ -15,7 +14,7 @@ import com.luck.picture.lib.utils.ActivityCompatHelper
  * created: 2022/4/27
  * desc:
  */
-class GlideEngine private constructor() : ImageEngine {
+class CoilEngine private constructor() : ImageEngine {
     /**
      * 加载图片
      *
@@ -27,9 +26,7 @@ class GlideEngine private constructor() : ImageEngine {
         if (!ActivityCompatHelper.assertValidRequest(context)) {
             return
         }
-        Glide.with(context)
-            .load(url)
-            .into(imageView)
+        imageView.load(url)
     }
 
     override fun loadImage(
@@ -42,10 +39,10 @@ class GlideEngine private constructor() : ImageEngine {
         if (!ActivityCompatHelper.assertValidRequest(context)) {
             return
         }
-        Glide.with(context)
-            .load(url)
-            .override(maxWidth, maxHeight)
-            .into(imageView)
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        imageView.load(url){
+            this.size(maxWidth, maxHeight)
+        }
     }
 
     /**
@@ -59,14 +56,12 @@ class GlideEngine private constructor() : ImageEngine {
         if (!ActivityCompatHelper.assertValidRequest(context)) {
             return
         }
-        Glide.with(context)
-            .asBitmap()
-            .load(url)
-            .override(180, 180)
-            .sizeMultiplier(0.5f)
-            .transform(CenterCrop(), RoundedCorners(8))
-            .placeholder(R.drawable.image_placeholder)
-            .into(imageView)
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        imageView.load(url){
+            size(180, 180)
+            placeholder(R.drawable.image_placeholder)
+            transformations(RoundedCornersTransformation(8f))
+        }
     }
 
 
@@ -81,28 +76,25 @@ class GlideEngine private constructor() : ImageEngine {
         if (!ActivityCompatHelper.assertValidRequest(context)) {
             return
         }
-        Glide.with(context)
-            .load(url)
-            .override(200, 200)
-            .centerCrop()
-            .placeholder(R.drawable.image_placeholder)
-            .into(imageView)
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        imageView.load(url){
+            size(200, 200)
+            placeholder(R.drawable.image_placeholder)
+        }
     }
 
     override fun pauseRequests(context: Context) {
-        Glide.with(context).pauseRequests()
     }
 
     override fun resumeRequests(context: Context) {
-        Glide.with(context).resumeRequests()
     }
 
     private object InstanceHolder {
-        val instance: GlideEngine = GlideEngine()
+        val instance: CoilEngine = CoilEngine()
     }
 
     companion object {
-        fun createGlideEngine(): GlideEngine {
+        fun createCoilEngine(): CoilEngine {
             return InstanceHolder.instance
         }
     }

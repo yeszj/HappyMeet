@@ -1,5 +1,6 @@
 package cn.yanhu.agora.adapter
 
+import android.R.attr.resource
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.text.Layout
@@ -90,18 +91,10 @@ class UserEnterAdapter(
                     svgaBg.visibility = View.GONE
                     GlideUtils.loadAsDrawable(
                         context,
-                        enterAnimUrl,
-                        object : CustomTarget<Drawable>() {
-                            override fun onResourceReady(
-                                resource: Drawable,
-                                transition: Transition<in Drawable>?
-                            ) {
-                                ivBg.setImageDrawable(resource)
-                            }
-
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                            }
-                        })
+                        enterAnimUrl
+                    ) {
+                        ivBg.setImageDrawable(it)
+                    }
                 }
             }
 

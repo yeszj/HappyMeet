@@ -1,5 +1,6 @@
 package cn.yanhu.commonres.pop
 
+import android.R.attr.resource
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -67,17 +68,9 @@ class CommonTipDialog(
                 } else {
                     GlideUtils.loadAsDrawable(
                         context,
-                        commonTipsInfo.icon,
-                        object : CustomTarget<Drawable>() {
-                            override fun onResourceReady(
-                                resource: Drawable,
-                                transition: Transition<in Drawable>?
-                            ) {
-                                ivTipIcon.setImageDrawable(resource)
-                            }
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                            }
-                        })
+                        commonTipsInfo.icon){
+                        ivTipIcon.setImageDrawable(it)
+                    }
                     ivTipIcon.visibility = VISIBLE
                     ViewUtils.setPaddingTop(
                         tvTitle,

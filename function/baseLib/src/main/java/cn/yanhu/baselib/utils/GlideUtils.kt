@@ -8,8 +8,11 @@ import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.core.graphics.drawable.toBitmap
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.utils.ext.logComToFile
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.DecodeFormat
@@ -18,7 +21,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomTarget
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 /**
@@ -27,28 +29,49 @@ import jp.wasabeef.glide.transformations.BlurTransformation
  * desc:
  */
 object GlideUtils {
-    fun loadAsDrawable(context: Context, imgUrl: Any, listener: CustomTarget<Drawable>) {
+    fun loadAsDrawable(context: Context, imgUrl: Any, callback: (Drawable?) -> Unit) {
         try {
             if (isUrlNull(imgUrl)) {
                 return
             }
             if (isDestroy(context)) return
-            Glide.with(context).asDrawable().load(imgUrl).dontAnimate()
-                .into(listener)
+//            Glide.with(context).asDrawable().load(imgUrl).dontAnimate()
+//                .into(listener)
+
+            context.imageLoader.enqueue(
+                ImageRequest.Builder(context)
+                    .data(imgUrl)
+                    .target(onSuccess = {
+                        callback(it)
+                    }, onError = {
+                        callback(null)
+                    })
+                    .build()
+            )
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
     }
 
-    fun loadAsBitmap(context: Context, imgUrl: Any, listener: CustomTarget<Bitmap>) {
+    fun loadAsBitmap(context: Context, imgUrl: Any, callback: (Bitmap?) -> Unit) {
         try {
             if (isUrlNull(imgUrl)) {
                 return
             }
             if (isDestroy(context)) return
-            Glide.with(context).asBitmap().load(imgUrl).dontAnimate()
-                .into(listener)
+
+            context.imageLoader.enqueue(
+                ImageRequest.Builder(context)
+                    .data(imgUrl)
+                    .target(onSuccess = {
+                        callback(it.toBitmap())
+                    }, onError = {
+                        callback(null)
+                    })
+                    .build()
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -78,11 +101,11 @@ object GlideUtils {
             if (isUrlNull(url)) {
                 return
             }
-            if (imageView == null){
+            if (imageView == null) {
                 logComToFile("glide", "加载失败：url=${url},imageView==null")
                 return
             }
-            if (isDestroy(context)){
+            if (isDestroy(context)) {
                 logComToFile("glide", "加载失败：url=${url},isDestroy")
                 return
             }
@@ -96,6 +119,7 @@ object GlideUtils {
                 requestOptions.error(placeholderId)
             }
             if (errorId != null) requestOptions.error(errorId)
+
             Glide.with(context).load(url).apply(requestOptions)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
@@ -126,9 +150,11 @@ object GlideUtils {
         }
 
     }
+
     private fun isUrlNull(url: Any?): Boolean {
         return url == null || (url is String && TextUtils.isEmpty(url.toString()))
     }
+
     private fun isDestroy(context: Context): Boolean {
         return context is Activity && context.isDestroyed
     }

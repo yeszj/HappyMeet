@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.userinfo.level
 
+import android.R.attr.resource
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -106,24 +107,16 @@ class UserLevelActivity : BaseActivity<ActivityUserLevelBinding, UserViewModel>(
 
     private var ruleDrawable:Drawable?=null
     private fun loadRuleImg(img:String){
-        GlideUtils.loadAsDrawable(mContext,img,object : CustomTarget<Drawable>() {
-            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                ruleDrawable = resource
-            }
-            override fun onLoadCleared(placeholder: Drawable?) {
-            }
-        })
+        GlideUtils.loadAsDrawable(mContext,img){
+            ruleDrawable = it
+        }
     }
 
     private var wealthDrawable:Drawable?=null
     private fun loadWealthImg(img:String){
-        GlideUtils.loadAsDrawable(mContext,img,object : CustomTarget<Drawable>() {
-            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                wealthDrawable = resource
-            }
-            override fun onLoadCleared(placeholder: Drawable?) {
-            }
-        })
+        GlideUtils.loadAsDrawable(mContext,img){
+            wealthDrawable = it
+        }
     }
 
     companion object {

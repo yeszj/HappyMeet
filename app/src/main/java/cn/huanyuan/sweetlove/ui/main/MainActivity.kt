@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.main
 
+import android.R.attr.resource
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -111,7 +112,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         getGiftInfo()
         mViewModel.getMainTabInfo()
         BaseApplication.clearTask()
-        if (!BuildConfig.DEBUG){
+        if (!BuildConfig.DEBUG) {
             checkOaId()
         }
         getSkinMaskConfig()
@@ -121,12 +122,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         clearOldLogFile()
     }
 
-    private fun getSkinMaskConfig(){
-        request({ commonRxApi.getConfigInfo(ServiceConfigKeyManager.OPEN_WHITEN_SKIN_MASK) },object : OnRequestResultListener<String>{
-            override fun onSuccess(data: BaseBean<String>) {
-                AppCacheManager.openWhitenSkinMask = data.data == "1"
-            }
-        })
+    private fun getSkinMaskConfig() {
+        request(
+            { commonRxApi.getConfigInfo(ServiceConfigKeyManager.OPEN_WHITEN_SKIN_MASK) },
+            object : OnRequestResultListener<String> {
+                override fun onSuccess(data: BaseBean<String>) {
+                    AppCacheManager.openWhitenSkinMask = data.data == "1"
+                }
+            })
     }
 
     private fun clearOldLogFile() {
@@ -140,7 +143,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     val currentLogFilePath = LogUtils.getCurrentLogFilePath()
                     val todayStr = DateUtils.getYestodyStr(0, "yyyy_MM_dd")
                     val yesTodayStr = DateUtils.getYestodyStr(-1, "yyyy_MM_dd")
-                    logcom("logTime","todayStr=$todayStr,yesTodayStr=$yesTodayStr")
+                    logcom("logTime", "todayStr=$todayStr,yesTodayStr=$yesTodayStr")
                     val yestodayLogFilePath = currentLogFilePath.replace(todayStr, yesTodayStr)
                     if (it.absolutePath != LogUtils.getCurrentLogFilePath() && it.absolutePath != yestodayLogFilePath) {
                         FileUtils.delete(it)
@@ -262,7 +265,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                             BaseApplication.addPopTask(AppPopTypeManager.TYPE_TEE_POP, "")
                             AppCacheManager.hasShowTeenApp = true
                         }
-                        if (appPopInfo != null && appPopInfo!!.common != null) {
+                        if (appPopInfo != null && appPopInfo!!.common != null && !CommonUtils.isEmpty(appPopInfo?.common?.bgImaUrl)) {
                             BaseApplication.addPopTask(
                                 ChatConstant.ACTION_EVENT_POP,
                                 GsonUtils.toJson(appPopInfo!!.common)
@@ -279,8 +282,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         }
     }
 
-    private fun getPop(){
-        request({rxApi.getPop()},object : OnRequestResultListener<String>{
+    private fun getPop() {
+        request({ rxApi.getPop() }, object : OnRequestResultListener<String> {
             override fun onSuccess(data: BaseBean<String>) {
             }
         })
@@ -546,30 +549,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             )
         GlideUtils.loadAsDrawable(
             mContext,
-            tabEntity.normalIcon,
-            object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable, transition: Transition<in Drawable>?
-                ) {
-                    bottomBarItem.setNormalIcon(resource)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
+            tabEntity.normalIcon
+        ) {
+            bottomBarItem.setNormalIcon(it)
+        }
         GlideUtils.loadAsDrawable(
             mContext,
-            tabEntity.selectIcon,
-            object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable, transition: Transition<in Drawable>?
-                ) {
-                    bottomBarItem.setSelectedIcon(resource)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
+            tabEntity.selectIcon
+        ) {
+            bottomBarItem.setSelectedIcon(it)
+        }
         return bottomBarItem
     }
 

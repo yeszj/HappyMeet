@@ -47,7 +47,7 @@ import cn.yanhu.baselib.queue.TaskQueueManager
 import cn.yanhu.baselib.queue.TaskQueueManagerImpl
 import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.refresh.SmartRefreshProcessor
-import cn.yanhu.baselib.utils.CacheSizeManager
+import cn.yanhu.baselib.utils.CoilManager
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.GlideHealthMonitor
@@ -81,6 +81,7 @@ import cn.zj.netrequest.intercept.HttpCacheInterceptor
 import cn.zj.netrequest.intercept.HttpCommonInterceptor
 import cn.zj.netrequest.status.BaseBean
 import cn.zj.netrequest.status.ErrorCode
+import coil.Coil
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.GsonUtils
@@ -94,13 +95,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.facebook.cache.disk.DiskCacheConfig
-import com.facebook.common.internal.Supplier
-import com.facebook.common.memory.NoOpMemoryTrimmableRegistry
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.imagepipeline.cache.MemoryCacheParams
-import com.facebook.imagepipeline.core.ImagePipelineConfig
-import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
 import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.hjq.toast.style.BlackToastStyle
 import com.hyphenate.EMCallBack
@@ -159,7 +153,6 @@ class BaseApplication : Application() {
                     reInitImSdk()
                     LiveEventBus.get<Boolean>(EventBusKeyConfig.SWITCH_TO_FOREGROUND).post(true)
                 }
-                SvgModule.adjustForAppState(activity, false)
                 logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "App切换到前台")
                 checkAlertPermission(activity)
             }
@@ -170,7 +163,6 @@ class BaseApplication : Application() {
                         AppManager.STATE_BACKGROUND,
                         PermissionX.areNotificationsEnabled(activity)
                     )
-                    SvgModule.adjustForAppState(activity, true)
                 }
                 logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "App切换到后台")
 
@@ -219,6 +211,7 @@ class BaseApplication : Application() {
         val sysExcepHandler = Thread.getDefaultUncaughtExceptionHandler()
         CrashUtils.install(this, object : ExceptionHandler() {
             override fun onUncaughtExceptionHappened(thread: Thread, throwable: Throwable) {
+
                 logComToFile(
                     "AndroidRuntime",
                     "--->onUncaughtExceptionHappened:$thread<---${throwable.message}"
@@ -264,7 +257,7 @@ class BaseApplication : Application() {
             ChannelUtils.getChannel()
         )
         ARouterWrapper.init(this)
-        initFrescoImg()
+        initCoilImg()
         initRetrofit()
         setVideoFactory()
         Looper.myQueue().addIdleHandler {
@@ -274,52 +267,8 @@ class BaseApplication : Application() {
         }
     }
 
-    private fun initFrescoImg(){
-        val config = ImagePipelineConfig.newBuilder(this)
-            // 内存缓存配置
-            .setBitmapMemoryCacheParamsSupplier(getMemoryCacheParamsSupplier())
-
-            // 禁用一些可能导致闪烁的功能
-            .setDownsampleEnabled(true)  // 启用向下采样
-            .setResizeAndRotateEnabledForNetwork(true)
-
-            // 渐进式 JPEG 配置
-            .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
-
-            // 缓存配置
-            .setMainDiskCacheConfig(getDiskCacheConfig())
-            .setSmallImageDiskCacheConfig(getDiskCacheConfig())
-
-            // 其他优化
-            .setBitmapsConfig(Bitmap.Config.RGB_565)  // 使用节省内存的格式
-            .setMemoryTrimmableRegistry(NoOpMemoryTrimmableRegistry())  // 不自动清理内存
-
-            .build()
-
-        Fresco.initialize(this, config)
-    }
-
-
-    private fun getMemoryCacheParamsSupplier(): Supplier<MemoryCacheParams> {
-        return Supplier {
-            MemoryCacheParams(
-                (Runtime.getRuntime().maxMemory() / 4).toInt(),  // 最大缓存大小
-                Integer.MAX_VALUE,  // 最大条目数
-                Integer.MAX_VALUE,  // 最大缓存未命中时的大小
-                Integer.MAX_VALUE,  // 最大缓存未命中时的条目数
-                Integer.MAX_VALUE   // 最大缓存条目数的限制
-            )
-        }
-    }
-
-    private fun getDiskCacheConfig(): DiskCacheConfig {
-        return DiskCacheConfig.newBuilder(this)
-            .setBaseDirectoryPath(cacheDir)
-            .setBaseDirectoryName("fresco_cache")
-            .setMaxCacheSize(200 * 1024 * 1024)  // 200MB
-            .setMaxCacheSizeOnLowDiskSpace(100 * 1024 * 1024)
-            .setMaxCacheSizeOnVeryLowDiskSpace(50 * 1024 * 1024)
-            .build()
+    private fun initCoilImg(){
+        Coil.setImageLoader(CoilManager.getImageLoader(this))
     }
 
     private fun setVideoFactory() {
@@ -969,8 +918,7 @@ class BaseApplication : Application() {
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         logComToFile("memoryInfo", "onTrimMemory")
-        clearMemory()
-
+        Glide.get(this).onTrimMemory(level)
     }
 
     override fun onLowMemory() {
@@ -981,7 +929,7 @@ class BaseApplication : Application() {
 
     private fun clearMemory() {
         logComToFile("memoryInfo", "clearMemory")
-        CacheSizeManager.clearAllCache(this, null)
+        Glide.get(this).clearMemory()
     }
 
 

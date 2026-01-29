@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.userinfo.adapter
 
+import android.R.attr.resource
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -39,17 +40,9 @@ class UserHomePageHeadAdapter :
                 if (TextUtils.isEmpty(item.guardInfo?.nickName)){
                     ivGuardFrame.setImageResource(cn.yanhu.commonres.R.drawable.icon_no_guard)
                 }else{
-                    GlideUtils.loadAsDrawable(context, item.guardInfo!!.avatarFrame, object :
-                        CustomTarget<Drawable>() {
-                        override fun onResourceReady(
-                            resource: Drawable,
-                            transition: Transition<in Drawable>?
-                        ) {
-                            ivGuardFrame.setImageDrawable(resource)
-                        }
-                        override fun onLoadCleared(placeholder: Drawable?) {
-                        }
-                    })
+                    GlideUtils.loadAsDrawable(context, item.guardInfo!!.avatarFrame){
+                        ivGuardFrame.setImageDrawable(it)
+                    }
                 }
             }
             ivGuardFrame.setOnSingleClickListener {

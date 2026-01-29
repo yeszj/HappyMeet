@@ -423,15 +423,15 @@ open class NineRoomSeatView(
     ) {
         val userId = dto.roomUserSeatInfo!!.userId
         if (localUserId == userId) {
+            //注意：声网分辨率必须是16的倍数 否则部分手机会出现画面黑边问题
             if (isScaleStyle) {
                 if (dto.isExpand) {
-                    //270 320  560  640
-                    AgoraManager.getInstance().setVideoEncoderConfiguration(560, 640)
+                    AgoraManager.getInstance().setVideoEncoderConfiguration(416, 480)
                 } else {
                     AgoraManager.getInstance().setVideoEncoderConfiguration(208, 208)
                 }
             } else {
-                AgoraManager.getInstance().setVideoEncoderConfiguration(320, 320)
+                AgoraManager.getInstance().setVideoEncoderConfiguration(256, 256)
             }
         }
 

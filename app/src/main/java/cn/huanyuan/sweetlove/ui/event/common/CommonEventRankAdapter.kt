@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.event.common
 
+import android.R.attr.resource
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
@@ -65,16 +66,9 @@ class CommonEventRankAdapter : BaseQuickAdapter<CommonEventRankInfo,CommonEventR
                 }
             }
             val itemBgImg = commonEventRankInfo?.itemBgImg?:return
-            GlideUtils.loadAsDrawable(context,itemBgImg,object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    vgParent.background = resource
-                }
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
+            GlideUtils.loadAsDrawable(context,itemBgImg){
+                vgParent.background = it
+            }
             executePendingBindings()
 
         }

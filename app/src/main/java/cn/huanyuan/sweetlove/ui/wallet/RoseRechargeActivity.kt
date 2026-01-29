@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.ui.wallet
 
+import android.R.attr.resource
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.view.View
@@ -129,18 +130,9 @@ class RoseRechargeActivity : BaseActivity<ActivityRoseRechargeBinding, WalletVie
                         }
                     }
                     val img = bannerInfo.img
-                    loadAsDrawable(mContext, img, object :
-                        CustomTarget<Drawable>() {
-                        override fun onResourceReady(
-                            resource: Drawable,
-                            transition: Transition<in Drawable>?
-                        ) {
-                            mBinding.ivBanner.setImageDrawable(resource)
-                        }
-
-                        override fun onLoadCleared(placeholder: Drawable?) {
-                        }
-                    })
+                    loadAsDrawable(mContext, img){
+                        mBinding.ivBanner.setImageDrawable(it)
+                    }
                 }
                 if (TextUtils.isEmpty(it.scrollText)) {
                     mBinding.tvNotice.visibility = View.GONE

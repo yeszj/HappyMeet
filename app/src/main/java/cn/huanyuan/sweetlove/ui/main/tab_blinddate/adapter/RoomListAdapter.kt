@@ -17,11 +17,15 @@ import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.commonres.adapter.MyBannerImageAdapter
 import cn.yanhu.commonres.bean.BannerBean
 import cn.yanhu.commonres.bean.RoomListBean
+import cn.yanhu.commonres.manager.ImageThumbUtils
 import cn.yanhu.commonres.router.PageIntentUtil
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.blankj.utilcode.util.ActivityUtils
 import com.chad.library.adapter4.BaseMultiItemAdapter
 import com.chad.library.adapter4.util.setOnDebouncedItemClick
 import com.youth.banner.listener.OnBannerListener
+import com.zj.dimens.R
 
 /**
  * @author: zhengjun
@@ -44,7 +48,11 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
         addItemType(TYPE_ROOM, object : OnMultiItemAdapterListener<RoomListBean, VH> {
             override fun onBind(holder: VH, position: Int, item: RoomListBean?) {
                 holder.binding.apply {
-                    roomBean = item
+                    roomBean = item?:return
+                    ivCover.load(ImageThumbUtils.getThumbUrl(item.coverUrl)){
+                        transformations(RoundedCornersTransformation(CommonUtils.getDimension(R.dimen.dp_10).toFloat()))
+                    }
+
                     if ((ivStatus.tag as OnAttachStateChangeListener?) == null) {
                         val attachStateChangeListener = object : OnAttachStateChangeListener {
                             override fun onViewAttachedToWindow(v: View) {
@@ -78,6 +86,10 @@ class RoomListAdapter(context: FragmentActivity) : BaseMultiItemAdapter<RoomList
                     }
                     holder.binding.apply {
                         roomBean = item
+                        ivCover.load(roomBean!!.coverUrl){
+                            transformations(RoundedCornersTransformation(CommonUtils.getDimension(R.dimen.dp_10).toFloat()))
+                        }
+
                         viewBg.tag = item.id.toString()
                         if (rvAvatar.tag == null) {
                             val roomAvatarAdapter = RoomAvatarAdapter()

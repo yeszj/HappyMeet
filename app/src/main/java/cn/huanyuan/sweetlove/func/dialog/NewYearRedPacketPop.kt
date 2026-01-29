@@ -1,5 +1,6 @@
 package cn.huanyuan.sweetlove.func.dialog
 
+import android.R.attr.resource
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -86,20 +87,12 @@ class NewYearRedPacketPop(context: Context, val drawable: Drawable) : CenterPopu
                     }
                     GlideUtils.loadAsDrawable(
                         context,
-                        rewardInfo!!.bgUrl,
-                        object : CustomTarget<Drawable>() {
-                            override fun onResourceReady(
-                                resource: Drawable,
-                                transition: Transition<in Drawable>?
-                            ) {
-                                rewardDrawable = resource
-                                mBinding.vgParent.clearAnimation()
-                                playRotationAnim(0f, 180f)
-                            }
-
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                            }
-                        })
+                        rewardInfo!!.bgUrl
+                    ) {
+                        rewardDrawable = it
+                        mBinding.vgParent.clearAnimation()
+                        playRotationAnim(0f, 180f)
+                    }
                 }
                 override fun onFail(code: Int?, msg: String?) {
                     super.onFail(code, msg)
