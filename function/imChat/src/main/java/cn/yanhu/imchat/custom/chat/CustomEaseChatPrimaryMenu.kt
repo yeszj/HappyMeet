@@ -1,5 +1,6 @@
 package cn.yanhu.imchat.custom.chat
 
+import android.R.attr.resource
 import android.animation.AnimatorSet
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -54,6 +55,9 @@ import com.hyphenate.easeui.modules.chat.interfaces.EaseChatPrimaryMenuListener
 import com.hyphenate.easeui.modules.chat.interfaces.IChatPrimaryMenu
 import androidx.core.view.isVisible
 import androidx.core.view.isGone
+import cn.yanhu.baselib.utils.CoilImgUtils
+import cn.yanhu.baselib.utils.CommonUtils
+import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.commonres.api.commonRxApi
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
@@ -160,6 +164,7 @@ class CustomEaseChatPrimaryMenu(
             })
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("CheckResult")
     private fun createEmojiImage(emojicon: EaseEmojicon) {
         val inputEmojiCount = this.inputEmojiCount
@@ -169,39 +174,29 @@ class CustomEaseChatPrimaryMenu(
         }
         val iconPath = emojicon.iconPath
         val bigIconPath = arrayOf<String?>(GsonUtils.toJson(emojicon) + "/forlove")
-        Glide.with(context).`as`<PictureDrawable?>(PictureDrawable::class.java).override(
-            getDimension(com.zj.dimens.R.dimen.dp_20)
-        ).load(iconPath).into(object : CustomTarget<PictureDrawable?>() {
-            @RequiresApi(Build.VERSION_CODES.Q)
-            override fun onResourceReady(
-                resource: PictureDrawable,
-                transition: Transition<in PictureDrawable?>?
-            ) {
-                val imageSpan = VerticalImageSpan2(
-                    context,
-                    drawableToBitmap(resource),
-                    DynamicDrawableSpan.ALIGN_CENTER
-                )
-                val s = editText!!.getText()
-                if (!s.toString().endsWith("/forlove")) {
-                    bigIconPath[0] = "/forlove" + bigIconPath[0]
-                }
-                val selectionStart = editText!!.selectionStart
-                val spannableString = SpannableString(bigIconPath[0])
-                spannableString.setSpan(
-                    imageSpan,
-                    0,
-                    bigIconPath[0]!!.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                s.insert(editText!!.selectionStart, spannableString)
-                editText!!.setText(s)
-                editText!!.setSelection(selectionStart + bigIconPath[0]!!.length)
-            }
 
-            override fun onLoadCleared(placeholder: Drawable?) {
+        GlideUtils.loadAsBitmap(context,iconPath, getDimension(com.zj.dimens.R.dimen.dp_20)) { it ->
+            val imageSpan = VerticalImageSpan2(
+                context,
+                it,
+                DynamicDrawableSpan.ALIGN_CENTER
+            )
+            val s = editText!!.getText()
+            if (!s.toString().endsWith("/forlove")) {
+                bigIconPath[0] = "/forlove" + bigIconPath[0]
             }
-        })
+            val selectionStart = editText!!.selectionStart
+            val spannableString = SpannableString(bigIconPath[0])
+            spannableString.setSpan(
+                imageSpan,
+                0,
+                bigIconPath[0]!!.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            s.insert(editText!!.selectionStart, spannableString)
+            editText!!.setText(s)
+            editText!!.setSelection(selectionStart + bigIconPath[0]!!.length)
+        }
     }
 
     private val inputEmojiCount: Int

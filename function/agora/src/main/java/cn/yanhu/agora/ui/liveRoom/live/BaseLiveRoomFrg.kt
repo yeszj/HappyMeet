@@ -1176,7 +1176,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     private var sendCount = 0
     private var sendCntId = ""
     private fun sendCnt(chatRoomGiftMsg: ChatRoomGiftMsg, isCombo: Boolean) {
-        if (!isCombo){
+        if (!isCombo) {
             sendCntId = ""
         }
         logInfoCom("sendCnt", "isCombo:$isCombo,sendCntId = $sendCntId")
@@ -1552,6 +1552,10 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 list.add(chatRoomMsgInfo)
                 if (sendType == ChatRoomMsgInfo.ITEM_GIFT_TYPE) {
                     val fromJson = GsonUtils.fromJson(content, ChatRoomGiftMsg::class.java)
+                    logComToFile(
+                        TAG,
+                        "收到礼物消息,送礼人：userId=${fromJson.sendUser.userId},礼物名称= ${fromJson.giftInfo.name}"
+                    )
                     dealReceiveGiftMsg(fromJson)
                 } else if (sendType == ChatRoomMsgInfo.ITEM_WELCOME_TYPE) {
                     if (isOwner) {
@@ -1871,7 +1875,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 }
                 sendPkNotice(content)
             }
-        } else{
+        } else {
             updatePkResult(roomPkInfo, true)
         }
 
@@ -2283,7 +2287,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
         showFloatAnim(chatRoomGiftMsg)
         //val giftMsgInfo = GiftMsgInfo(item, roomUserSeatInfo)
-        logInfoCom("startSendComboGift", "赠送礼物成功，发送礼物消息")
+        logComToFile("startSendComboGift", "连击结算成功，发送礼物消息")
         sendMessage(GsonUtils.toJson(chatRoomGiftMsg), ChatRoomMsgInfo.ITEM_GIFT_TYPE)
         getRoseGift()
     }
@@ -3458,6 +3462,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 //            }
 //        }
     }
+
     var checkTime = 0L
     override fun onLocalAudioStats(stats: IRtcEngineEventHandler.LocalAudioStats?) {
         if (isOwner) {
@@ -3482,7 +3487,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             }
         }
     }
-
 
 
     private fun getSeatUserInfoUserId(uid: Int): SeatUserInfo? {

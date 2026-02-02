@@ -50,7 +50,6 @@ import cn.yanhu.baselib.refresh.SmartRefreshProcessor
 import cn.yanhu.baselib.utils.CoilManager
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
-import cn.yanhu.baselib.utils.GlideHealthMonitor
 import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.showToast
@@ -65,7 +64,6 @@ import cn.yanhu.commonres.manager.AppManager
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.utils.PermissionXUtils
-import cn.yanhu.commonres.view.svg.SvgModule
 import cn.yanhu.imchat.custom.chat.EaseCommonUtils
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EMInitUtils
@@ -249,7 +247,6 @@ class BaseApplication : Application() {
 
     private fun init() {
         LitePal.initialize(this)
-        GlideHealthMonitor.init(this)
         //预初始化友盟
         UMConfigure.preInit(
             this,
@@ -918,20 +915,12 @@ class BaseApplication : Application() {
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         logComToFile("memoryInfo", "onTrimMemory")
-        Glide.get(this).onTrimMemory(level)
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
         logcom("memoryInfo", "onLowMemory")
-        clearMemory()
     }
-
-    private fun clearMemory() {
-        logComToFile("memoryInfo", "clearMemory")
-        Glide.get(this).clearMemory()
-    }
-
 
     companion object {
         private val appPopTaskQueueManagerImpl = TaskQueueManagerImpl()

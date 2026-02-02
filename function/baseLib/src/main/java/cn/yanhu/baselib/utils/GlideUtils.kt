@@ -35,9 +35,6 @@ object GlideUtils {
                 return
             }
             if (isDestroy(context)) return
-//            Glide.with(context).asDrawable().load(imgUrl).dontAnimate()
-//                .into(listener)
-
             context.imageLoader.enqueue(
                 ImageRequest.Builder(context)
                     .data(imgUrl)
@@ -65,6 +62,29 @@ object GlideUtils {
             context.imageLoader.enqueue(
                 ImageRequest.Builder(context)
                     .data(imgUrl)
+                    .target(onSuccess = {
+                        callback(it.toBitmap())
+                    }, onError = {
+                        callback(null)
+                    })
+                    .build()
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun loadAsBitmap(context: Context, imgUrl: Any,dimen:Int, callback: (Bitmap?) -> Unit) {
+        try {
+            if (isUrlNull(imgUrl)) {
+                return
+            }
+            if (isDestroy(context)) return
+
+            context.imageLoader.enqueue(
+                ImageRequest.Builder(context)
+                    .data(imgUrl)
+                    .size(dimen,dimen)
                     .target(onSuccess = {
                         callback(it.toBitmap())
                     }, onError = {
@@ -129,7 +149,6 @@ object GlideUtils {
                         isFirstResource: Boolean
                     ): Boolean {
                         logComToFile("glide", "加载失败：url=${url},error=${e?.message}")
-                        GlideHealthMonitor.onLoadFailed(e)
                         return false // 继续交给 Glide 默认逻辑
                     }
 

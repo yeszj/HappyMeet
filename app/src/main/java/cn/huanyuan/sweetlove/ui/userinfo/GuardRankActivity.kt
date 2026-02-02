@@ -44,7 +44,7 @@ class GuardRankActivity : BaseActivity<ActivityGuardRankBinding, UserViewModel>(
         userId = intent.getStringExtra(IntentKeyConfig.ID).toString()
         //addEmptyView()
         mBinding.rvRank.adapter = guardRankAdapter
-        if (userId==AppCacheManager.userId){
+        if (userId == AppCacheManager.userId) {
             mBinding.vgMyInfo.clUser.visibility = View.GONE
         }
         mBinding.vgMyInfo.clUser.setBackgroundColor(Color.parseColor("#0A000000"))
@@ -94,6 +94,7 @@ class GuardRankActivity : BaseActivity<ActivityGuardRankBinding, UserViewModel>(
                 override fun leftButtonOnClick(v: View?) {
                     finish()
                 }
+
                 override fun rightButtonOnClick(v: View?) {
                     showGuardRulePop()
                 }
@@ -105,9 +106,9 @@ class GuardRankActivity : BaseActivity<ActivityGuardRankBinding, UserViewModel>(
         }
     }
 
-    private var commonImagePop:CommonImagePop?=null
+    private var commonImagePop: CommonImagePop? = null
     private fun showGuardRulePop() {
-        if (CommonUtils.isPopShow(commonImagePop)){
+        if (CommonUtils.isPopShow(commonImagePop)) {
             return
         }
         val commonEventPopInfo = CommonEventPopInfo(
@@ -116,11 +117,11 @@ class GuardRankActivity : BaseActivity<ActivityGuardRankBinding, UserViewModel>(
             )
         )
         val drawable = ResourceUtils.getDrawable(R.mipmap.guard_rule)
-        commonImagePop =  CommonImagePop.showDialog(mContext, commonEventPopInfo, drawable)
+        commonImagePop = CommonImagePop.showDialog(mContext, commonEventPopInfo, drawable)
     }
 
     private fun intentToDetail(rankInfo: RankInfo) {
-        if (!TextUtils.isEmpty(rankInfo.userId)) {
+        if (!rankInfo.isIfHide && !TextUtils.isEmpty(rankInfo.userId)) {
             RouteIntent.lunchPersonHomePage(rankInfo.userId)
         }
     }
