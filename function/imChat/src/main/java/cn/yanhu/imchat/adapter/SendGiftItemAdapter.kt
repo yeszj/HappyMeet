@@ -41,12 +41,12 @@ class SendGiftItemAdapter : BaseQuickAdapter<GiftInfo, SendGiftItemAdapter.VH>()
 
     private fun AdapterSendGiftItemBinding.changeSelect(position: Int) {
         if (selectPosition == position) {
-            tvSend.visibility = View.VISIBLE
-            tvGiftName.visibility = View.GONE
-            vgParent.setBackgroundResource(cn.yanhu.commonres.R.drawable.white_stroke_alpha10_corner_8)
+           // tvSend.visibility = View.VISIBLE
+            //tvGiftName.visibility = View.GONE
+            vgParent.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_gift_item_select)
         } else {
-            tvSend.visibility = View.INVISIBLE
-            tvGiftName.visibility = View.VISIBLE
+           // tvSend.visibility = View.INVISIBLE
+           // tvGiftName.visibility = View.VISIBLE
             vgParent.setBackgroundResource(cn.yanhu.commonres.R.drawable.shape_transparent)
         }
     }

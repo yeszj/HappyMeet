@@ -1,3 +1,4 @@
+import com.android.tools.r8.internal.kt
 import org.gradle.kotlin.dsl.implementation
 
 plugins {
@@ -133,5 +134,7 @@ dependencies {
 
     // Coil Video支持
     api ("io.coil-kt:coil-video:${coilVersion}")
+
+
 //    api ("com.tencent.qcloud:VAPSDK:2.0.28")
 }

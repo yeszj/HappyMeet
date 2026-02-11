@@ -39,26 +39,28 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
 
     private var giftInfo: GiftResponse? = null
     fun getGiftInfo() {
-        request({ imChatRxApi.getGiftList(type,source) }, object : OnRequestResultListener<GiftResponse> {
-            override fun onSuccess(data: BaseBean<GiftResponse>) {
-                giftInfo = data.data
-                removeRandomBoxGift()
-                setGiftInfo()
-            }
+        request(
+            { imChatRxApi.getGiftList(type, source) },
+            object : OnRequestResultListener<GiftResponse> {
+                override fun onSuccess(data: BaseBean<GiftResponse>) {
+                    giftInfo = data.data
+                    removeRandomBoxGift()
+                    setGiftInfo()
+                }
 
-            override fun onFail(code: Int?, msg: String?) {
-                super.onFail(code, msg)
-            }
-        })
+                override fun onFail(code: Int?, msg: String?) {
+                    super.onFail(code, msg)
+                }
+            })
     }
 
     private fun setGiftInfo() {
         giftAdapter.submitList(giftInfo?.list)
-        onClickSendListener?.setGiftInfo(giftInfo!!,type)
+        onClickSendListener?.setGiftInfo(giftInfo!!, type)
     }
 
     private var source: Int = 0
-    private var type:Int = GiftInfo.TYPE_GIFT
+    private var type: Int = GiftInfo.TYPE_GIFT
 
     private fun removeRandomBoxGift() {
         //如果不是直播间 移除随机盲盒礼物
@@ -72,14 +74,15 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
     private fun initGiftAdapter() {
         mBinding.rvGift.adapter = giftAdapter
         giftAdapter.setOnItemClickListener { _, _, position ->
-            if (position == giftAdapter.getSelectPosition()) {
-                onClickSendListener?.onSendGift(giftAdapter.getItem(position))
-            } else {
-                giftAdapter.setSelectPosition(
-                    position
-                )
-                mBinding.rvGift.scrollToPosition(position)
-            }
+//            if (position == giftAdapter.getSelectPosition()) {
+//            } else {
+
+            giftAdapter.setSelectPosition(
+                position
+            )
+            onClickSendListener?.onClickGift(giftAdapter.getItem(position))
+            mBinding.rvGift.scrollToPosition(position)
+            //}
 
         }
         giftAdapter.addOnDebouncedChildClick(
@@ -90,6 +93,13 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
         if (!TextUtils.isEmpty(AppCacheManager.giftInfo) && type == GiftInfo.TYPE_GIFT) {
             giftInfo = GsonUtils.fromJson(AppCacheManager.giftInfo, GiftResponse::class.java)
             removeRandomBoxGift()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (giftAdapter.itemCount>0){
+            onClickSendListener?.onClickGift(giftAdapter.getSelectItem())
         }
     }
 
@@ -104,12 +114,13 @@ class GiftShowFrg : BaseFragment<ViewGiftShowBinding, ImChatViewModel>(
 
     interface OnClickSendListener {
         fun onSendGift(item: GiftInfo?)
-        fun setGiftInfo(giftResponse: GiftResponse,type:Int)
+        fun onClickGift(item: GiftInfo?){}
+        fun setGiftInfo(giftResponse: GiftResponse, type: Int)
     }
 
     companion object {
 
-        fun newInstance(source: Int,type: Int): GiftShowFrg{
+        fun newInstance(source: Int, type: Int): GiftShowFrg {
             val args = Bundle()
             args.putInt("source", source)
             args.putInt("type", type)

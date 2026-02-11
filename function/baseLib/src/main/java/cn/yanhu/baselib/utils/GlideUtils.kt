@@ -12,6 +12,7 @@ import androidx.core.graphics.drawable.toBitmap
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.utils.ext.logComToFile
 import coil.imageLoader
+import coil.load
 import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource

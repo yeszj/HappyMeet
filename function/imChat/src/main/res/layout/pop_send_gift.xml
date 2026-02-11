@@ -15,13 +15,57 @@
     </data>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/vg_faceTips"
+            android:layout_width="@dimen/dp_340"
+            android:layout_height="@dimen/dp_34"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@drawable/face_combo_gift_tips"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <cn.yanhu.baselib.widget.FontWeightValueTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="本次赠送"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                app:fontWeightValue="medium" />
+
+            <cn.yanhu.baselib.view.StrokeGradientTextView
+                android:id="@+id/tv_faceCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/dp_6"
+                android:text="12"
+                android:textSize="@dimen/sp_16"
+                app:endColor="@color/white"
+                android:textStyle="bold"
+                app:startColor="#FFF3DD" />
+
+            <cn.yanhu.baselib.widget.FontWeightValueTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个即可永久显示贴脸！"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                app:fontWeightValue="medium" />
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/white_top_corner_10"
             android:backgroundTint="#161727"
             android:orientation="vertical">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -162,9 +206,9 @@
                     android:id="@+id/tv_roseNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="0"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_13"
-                    android:text="0" />
+                    android:textSize="@dimen/sp_13" />
 
                 <cn.yanhu.baselib.view.CustomFontTextView
                     android:id="@+id/tv_recharge"
@@ -184,7 +228,67 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_324" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                android:gravity="center_vertical">
 
+                <cn.yanhu.baselib.widget.FontWeightValueTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/dp_10"
+                    android:text="赠送数量:"
+                    android:textColor="#CCFFFFFF"
+                    android:textSize="@dimen/sp_12" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_36"
+                    android:background="@drawable/main_color_stroke_corner_20"
+                    android:gravity="center_vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp_10"
+                        android:src="@drawable/svg_gift_gray_sub" />
+
+                    <cn.yanhu.baselib.widget.FontWeightValueTextView
+                        android:id="@+id/tv_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp_10"
+                        android:src="@drawable/svg_gift_white_add" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <cn.yanhu.baselib.widget.FontWeightValueTextView
+                    android:id="@+id/btnSend"
+                    android:layout_width="@dimen/dp_76"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@drawable/common_shape_click_bg_r20"
+                    android:gravity="center"
+                    android:text="赠送"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    app:fontWeightValue="medium" />
+            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
 
 </layout>

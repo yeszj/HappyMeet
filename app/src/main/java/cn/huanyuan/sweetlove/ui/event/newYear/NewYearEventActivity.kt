@@ -1,7 +1,6 @@
 package cn.huanyuan.sweetlove.ui.event.newYear
 
 import android.Manifest
-import android.R.attr.resource
 import android.animation.AnimatorSet
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
@@ -32,13 +31,13 @@ import cn.zj.netrequest.ext.parseState
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.GsonUtils
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.pcl.sdklib.sdk.share.ContentShare
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import androidx.core.graphics.toColorInt
+import cn.yanhu.commonres.router.PageIntentUtil
 
 /**
  * @author: zhengjun
@@ -96,7 +95,7 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
         mBinding.selfRank.rankInfo = this.myInfo
         mBinding.selfRank.vgParent.setBackgroundResource(cn.yanhu.commonres.R.drawable.white_corner_15)
         mBinding.selfRank.vgParent.backgroundTintList =
-            ColorStateList.valueOf(Color.parseColor("#Fbebf0"))
+            ColorStateList.valueOf("#Fbebf0".toColorInt())
         mBinding.selfRank.vgRank.visibility = View.GONE
         if (index >= 0) {
             mBinding.selfRank.tvNum.text = (index + 1).toString()
@@ -192,6 +191,9 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
         }
         mBinding.btnShare.setOnSingleClickListener {
             startWxShare()
+        }
+        mBinding.ivRule.setOnSingleClickListener {
+            PageIntentUtil.url2Page(mContext,imgConfig?.ruleUrl)
         }
     }
 

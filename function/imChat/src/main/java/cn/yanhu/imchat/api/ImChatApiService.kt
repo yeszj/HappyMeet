@@ -3,6 +3,7 @@ package cn.yanhu.imchat.api
 import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.ChatPriceItemInfo
+import cn.yanhu.commonres.bean.ComboCountInfo
 import cn.yanhu.commonres.bean.CommonErrorTipsInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
 import cn.yanhu.commonres.bean.SmCheckResult
@@ -200,6 +201,9 @@ interface ImChatApiService : CommonApiService {
     @FormUrlEncoded
     @POST("app/v1/chat/call")
     suspend fun call(@FieldMap map: Map<String, String>): BaseBean<ChatCallResponseInfo>
+
+    @GET("app/v1/room/getStickerGiftMinNum")
+    suspend fun getStickerGiftMinNum(@Query("roomId") roomId:String, @Query("toUserId") toUserId:String, @Query("giftId") giftId: Int): BaseBean<ComboCountInfo>
 
 
 }

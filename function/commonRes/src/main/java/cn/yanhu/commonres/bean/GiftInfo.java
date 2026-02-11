@@ -22,7 +22,7 @@ public class GiftInfo implements Serializable {
 
     public static final int TYPE_ROSE = 13;//玫瑰
 
-    public static final int TYPE_LOVER = 14 ;//CP
+    public static final int TYPE_LOVER = 14;//CP
 
     private String name;
     private int price;
@@ -42,6 +42,16 @@ public class GiftInfo implements Serializable {
     private int loversType;
 
     private String targetUserId;
+
+    private boolean isForeverFaceEffect;
+
+    public boolean isForeverFaceEffect() {
+        return isForeverFaceEffect;
+    }
+
+    public void setForeverFaceEffect(boolean foreverFaceEffect) {
+        isForeverFaceEffect = foreverFaceEffect;
+    }
 
     public String getTargetUserId() {
         return targetUserId;

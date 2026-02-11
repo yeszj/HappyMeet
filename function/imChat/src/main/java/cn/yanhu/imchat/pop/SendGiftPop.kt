@@ -18,9 +18,11 @@ import cn.yanhu.baselib.utils.ext.logComToFile
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.bean.ComboCountInfo
 import cn.yanhu.commonres.bean.CommonErrorTipsInfo
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.SendGiftRequest
+import cn.yanhu.commonres.bean.SendGiftRequest.SOURCE_CHAT
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.bean.response.GiftResponse
 import cn.yanhu.commonres.config.ChatConstant
@@ -32,6 +34,8 @@ import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.databinding.PopSendGiftBinding
 import cn.yanhu.imchat.manager.EmMsgManager
 import cn.yanhu.imchat.manager.SendGiftCheckManager
+import cn.yanhu.imchat.manager.SendGiftCheckManager.checkSendGift
+import cn.yanhu.imchat.manager.SendGiftCheckManager.sendGiftRequest
 import cn.yanhu.imchat.manager.SmSdkUtils.SOURCE_VIDEO
 import cn.yanhu.imchat.view.GiftShowFrg
 import cn.zj.netrequest.application.ApplicationProxy
@@ -65,20 +69,23 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     private var giftInfo: GiftResponse? = null
     private var source: Int = 0
     private var callId: Int = 0
-    private var sendUserInfo: UserDetailInfo = UserDetailInfo()
+    private var targetUserInfo: UserDetailInfo = UserDetailInfo()
     private var onSendGiftListener: OnSendGiftListener? = null
     private var isShowContinueClick: Boolean = false
+    private var foreverFaceCount = 0
+    private var randomBoxMaxNum = 1//盲盒最大可选择数量
 
-    @SuppressLint("CommitTransaction", "ClickableViewAccessibility")
+    @SuppressLint("CommitTransaction", "ClickableViewAccessibility", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
-            sendUserInfo =
+            targetUserInfo =
                 requireArguments().getSerializable(IntentKeyConfig.DATA) as UserDetailInfo
             source = requireArguments().getInt("source")
             callId = requireArguments().getInt("callId")
             isShowContinueClick = requireArguments().getBoolean("isShowContinueClick", false)
-            this.userInfo = sendUserInfo
+            randomBoxMaxNum = requireArguments().getInt("randomBoxMaxNum")
+            this.userInfo = targetUserInfo
             this.executePendingBindings()
             logcom("showGiftPop = show")
             val balanceRose = requireArguments().getString("balanceRose", "")
@@ -87,22 +94,69 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             }
 
             initTabLayout()
+            this.ivSub.setOnClickListener {
+                if (binding!!.tvNum.text.toString().toInt() > 1) {
+                    val count = binding!!.tvNum.text.toString().toInt() - 1
+                    binding!!.tvNum.text = count.toString()
+                    if (count == 1) {
+                        this.ivSub.setImageResource(cn.yanhu.commonres.R.drawable.svg_gift_gray_sub)
+                    }
+                }
+            }
+            this.ivAdd.setOnClickListener {
+                val count = binding!!.tvNum.text.toString().toInt() + 1
+                val fragment = giftViewsList[viewPager.currentItem] as GiftShowFrg
+                val selectItem = fragment.getSelectItem()
+                selectItem?.apply {
+                    if (this.type == GiftInfo.TYPE_RANDOM_BOX && count > randomBoxMaxNum) {
+                        //盲盒礼物根据配置项限制连送数量
+                        if (randomBoxMaxNum == 1) {
+                            showToast("当前礼物不支持连送")
+                        } else {
+                            showToast("${this.name}连送最多上限${randomBoxMaxNum}个哦")
+                        }
+                        return@apply
+                    }
+                    val balanceRose = binding!!.tvRoseNum.text.toString()
+                    val totalPrice =
+                        CommonUtils.multiplyString(count.toString(), selectItem.price.toString())
+                    if (CommonUtils.compareString(balanceRose, totalPrice)) {
+                        binding!!.tvNum.text = count.toString()
+                        binding!!.ivSub.setImageResource(cn.yanhu.commonres.R.drawable.svg_gift_white_sub)
+                    } else {
+                        showRechargePop()
+                    }
+                }
+            }
             this.tvAddFriend.setOnSingleClickListener {
                 onSendGiftListener?.onAddFriend()
             }
             this.tvRecharge.setOnSingleClickListener {
                 showRechargePop()
             }
+            this.btnSend.setOnSingleClickListener {
+                val fragment = giftViewsList[viewPager.currentItem] as GiftShowFrg
+                val selectItem = fragment.getSelectItem()
+                selectItem?.apply {
+                    this.sendNumber = binding!!.tvNum.text.toString().toInt()
+                    checkSendGift(this)
+                }
+            }
             this.tvSendAll.setOnSingleClickListener {
                 val fragment = giftViewsList[viewPager.currentItem] as GiftShowFrg
                 val selectItem = fragment.getSelectItem()
                 selectItem?.apply {
-                    val balanceRose = binding!!.tvRoseNum.text.toString()
-                    onSendGiftListener?.onSendAll(selectItem, balanceRose)
+                    this.sendNumber = binding!!.tvNum.text.toString().toInt()
+                    if (this.sendNumber > 1) {
+                        showToast("连送时不支持全麦赠送哦")
+                    } else {
+                        val balanceRose = binding!!.tvRoseNum.text.toString()
+                        onSendGiftListener?.onSendAll(selectItem, balanceRose)
+                    }
                 }
             }
             this.ivAvatar.setOnSingleClickListener {
-                onSendGiftListener?.onShowUserInfo(sendUserInfo.userId)
+                onSendGiftListener?.onShowUserInfo(targetUserInfo.userId)
             }
             if (SendGiftRequest.SOURCE_LIVE_ROOM == source) {
                 onSendGiftListener?.onShowFriendBtn()
@@ -118,9 +172,9 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     }
 
     fun showAddFriendsBtn(userInfo: UserDetailInfo) {
-        this.sendUserInfo = userInfo
+        this.targetUserInfo = userInfo
         if (binding != null) {
-            if (sendUserInfo.isFriend || (sendUserInfo.isSameGender && AppCacheManager.isMan())) {
+            if (targetUserInfo.isFriend || (targetUserInfo.isSameGender && AppCacheManager.isMan())) {
                 binding!!.tvAddFriend.visibility = View.INVISIBLE
             } else {
                 binding!!.tvAddFriend.visibility = View.VISIBLE
@@ -131,6 +185,40 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     private var sendGiftListener = object : GiftShowFrg.OnClickSendListener {
         override fun onSendGift(item: GiftInfo?) {
             checkSendGift(item!!)
+        }
+
+        override fun onClickGift(item: GiftInfo?) {
+            if (item == null) {
+                return
+            }
+            if (item.type == GiftInfo.TYPE_FACE) {
+                request({
+                    imChatRxApi.getStickerGiftMinNum(
+                        targetUserInfo.roomId.toString(),
+                        targetUserInfo.userId,
+                        item.id
+                    )
+                }, object : OnRequestResultListener<ComboCountInfo> {
+                    override fun onSuccess(data: BaseBean<ComboCountInfo>) {
+                        data.data?.apply {
+                            if (binding!!.tabLayout.checkedRadioButtonId == R.id.tv_face) {
+                                foreverFaceCount = this.minNum
+                                if (this.minNum > 0) {
+                                    binding!!.vgFaceTips.visibility = View.VISIBLE
+                                    binding!!.tvFaceCount.text = this.minNum.toString()
+                                } else {
+                                    binding!!.vgFaceTips.visibility = View.INVISIBLE
+                                }
+                            }
+                        }
+                    }
+                })
+            } else if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
+                val sendNumber = binding!!.tvNum.text.toString().toInt()
+                if (sendNumber > randomBoxMaxNum) {
+                    binding!!.tvNum.text = randomBoxMaxNum.toString()
+                }
+            }
         }
 
         override fun setGiftInfo(giftResponse: GiftResponse, type: Int) {
@@ -154,15 +242,23 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         }
     }
 
-    private fun checkSendGift(item: GiftInfo){
+    private fun checkSendGift(item: GiftInfo) {
+        item.sendNumber = binding!!.tvNum.text.toString().toInt()
         val balanceRose = binding?.tvRoseNum?.text.toString()
-        if (CommonUtils.compareString(balanceRose, item.price.toString())) {
-            SendGiftCheckManager.checkSendGift(sendUserInfo.userId,item.id,object : SendGiftCheckManager.OnCheckGiftListener{
-                override fun onCanSend() {
-                    clickSendGift(item)
-                }
-            })
-        }else{
+        if (CommonUtils.compareString(
+                balanceRose,
+                CommonUtils.multiplyString(item.price.toString(), item.sendNumber.toString())
+            )
+        ) {
+            SendGiftCheckManager.checkSendGift(
+                targetUserInfo.userId,
+                item.id,
+                object : SendGiftCheckManager.OnCheckGiftListener {
+                    override fun onCanSend() {
+                        clickSendGift(item)
+                    }
+                })
+        } else {
             showRechargePop(true)
         }
     }
@@ -179,7 +275,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                 val faceGiftShowView = GiftShowFrg.newInstance(source, GiftInfo.TYPE_FACE)
                 giftViewsList.add(faceGiftShowView)
                 faceGiftShowView.registerClickSendListener(sendGiftListener)
-                if (!sendUserInfo.isSameGender) {
+                if (!targetUserInfo.isSameGender) {
                     val loversGiftShowView =
                         GiftShowFrg.newInstance(source, GiftInfo.TYPE_LOVER)
                     giftViewsList.add(loversGiftShowView)
@@ -202,6 +298,7 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             myFragmentStateAdapter = FrgFragmentStateAdapter(this@SendGiftPop, giftViewsList)
             viewPager.adapter = myFragmentStateAdapter
             tabLayout.setOnCheckedChangeListener { _, checkedId ->
+                vgFaceTips.visibility = View.INVISIBLE
                 when (checkedId) {
                     R.id.tv_gift -> {
                         setCurrentItem(0)
@@ -247,54 +344,77 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         }
     }
 
-
+    private var sendPosition = 0
     private fun startSendGift(item: GiftInfo) {
         val balanceRose = binding?.tvRoseNum?.text.toString()
-        if (CommonUtils.compareString(balanceRose, item.price.toString())) {
-            val sendGiftRequest = SendGiftRequest()
-            sendGiftRequest.roomId = sendUserInfo.roomId.toString()
-            sendGiftRequest.toUid = sendUserInfo.userId
-            sendGiftRequest.giftId = item.id
-            sendGiftRequest.num = 1
-            sendGiftRequest.source =
-                if (source == SOURCE_VIDEO) SendGiftRequest.SOURCE_CALL else if (source == SOURCE_CHAT) SendGiftRequest.SOURCE_CHAT else SendGiftRequest.SOURCE_LIVE_ROOM
-            sendGiftRequest.callId = callId
-            sendGift(sendGiftRequest, item)
+        if (CommonUtils.compareString(
+                balanceRose,
+                CommonUtils.multiplyString(item.price.toString(), item.sendNumber.toString())
+            )
+        ) {
+            sendPosition = 0
+            sendGift(item, item.sendNumber)
         } else {
             showRechargePop(true)
         }
     }
 
-    private fun sendGift(sendGiftRequest: SendGiftRequest, item: GiftInfo) {
+    private fun createSendRequest(item: GiftInfo): SendGiftRequest {
+        val sendGiftRequest = SendGiftRequest()
+        sendGiftRequest.roomId = targetUserInfo.roomId.toString()
+        sendGiftRequest.toUid = targetUserInfo.userId
+        sendGiftRequest.giftId = item.id
+        if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
+            sendGiftRequest.num = 1
+        } else {
+            sendGiftRequest.num = item.sendNumber
+        }
+        sendGiftRequest.source =
+            if (source == SOURCE_VIDEO) SendGiftRequest.SOURCE_CALL else if (source == SOURCE_CHAT) SendGiftRequest.SOURCE_CHAT else SendGiftRequest.SOURCE_LIVE_ROOM
+        sendGiftRequest.callId = callId
+        return sendGiftRequest
+    }
+
+    private fun sendGift(item: GiftInfo, count: Int) {
+        val sendGiftRequest = createSendRequest(item)
         request2(
             { imChatRxApi.sendGift(sendGiftRequest) },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
+
+                    if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
+                        item.sendNumber = 1
+                        sendPosition++
+                        if (sendPosition < count) {
+                            sendGift(item, count)
+                        } else {
+                            showToast("赠送礼物成功")
+                            VibrateUtils.vibrate(50)
+                        }
+                    } else {
+                        showToast("赠送礼物成功")
+                        VibrateUtils.vibrate(50)
+                    }
                     giftInfo?.roseNum = BigDecimal(
                         CommonUtils.subString(
                             giftInfo!!.roseNum.toPlainString(),
-                            item.price.toString()
+                            CommonUtils.multiplyString(
+                                item.price.toString(),
+                                sendGiftRequest.num.toString()
+                            )
                         )
                     )
                     binding?.tvRoseNum?.text = giftInfo!!.roseNum.toPlainString()
-                    showToast("赠送礼物成功")
-                    VibrateUtils.vibrate(50)
-                    val map = HashMap<String, Any>()
-                    map["giftName"] = item.name
-                    map["giftIcon"] = item.giftIcon
-                    map["num"] = sendGiftRequest.num
-                    map["svga"] = item.svga
-                    if (source == SendGiftRequest.SOURCE_CALL) {
-                        EmMsgManager.sendCmdMessagePeople(
-                            sendUserInfo.userId,
-                            ChatConstant.ACTION_PHONE_SEND_GIFT,
-                            map,
-                        )
-                    }
+
+                    sendCallTypeMsg(item, sendGiftRequest)
+
                     if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
                         item.randomBoxGiftInfo = data.data
                     }
                     logComToFile("sendGift", "赠送礼物成功，giftName=${item.name}")
+                    if (foreverFaceCount > 0 && item.sendNumber >= foreverFaceCount) {
+                        item.isForeverFaceEffect = true
+                    }
                     onSendGiftListener?.onSendGift(item, false)
                 }
 
@@ -307,10 +427,28 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             })
     }
 
+    private fun sendCallTypeMsg(
+        item: GiftInfo,
+        sendGiftRequest: SendGiftRequest
+    ) {
+        val map = HashMap<String, Any>()
+        map["giftName"] = item.name
+        map["giftIcon"] = item.giftIcon
+        map["num"] = sendGiftRequest.num
+        map["svga"] = item.svga
+        if (source == SendGiftRequest.SOURCE_CALL) {
+            EmMsgManager.sendCmdMessagePeople(
+                targetUserInfo.userId,
+                ChatConstant.ACTION_PHONE_SEND_GIFT,
+                map,
+            )
+        }
+    }
+
     private fun showRechargePop(isDismiss: Boolean = false) {
         activity?.apply {
             val balanceRose = binding?.tvRoseNum?.text.toString()
-            if (CommonUtils.isEmpty(balanceRose)){
+            if (CommonUtils.isEmpty(balanceRose)) {
                 return
             }
             ApplicationProxy.instance.showRechargePop(
@@ -353,12 +491,13 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
         @JvmStatic
         fun showDialog(
             context: FragmentActivity,
-            sendUserInfo: UserDetailInfo,
+            targetUserInfo: UserDetailInfo,
             source: Int,
             callId: Int,
             onSendGiftListener: OnSendGiftListener,
             isShowContinueClick: Boolean = false,
-            balanceRose: BigDecimal? = null
+            balanceRose: BigDecimal? = null,
+            randomBoxMaxNum: Int = 1
         ): SendGiftPop {
             val createGroupPop =
                 SendGiftPop()
@@ -368,8 +507,9 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
             if (balanceRose != null) {
                 arguments.putString("balanceRose", balanceRose.toPlainString())
             }
+            arguments.putInt("randomBoxMaxNum", randomBoxMaxNum)
             arguments.putBoolean("isShowContinueClick", isShowContinueClick)
-            arguments.putSerializable(IntentKeyConfig.DATA, sendUserInfo)
+            arguments.putSerializable(IntentKeyConfig.DATA, targetUserInfo)
             createGroupPop.onSendGiftListener = onSendGiftListener
             createGroupPop.arguments = arguments
             createGroupPop.showNow(context.supportFragmentManager, "sendGiftPop")

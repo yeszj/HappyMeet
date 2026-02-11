@@ -44,6 +44,7 @@ class RoomDetailInfo : RoomListBean(), Serializable, Observable {
     var needComboCnt:Int = 0
     var exclusiveRoomPrice:Int = 0
     var exclusiveSeatPrice:Int = 0
+    var foreverFaceEffect: String?=""
 
     fun isAdmin(): Boolean {
         return admin == 1

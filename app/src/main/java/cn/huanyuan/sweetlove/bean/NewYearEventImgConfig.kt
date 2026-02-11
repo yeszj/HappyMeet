@@ -12,5 +12,7 @@ data class NewYearEventImgConfig(
     val eventRewardImg: String,
     val rangTab1: String,
     val rangTab2: String,
-    val shareBtn: String
+    val shareBtn: String,
+    val ruleIcon: String,
+    val ruleUrl: String
 )

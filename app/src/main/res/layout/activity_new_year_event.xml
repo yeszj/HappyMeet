@@ -38,7 +38,16 @@
                     android:adjustViewBounds="true"
                     android:minHeight="@dimen/dp_300"
                     app:layout_constraintTop_toTopOf="parent" />
-
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_rule"
+                    drawableUrl="@{eventImageConfig.ruleIcon}"
+                    placeholderId="@{-1}"
+                    android:layout_width="@dimen/dp_22"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_90"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
                 <cn.yanhu.baselib.view.CustomFontTextView
                     android:id="@+id/tv_finishTips"
                     style="@style/common_white_shadow"

@@ -1,12 +1,10 @@
 package cn.yanhu.agora.ui.liveRoom.live
 
 import android.Manifest
-import android.R.attr.data
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -47,7 +45,6 @@ import cn.yanhu.agora.listener.OnSendSeatInviteListener
 import cn.yanhu.agora.manager.AgoraManager
 import cn.yanhu.agora.manager.LiveRoomManager
 import cn.yanhu.agora.manager.LiveWebSocketManager
-import cn.yanhu.agora.manager.LiveWebSocketManager.MessageItem
 import cn.yanhu.agora.manager.VideoCanvasPool
 import cn.yanhu.agora.manager.dbCache.InviteRecordCacheManager
 import cn.yanhu.agora.miniwindow.LiveRoomVideoMiniManager
@@ -153,7 +150,6 @@ import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
 import com.pcl.sdklib.listener.OnPayResultListener
 import com.pcl.sdklib.manager.PayManager
-import com.vivo.push.b.r
 import com.yhao.floatwindow.PermissionListener
 import io.agora.rtc2.Constants
 import io.agora.rtc2.IRtcEngineEventHandler
@@ -167,8 +163,6 @@ import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.math.BigDecimal
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
-import java.util.concurrent.LinkedBlockingQueue
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -207,6 +201,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     private var needComboCnt = 10
     private var isShowContinueClick: Boolean = false//普通礼物是否显示连击
     private var selfUserInfo: UserDetailInfo? = null
+    private var randomBoxMaxNum = 1//盲盒最大可选择数量
     override fun initData() {
         selfUserInfo = ImUserManager.getSelfUserInfo()
         initPageData()
@@ -226,6 +221,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         initRvChatTop()
         initChatMsgAdapterData()
         setUserEnterAdapter()
+        EMClient.getInstance().chatroomManager().addChatRoomChangeListener(this)
+        getRandomBoxLimitNum()
         joinChatRoom()
         joinChannel()
         requestData()
@@ -236,6 +233,18 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         setGiftNormalAnimAdapter()
         getRoseGift()
         setApplySeatNum()
+
+    }
+
+    private fun getRandomBoxLimitNum() {
+        request({ commonRxApi.getConfigInfo(ServiceConfigKeyManager.RANDOM_BOX_COMBO_LIMIT_NUM) },
+            object : OnRequestResultListener<String> {
+                override fun onSuccess(data: BaseBean<String>) {
+                    data.data?.apply {
+                        randomBoxMaxNum = this.toInt()
+                    }
+                }
+            })
     }
 
 
@@ -268,22 +277,22 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun getGiftComboSwitch() {
-        request(
-            { commonRxApi.getConfigInfo(ServiceConfigKeyManager.GIF_COMBO_SWITCH) },
-            object : OnRequestResultListener<String> {
-                @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-                override fun onSuccess(data: BaseBean<String>) {
-                    val value = data.data
-                    isShowContinueClick = if (roomSourceBean.isPrivateRoom()) {
-                        false
-                    } else {
-                        value == "1"
-                    }
-                    if (isShowContinueClick && !LiveWebSocketManager.getInstance().isConnected()) {
-                        LiveWebSocketManager.getInstance().init(roomSourceBean.roomId!!)
-                    }
-                }
-            })
+//        request(
+//            { commonRxApi.getConfigInfo(ServiceConfigKeyManager.GIF_COMBO_SWITCH) },
+//            object : OnRequestResultListener<String> {
+//                @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+//                override fun onSuccess(data: BaseBean<String>) {
+//                    val value = data.data
+//                    isShowContinueClick = if (roomSourceBean.isPrivateRoom()) {
+//                        false
+//                    } else {
+//                        value == "1"
+//                    }
+//                    if (isShowContinueClick && !LiveWebSocketManager.getInstance().isConnected()) {
+//                        LiveWebSocketManager.getInstance().init(roomSourceBean.roomId!!)
+//                    }
+//                }
+//            })
     }
 
     private var pkConfigInfo: PkConfigInfo? = null
@@ -671,7 +680,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             refreshSeatInfo()
         }
         registerNetChange()
-        initWebSocket()
+        //    initWebSocket()
     }
 
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
@@ -996,6 +1005,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     protected fun showSendGiftPop(roomUserSeatInfo: UserDetailInfo, isGetUser: Boolean = true) {
+        getRandomBoxLimitNum()
         getGiftComboSwitch()
         if (isGetUser) {
             request(
@@ -1080,7 +1090,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         }
                     }
                 }
-                val price = item.price * needSendUserInfo.size
+                val price = item.price * needSendUserInfo.size * item.sendNumber
                 if (CommonUtils.compareString(price.toString(), balanceRose)) {
                     showRechargePop()
                     isSendAll = false
@@ -1096,7 +1106,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             }
         }
         val sendGiftPop = SendGiftPop.showDialog(
-            mContext, roomUserSeatInfo, roomType, 0, listener, isShowContinueClick, balanceRose
+            mContext, roomUserSeatInfo, roomType, 0, listener, isShowContinueClick, balanceRose,randomBoxMaxNum
         )
         sendGiftPopWeakRef = WeakReference(sendGiftPop)
     }
@@ -1158,7 +1168,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 if (giftInfo.type == GiftInfo.TYPE_ROSE) ChatConstant.ACTION_SEND_ROSE else ChatConstant.ACTION_SEND_GIFT
             )
         )
-        mBinding.progress.setCountdownTime(3000)
+        mBinding.progress.setCountdownTime(1000)
         mBinding.progress.startCountdown()
         startCountTime(chatRoomRoseGiftMsg!!)
         clickCount++
@@ -1236,7 +1246,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         sendGiftRequest.roomId = roomId
         sendGiftRequest.toUid = userInfo.userId
         sendGiftRequest.giftId = item.id
-        sendGiftRequest.num = 1
+        sendGiftRequest.num = item.sendNumber
         sendGiftRequest.source = SendGiftRequest.SOURCE_LIVE_ROOM
         sendGiftRequest.callId = 0
         request2(
@@ -1292,7 +1302,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         isSendAll: Boolean = false
     ) {
         LiveDataEventManager.sendLiveDataMessage(LiveDataEventManager.REFRESH_USER_CACHE)
-        item.sendNumber = 1
         val chatRoomGiftMsg =
             ChatRoomGiftMsg(selfUserInfo!!, roomUserSeatInfo, item)
         chatRoomGiftMsg.isAllSeatSend = isSendAll
@@ -2014,8 +2023,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     protected open fun setSeatOutSuccess() {
         checkTime = 0L
-        foreverFaceEffect = ""
-        foreverFacePrice = 0
         setSeatStatus()
         logInfoCom(value = "用户下麦：$localUserId")
         BeautyManager.setStickerItem(null)
@@ -2106,6 +2113,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     checkTime = 0L
                     refreshSeatInfo(localUserId)
                     setHasSeatUpStatus()
+                    setForeverFaceEffect()
                     balanceRose = CommonUtils.subBigDecimal(
                         balanceRose,
                         BigDecimal(getSeatInRoseNum())
@@ -2120,6 +2128,13 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             }
 
         })
+    }
+
+    private fun setForeverFaceEffect() {
+        if (!CommonUtils.isEmpty(foreverFaceEffect)) {
+            val stickerItem = SenseTimeBeautySDK.StickerItem(mContext, foreverFaceEffect!!)
+            BeautyManager.setStickerItem(stickerItem)
+        }
     }
 
     private fun showFailTips(code: Int?, msg: String?) {
@@ -2253,7 +2268,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun startCountTime(chatRoomGiftMsg: ChatRoomGiftMsg) {
         countDown?.cancel()
-        mContext.countDown(3, start = {
+        mContext.countDown(1, start = {
             countDown = it
         }, end = {
             //倒计时结束
@@ -2486,11 +2501,14 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (giftInfo == null || TextUtils.isEmpty(giftInfo.svga) || giftInfo.type == GiftInfo.TYPE_FACE) {
             return
         }
-        giftAnimTaskManager.addTask(
-            GiftPopAnimTask(
-                giftInfo, mBinding.svgGiftAnim, mBinding.videoGiftAnimView, roomId = roomId
+        (0 until giftInfo.sendNumber).forEach { i ->
+            giftAnimTaskManager.addTask(
+                GiftPopAnimTask(
+                    giftInfo, mBinding.svgGiftAnim, mBinding.videoGiftAnimView, roomId = roomId
+                )
             )
-        )
+        }
+
     }
 
     private fun showFloatAnim(giftMsgInfo: ChatRoomGiftMsg) {
@@ -2572,7 +2590,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 BeautyManager.setStickerItem(stickerItem)
                 logInfoCom("startSendComboGift", "设置贴脸setStickerItem=${faceEffectInfo}")
             }
-            startFaceEffectTime(currentStickerItem)
+            startFaceEffectTime(currentStickerItem, giftMsgInfo.giftInfo.sendNumber)
         }
     }
 
@@ -2587,36 +2605,51 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         }
     }
 
-    private var foreverFaceEffect: String = "" //永久贴脸礼物特效
+    private var foreverFaceEffect: String? = "" //永久贴脸礼物特效
     private var foreverFacePrice: Int = 0
     private fun calculateForeverFaceEffect(giftMsgInfo: ChatRoomGiftMsg) {
         val giftInfo = giftMsgInfo.giftInfo
         if (giftInfo.type == GiftInfo.TYPE_FACE && giftMsgInfo.targetUserInfo.userId == localStrUserId) {
             faceEffectInfo = giftInfo.svga
-            if (giftInfo.sendNumber >= needComboCnt) {
-                var totalPrice = giftInfo.price * giftInfo.sendNumber
-                if (TextUtils.isEmpty(foreverFaceEffect)) {
-                    foreverFacePrice = totalPrice
+            if (isShowContinueClick) {
+                if (giftInfo.sendNumber >= needComboCnt) {
+                    var totalPrice = giftInfo.price * giftInfo.sendNumber
+                    if (TextUtils.isEmpty(foreverFaceEffect)) {
+                        foreverFacePrice = totalPrice
+                        foreverFaceEffect = faceEffectInfo
+                        logInfoCom(
+                            "startSendComboGift",
+                            "收到永久贴脸,faceEffectInfo = $faceEffectInfo"
+                        )
+                    } else {
+                        if (totalPrice > foreverFacePrice) {
+                            foreverFacePrice = totalPrice
+                            foreverFaceEffect = faceEffectInfo
+                            logInfoCom(
+                                "startSendComboGift",
+                                "替换永久贴脸,faceEffectInfo = $faceEffectInfo"
+                            )
+                        }
+                    }
+                }
+                if (!TextUtils.isEmpty(foreverFaceEffect)) {
+                    logInfoCom(
+                        "startSendComboGift",
+                        "当前永久贴脸setStickerItem=${foreverFaceEffect}"
+                    )
+                }
+            } else {
+                if (giftInfo.isForeverFaceEffect) {
                     foreverFaceEffect = faceEffectInfo
                     logInfoCom(
                         "startSendComboGift",
                         "收到永久贴脸,faceEffectInfo = $faceEffectInfo"
                     )
-                } else {
-                    if (totalPrice > foreverFacePrice) {
-                        foreverFacePrice = totalPrice
-                        foreverFaceEffect = faceEffectInfo
-                        logInfoCom(
-                            "startSendComboGift",
-                            "替换永久贴脸,faceEffectInfo = $faceEffectInfo"
-                        )
-                    }
                 }
             }
-            if (!TextUtils.isEmpty(foreverFaceEffect)) {
-                logInfoCom("startSendComboGift", "当前永久贴脸setStickerItem=${foreverFaceEffect}")
-            }
+
         }
+
     }
 
 
@@ -2624,12 +2657,12 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     private var faceRestTime: Int = 0
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun startFaceEffectTime(currentStickerItem: String?) {
+    private fun startFaceEffectTime(currentStickerItem: String?, count: Int) {
         if (!TextUtils.isEmpty(foreverFaceEffect) && faceEffectInfo != foreverFaceEffect && currentStickerItem == foreverFaceEffect) {
             //如果当前正在播放的贴脸是永久贴脸并且新的贴脸不是永久贴脸则重置倒计时时间为原始的30s
             faceRestTime = 0
         }
-        val countTime = faceRestTime + 30
+        val countTime = faceRestTime + 30 * count
         logInfoCom("startSendComboGift", "startFaceEffectTime = $countTime")
         mContext.countDown(countTime, start = {
             faceEffectCountDown = it
@@ -2638,9 +2671,9 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             logInfoCom("startSendComboGift", "倒计时结束")
             if (!TextUtils.isEmpty(foreverFaceEffect)) {
                 logInfoCom("startSendComboGift", "设置永久贴脸setStickerItem=${foreverFaceEffect}")
-                val stickerItem = SenseTimeBeautySDK.StickerItem(mContext, foreverFaceEffect)
-                BeautyManager.setStickerItem(stickerItem)
+                setForeverFaceEffect()
             } else {
+                logInfoCom("startSendComboGift", "取消贴脸特效")
                 BeautyManager.setStickerItem(null)
             }
             faceRestTime = 0
@@ -2849,6 +2882,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 logComToFile(TAG, "获取麦位信息成功userId=$uid")
                 if (uid == 0) {
                     getRoomSeatSuccess(seatList)
+                    setForeverFaceEffect()
                 } else {
                     refreshSeatInfo(seatList, uid)
                 }
@@ -2906,6 +2940,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 roomType = it.roomType
                 mBinding.roomInfo = it
                 needComboCnt = it.needComboCnt
+                foreverFaceEffect = it.foreverFaceEffect
                 roomSourceBean = it
                 if (seatList.isNotEmpty()) {
                     roomSourceBean.roomSeatResList = seatList
@@ -2927,7 +2962,6 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
 
     private fun joinChatRoom(onJoinChatRoomListener: OnJoinChatRoomListener? = null) {
-        EMClient.getInstance().chatroomManager().addChatRoomChangeListener(this)
         EMClient.getInstance().chatroomManager()
             .joinChatRoom(roomSourceBean.uid, object : EMValueCallBack<EMChatRoom> {
                 override fun onSuccess(value: EMChatRoom?) {
@@ -3013,6 +3047,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             ) {
                 val giftInfo = GiftInfo()
                 giftInfo.svga = carUrl
+                giftInfo.sendNumber = 1
                 showGiftSvgAnim(giftInfo)
             }
         }
@@ -3170,6 +3205,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             isOnNewIntent = false
             return
         }
+        reLoginIm(object : OnJoinChatRoomListener{
+            override fun onJoinSuccess() {
+
+            }
+        })
         getRoseGift()
         closeMiniWindow()
         if (mViewModel.roomDetailLivedata.value != null) {
@@ -3772,6 +3812,13 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     override fun onRemovedFromChatRoom(
         reason: Int, roomId: String?, roomName: String?, participant: String?
     ) {
+        logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "被移出聊天室roomId=${roomId}——————$participant,reason=${reason}")
+        if (isNotMyRoom(roomId)) {
+            return
+        }
+        if (participant == localStrUserId) {
+            leaveRoomFinish()
+        }
     }
 
     override fun onMuteListAdded(

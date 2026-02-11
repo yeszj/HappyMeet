@@ -20,4 +20,7 @@ object ServiceConfigKeyManager {
 
     //开启皮肤分割
     const val OPEN_WHITEN_SKIN_MASK = "open_whiten_skin_mask"
+
+    //盲盒礼物连击最大限制数量
+    const val RANDOM_BOX_COMBO_LIMIT_NUM = "random_box_combo_limit_num"
 }

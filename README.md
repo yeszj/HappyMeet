@@ -1,5 +1,5 @@
 ## 欢遇
-
+18969907297 可送盲盒的测试账号
 * 接口文档：https://pzi2iye0p9.apifox.cn
 * 项目原型地址：https://www.figma.com/file/EZ3KVafM8YZiuQerLQ5qKN/%E8%B6%A3%E7%9B%B8%E4%BA%B2?type=design&node-id=1-80&mode=design&t=pwwyfQtOvusBgiRv-0
 

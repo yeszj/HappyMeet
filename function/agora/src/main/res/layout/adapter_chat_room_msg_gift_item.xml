@@ -112,7 +112,7 @@
             <cn.yanhu.baselib.view.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{" "+giftMsgInfo.giftInfo.name+"x"+giftMsgInfo.giftInfo.sendNumber}'
+                android:text='@{" "+giftMsgInfo.giftInfo.name+"x"+giftMsgInfo.giftInfo.sendNumber+" "}'
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14"
                 app:fontType="@string/fontMedium"
@@ -124,6 +124,16 @@
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
                 android:src="@drawable/icon_rose" />
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 触发永久贴脸"
+                android:visibility="@{giftMsgInfo.giftInfo.foreverFaceEffect?View.VISIBLE:View.GONE}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                app:fontType="@string/fontMedium"
+                tools:text="" />
 
         </LinearLayout>
 
