@@ -1,5 +1,6 @@
 package com.hyphenate.easeui.modules.chat;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -99,6 +100,7 @@ public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryM
         initListener();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initListener() {
         buttonSend.setOnClickListener(this);
         buttonSetModeKeyboard.setOnClickListener(this);
@@ -109,14 +111,11 @@ public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryM
         editText.setOnEditTextChangeListener(this);
         editText.addTextChangedListener(this);
         cancelSelect.setOnClickListener(this);
-        buttonPressToSpeak.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(listener != null){
-                    return listener.onPressToSpeakBtnTouch(v, event);
-                }
-                return false;
+        buttonPressToSpeak.setOnTouchListener((v, event) -> {
+            if(listener != null){
+                return listener.onPressToSpeakBtnTouch(v, event);
             }
+            return false;
         });
     }
 

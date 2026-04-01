@@ -1,15 +1,38 @@
 package cn.yanhu.baselib.utils
 
+import android.R.attr.bitmap
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.NinePatch
+import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.NinePatchDrawable
 import android.text.TextUtils
+import android.view.View
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.core.graphics.drawable.toBitmap
+import androidx.databinding.adapters.ViewBindingAdapter.setPadding
 import cn.yanhu.baselib.R
 import cn.yanhu.baselib.utils.ext.logComToFile
+import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.baselib.view.CircleBorderTransformation
+import coil.imageLoader
 import coil.load
+import coil.request.ImageRequest
+import coil.request.SuccessResult
+import coil.size.Size
 import coil.transform.CircleCropTransformation
+import coil.transform.RoundedCornersTransformation
+import com.bumptech.glide.request.target.CustomTarget
+import com.luck.picture.lib.utils.ActivityCompatHelper
+import ua.anatolii.graphics.ninepatch.NinePatchChunk
+import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 /**
  * @author: zhengjun
@@ -56,6 +79,13 @@ object CoilImgUtils {
 
     }
 
+    fun loadRoundImg(url: String?, imageView: ImageView,roundDimens: Float) {
+        imageView.load(url){
+            placeholder(R.drawable.image_placeholder)
+            transformations(RoundedCornersTransformation(roundDimens))
+        }
+    }
+
     @SuppressLint("CheckResult")
     fun loadImg(
         url: Any?,
@@ -91,4 +121,36 @@ object CoilImgUtils {
     private fun isUrlNull(url: Any?): Boolean {
         return url == null || (url is String && TextUtils.isEmpty(url.toString()))
     }
+
+
+    fun loadNinePatchImage(context: Context,url: String?,onLoadNinePatchImageListener: OnLoadNinePatchImageListener) {
+        if (isUrlNull(url)){
+            return
+        }
+        context.imageLoader.enqueue(
+            ImageRequest.Builder(context)
+                .data(url)
+                .target(onSuccess = { drawable ->
+                    val bitmapDrawable = drawable as? BitmapDrawable
+                    val finalDrawable = if (bitmapDrawable != null) {
+                        val bitmap = bitmapDrawable.bitmap
+                        NinePatchChunk.create9PatchDrawable(
+                            context,
+                            bitmap,
+                            "qipao"  // srcName，可为 null
+                        )
+                    } else {
+                        drawable
+                    }
+                    onLoadNinePatchImageListener.onLoadNinePatchImage(finalDrawable)
+                }, onError = {
+                    // 错误处理
+                })
+                .build()
+        )
+    }
+    interface OnLoadNinePatchImageListener {
+        fun onLoadNinePatchImage(drawable: Drawable)
+    }
+
 }

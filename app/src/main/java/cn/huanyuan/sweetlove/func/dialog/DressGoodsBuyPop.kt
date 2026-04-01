@@ -10,6 +10,7 @@ import cn.huanyuan.sweetlove.R
 import cn.huanyuan.sweetlove.databinding.PopDressGoodsBuyBinding
 import cn.huanyuan.sweetlove.net.rxApi
 import cn.huanyuan.sweetlove.ui.userinfo.dressUp.DressUpFrg
+import cn.huanyuan.sweetlove.ui.userinfo.dressUp.DressUpFrg.Companion.TYPE_USER_POP
 import cn.huanyuan.sweetlove.ui.userinfo.dressUp.adapter.GoodsPriceAdapter
 import cn.yanhu.agora.api.agoraRxApi
 import cn.yanhu.agora.pop.FriendsSelectPop
@@ -68,20 +69,13 @@ class DressGoodsBuyPop(
             val svga = item.svgUrl
 
             if (!TextUtils.isEmpty(svga)) {
-                if (type != DressUpFrg.TYPE_CAR) {
-                    if (type == DressUpFrg.TYPE_USER_FLOAT) {
-                        ViewUtils.setViewSize(
-                            ivGoods,
-                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_187),
-                            CommonUtils.getDimension(
-                                com.zj.dimens.R.dimen.dp_50
-                            )
-                        )
+                if (type == DressUpFrg.TYPE_CAR || type == DressUpFrg.TYPE_USER_HOMEPAGE ) {
+                    if (svga!!.contains(".mp4") || svga.contains(".svga")){
+                        tvRead.visibility = View.VISIBLE
+                    }else{
+                        tvRead.visibility = View.INVISIBLE
                     }
-                    tvRead.visibility = View.INVISIBLE
-                    SVGAUtils.loadSVGAAnim(ivGoods, svga)
-                } else {
-                    tvRead.visibility = View.VISIBLE
+
                     vgPic.setOnSingleClickListener {
                         if (svga!!.contains(".mp4")){
                             VideoAnimUtils.loadNetVideoAnim(context,svga,this.animView,null)
@@ -101,6 +95,20 @@ class DressGoodsBuyPop(
                         override fun onRepeat() {}
                         override fun onStep(i: Int, v: Double) {}
                     }
+                } else {
+                    if (type == DressUpFrg.TYPE_USER_FLOAT) {
+                        ViewUtils.setViewSize(
+                            ivGoods,
+                            CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_187),
+                            CommonUtils.getDimension(
+                                com.zj.dimens.R.dimen.dp_50
+                            )
+                        )
+                    }
+                    tvRead.visibility = View.INVISIBLE
+                    SVGAUtils.loadSVGAAnim(ivGoods, svga)
+
+
                 }
             } else {
                 tvRead.visibility = View.INVISIBLE

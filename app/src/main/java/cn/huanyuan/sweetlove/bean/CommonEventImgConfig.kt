@@ -1,5 +1,7 @@
 package cn.huanyuan.sweetlove.bean
 
+import cn.yanhu.commonres.bean.HeartCpUserInfo
+
 /**
  * @author: zhengjun
  * created: 2025/1/20
@@ -14,7 +16,10 @@ data class CommonEventImgConfig(
     val eventName: String,
     val times:String,
     val copyrightColor: String,
-    val rewardPool: RewardPool
+    val rewardPool: RewardPool,
+    val signInTag: String?="",
+    val needSignIn: Boolean = false,
+    val myCp: HeartCpUserInfo?=null
 ) {
     data class BgColor(val start: String, val end: String)
     data class RewardPool(

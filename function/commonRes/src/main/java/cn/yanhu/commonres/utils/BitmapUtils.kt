@@ -23,6 +23,8 @@ import com.blankj.utilcode.util.ThreadUtils
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
+import androidx.core.graphics.createBitmap
+import androidx.core.net.toUri
 
 /**
  * @author zhengjun
@@ -31,10 +33,8 @@ import java.io.FileOutputStream
  */
 object BitmapUtils {
     fun view2Bitmap(shareView: View): Bitmap {
-        val bitmap = Bitmap.createBitmap(
-            shareView.measuredWidth, shareView.measuredHeight,
-            Bitmap.Config.RGB_565
-        )
+        val bitmap =
+            createBitmap(shareView.measuredWidth, shareView.measuredHeight, Bitmap.Config.RGB_565)
         val canvas = Canvas(bitmap)
         canvas.drawColor(Color.WHITE)
         shareView.draw(canvas)
@@ -52,10 +52,8 @@ object BitmapUtils {
         )
         shareView.measure(widthMeasureSpec, heightMeasureSpec)
         shareView.layout(0, 0, shareView.measuredWidth, shareView.measuredHeight)
-        val bitmap = Bitmap.createBitmap(
-            shareView.measuredWidth, shareView.measuredHeight,
-            Bitmap.Config.RGB_565
-        )
+        val bitmap =
+            createBitmap(shareView.measuredWidth, shareView.measuredHeight, Bitmap.Config.RGB_565)
         val canvas = Canvas(bitmap)
         canvas.drawColor(Color.WHITE)
         shareView.draw(canvas)
@@ -90,6 +88,7 @@ object BitmapUtils {
                         return try {
                             savePicture(mActivity, finalBitmap, System.currentTimeMillis().toString())
                         }catch (e:Exception){
+                            e.printStackTrace()
                             false
                         }
                     }
@@ -151,9 +150,7 @@ object BitmapUtils {
         // 发送广播，通知刷新图库的显示
         context.sendBroadcast(
             Intent(
-                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(
-                    "file://$fileName"
-                )
+                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, "file://$fileName".toUri()
             )
         )
         return true

@@ -8,8 +8,11 @@ import cn.huanyuan.sweetlove.bean.CommonEventRankResponse
 import cn.huanyuan.sweetlove.bean.ComplaintInfo
 import cn.huanyuan.sweetlove.bean.ErrorLogInfo
 import cn.huanyuan.sweetlove.bean.GuardRankResponse
+import cn.huanyuan.sweetlove.bean.HeartCpEventRankResponse
+import cn.huanyuan.sweetlove.bean.HeartCpSignResponse
 import cn.huanyuan.sweetlove.bean.InviteInfo
 import cn.huanyuan.sweetlove.bean.InviteRecordResponse
+import cn.huanyuan.sweetlove.bean.InviteUserDataRes
 import cn.huanyuan.sweetlove.bean.LiveFloatInfo
 import cn.huanyuan.sweetlove.bean.NewYearInfo
 import cn.huanyuan.sweetlove.bean.NewYearRankResponse
@@ -22,6 +25,7 @@ import cn.huanyuan.sweetlove.bean.TaskResponse
 import cn.huanyuan.sweetlove.bean.UserLevelResponse
 import cn.huanyuan.sweetlove.bean.WalletInfo
 import cn.huanyuan.sweetlove.bean.WalletRecordResponse
+import cn.huanyuan.sweetlove.bean.reqeust.HeartCpSignRequest
 import cn.yanhu.commonres.api.CommonApiService
 import cn.yanhu.commonres.bean.AppPopResponse
 import cn.yanhu.commonres.bean.AuthCenterInfo
@@ -247,7 +251,7 @@ interface ApiService : CommonApiService {
 
     @GET("app/v1/user/getMyInviteUser")
     suspend fun getMyInviteUser(
-        @Query("page") page: Int,@Query("filterId") filterId:String,@Query("inviteFilterId") inviteFilterId:String
+        @Query("page") page: Int,@Query("filterId") filterId:String,@Query("inviteFilterId") inviteFilterId:String,@Query("searchContent") searchContent: String?
     ): BaseBean<InviteRecordResponse>
 
     @GET("app/v1/user/getInviteInfo")
@@ -417,4 +421,31 @@ interface ApiService : CommonApiService {
 
     @GET("app/v1/user/getPop")
     suspend fun getPop(): BaseBean<String>
+
+    @GET("app/v1/activity/cp/getIndex")
+    suspend fun getHeartCpEventConfig(@Query("activityId") activityId:String): BaseBean<CommonEventImgConfig>
+
+    @POST("app/v1/activity/cp/unbind")
+    suspend fun unBindCp(@Query("activityId") activityId:String): BaseBean<String?>
+
+
+    @GET("app/v1/activity/cp/getRanking")
+    suspend fun getHeartCpRank(@Query("activityId") activityId:String,@Query("type") type:Int): BaseBean<HeartCpEventRankResponse>
+
+    @GET("app/v1/activity/cp/getSignInCalendar")
+    suspend fun getSignInCalendar(@Query("activityId") activityId:String): BaseBean<HeartCpSignResponse>
+
+    @POST("app/v1/activity/cp/signIn")
+    suspend fun signInHeartCp(@Body signRequest: HeartCpSignRequest): BaseBean<String>
+
+    @POST("app/v1/activity/cp/makeUpSignIn")
+    suspend fun makeUpSignIn(@Body signRequest: HeartCpSignRequest): BaseBean<String>
+
+    @POST("app/v1/activity/cp/receiveReward")
+    suspend fun receiveReward(@Body signRequest: HeartCpSignRequest): BaseBean<String>
+
+
+    @GET("app/v1/user/getMyInviteUserDetail")
+    suspend fun getMyInviteUserDetail(@Query("invitedUserId") invitedUserId:String): BaseBean<InviteUserDataRes>
+
 }

@@ -61,12 +61,12 @@ class ChatAlertNew(context: Context?, isSender: Boolean) : BaseEaseChatRow(conte
         tvCallBtn = findViewById<TextView?>(R.id.tv_callBtn)
     }
 
-    protected override fun onSetUpView() {
+    override fun onSetUpView() {
         super.onSetUpView()
         try {
             val messageBody = message.getBody() as EMCustomMessageBody
-            val params = messageBody.getParams()
-            val iconUrl = params.get("icon")
+            val params = messageBody.params
+            val iconUrl = params["icon"]
             if (TextUtils.isEmpty(iconUrl)) {
                 icon!!.setVisibility(GONE)
             } else {
@@ -75,7 +75,7 @@ class ChatAlertNew(context: Context?, isSender: Boolean) : BaseEaseChatRow(conte
             }
 
             if (params.containsKey("rightIcon")) {
-                val rightIcon = params.get("rightIcon")
+                val rightIcon = params["rightIcon"]
                 if (!TextUtils.isEmpty(rightIcon)) {
                     ivRightIcon!!.setVisibility(VISIBLE)
                     loadImage(context, rightIcon, ivRightIcon)

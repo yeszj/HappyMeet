@@ -41,20 +41,48 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
     R.layout.activity_real_name,
     UserViewModel::class.java
 ) {
-    private var source:Int = 1
-    private var isConsumeGold:Boolean = false
+    private var source: Int = 1
+    private var isConsumeGold: Boolean = false
     private var checkBaiduFaceResult: CheckFaceAuthResult? = null
+    private var isRefaceAuth = false
     override fun initData() {
-        source = intent.getIntExtra(IntentKeyConfig.SOURCE,1)
-        isConsumeGold = intent.getBooleanExtra("isConsumeGold",false)
+        source = intent.getIntExtra(IntentKeyConfig.SOURCE, 1)
+        isConsumeGold = intent.getBooleanExtra("isConsumeGold", false)
+        isRefaceAuth = intent.getBooleanExtra("isRefaceAuth", false)
+
         setStatusBarStyle(false)
-         checkBaiduFaceResult =
+        checkBaiduFaceResult =
             intent.getSerializableExtra(IntentKeyConfig.DATA) as CheckFaceAuthResult?
         if (checkBaiduFaceResult != null) {
             toCheckFace(checkBaiduFaceResult!!)
         } else {
-            checkBaiduStep()
+            if (isRefaceAuth) {
+                getFaceAuthInfo()
+            } else {
+                checkBaiduStep()
+            }
         }
+    }
+
+    private fun getFaceAuthInfo() {
+        DialogUtils.showLoading()
+        request(
+            { rxApi.getFaceAuthInfo() },
+            object : OnRequestResultListener<FaceAuthInfo> {
+                override fun onSuccess(data: BaseBean<FaceAuthInfo>) {
+                    DialogUtils.dismissLoading()
+                    val faceInfo = data.data ?: return
+                    checkBaiduFaceResult =
+                        CheckFaceAuthResult(2, GsonUtils.toJson(faceInfo), false)
+                    toCheckFace(checkBaiduFaceResult!!)
+                }
+                override fun onFail(code: Int?, msg: String?) {
+                    DialogUtils.dismissLoading()
+                    finish()
+                }
+            },
+            true
+        )
     }
 
     override fun initListener() {
@@ -65,16 +93,16 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
             }
         }
         LiveEventBus.get<Boolean>(LiveDataEventManager.FACE_RESULT).observe(this) {
-            if (it){
+            if (it) {
                 authSuccess()
-            }else{
+            } else {
                 authFail()
             }
         }
-        LiveEventBus.get<String>(LiveDataEventManager.START_FACE_AUTH).observe(this){
-            if (checkBaiduFaceResult!=null && checkBaiduFaceResult?.isChangeDevice == true){
+        LiveEventBus.get<String>(LiveDataEventManager.START_FACE_AUTH).observe(this) {
+            if (checkBaiduFaceResult != null && checkBaiduFaceResult?.isChangeDevice == true) {
                 toCheckFaceDeviceChange()
-            }else{
+            } else {
                 checkBaiduStep()
             }
         }
@@ -105,7 +133,7 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
         mViewModel.checkFaceResultObservable.observe(this) { it ->
             parseState(it, {
                 toCheckFace(it)
-            },{
+            }, {
                 DialogUtils.dismissLoading()
                 finish()
             })
@@ -118,7 +146,7 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
                     DialogUtils.showConfirmDialog("温馨提示", {
                         ApplicationProxy.instance.askCustomer()
                     }, {
-                       finish()
+                        finish()
                     }, it.msg!!, cancel = "稍后再试", confirm = "联系客服")
                 } else {
                     showToast(it.msg)
@@ -153,7 +181,7 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
                 faceAuthInfo = GsonUtils.fromJson(params, FaceAuthInfo::class.java)
                 realName = faceAuthInfo!!.realName
                 if (!TextUtils.isEmpty(realName)) {
-                    logcom("1.sessionId="+faceAuthInfo!!.sessionId)
+                    logcom("1.sessionId=" + faceAuthInfo!!.sessionId)
                     checkIsCanFace()
                 } else {
                     DialogUtils.dismissLoading()
@@ -178,8 +206,8 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
     private fun startBaiduFaceAuth() {
         DialogUtils.dismissLoading()
         faceAuthInfo?.apply {
-            logcom("2.sessionId="+this.sessionId)
-            FaceAuthActivity.lunch(mContext,this,source,isConsumeGold)
+            logcom("2.sessionId=" + this.sessionId)
+            FaceAuthActivity.lunch(mContext, this, source, isConsumeGold)
         }
     }
 
@@ -214,11 +242,16 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
     }
 
     companion object {
-        fun lunch(context: Activity, checkBaiduFaceResult: CheckFaceAuthResult? = null,source:Int = 1,isConsumeGold:Boolean = false) {
+        fun lunch(
+            context: Activity,
+            checkBaiduFaceResult: CheckFaceAuthResult? = null,
+            source: Int = 1,
+            isConsumeGold: Boolean = false
+        ) {
             val intent = Intent(context, RealNameActivity::class.java)
             intent.putExtra(IntentKeyConfig.DATA, checkBaiduFaceResult)
-            intent.putExtra(IntentKeyConfig.SOURCE,source)
-            intent.putExtra("isConsumeGold",isConsumeGold)
+            intent.putExtra(IntentKeyConfig.SOURCE, source)
+            intent.putExtra("isConsumeGold", isConsumeGold)
             context.startActivityForResult(
                 intent,
                 RequestCodeManager.REQUEST_CODE_REAL_NAME

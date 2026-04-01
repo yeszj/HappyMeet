@@ -32,32 +32,34 @@
                 android:layout_alignParentEnd="true"
                 tools:ignore="IncludeLayoutParam" />
 
-            <RelativeLayout
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bubble"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_userid"
-                android:layout_marginTop="@dimen/dp_5"
-                android:layout_toLeftOf="@id/vg_avatar"
                 android:background="@drawable/ease_chat_bubble_send_bg"
-                android:minWidth="30dp"
-                android:minHeight="@dimen/dp_44"
-                android:paddingHorizontal="@dimen/dp_10"
-                android:paddingVertical="@dimen/dp_9">
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_toLeftOf="@id/vg_avatar">
 
-                <TextView
+
+                <cn.yanhu.baselib.view.CustomFontTextView
                     android:id="@+id/tv_chatcontent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:autoLink="web"
-                    android:gravity="center|left"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/dp_10"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:lineSpacingExtra="2dp"
-                    android:maxWidth="@dimen/dp_225"
+                    android:minWidth="@dimen/dp_80"
+                    android:maxWidth="@dimen/dp_220"
                     android:textColor="@color/cl_common"
                     android:textSize="@dimen/sp_15"
-                    tools:text="环信环信环信环信环信环信" />
-            </RelativeLayout>
+                    app:fontType="@string/fontMedium"
+                    tools:text="家" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <!--  <TextView
                  android:id="@+id/tv_userid"

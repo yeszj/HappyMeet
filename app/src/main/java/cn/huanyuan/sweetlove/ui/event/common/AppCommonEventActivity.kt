@@ -227,7 +227,7 @@ class AppCommonEventActivity : BaseActivity<ActivityAppCommonEventBinding, Event
         super.registerNecessaryObserver()
         mViewModel.eventConfigLivedata.observe(this) { it ->
             parseState(it, { it ->
-                commonEventImgConfig = it
+                commonEventImgConfig = it!!
                 mBinding.titleBar.setTitleName(it.eventName)
                 mBinding.eventImageConfig = it
                 mBinding.vgShadow.setGradientColor(

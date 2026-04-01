@@ -38,9 +38,7 @@ fun <T> BaseViewModel.request(
             }
             block()
         }.onSuccess {
-            if (isShow) {
                 loadingChange.dismissDialog.postValue(true)
-            }
             Log.d(TAG, "request：bean:${it} code:${it.code} msg:${it.msg}")
             resultState.paresResult(it)
         }.onFailure {
@@ -90,7 +88,7 @@ fun <T> BaseViewModel.request2(
             if (isShow) loadingChange.showDialog.postValue(loadingHasContent)
             block()
         }.onSuccess {
-            if (isShow) loadingChange.dismissDialog.postValue(true)
+             loadingChange.dismissDialog.postValue(true)
             resultState.paresResult(it)
         }.onFailure {
             if (it is CustomException) {

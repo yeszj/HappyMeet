@@ -379,7 +379,7 @@ public class AgoraManager implements IMediaExtensionObserver {
         @Override
         public void onLocalVideoStats(Constants.VideoSourceType source, LocalVideoStats stats) {
             super.onLocalVideoStats(source, stats);
-            logcom("liveRoom", "onLocalVideoStats=" + GsonUtils.toJson(stats));
+            //logcom("liveRoom", "onLocalVideoStats=" + GsonUtils.toJson(stats));
         }
 
         @Override

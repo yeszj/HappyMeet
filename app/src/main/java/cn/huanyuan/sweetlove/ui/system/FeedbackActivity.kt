@@ -119,7 +119,7 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding, SystemViewModel>(
         mViewModel.reportConfigObservable.observe(this) { it ->
             parseState(it, { it ->
                 val list = mutableListOf<ReportConfigInfo.ConfigInfo>()
-                it.forEach {
+                it!!.forEach {
                     list.addAll(it.list)
                 }
                 complaintTypeAdapter.submitList(list)

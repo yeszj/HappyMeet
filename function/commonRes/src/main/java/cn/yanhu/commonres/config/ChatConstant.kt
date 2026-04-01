@@ -29,6 +29,8 @@ object ChatConstant {
 
     const val MSG_COMMON_SYSTEM: String = "msg_common_system"
 
+    const val MSG_INVITE_BIND_CP = "msg_invite_bind_cp"
+
     //    /*
     //     * 一对一通话 end
     //     * */

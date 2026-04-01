@@ -126,7 +126,7 @@ class UserListFrg : BaseFragment<FrgSameCityUserListBinding, MainViewModel>(
         mViewModel.sameCityUserObservable.observe(this) { it ->
             parseState(it, {
                 adapter.isStateViewEnable = true
-                val tcListRes = it.tcListRes
+                val tcListRes = it!!.tcListRes
                 if (page == 1) {
                     userIdList.clear()
                 }

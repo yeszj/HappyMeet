@@ -107,7 +107,7 @@ class FriendRequestRecordActivity : BaseActivity<ActivityFriendRequestRecordBind
         super.registerNecessaryObserver()
         mViewModel.requestFriendObservable.observe(this) { it ->
             parseState(it, {
-                val list = it.list
+                val list = it!!.list
                 if (page == 1) {
                     friendRequestAdapter.isStateViewEnable = list.isEmpty()
                     friendRequestAdapter.submitList(list)

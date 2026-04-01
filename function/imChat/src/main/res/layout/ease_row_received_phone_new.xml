@@ -20,23 +20,28 @@
         android:layout_marginTop="@dimen/margin_chat_activity">
         <include layout="@layout/ease_im_chat_avatar" />
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_userid"
             android:layout_marginTop="@dimen/dp_5"
             android:layout_marginRight="50dp"
-            android:minHeight="@dimen/dp_40"
             android:layout_toRightOf="@id/vg_avatar"
-            android:paddingVertical="@dimen/dp_9"
-            android:background="@drawable/ease_chat_bubble_receive_bg"
-            android:paddingHorizontal="@dimen/dp_10">
-
-            <ImageView
+            android:background="@drawable/ease_chat_bubble_receive_bg">
+            <View
+                android:layout_width="@dimen/dp_10"
+                android:id="@+id/divider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="@dimen/dp_10"/>
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/tv_phone"
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
+                app:layout_constraintStart_toEndOf="@+id/divider"
+                app:layout_constraintTop_toTopOf="@+id/tv_chatcontent"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_chatcontent"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/dp_5"
                 app:tint="@color/cl_common" />
@@ -47,7 +52,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/tv_phone"
+                app:layout_constraintStart_toEndOf="@+id/tv_phone"
                 android:autoLink="web"
+                android:paddingEnd="@dimen/dp_10"
+                app:layout_constraintTop_toTopOf="parent"
                 android:gravity="center|left"
                 android:lineSpacingExtra="2dp"
                 android:maxWidth="225.0dip"
@@ -55,7 +63,7 @@
                 android:textSize="@dimen/sp_15"
                 tools:text="环信" />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_userid"

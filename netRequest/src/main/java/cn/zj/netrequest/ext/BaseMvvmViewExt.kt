@@ -35,6 +35,23 @@ fun <T> parseState(
             }
         }
     }
+}
 
+fun <T> parseState2(
+    resultState: ResultState<T>?,
+    onSuccess: (T?) -> Unit,
+    onError: ((CustomException) -> Unit)? = null
+) {
+    resultState?.apply {
+        when (resultState) {
+            is ResultState.Success -> {
+                onSuccess(resultState.data)
+            }
+            is ResultState.Error -> {
+                val e = resultState.error
+                onError?.run { this(e) }
+            }
+        }
+    }
 }
 

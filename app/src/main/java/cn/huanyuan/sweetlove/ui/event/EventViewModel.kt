@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import cn.huanyuan.sweetlove.bean.CommonEventImgConfig
 import cn.huanyuan.sweetlove.bean.CommonEventRankResponse
+import cn.huanyuan.sweetlove.bean.HeartCpEventRankResponse
 import cn.huanyuan.sweetlove.bean.NewYearInfo
 import cn.huanyuan.sweetlove.bean.NewYearRankResponse
 import cn.huanyuan.sweetlove.net.rxApi
@@ -34,6 +35,30 @@ class EventViewModel : BaseViewModel() {
             { rxApi.getCommonEventRank(type,activityId) }, onRequestResultListener
         )
     }
+
+
+    fun getHeartCpEventConfig(activityId:String) {
+        request(
+            { rxApi.getHeartCpEventConfig(activityId) }, eventConfigLivedata,
+            isShowDialog = false
+        )
+    }
+
+
+    fun getHeartCpRank(type:Int,activityId:String,onRequestResultListener: OnRequestResultListener<HeartCpEventRankResponse>) {
+        request(
+            { rxApi.getHeartCpRank(activityId,type) }, onRequestResultListener
+        )
+    }
+
+
+    val unBindCpLivedata = MutableLiveData<ResultState<String?>>()
+    fun unBindCp(activityId:String) {
+        request(
+            { rxApi.unBindCp(activityId) }, unBindCpLivedata,true,true
+        )
+    }
+
 
     fun getNewYearInfo() {
         request(

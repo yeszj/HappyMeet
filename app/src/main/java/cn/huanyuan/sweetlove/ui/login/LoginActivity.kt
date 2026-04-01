@@ -104,7 +104,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
         mViewModel.getPhone(loginToken)
         mViewModel.getPhoneLivedata.observe(this@LoginActivity) { it ->
             parseState(it, {
-                startLogin(it)
+                startLogin(it!!)
             })
         }
     }
@@ -130,7 +130,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
         super.registerNecessaryObserver()
         mViewModel.loginLivedata.observe(this@LoginActivity) { it ->
             parseState(it, {
-                LoginResultManager.loginSuccess(mContext, it)
+                LoginResultManager.loginSuccess(mContext, it!!)
             }, {
                 val code = it.code
                 if (code == ErrorCode.TO_BIND_PHONE) {

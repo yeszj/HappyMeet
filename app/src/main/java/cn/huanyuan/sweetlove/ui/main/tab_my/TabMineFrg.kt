@@ -162,7 +162,7 @@ class TabMineFrg : BaseFragment<FrgTabMineBinding, UserViewModel>(
     private fun onGetUserInfoListener() {
         mViewModel.myPageInfoObservable.observe(this) { it ->
             parseState(it, {
-                refreshUserCache(it)
+                refreshUserCache(it!!)
                 showMyPicData(it)
                 bindBanner(it.banners)
                 showUploadAvatarPop(it)

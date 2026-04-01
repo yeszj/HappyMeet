@@ -1,6 +1,7 @@
 package cn.yanhu.imchat.api
 
 import cn.yanhu.commonres.api.CommonApiService
+import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.ChatCallResponseInfo
 import cn.yanhu.commonres.bean.ChatPriceItemInfo
 import cn.yanhu.commonres.bean.ComboCountInfo
@@ -16,6 +17,7 @@ import cn.yanhu.imchat.bean.GroupDetailInfo
 import cn.yanhu.imchat.bean.GroupMemberData
 import cn.yanhu.imchat.bean.GroupOnlineData
 import cn.yanhu.imchat.bean.SystemMsgUnReadInfo
+import cn.yanhu.imchat.bean.request.BindCpRequest
 import cn.yanhu.imchat.bean.request.GetChatGroupRequest
 import cn.yanhu.imchat.bean.request.GetChatUsersRequest
 import cn.yanhu.imchat.bean.request.RewardRequest
@@ -205,5 +207,9 @@ interface ImChatApiService : CommonApiService {
     @GET("app/v1/room/getStickerGiftMinNum")
     suspend fun getStickerGiftMinNum(@Query("roomId") roomId:String, @Query("toUserId") toUserId:String, @Query("giftId") giftId: Int): BaseBean<ComboCountInfo>
 
+    @POST("app/v1/activity/cp/confirmBind")
+    suspend fun confirmBindCp(@Body bindCpRequest: BindCpRequest): BaseBean<BaseUserInfo>
 
+    @POST("app/v1/activity/cp/rejectBind")
+    suspend fun rejectBindCp(@Body bindCpRequest: BindCpRequest): BaseBean<String>
 }

@@ -1,6 +1,5 @@
 package cn.yanhu.commonres.bean
 
-import android.R.attr.value
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import cn.zj.netrequest.BR

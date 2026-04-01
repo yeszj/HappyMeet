@@ -2,6 +2,7 @@ package cn.yanhu.imchat.custom.chat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -137,7 +138,7 @@ public class CustomEaseConversationDelegate extends EaseDefaultConversationDeleg
                 holder.message.setText(content);
             } else {
                 holder.message.setVisibility(View.INVISIBLE);
-                EaseCommonUtils.showCustomEmojiView(context, finalMessage.getCustom_msg(), finalMessage.getSend_user_info(), binding.vgContent, finalMessage.getMsgId(), true, false);
+                EaseCommonUtils.showCustomEmojiView(context, finalMessage.getCustom_msg(), finalMessage.getSend_user_info(), binding.vgContent, finalMessage.getMsgId(), true, false, Color.parseColor("#888888"));
             }
         }
     }
@@ -152,7 +153,7 @@ public class CustomEaseConversationDelegate extends EaseDefaultConversationDeleg
             String event = messageBody.event();
             if (event.equals(ImMsgManager.MSG_CUSTOM_EMOJI)) {
                 holder.message.setVisibility(View.INVISIBLE);
-                EaseCommonUtils.showCustomEmojiView(context, lastMessage, binding.vgContent, true, isGroup);
+                EaseCommonUtils.showCustomEmojiView(context, lastMessage, binding.vgContent, true, isGroup,Color.parseColor("#888888"));
             } else {
                 setMessageContent(holder, context, lastMessage, isGroup);
             }

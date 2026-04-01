@@ -1,6 +1,7 @@
 package cn.yanhu.agora.adapter.liveRoom
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,11 @@ import cn.yanhu.agora.databinding.AdapterChatRoomMsgNoticeItemBinding
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgRobotItemBinding
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgTxtItemBinding
 import cn.yanhu.agora.databinding.AdapterChatRoomMsgWelcomeItemBinding
+import cn.yanhu.baselib.utils.CoilImgUtils
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.widget.spans.Spans
+import cn.yanhu.commonres.bean.BubbleInfo
 import com.blankj.utilcode.util.GsonUtils
 import com.chad.library.adapter4.BaseMultiItemAdapter
 import com.lihang.ShadowLayout
@@ -239,9 +242,25 @@ class LiveRoomChatMessageAdapter : BaseMultiItemAdapter<ChatRoomMsgInfo>() {
         val bubbleInfo = sendUserInfo?.bubbleInfo
         if (bubbleInfo != null) {
             val type = bubbleInfo.type
-            if ("ninePatch" == type) {
-                tvChatStyle.visibility = View.INVISIBLE
-                tvContent.setBackgroundResource(cn.yanhu.agora.R.drawable.chatbg)
+            if (BubbleInfo.TYPE_NINEPATCH == type) {
+
+                val image = bubbleInfo.content.image
+
+                if (CommonUtils.isEmpty(image)) {
+                    tvChatStyle.visibility = View.INVISIBLE
+                    tvContent.setBackgroundResource(cn.yanhu.agora.R.drawable.chatbg)
+                } else {
+                    CoilImgUtils.loadNinePatchImage(
+                        context,
+                        bubbleInfo.content.image,
+                        object : CoilImgUtils.OnLoadNinePatchImageListener {
+                            override fun onLoadNinePatchImage(drawable: Drawable) {
+                                tvChatStyle.visibility = View.INVISIBLE
+                                tvContent.background = drawable
+                            }
+                        })
+                }
+
             } else {
                 tvChatStyle.visibility = View.VISIBLE
                 tvContent.background = null

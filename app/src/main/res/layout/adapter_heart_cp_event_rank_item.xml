@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="rankInfo"
+            type="cn.huanyuan.sweetlove.bean.HeartCpEventRankInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/dp_3"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/vg_parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_66"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="@drawable/bg_heart_cp_rank_4"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_5"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_num"
+                android:layout_width="@dimen/dp_35"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{rankInfo.rankNum}"
+                android:textColor="#974D4D"
+                android:textSize="@dimen/sp_16"
+                app:fontType="@string/fontBold"
+                tools:text="1" />
+
+            <FrameLayout
+                android:id="@+id/vg_rank"
+                android:layout_width="@dimen/dp_35"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_rank"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:src="@drawable/icon_new_year_rank1"
+                    android:textColor="@color/fontGrayColor"
+                    android:textSize="@dimen/sp_16"
+                    app:fontType="@string/fontBold"
+                    tools:text="1" />
+            </FrameLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/userAvatar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    circleImageUrl="@{rankInfo.portraitA}"
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
+                    tools:src="@drawable/icon_portrait" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/userAvatarB"
+                    circleImageUrl="@{rankInfo.portraitB}"
+                    app:layout_constraintStart_toEndOf="@+id/userAvatar"
+                    app:layout_constraintTop_toTopOf="@+id/userAvatar"
+                    app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
+                    android:layout_marginStart="@dimen/dp_m_10"
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
+                    tools:src="@drawable/icon_portrait" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dp_65"
+                    android:adjustViewBounds="true"
+                    android:layout_marginTop="@dimen/dp_25"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:src="@mipmap/icon_heart_cp_love"
+                    android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/dp_6">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/dp_10">
+
+                    <cn.yanhu.baselib.widget.FontWeightValueTextView
+                        android:id="@+id/tv_nickName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:fontWeightValue="medium"
+                        android:text='@{rankInfo.nickAShot+"&amp;"+rankInfo.nickBShot}'
+                        android:textColor="#51160A"
+                        android:textSize="@dimen/sp_13"
+                        tools:text="宠爱佳哥一个人" />
+
+                    <cn.yanhu.baselib.widget.FontWeightValueTextView
+                        android:id="@+id/tv_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:paddingStart="@dimen/dp_5"
+                        android:text='@{rankInfo.intimacy+"亲密值"}'
+                        android:textColor="@color/colorTextRed"
+                        android:textSize="@dimen/sp_13"
+                        app:fontWeightValue="medium"
+                        tools:text="99亲密值" />
+                </LinearLayout>
+
+                <cn.yanhu.baselib.view.CustomFontTextView
+                    android:id="@+id/tv_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_6"
+                    android:text="@{rankInfo.desc}"
+                    android:textColor="#966C64"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="预计瓜分：87518玫瑰+活动套装" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_rankTop"
+            android:layout_width="@dimen/dp_139"
+            android:layout_height="@dimen/dp_24"
+            android:visibility="invisible"
+            android:src="@mipmap/heart_cp_rank_top_3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -28,7 +28,7 @@
             android:id="@+id/viewBg"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_70"
             android:background="@drawable/white_top_corner_15"
             app:layout_constraintBottom_toBottomOf="@+id/vg_operate"
             app:layout_constraintTop_toTopOf="parent" />
@@ -202,7 +202,6 @@
                 tools:text="送她礼物" />
         </LinearLayout>
 
-
         <cn.yanhu.commonres.view.UserAvatarView
             android:id="@+id/iv_avatar"
             avatarFrameUrl="@{userInfo.avatarFramePic}"
@@ -217,7 +216,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+        <com.tencent.qgame.animplayer.AnimView
+            android:id="@+id/animView"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="@dimen/dp_120"
+            android:layout_marginTop="@dimen/dp_7" />
         <!-- android:visibility="@{isSelf?View.INVISIBLE:View.VISIBLE}"-->
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_report"
@@ -247,5 +251,6 @@
             app:drawableTint="@color/color_888888"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/viewBg" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

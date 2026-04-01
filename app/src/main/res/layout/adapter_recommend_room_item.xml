@@ -16,11 +16,10 @@
         android:gravity="center_vertical"
         android:padding="@dimen/dp_12">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/dp_32"
             android:layout_height="@dimen/dp_32"
-            app:riv_oval="true"
-            imageUrl="@{ImageThumbUtils.getThumbUrl(userInfo.portrait)}"
+            circleImageUrl="@{ImageThumbUtils.getThumbUrl(userInfo.portrait)}"
             android:src="@drawable/ease_default_avatar" />
 
         <cn.yanhu.baselib.view.CustomFontTextView

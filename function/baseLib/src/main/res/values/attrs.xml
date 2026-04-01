@@ -58,6 +58,7 @@
         <attr name="borderBottomRightRadius" format="dimension" />
         <attr name="borderTopRightRadius" format="dimension" />
         <attr name="borderTopLeftRadius" format="dimension" />
+        <attr name="borderGradientColors" format="dimension"/>
         <attr name="borderGradientType">
             <flag name="TOP_TO_BOTTOM" value="0" />
             <flag name="LEFT_TO_RIGHT" value="1" />
@@ -172,5 +173,14 @@
             <enum name="extraBold" value="800" />"
             <enum name="black" value="900" />"
         </attr>
+    </declare-styleable>
+
+    <declare-styleable name="GradientBorderCircleImageView">
+        <!-- 边框宽度 -->
+        <attr name="fl_borderWidth" format="dimension" />
+        <!-- 边框渐变色起始颜色 -->
+        <attr name="fl_borderStartColor" format="color" />
+        <!-- 边框渐变色结束颜色 -->
+        <attr name="fl_borderEndColor" format="color" />
     </declare-styleable>
 </resources>

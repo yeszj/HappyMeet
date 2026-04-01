@@ -29,12 +29,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_user_portrait"
             style="@style/constraintHorizonCenter"
-            imageUrl="@{editUserInfo.portrait}"
+            circleImageUrl="@{editUserInfo.portrait}"
             android:layout_width="@dimen/dp_80"
-            app:riv_oval="true"
             android:layout_height="@dimen/dp_80"
             android:layout_marginTop="@dimen/dp_10"
             android:src="@drawable/icon_portrait"

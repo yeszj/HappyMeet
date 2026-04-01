@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -8,15 +9,14 @@
 
         <import type="android.text.TextUtils" />
 
-
     </data>
 
     <LinearLayout
+        style="@style/chat_im_parent_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        style="@style/chat_im_parent_style">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/timestamp"
@@ -38,10 +38,10 @@
                 android:id="@+id/alertView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/dp_10"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/dp_5">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/alert_icon"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20" />
@@ -65,18 +65,19 @@
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <cn.yanhu.baselib.widget.FontWeightValueTextView
                 android:id="@+id/tv_operate"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_32"
+                android:layout_height="wrap_content"
                 android:background="@drawable/common_shape_click_bg"
-                android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:paddingHorizontal="@dimen/dp_15"
+                android:paddingHorizontal="@dimen/dp_6"
+                android:paddingVertical="@dimen/dp_3"
                 android:text="操作按钮"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_14"
+                android:textSize="@dimen/sp_13"
                 android:visibility="gone"
+                app:fontWeightValue="medium"
                 tools:visibility="visible" />
         </LinearLayout>
 

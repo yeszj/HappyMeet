@@ -49,11 +49,11 @@ class MainViewModel : BaseViewModel() {
         request({ imChatRxApi.operateRequest(recordId,status) }, onRequestResultListener)
     }
     fun getRoomList(type:Int,page:Int) {
-        request({ rxApi.getRoomList(type,page) }, roomListObservable, true)
+        request({ rxApi.getRoomList(type,page) }, roomListObservable, false)
     }
 
     fun getSameCityUserList(ages:String,province:String,page:Int) {
-        request({ rxApi.getSameCityUserList(ages,province,page,50) }, sameCityUserObservable, true)
+        request({ rxApi.getSameCityUserList(ages,province,page,50) }, sameCityUserObservable, false)
     }
 
     fun getFriendList(page:Int) {

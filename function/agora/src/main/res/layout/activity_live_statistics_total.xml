@@ -188,7 +188,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/bgLiveRoom" />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/icon2"
+                        android:id="@+id/tv_month"
                         android:layout_width="@dimen/dp_20"
                         android:layout_height="@dimen/dp_20"
                         android:layout_marginStart="@dimen/dp_10"
@@ -205,18 +205,18 @@
                         android:textColor="@color/fontTextColor"
                         android:textSize="@dimen/sp_14"
                         app:fontType="@string/fontBold"
-                        app:layout_constraintBottom_toBottomOf="@+id/icon2"
-                        app:layout_constraintStart_toEndOf="@+id/icon2"
-                        app:layout_constraintTop_toTopOf="@+id/icon2" />
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_month"
+                        app:layout_constraintStart_toEndOf="@+id/tv_month"
+                        app:layout_constraintTop_toTopOf="@+id/tv_month" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/dp_10"
                         android:src="@drawable/svg_arrow_right"
-                        app:layout_constraintBottom_toBottomOf="@+id/icon2"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_month"
                         app:layout_constraintEnd_toEndOf="@+id/bgMyInvite"
-                        app:layout_constraintTop_toTopOf="@+id/icon2" />
+                        app:layout_constraintTop_toTopOf="@+id/tv_month" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_inviteTotal"
@@ -228,7 +228,7 @@
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintEnd_toEndOf="@+id/bgMyInvite"
                         app:layout_constraintStart_toStartOf="@+id/bgMyInvite"
-                        app:layout_constraintTop_toBottomOf="@+id/icon2"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_month"
                         app:spanCount="2"
                         tools:listitem="@layout/adapter_live_statistic_total_item" />
                 </androidx.constraintlayout.widget.ConstraintLayout>

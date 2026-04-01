@@ -3,6 +3,7 @@ package cn.yanhu.imchat.manager
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import cn.yanhu.baselib.utils.DateUtils
+import cn.yanhu.commonres.bean.BaseUserInfo
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.config.ChatConstant
 import cn.yanhu.commonres.config.EventBusKeyConfig
@@ -114,7 +115,7 @@ object EmMsgManager {
         val cmdBody = EMCmdMessageBody("action")
         cmdMsg.deliverOnlineOnly(onlineOnly)
         cmdMsg.addBody(cmdBody)
-        if (callBack!=null){
+        if (callBack != null) {
             cmdMsg.setMessageStatusCallback(callBack)
         }
         // 发送消息
@@ -151,7 +152,7 @@ object EmMsgManager {
         val cmdBody = EMCmdMessageBody("action")
         cmdMsg.deliverOnlineOnly(onlineOnly)
         cmdMsg.addBody(cmdBody)
-        if (callBack!=null){
+        if (callBack != null) {
             cmdMsg.setMessageStatusCallback(callBack)
         }
         // 发送消息
@@ -287,7 +288,7 @@ object EmMsgManager {
         conversationId: String,
         event: String,
         content: String
-    ) : EMMessage {
+    ): EMMessage {
         val message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM)
         val body = EMCustomMessageBody(event)
         message.setAttribute(ChatConstant.CUSTOM_DATA, content)
@@ -308,6 +309,20 @@ object EmMsgManager {
     fun sendCommonTipMsg(chatUserId: String, params: MutableMap<String, String>) {
         val message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM)
         val body = EMCustomMessageBody(ChatConstant.MSG_COMMON_TIP)
+        body.params = params
+        message.body = body
+        message.to = chatUserId
+        EMClient.getInstance().chatManager().sendMessage(message)
+    }
+
+    @JvmStatic
+    fun sendCommonAlertMsg(chatUserId: String, content: String) {
+        val message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM)
+        val body = EMCustomMessageBody(ChatConstant.MSG_ALERT)
+
+        val params = HashMap<String, String>()
+        params[ImMessageParamsConfig.KEY_CONTENT] =
+            content
         body.params = params
         message.body = body
         message.to = chatUserId
@@ -483,6 +498,24 @@ object EmMsgManager {
             chatLayout.sendMessage(message)
         }
         LiveDataEventManager.sendLiveDataMessage("sendGift", bean.svga)
+    }
+
+
+    /**
+     * 发送心动cp邀请消息
+     */
+    @JvmStatic
+    fun sendInviteBindCpMessage(activityId: String, userInfo: BaseUserInfo) {
+        val message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM)
+        val body = EMCustomMessageBody(ChatConstant.MSG_INVITE_BIND_CP)
+        val params: MutableMap<String, String> = java.util.HashMap()
+        params[ImMessageParamsConfig.ACTIVITY_ID] = activityId
+        params[ImMessageParamsConfig.USERNAME] = ImUserManager.getSelfUserInfo().nickName
+        body.params = params
+        message.body = body
+        message.to = userInfo.userId
+        message.setAttribute(ImMessageParamsConfig.KEY_STATUS, 0)
+        EMClient.getInstance().chatManager().sendMessage(message)
     }
 
     fun sendApplyFriend(

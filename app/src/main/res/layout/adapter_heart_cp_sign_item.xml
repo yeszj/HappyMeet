@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_marginEnd="@dimen/dp_6"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_height="@dimen/dp_72">
+
+        <com.lihang.ShadowLayout
+            android:id="@+id/viewBg"
+            android:layout_width="match_parent"
+            app:hl_startColor="#FFF8FB"
+            app:hl_centerColor="#FFF0F7"
+            app:hl_endColor="#FFE2EF"
+            app:hl_cornerRadius="@dimen/dp_5"
+            app:hl_angle="90"
+            android:layout_height="match_parent"/>
+
+        <cn.yanhu.baselib.view.BorderGradientView
+            android:id="@+id/viewBorder"
+            android:layout_width="match_parent"
+            app:borderStartColor = "#1AFF24B6"
+            app:borderEndColor="#33FF24B6"
+            app:borderViewWidth="@dimen/dp_1"
+            app:borderRadius="@dimen/dp_5"
+            android:layout_height="match_parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_box"
+            android:layout_width="@dimen/dp_40"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/dp_3"
+            tools:src="@drawable/svg_gift"
+            android:layout_height="@dimen/dp_40"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_bottom"
+            android:layout_width="@dimen/dp_58"
+            android:adjustViewBounds="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@mipmap/bg_cp_sign_item_bottom"
+            android:layout_height="@dimen/dp_25"/>
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_sign"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/sp_10"
+            android:textColor="@color/white"
+            app:fontWeightValue="medium"
+            android:drawablePadding="@dimen/dp_2"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_bottom"
+            app:layout_constraintTop_toTopOf="@+id/iv_bottom"
+            app:layout_constraintStart_toStartOf="@+id/iv_bottom"
+            app:layout_constraintEnd_toEndOf="@+id/iv_bottom"
+            android:drawableStart="@drawable/svg_cp_sign"
+            android:text="补签"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

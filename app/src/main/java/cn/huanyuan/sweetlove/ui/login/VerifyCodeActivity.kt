@@ -89,7 +89,7 @@ class VerifyCodeActivity : BaseActivity<ActivityVerifyCodeBinding, LoginViewMode
         }
         mViewModel.loginLivedata.observe(this){ it ->
             parseState(it,{
-                LoginResultManager.loginSuccess(mContext,it)
+                LoginResultManager.loginSuccess(mContext,it!!)
             })
         }
     }

@@ -20,22 +20,28 @@
         android:layout_marginTop="@dimen/margin_chat_activity" >
 
         <include layout="@layout/ease_im_chat_avatar" />
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/vg_avatar"
             android:layout_marginTop="@dimen/dp_5"
-            android:minHeight="@dimen/dp_40"
             android:layout_below="@+id/userInfoView"
-            android:paddingHorizontal="@dimen/dp_10"
             android:layout_marginRight="50dp"
-            android:paddingVertical="@dimen/dp_9"
             android:background="@drawable/ease_chat_bubble_receive_bg" >
 
+            <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="@dimen/dp_1"/>
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/tv_gift"
                 android:layout_width="@dimen/dp_30"
+                app:layout_constraintTop_toTopOf="@+id/tv_chatcontent"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_chatcontent"
+                app:layout_constraintStart_toEndOf="@+id/divider"
                 android:layout_height="@dimen/dp_30"
                 android:layout_marginEnd="@dimen/dp_5"/>
 
@@ -44,6 +50,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                app:layout_constraintStart_toEndOf="@+id/tv_gift"
+                app:layout_constraintTop_toTopOf="parent"
+                android:paddingEnd="@dimen/dp_10"
                 android:autoLink="web"
                 android:gravity="center|left"
                 android:layout_toEndOf="@id/tv_gift"
@@ -53,7 +62,7 @@
                 android:textSize="@dimen/sp_15"
                 tools:text="环信" />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <cn.yanhu.imchat.view.ImChatUserInfoView
             android:id="@+id/userInfoView"

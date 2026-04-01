@@ -291,7 +291,7 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
         mViewModel.userInfoObserver.observe(this) { it ->
             parseState(it, {
                 ChatUserInfoManager.saveUserInfo(it)
-                bindUserInfo(it)
+                bindUserInfo(it,true)
             }, {
                 if (it.code == ErrorCode.HAS_BLACK) {
                     EaseHelper.setUserIsBlackSuccess(userId)
@@ -302,12 +302,11 @@ class ImChatFrg : BaseFragment<FrgImChatBinding, ImChatViewModel>(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun bindUserInfo(it: UserDetailInfo) {
+    private fun bindUserInfo(it: UserDetailInfo,isNetGet: Boolean = false) {
         mBinding.userInfo = it
         mBinding.executePendingBindings()
         userInfo = it
-
-        chatFragment.setUserInfo(userInfo)
+        chatFragment.setUserInfo(userInfo,isNetGet)
 //        if (it.isFriend || !it.sameSex) {
 //            mBinding.vgAddFriendTips.visibility = View.GONE
 //        } else {

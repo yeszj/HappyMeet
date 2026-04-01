@@ -1,11 +1,15 @@
+@file:Suppress("DEPRECATION")
+
 package cn.yanhu.baselib.utils
 
 import android.annotation.SuppressLint
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Formatter
 import java.util.GregorianCalendar
+
 
 /**
  * @author: zhengjun
@@ -24,6 +28,7 @@ object DateUtils {
         val hours = totalSeconds / 3600
         return Formatter().format("%02d:%02d:%02d", hours, minutes, seconds).toString()
     }
+
     fun stringForTime2(totalSeconds: Int): String {
         val seconds = totalSeconds % 60
         val minutes = (totalSeconds / 60)
@@ -53,10 +58,11 @@ object DateUtils {
             String.format("%02d:%02d", minute, second)
         }
     }
+
     /**
      *  i 负数往前推几天 正数代表往后推几天
      */
-    fun getTimeMillions(i: Int): Long{
+    fun getTimeMillions(i: Int): Long {
         var date = Date()
         val calendar: Calendar = GregorianCalendar()
         calendar.time = date
@@ -70,6 +76,7 @@ object DateUtils {
         }
         return dateString
     }
+
     fun secondToHMSTime(time: Long, format: String?): String {
         var finalTime = time
         val day = (finalTime / 24 / 3600).toInt()
@@ -190,7 +197,7 @@ object DateUtils {
      * @return
      */
     @JvmStatic
-    fun getYestodyStr(i: Int, dayFormat: String?): String{
+    fun getYestodyStr(i: Int, dayFormat: String?): String {
         var date = Date()
         @SuppressLint("SimpleDateFormat") val formatter = SimpleDateFormat(dayFormat)
         val calendar: Calendar = GregorianCalendar()
@@ -204,5 +211,35 @@ object DateUtils {
             e.printStackTrace()
         }
         return dateString
+    }
+
+
+    /**
+     * 判断给定日期与当天关系的优化版本
+     * @param dateStr 日期字符串，格式：yyyy-MM-dd
+     * @return -1: 当天之前, 0: 当天, 1: 当天之后
+     */
+    fun compareWithToday(dateStr: String): Int {
+        try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd")
+            try {
+                val inputDate = sdf.parse(dateStr)
+                val targetDate = sdf.parse(getTodayStr())
+
+                return if (inputDate.before(targetDate)) {
+                    -1
+                } else if (inputDate.after(targetDate)) {
+                    1
+                } else {
+                    0
+                }
+            } catch (e: ParseException) {
+                e.printStackTrace()
+                return 0 // 如果日期格式错误，返回0（可根据需求调整）
+            }
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            return -2 // 解析失败
+        }
     }
 }

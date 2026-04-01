@@ -1,7 +1,7 @@
 package cn.zj.netrequest.factory
 
 import cn.zj.netrequest.convert.CustomGsonRequestBodyConverter
-import com.contract.commonlib.http.convert.CustomizeGsonResponseBodyConverter
+import cn.zj.netrequest.convert.CustomizeGsonResponseBodyConverter
 import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
 import retrofit2.Converter

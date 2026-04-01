@@ -1,21 +1,31 @@
 package cn.yanhu.imchat.ui.chat
 
 import android.Manifest
-import android.R.attr.resource
+import android.R.attr.centerColor
+import android.R.attr.endColor
+import android.R.attr.startColor
 import android.annotation.SuppressLint
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
+import android.os.Build
 import android.text.TextUtils
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import cn.yanhu.baselib.anim.AnimManager.removeAnimSet
+import cn.yanhu.baselib.utils.CoilImgUtils
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.CommonUtils.isPopShow
 import cn.yanhu.baselib.utils.DialogUtils.showConfirmDialog
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.commonres.bean.BubbleInfo
 import cn.yanhu.commonres.bean.CommonSystemMsgInfo
 import cn.yanhu.commonres.bean.GiftInfo
 import cn.yanhu.commonres.bean.SmCheckResult
@@ -33,6 +43,7 @@ import cn.yanhu.imchat.api.imChatRxApi
 import cn.yanhu.imchat.bean.ChatCheckInfo
 import cn.yanhu.imchat.bean.ChatFuncInfo
 import cn.yanhu.imchat.custom.chat.CustomEaseChatLayout.SendMsgListener
+import cn.yanhu.imchat.custom.chat.CustomEaseChatMessageListLayout
 import cn.yanhu.imchat.custom.chat.CustomEaseChatPrimaryMenu
 import cn.yanhu.imchat.custom.chat.CustomEaseChatPrimaryMenu.OnChatTypeClickListener
 import cn.yanhu.imchat.custom.chat.CustomEaseHandleMessagePresenterImpl
@@ -47,7 +58,6 @@ import cn.yanhu.imchat.pop.ChatSelectImagePop
 import cn.yanhu.imchat.pop.ChatSelectImagePop.Companion.showDialog
 import cn.yanhu.imchat.pop.SendGiftPop
 import cn.zj.netrequest.application.ApplicationProxy
-import cn.zj.netrequest.application.OnImLoginListener
 import cn.zj.netrequest.ext.OnRequestResultListener
 import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
@@ -59,8 +69,6 @@ import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.UriUtils
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.hjq.toast.ToastUtils
 import com.hyphenate.EMError
 import com.hyphenate.chat.EMClient
@@ -75,6 +83,7 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import com.lxj.xpopup.core.BasePopupView
+import com.zj.dimens.R
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
@@ -94,11 +103,105 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     private var userDetailInfo: UserDetailInfo? = null
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setUserInfo(userInfo: UserDetailInfo?) {
+    fun setUserInfo(userInfo: UserDetailInfo?, isNetGet: Boolean = false) {
         userDetailInfo = userInfo
         userInfo?.apply {
             customEaseChatPrimaryMenu?.setUserInfo(this)
+            if (isInit() && isNetGet) {
+                val chatMessageListLayout: CustomEaseChatMessageListLayout =
+                    chatLayout.chatMessageListLayout
+
+
+                val myBubbleInfo = userInfo.myBubbleInfo
+                val targetBubbleInfo = userInfo.targetBubbleInfo
+                if (myBubbleInfo != null) {
+                    val type = myBubbleInfo.type
+                    if (BubbleInfo.TYPE_NINEPATCH == type) {
+                        CoilImgUtils.loadNinePatchImage(
+                            mContext,
+                            myBubbleInfo.content.image,
+                            object : CoilImgUtils.OnLoadNinePatchImageListener {
+                                override fun onLoadNinePatchImage(drawable: Drawable) {
+                                    chatMessageListLayout.setItemSenderBackground(drawable)
+                                    if (targetBubbleInfo != null) {
+                                        loadTargetBubbleInfo(targetBubbleInfo, chatMessageListLayout)
+                                    }
+                                }
+                            })
+                    } else {
+                        val content = myBubbleInfo.content
+                        val gradientDrawable = getGradientDrawable(content)
+                        chatMessageListLayout.setItemSenderBackground(gradientDrawable)
+
+                        if (targetBubbleInfo != null) {
+                            loadTargetBubbleInfo(targetBubbleInfo, chatMessageListLayout)
+                        }
+                    }
+                }else{
+                    if (targetBubbleInfo != null) {
+                        loadTargetBubbleInfo(targetBubbleInfo, chatMessageListLayout)
+                    }
+                }
+
+            }
+
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun loadTargetBubbleInfo(
+        targetBubbleInfo: BubbleInfo,
+        chatMessageListLayout: CustomEaseChatMessageListLayout
+    ) {
+        if (BubbleInfo.TYPE_NINEPATCH == targetBubbleInfo.type) {
+            CoilImgUtils.loadNinePatchImage(
+                mContext,
+                targetBubbleInfo.content.image,
+                object : CoilImgUtils.OnLoadNinePatchImageListener {
+                    @SuppressLint("NotifyDataSetChanged")
+                    override fun onLoadNinePatchImage(drawable: Drawable) {
+                        chatMessageListLayout.setItemReceiverBackground(
+                            drawable
+                        )
+                    }
+                })
+        } else {
+            val targetGradientDrawable =
+                getGradientDrawable(targetBubbleInfo.content)
+            chatMessageListLayout.setItemReceiverBackground(targetGradientDrawable)
+        }
+    }
+
+    private fun getGradientDrawable(content: BubbleInfo.BubbleContent): GradientDrawable {
+        val gradientList = content.gradientList
+        val startColor = gradientList[0].color
+        var centerColor = ""
+        var endColor = startColor
+        if (gradientList.size == 2) {
+            endColor = gradientList[1].color
+            centerColor = endColor
+        } else if (gradientList.size >= 3) {
+            centerColor = gradientList[1].color
+            endColor = gradientList[2].color
+        }
+
+        val gradientDrawable = GradientDrawable()
+        gradientDrawable.shape = GradientDrawable.RECTANGLE
+        gradientDrawable.colors = arrayListOf<Int>(
+            startColor.toColorInt(), centerColor.toColorInt(), endColor.toColorInt()
+        ).toIntArray()
+        if (content.mode == "linear") {
+            gradientDrawable.orientation = GradientDrawable.Orientation.LEFT_RIGHT
+        } else {
+            gradientDrawable.orientation = GradientDrawable.Orientation.TOP_BOTTOM
+        }
+        gradientDrawable.cornerRadius =
+            CommonUtils.getDimension(R.dimen.dp_10).toFloat()
+        val left = CommonUtils.getDimension(R.dimen.dp_10)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            gradientDrawable.setPadding(0, left, 0, left)
+        }
+        return gradientDrawable
     }
 
     override fun initView() {
@@ -264,7 +367,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                         //ImCallManager.checkCall(requireActivity(), ImCallManager.CALL_VIDEO, get getConversationId()());
                     }
 
-                    override fun onError(code: Int, errorMsg: String) {
+                    override fun onError(code: Int, errorMsg: String?) {
 
                     }
                 })
@@ -314,7 +417,8 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         //设置头像形状：0 为默认，1 为圆形，2 为方形
         messageListLayout.setAvatarShapeType(1)
         GlideUtils.loadAsDrawable(
-            mContext, getSelfUserInfo().portrait){
+            mContext, getSelfUserInfo().portrait
+        ) {
             chatLayout.chatMessageListLayout.setAvatarDefaultSrc(it)
         }
     }
@@ -361,7 +465,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                 sendChatMessage(emMessage)
             }
 
-            override fun onError(code: Int, errorMsg: String) {
+            override fun onError(code: Int, errorMsg: String?) {
                 updateMsgFail(emMessage, errorMsg)
             }
         })
@@ -555,7 +659,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
             return
         }
         sendCheck("1", "1", object : CallBackListener {
-            override fun onError(code: Int, errorMsg: String) {
+            override fun onError(code: Int, errorMsg: String?) {
                 when (code) {
                     ErrorCode.CODE_NO_BALANCE -> {
                         showRechargeListDialog()
@@ -770,28 +874,24 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                     SmSdkUtils.TYPE_MESSAGE,
                     source,
                     object : SmSdkUtils.OnSmCheckResultListener {
-                        override fun onCheckSuccess(checkResult: SmCheckResult, msg: String) {
+                        override fun onCheckSuccess(checkResult: SmCheckResult, msg: String?) {
                             //消息检测合规后 正式发送
                             smCheckResult = checkResult;
                             if (checkResult.canSend == 0) {
                                 message.setAttribute(
-                                    ImMessageParamsConfig.SM_CHECK_ID,
-                                    checkResult.recordId
+                                    ImMessageParamsConfig.SM_CHECK_ID, checkResult.recordId
                                 )
                                 message.setAttribute(
-                                    ImMessageParamsConfig.MSG_TYPE,
-                                    checkResult.msgType
+                                    ImMessageParamsConfig.MSG_TYPE, checkResult.msgType
                                 )
                                 sendChatMessage(message)
                             } else {
                                 updateMsgFail(message, msg)
                                 val chatContent: ChatTipContent? = checkResult.chatContent
                                 if (chatContent != null) {
-                                    ThreadUtils.getMainHandler()
-                                        .postDelayed(
-                                            Runnable { saveSystemMsgFail(chatContent) },
-                                            500
-                                        )
+                                    ThreadUtils.getMainHandler().postDelayed(
+                                        Runnable { saveSystemMsgFail(chatContent) }, 500
+                                    )
                                 }
                             }
 
@@ -807,7 +907,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
                     });
             }
 
-            override fun onError(code: Int, errorMsg: String) {
+            override fun onError(code: Int, errorMsg: String?) {
                 //不满足发送消息条件 更新本地消息为发送失败
                 if (code == ErrorCode.CODE_NO_BALANCE) {
                     updateMsgFail(message, "")

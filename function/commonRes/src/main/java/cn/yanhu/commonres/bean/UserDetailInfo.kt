@@ -21,6 +21,7 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var personInfo: MutableList<TagInfo> = mutableListOf()
     var roomId: Int = 0
     var roomType: Int = 0
+    var roomStatus: Int = 0 //0 不在房间、1 在房间上麦、2 在房间围观
     var isAdmin: Boolean = false
     var thumbnail: List<String> = mutableListOf()
     var basicTagInfo: MutableList<String> = mutableListOf()
@@ -34,11 +35,16 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var guardNickName: String = ""
     var loverInfo: LoverInfo? = null
     var guardInfo: BaseUserInfo? = null
-    var avatarFrameCover: String?=""
-    var bubbleInfo:BubbleInfo?=null
+    var avatarFrameCover: String? = ""
+    var bubbleInfo: BubbleInfo? = null
+    var homeDecorSvga : String?=""
+    var cardFrameSvga: String?=""
+    var myBubbleInfo: BubbleInfo? = null
+    var targetBubbleInfo: BubbleInfo? = null
 
-    fun getAvatarFramePic(): String?{
-        if (TextUtils.isEmpty(avatarFrameCover)){
+
+    fun getAvatarFramePic(): String? {
+        if (TextUtils.isEmpty(avatarFrameCover)) {
             return avatarFrame
         }
         return avatarFrameCover
@@ -63,7 +69,7 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     }
 
     fun hideRoomBtn(): Boolean {
-        return roomId == 0 || userId == AppCacheManager.userId
+        return roomStatus == 0 || userId == AppCacheManager.userId
     }
 
     fun isShowLoverInfo(): Boolean {
@@ -104,7 +110,9 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
         }
 
     fun getRoomDesc(): String {
-        return if (isPublicRoom()) {
+        return if (roomStatus == 2) {
+            "围观中"
+        } else if (isPublicRoom()) {
             "交友中"
         } else if (isPrivateRoom()) {
             "专属中"

@@ -5,10 +5,12 @@ import android.content.Context
 import com.lxj.xpopup.core.BottomPopupView
 import cn.yanhu.agora.R
 import cn.yanhu.agora.databinding.PopSeatUserOperateBinding
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.commonres.bean.UserDetailInfo
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.router.RouteIntent
+import cn.yanhu.commonres.utils.VideoAnimUtils
 import com.lxj.xpopup.XPopup
 
 /**
@@ -30,8 +32,15 @@ class SeatUserOperatePop(
     override fun onCreate() {
         super.onCreate()
         mBinding = PopSeatUserOperateBinding.bind(popupImplView)
+        if (!CommonUtils.isEmpty(userInfo.cardFrameSvga)) {
+            mBinding.animView.setLoop(Int.MAX_VALUE)
+            VideoAnimUtils.loadNetVideoAnim(context, userInfo.cardFrameSvga!!, mBinding.animView)
+            userInfo.avatarFrameCover = ""
+            userInfo.avatarFrame = ""
+        }
         mBinding.userInfo = userInfo
         mBinding.isSelf = userInfo.userId == AppCacheManager.userId
+
         mBinding.ivAvatar.setOnSingleClickListener {
             RouteIntent.lunchPersonHomePage(userId = userInfo.userId)
         }
@@ -61,7 +70,7 @@ class SeatUserOperatePop(
         }
     }
 
-    fun refreshUserInfo(userInfo: UserDetailInfo){
+    fun refreshUserInfo(userInfo: UserDetailInfo) {
         mBinding.userInfo = userInfo
     }
 

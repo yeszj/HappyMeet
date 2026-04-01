@@ -71,7 +71,7 @@ class GroupChatDetailActivity : BaseActivity<ActivityGroupChatDetailBinding, ImC
         super.registerNecessaryObserver()
         mViewModel.groupDetailObserver.observe(this) { it ->
             parseState(it, {
-                mBinding.groupInfo = it
+                mBinding.groupInfo = it!!
                 if (it.isGroupUser()) {
                     ViewUtils.setMarginRight(
                         mBinding.vgSee,

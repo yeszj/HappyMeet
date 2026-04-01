@@ -8,9 +8,14 @@ import java.io.Serializable
  * desc:
  */
 data class BubbleInfo(val type: String, val content: BubbleContent) : Serializable {
+    companion object{
+        const val TYPE_NINEPATCH = "ninePatch"
+    }
     data class BubbleContent(
         val mode: String,
         val angle: Int,
+        val image: String,
+        val original: String,
         val gradientList: MutableList<GradientBean>
     ) : Serializable
 

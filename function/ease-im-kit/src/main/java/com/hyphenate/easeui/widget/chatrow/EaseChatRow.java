@@ -1,6 +1,7 @@
 package com.hyphenate.easeui.widget.chatrow;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
@@ -110,6 +113,7 @@ public abstract class EaseChatRow extends LinearLayout {
 
     protected MessageListItemClickListener itemClickListener;
     protected EaseChatRowActionCallback itemActionCallback;
+    private TextView tvChatContent;
 
     public EaseChatRow(Context context, boolean isSender) {
         super(context);
@@ -159,6 +163,8 @@ public abstract class EaseChatRow extends LinearLayout {
         ackedView = (TextView) findViewById(R.id.tv_ack);
         editView = (TextView) findViewById(R.id.tv_edit);
         deliveredView = (TextView) findViewById(R.id.tv_delivered);
+        tvChatContent =findViewById(R.id.tv_chatcontent);
+
         if (null != progressBar) {
             progressBar.setVisibility(INVISIBLE);
         }
@@ -186,6 +192,26 @@ public abstract class EaseChatRow extends LinearLayout {
         }
     }
 
+    public boolean hasSetSendDrawable(){
+        EaseChatItemStyleHelper helper = getItemStyleHelper();
+        if (helper != null) {
+            EaseChatSetStyle itemStyle = helper.getStyle();
+            Drawable senderBgDrawable = itemStyle.getSenderBgDrawable();
+            return senderBgDrawable!=null;
+        }
+        return false;
+    }
+
+    public boolean hasSetReceiveDrawable(){
+        EaseChatItemStyleHelper helper = getItemStyleHelper();
+        if (helper != null) {
+            EaseChatSetStyle itemStyle = helper.getStyle();
+            Drawable senderBgDrawable = itemStyle.getReceiverBgDrawable();
+            return senderBgDrawable!=null;
+        }
+        return false;
+    }
+
     protected void setLayoutStyle() {
         EaseChatItemStyleHelper helper = getItemStyleHelper();
         if (helper != null) {
@@ -196,11 +222,25 @@ public abstract class EaseChatRow extends LinearLayout {
                         Drawable senderBgDrawable = itemStyle.getSenderBgDrawable();
                         if (senderBgDrawable != null) {
                             bubbleLayout.setBackground(senderBgDrawable.getConstantState().newDrawable());
+                            if (tvChatContent!= null){
+                                tvChatContent.setTextColor(ContextCompat.getColor(context,R.color.white));
+                            }
+                        }else {
+                            if (tvChatContent!= null){
+                                tvChatContent.setTextColor(ContextCompat.getColor(context,R.color.colorIm));
+                            }
                         }
                     } else {
                         Drawable receiverBgDrawable = itemStyle.getReceiverBgDrawable();
                         if (receiverBgDrawable != null) {
                             bubbleLayout.setBackground(receiverBgDrawable.getConstantState().newDrawable());
+                            if (tvChatContent!= null){
+                                tvChatContent.setTextColor(ContextCompat.getColor(context,R.color.white));
+                            }
+                        }else{
+                            if (tvChatContent!= null){
+                                tvChatContent.setTextColor(ContextCompat.getColor(context,R.color.colorIm));
+                            }
                         }
                     }
                 } catch (Exception e) {

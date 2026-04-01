@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@mipmap/bg_heart_cp_sign"
+            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_close"
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/iv_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="@dimen/dp_13"
+            android:layout_marginTop="@dimen/dp_140"
+            android:src="@drawable/svg_common_pop_close"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_13"
+            android:layout_marginTop="@dimen/dp_141"
+            android:src="@drawable/svg_cp_sign_title_txt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_bg" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:textColor="#D7324F"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toStartOf="@+id/iv_title"
+            app:layout_constraintTop_toBottomOf="@+id/iv_title"
+            tools:text="已连续点亮15天｜连续越久奖励越丰厚" />
+
+        <cn.yanhu.baselib.view.GradientBorderCircleImageView
+            android:id="@+id/iv_avatarA"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:src="@drawable/ease_default_avatar"
+            app:fl_borderEndColor="#33FF24B6"
+            app:fl_borderStartColor="#FFDBDB"
+            app:fl_borderWidth="@dimen/dp_1"
+            app:layout_constraintBottom_toBottomOf="@+id/icon"
+            app:layout_constraintEnd_toStartOf="@+id/icon"
+            app:layout_constraintTop_toTopOf="@+id/icon" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/dp_72"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginTop="@dimen/dp_35"
+            android:src="@mipmap/icon_sign_love"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_days" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_intimacy"
+            android:layout_width="wrap_content"
+            tools:text="33333"
+            android:textSize="@dimen/sp_13"
+            android:layout_marginBottom="@dimen/dp_m_2"
+            app:layout_constraintStart_toStartOf="@+id/icon"
+            app:layout_constraintEnd_toEndOf="@+id/icon"
+            app:layout_constraintBottom_toBottomOf="@+id/icon"
+            app:fontWeightValue="medium"
+            android:textColor="@color/colorMain"
+            android:layout_height="wrap_content"/>
+
+        <cn.yanhu.baselib.view.GradientBorderCircleImageView
+            android:id="@+id/iv_avatarB"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:src="@drawable/ease_default_avatar"
+            app:fl_borderEndColor="#33FF24B6"
+            app:fl_borderStartColor="#FFDBDB"
+            app:fl_borderWidth="@dimen/dp_1"
+            app:layout_constraintBottom_toBottomOf="@+id/icon"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toTopOf="@+id/icon" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_sign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_23"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_17"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/iv_avatarB"
+            app:spanCount="5"
+            tools:itemCount="15"
+            tools:listitem="@layout/adapter_heart_cp_sign_item" />
+
+        <com.lihang.ShadowLayout
+            android:id="@+id/vg_operate"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginHorizontal="@dimen/dp_30"
+            android:layout_marginBottom="@dimen/dp_19"
+            app:hl_angle="90"
+            app:hl_centerColor="#FEFEFE"
+            app:hl_cornerRadius="@dimen/dp_30"
+            app:hl_endColor="#FEFEFE"
+            app:hl_shadowColor="#80FF7498"
+            app:hl_shadowHiddenTop="true"
+            app:hl_shadowLimit="@dimen/dp_4"
+            app:hl_startColor="#FFE2EA"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <cn.yanhu.baselib.view.StrokeGradientTextView
+                android:id="@+id/tv_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="送礼增加亲密值"
+                android:textSize="@dimen/sp_24"
+                app:endColor="#FF2483"
+                app:fontType="@string/fontBold"
+                app:startColor="#FF7698" />
+
+        </com.lihang.ShadowLayout>
+
+
+        <com.cpiz.android.bubbleview.BubbleTextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:paddingHorizontal="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:text="还差888亲密值可领取今日奖励"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_13"
+            app:bb_arrowDirection="Down"
+            app:bb_arrowHeight="@dimen/dp_8"
+            app:bb_arrowPosPolicy="SelfCenter"
+            app:bb_arrowWidth="@dimen/dp_16"
+            app:bb_cornerRadius="@dimen/dp_10"
+            app:bb_fillColor="#FF2D6A"
+            app:layout_constraintBottom_toTopOf="@+id/vg_operate"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

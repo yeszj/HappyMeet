@@ -344,7 +344,7 @@ class EditUserInfoActivity : BaseActivity<ActivityEditUserinfoBinding, UserViewM
 
                 editUserInfoHeadAdapter.item = it
 
-                val info = EditIUserItemInfo("基本信息（必填）", it.basicInfo)
+                val info = EditIUserItemInfo("基本信息（必填）", it!!.basicInfo)
                 editBasicUserInfoAdapter.item = info
 //bao
 ////                val info2 = EditIUserItemInfo("详细信息", it.detailInfo)

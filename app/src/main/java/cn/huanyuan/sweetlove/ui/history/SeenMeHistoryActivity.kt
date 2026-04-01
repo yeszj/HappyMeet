@@ -73,7 +73,7 @@ class SeenMeHistoryActivity : BaseActivity<ActivitySeenMeHistoryBinding, History
         super.registerNecessaryObserver()
         mViewModel.seenMeHistoryObservable.observe(this) { it ->
             parseState(it, {
-                val hasPermission = it.isHasPermission
+                val hasPermission = it!!.isHasPermission
                 historyAdapter.setIsLock(hasPermission)
                 mBinding.refreshLayout.setEnableLoadMore(hasPermission)
                 mBinding.rvHistory.isNestedScrollingEnabled = hasPermission

@@ -63,7 +63,7 @@ class UserViewModel : BaseViewModel() {
     }
 
     fun getMyPageInfo() {
-        request({ rxApi.getMyPageInfo() }, myPageInfoObservable, true)
+        request({ rxApi.getMyPageInfo() }, myPageInfoObservable, false)
     }
 
     fun refreshMyPageInfo(onRequestResultListener: OnRequestResultListener<UserDetailInfo>) {

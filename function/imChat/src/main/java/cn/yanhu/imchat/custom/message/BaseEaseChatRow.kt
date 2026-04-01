@@ -55,12 +55,14 @@ open class BaseEaseChatRow : EaseChatRow {
     private var vgAvatar: ViewGroup? = null
     private var userInfoView: ImChatUserInfoView? = null
     private var tvIdentity: TextView? = null
+
     override fun onInflateView() {}
     override fun onFindViewById() {
         ivAvatarFrame = findViewById(R.id.iv_avatarFrame)
         vgAvatar = findViewById(R.id.vg_avatar)
         userInfoView = findViewById(R.id.userInfoView)
         tvIdentity = findViewById(R.id.tv_identity)
+
     }
 
     override fun onMessageSuccess() {
@@ -70,6 +72,7 @@ open class BaseEaseChatRow : EaseChatRow {
 
     override fun onSetUpView() {
 
+        setLayoutStyle()
         var sendUserInfo = GroupUserInfoCacheManager.getGroupUserInfoByUserId(message.from)
         if (sendUserInfo==null){
             val stringAttribute: String =
@@ -78,6 +81,7 @@ open class BaseEaseChatRow : EaseChatRow {
                 stringAttribute, GroupUserInfo::class.java
             )
         }
+
         if (message.chatType == EMMessage.ChatType.GroupChat) {
             ackedView?.visibility = INVISIBLE
             bindIdentityView(message)

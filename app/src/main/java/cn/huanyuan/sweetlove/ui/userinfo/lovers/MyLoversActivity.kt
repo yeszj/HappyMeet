@@ -78,7 +78,7 @@ class MyLoversActivity : BaseActivity<ActivityMyLoversBinding, LoversViewModel>(
             parseState(it, {
                 loversInfo = it
                 mBinding.loversRes = it
-                mBinding.isSameSex = it.viewInfo.gender == AppCacheManager.gender
+                mBinding.isSameSex = it!!.viewInfo.gender == AppCacheManager.gender
                 bindTips(it)
             })
         }

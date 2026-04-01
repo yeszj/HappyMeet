@@ -52,7 +52,7 @@ open class CustomEaseChatFragment : EaseBaseFragment(), OnChatLayoutListener, On
     OnAddMsgAttrsBeforeSendEvent, OnChatRecordTouchListener, OnTranslateMessageListener,
     OnChatFinishListener {
     lateinit var chatLayout: CustomEaseChatLayout
-     var conversationId: String = ""
+    var conversationId: String = ""
     var chatType = 0
     private var historyMsgId: String? = null
     var isRoam = false
@@ -80,6 +80,10 @@ open class CustomEaseChatFragment : EaseBaseFragment(), OnChatLayoutListener, On
         initData()
     }
 
+
+    fun isInit(): Boolean{
+        return ::chatLayout.isInitialized
+    }
 
     private fun initArguments() {
         val bundle = arguments

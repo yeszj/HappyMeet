@@ -357,4 +357,9 @@ interface AgoraApiService : CommonApiService {
 
     @POST("app/v1/room/gift/sendCnt")
     suspend fun sendCnt(@Body sendGiftRequest: SendGiftRequest): BaseBean<GiftSendCntInfo>
+
+    @GET("app/v1/activity/cp/getBindList")
+    suspend fun getHeartInviteUserList(
+        @Query("activityId") activityId: String?, @Query("page") page: Int,@Query("searchContent") searchContent: String?
+    ): BaseBean<MutableList<UserDetailInfo>>
 }

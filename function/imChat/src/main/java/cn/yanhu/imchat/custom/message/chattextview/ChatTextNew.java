@@ -8,6 +8,7 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.URLSpan;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
@@ -106,6 +107,12 @@ public class ChatTextNew extends BaseEaseChatRow {
                 }
                 return false;
             });
+
+            if (contentView.getText().toString().length()<=3){
+                contentView.setGravity(Gravity.CENTER);
+            }else {
+                contentView.setGravity(Gravity.CENTER_VERTICAL);
+            }
 
             EMTranslationResult result = EMClient.getInstance().translationManager().getTranslationResult(message.getMsgId());
             if (result != null) {

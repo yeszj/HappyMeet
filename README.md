@@ -40,6 +40,7 @@ SHA-256: 98:05:D1:31:DB:1D:3C:76:F4:AC:88:D9:5E:62:0C:3F:73:FA:6E:E6:75:DE:9F:E7
 {clsPath:cn.huanyuan.sweetlove.ui.userinfo.edit.EditUserInfoActivity}
 {clsPath:cn.huanyuan.sweetlove.ui.system.FeedbackActivity,id:100001,position:2}
 
+{clsPath:cn.huanyuan.sweetlove.ui.userinfo.auth.RealNameActivity}
 
 
 "<font color = '#333333'>联系方式已成功发送</font><br>安全提醒：如对于表示无法收到、看不到联系方式，要继续送礼才可解锁时请勿轻信；如对方要求添加外部聊天工具时（微信、QQ等）如涉及金钱相关，请保持警惕并及时<font color = '#E83D24'>举报</font>，举报核实成功后可领取奖励。请谨防理财、裸聊、杀猪盘等诈骗，建议在平台内交友。"

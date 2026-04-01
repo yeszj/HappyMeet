@@ -1225,14 +1225,19 @@ public class CustomEaseChatMessageListLayout extends RelativeLayout implements I
 
     @Override
     public void setItemSenderBackground(Drawable bgDrawable) {
-        chatSetHelper.setSenderBgDrawable(bgDrawable);
-        notifyDataSetChanged();
+        if (chatSetHelper!=null){
+            chatSetHelper.setSenderBgDrawable(bgDrawable);
+            notifyDataSetChanged();
+        }
+
     }
 
     @Override
     public void setItemReceiverBackground(Drawable bgDrawable) {
-        chatSetHelper.setReceiverBgDrawable(bgDrawable);
-        notifyDataSetChanged();
+        if (chatSetHelper!=null) {
+            chatSetHelper.setReceiverBgDrawable(bgDrawable);
+            notifyDataSetChanged();
+        }
     }
 
     @Override

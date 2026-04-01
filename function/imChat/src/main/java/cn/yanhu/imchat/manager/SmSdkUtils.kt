@@ -105,7 +105,7 @@ object SmSdkUtils {
     }
 
     interface OnSmCheckResultListener {
-        fun onCheckSuccess(smCheckResult: SmCheckResult,msg: String)
+        fun onCheckSuccess(smCheckResult: SmCheckResult,msg: String?)
         fun onCheckFail(code:Int?,msg:String?)
     }
 }

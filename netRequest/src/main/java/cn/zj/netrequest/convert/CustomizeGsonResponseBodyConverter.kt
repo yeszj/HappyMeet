@@ -1,4 +1,4 @@
-package com.contract.commonlib.http.convert
+package cn.zj.netrequest.convert
 
 import cn.zj.netrequest.status.CustomException
 import cn.zj.netrequest.status.ErrorCode

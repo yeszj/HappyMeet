@@ -23,7 +23,12 @@ object ImUserManager {
 
 
     fun getSelfUserInfo():UserDetailInfo{
-        return  GsonUtils.fromJson(AppCacheManager.userInfo ,UserDetailInfo::class.java)
+        try {
+            return  GsonUtils.fromJson(AppCacheManager.userInfo ,UserDetailInfo::class.java)
+        }catch (e: Exception){
+            return UserDetailInfo()
+            e.printStackTrace()
+        }
     }
 
     fun updateUserInfo(key: EMUserInfo.EMUserInfoType, value: String) {

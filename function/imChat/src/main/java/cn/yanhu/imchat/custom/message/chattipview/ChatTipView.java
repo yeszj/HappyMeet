@@ -67,11 +67,12 @@ public class ChatTipView extends BaseEaseChatRow {
             }
 
             String content;
-            if (message.getFrom().equals(AppCacheManager.INSTANCE.getUserId())) {
+            boolean isSendUser = message.getFrom().equals(AppCacheManager.INSTANCE.getUserId());
+            if (isSendUser) {
                 //发送方
-                content = params.get("sendShowContent");
+                content = params.getOrDefault(ImMessageParamsConfig.SENDSHOWCONTENT, "");
             } else {
-                content = params.get("receiveShowContent");
+                content = params.getOrDefault(ImMessageParamsConfig.RECEIVESHOWCONTENT, "");
             }
             if (TextUtils.isEmpty(content)) {
                 binding.alertView.setVisibility(View.GONE);
@@ -85,9 +86,25 @@ public class ChatTipView extends BaseEaseChatRow {
             }
 
             if (params.containsKey(ImMessageParamsConfig.KEY_BTN_VALUE)) {
+
+                String btnStatus = params.getOrDefault(ImMessageParamsConfig.KEY_BTN_STATUS, "0");
+                if ("0".equals(btnStatus)){
+                    binding.tvOperate.setVisibility(View.VISIBLE);
+                }else if ("1".equals(btnStatus)){
+                    if (isSendUser){
+                        binding.tvOperate.setVisibility(View.VISIBLE);
+                    }else {
+                        binding.tvOperate.setVisibility(View.GONE);
+                    }
+                }else {
+                    if (!isSendUser){
+                        binding.tvOperate.setVisibility(View.VISIBLE);
+                    }else {
+                        binding.tvOperate.setVisibility(View.GONE);
+                    }
+                }
                 String btnValue = params.get(ImMessageParamsConfig.KEY_BTN_VALUE);
                 binding.tvOperate.setText(btnValue);
-                binding.tvOperate.setVisibility(View.VISIBLE);
                 binding.tvOperate.setOnClickListener(v -> {
                     String pageUrl = params.get(ImMessageParamsConfig.KEY_PAGE_URL);
                     PageIntentUtil.url2Page(context, pageUrl);

@@ -76,7 +76,7 @@ class UserSearchActivity : BaseActivity<ActivityUserSearchBinding, UserViewModel
         mViewModel.searchUserObservable.observe(this) { it ->
             parseState(it, {
                 mBinding.tvResult.visibility = View.VISIBLE
-                userAdapter.isStateViewEnable = it.size <= 0
+                userAdapter.isStateViewEnable = it.isEmpty()
                 userAdapter.submitList(it)
             })
         }

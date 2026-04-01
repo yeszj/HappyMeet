@@ -69,7 +69,6 @@ import java.util.TimerTask
 import androidx.core.view.isVisible
 import cn.yanhu.agora.service.LocalRecordingService
 import cn.yanhu.agora.service.LocalServiceManager
-import io.agora.rtc2.Constants
 
 /**
  * @author: zhengjun

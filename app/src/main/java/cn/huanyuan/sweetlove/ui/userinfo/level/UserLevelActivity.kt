@@ -97,7 +97,7 @@ class UserLevelActivity : BaseActivity<ActivityUserLevelBinding, UserViewModel>(
         mViewModel.userLevelObservable.observe(this) { it ->
             parseState(it, {
                 headAdapter.item = it
-                val ruleInfo = it.ruleInfo
+                val ruleInfo = it!!.ruleInfo
                 loadRuleImg(ruleInfo.levelRuleImg)
                 loadWealthImg(ruleInfo.wealthSourceImg)
                 privilegeAdapter.submitList(it.privilegeList)

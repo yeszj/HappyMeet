@@ -25,25 +25,24 @@
             android:layout_alignParentEnd="true"
             tools:ignore="IncludeLayoutParam" />
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_userid"
             android:layout_marginTop="@dimen/dp_5"
             android:layout_marginEnd="@dimen/margin_chat_activity"
-            android:paddingVertical="@dimen/dp_9"
             android:layout_toStartOf="@id/vg_avatar"
-            android:background="@drawable/ease_chat_bubble_send_bg"
-            android:minWidth="30dp"
-            android:minHeight="@dimen/dp_40"
-            android:paddingHorizontal="@dimen/dp_10">
+            android:background="@drawable/ease_chat_bubble_send_bg">
 
             <TextView
                 android:id="@+id/tv_chatcontent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="@dimen/dp_10"
                 android:layout_centerVertical="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:autoLink="web"
                 android:gravity="center|start"
                 android:lineSpacingExtra="2dp"
@@ -53,15 +52,23 @@
                 tools:text="环信环信环信环信环信环信\n00:00:89"
                 android:layout_marginEnd="@dimen/dp_5"/>
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/tv_phone"
+                app:layout_constraintStart_toEndOf="@+id/tv_chatcontent"
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
+                app:layout_constraintTop_toTopOf="@+id/tv_chatcontent"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_chatcontent"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/tv_chatcontent"
                 app:tint="@color/cl_common" />
+            <View
+                android:layout_width="@dimen/dp_10"
+                app:layout_constraintStart_toEndOf="@+id/tv_phone"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="@dimen/dp_10"/>
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
             android:id="@+id/msg_status"

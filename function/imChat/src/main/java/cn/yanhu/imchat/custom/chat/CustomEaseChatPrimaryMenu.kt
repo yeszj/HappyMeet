@@ -242,9 +242,11 @@ class CustomEaseChatPrimaryMenu(
         editText!!.addTextChangedListener(this)
         buttonPressToSpeak!!.setOnTouchListener(OnTouchListener { v: View?, event: MotionEvent? ->
             if (listener != null) {
-                 listener!!.onPressToSpeakBtnTouch(v, event)
+                val onPressToSpeakBtnTouch = listener!!.onPressToSpeakBtnTouch(v, event)
+                onPressToSpeakBtnTouch
+            }else{
+                false
             }
-            false
         })
         vgAddFriendTips!!.setOnClickListener(OnClickListener { v: View? -> onChatTypeClickListener!!.onAddFriend() })
     }

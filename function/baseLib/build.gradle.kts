@@ -134,7 +134,7 @@ dependencies {
 
     // Coil Video支持
     api ("io.coil-kt:coil-video:${coilVersion}")
-
+    api ("com.github.YvesCheung:NinePatchChunk:1.0.0")
 
 //    api ("com.tencent.qcloud:VAPSDK:2.0.28")
 }

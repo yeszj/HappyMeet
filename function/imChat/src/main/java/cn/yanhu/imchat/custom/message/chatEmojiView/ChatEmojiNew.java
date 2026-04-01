@@ -3,6 +3,7 @@ package cn.yanhu.imchat.custom.message.chatEmojiView;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import cn.yanhu.baselib.utils.CommonUtils;
 import cn.yanhu.imchat.custom.message.BaseEaseChatRow;
 import cn.yanhu.imchat.R;
 import cn.yanhu.imchat.custom.chat.EaseCommonUtils;
@@ -31,8 +32,19 @@ public class ChatEmojiNew extends BaseEaseChatRow {
     protected void onSetUpView() {
         try {
             super.onSetUpView();
-            EaseCommonUtils.showCustomEmojiView(context,message,vgContent,false,false);
+            int colorId =  CommonUtils.getColor(com.hyphenate.easeui.R.color.colorIm);
+            if (isSender){
+                if (hasSetSendDrawable()){
+                    colorId = CommonUtils.getColor(com.hyphenate.easeui.R.color.white);
+                }
+            }else {
+                if (hasSetReceiveDrawable()){
+                    colorId = CommonUtils.getColor(com.hyphenate.easeui.R.color.white);
+                }
+            }
+            EaseCommonUtils.showCustomEmojiView(context,message,vgContent,false,false,colorId);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

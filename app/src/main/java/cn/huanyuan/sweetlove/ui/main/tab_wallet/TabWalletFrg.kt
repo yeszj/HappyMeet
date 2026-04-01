@@ -64,7 +64,7 @@ class TabWalletFrg : BaseFragment<FrgTabWalletBinding, MainViewModel>(
         mViewModel.walletObservable.observe(this) { it ->
             parseState(it, {
                 walletInfo = it
-                rewardBannerAdapter.setDatas(it.carouselList)
+                rewardBannerAdapter.setDatas(it!!.carouselList)
                 mBinding.walletInfo = it
                 bindConfirmNumTips(it)
             })

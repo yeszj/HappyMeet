@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+    </data>
+
+    <LinearLayout
+        style="@style/chat_im_parent_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/timestamp"
+            style="@style/chat_text_date_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="7月19日 10:24" />
+
+        <LinearLayout
+            android:id="@+id/alert_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_20"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/margin_chat_activity">
+
+            <TextView
+                android:id="@+id/tv_alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="@dimen/dp_5"
+                android:text="心动预警！护士小王向您发送了心动CP邀请！\n请在24小时内处理，过期自动失效"
+                android:textColor="@color/cl_common_opacity_50"
+                android:textSize="@dimen/sp_13" />
+
+
+            <LinearLayout
+                android:id="@+id/vg_operate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <cn.yanhu.baselib.widget.FontWeightValueTextView
+                    android:id="@+id/tv_refuse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/common_shape_click_bg_r5"
+                    android:backgroundTint="@color/blackAlpha80"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/dp_6"
+                    android:paddingVertical="@dimen/dp_3"
+                    android:text="拒绝"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_13"
+                    app:fontWeightValue="medium"
+                    tools:visibility="visible" />
+
+                <cn.yanhu.baselib.widget.FontWeightValueTextView
+                    android:id="@+id/tv_commit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/common_shape_click_bg_r5"
+                    android:gravity="center"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:paddingHorizontal="@dimen/dp_6"
+                    android:paddingVertical="@dimen/dp_3"
+                    android:text="同意"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_13"
+                    app:fontWeightValue="medium"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

@@ -12,6 +12,7 @@ import cn.yanhu.commonres.bean.PayWayInfo
 import cn.yanhu.commonres.databinding.AdapterPayWayItemBinding
 import com.chad.library.adapter4.BaseQuickAdapter
 import androidx.core.graphics.toColorInt
+import cn.yanhu.baselib.utils.CoilImgUtils
 import cn.yanhu.baselib.utils.GlideUtils
 
 /**
@@ -36,7 +37,7 @@ class PayWayAdapter : BaseQuickAdapter<PayWayInfo, PayWayAdapter.VH>() {
             if (TextUtils.isEmpty(item.icon)){
                 ivLogo.setImageResource(item.iconId)
             }else{
-                GlideUtils.load(context, item.icon, ivLogo)
+                CoilImgUtils.loadImg(item.icon, ivLogo)
             }
             changeSelect(position)
             executePendingBindings()

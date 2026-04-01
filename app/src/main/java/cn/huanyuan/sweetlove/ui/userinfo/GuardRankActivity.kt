@@ -135,7 +135,7 @@ class GuardRankActivity : BaseActivity<ActivityGuardRankBinding, UserViewModel>(
         super.registerNecessaryObserver()
         mViewModel.guardRankObservable.observe(this) { it ->
             parseState(it, {
-                mBinding.vgMyInfo.rankInfo = it.myInfoRes
+                mBinding.vgMyInfo.rankInfo = it!!.myInfoRes
                 val rankingList = it.guardUsers
                 //guardRankAdapter.isStateViewEnable = rankingList.size < 4
                 if (rankingList.size > 0) {

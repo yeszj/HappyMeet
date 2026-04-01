@@ -15,4 +15,5 @@ class InviteRecordInfo : BaseUserInfo() {
     var contributionIncome:String = ""
     var activeDesc: String = ""
     var showActiveTip: Boolean = false
+    var  lastOnlineTime: String = ""
 }

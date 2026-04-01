@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.blankj.utilcode.util.GsonUtils;
 import com.hyphenate.chat.EMCustomMessageBody;
 
@@ -84,11 +86,12 @@ public class ChatPhoneNew extends BaseEaseChatRow {
                 ));
             }
 
-            if ("0".equals(chatType)) {
-                imageView.setImageResource(isSender ? cn.yanhu.commonres.R.mipmap.ic_voice_line : cn.yanhu.commonres.R.mipmap.ic_voice_receive_line);
-            } else {
-                imageView.setImageResource(isSender ? cn.yanhu.commonres.R.mipmap.ic_video_line : cn.yanhu.commonres.R.mipmap.ic_video_receive_line);
+            if (isSender){
+                setColorValue(hasSetSendDrawable(),chatType);
+            }else {
+                setColorValue(hasSetReceiveDrawable(),chatType);
             }
+
             LinearLayout coinLl = inflate.findViewById(R.id.coin_ll);
             TextView coinTxt = inflate.findViewById(R.id.coin_txt);
             ImageView ivCoin = inflate.findViewById(R.id.iv_coin);
@@ -112,6 +115,19 @@ public class ChatPhoneNew extends BaseEaseChatRow {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setColorValue(boolean isSet,String chatType) {
+        if (isSet){
+            imageView.setImageTintList(ContextCompat.getColorStateList(context, com.hyphenate.easeui.R.color.white));
+        }else {
+            imageView.setImageTintList(ContextCompat.getColorStateList(context, com.hyphenate.easeui.R.color.colorIm));
+        }
+        if ("0".equals(chatType)) {
+            imageView.setImageResource(isSet ? cn.yanhu.commonres.R.mipmap.ic_voice_line : cn.yanhu.commonres.R.mipmap.ic_voice_receive_line);
+        } else {
+            imageView.setImageResource(isSet ? cn.yanhu.commonres.R.mipmap.ic_video_line : cn.yanhu.commonres.R.mipmap.ic_video_receive_line);
         }
     }
 }

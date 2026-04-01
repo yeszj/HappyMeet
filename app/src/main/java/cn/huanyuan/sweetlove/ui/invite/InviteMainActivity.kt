@@ -64,7 +64,7 @@ class InviteMainActivity : BaseActivity<ActivityInviteMainBinding, InviteViewMod
         super.registerNecessaryObserver()
         mViewModel.invitePageInfoObservable.observe(this) { it ->
             parseState(it, {
-                mBinding.inviteInfo = it
+                mBinding.inviteInfo = it!!
                 val dimension = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_128)
                 createQRImage = ZXingUtils.createQRImage(it.inviteUrl, dimension, dimension)
                 mBinding.ivQrCode.setImageBitmap(createQRImage)

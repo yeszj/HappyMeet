@@ -28,6 +28,7 @@ import cn.yanhu.commonres.pop.CommonOperatePop
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.router.RouterPath
 import cn.yanhu.commonres.utils.TraceUtils
+import cn.yanhu.commonres.utils.VideoAnimUtils
 import cn.yanhu.dynamic.adapter.DynamicAdapter
 import cn.yanhu.imchat.db.ChatUserInfoManager
 import cn.yanhu.imchat.manager.EmMsgManager
@@ -40,6 +41,10 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter4.QuickAdapterHelper
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lxj.xpopup.core.BasePopupView
+import com.tencent.qgame.animplayer.AnimConfig
+import com.tencent.qgame.animplayer.IAnimView
+import com.tencent.qgame.animplayer.inter.IAnimListener
+import com.umeng.socialize.utils.DeviceConfigInternal.context
 
 /**
  * @author: zhengjun
@@ -274,6 +279,10 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
         mViewModel.userDetailObservable.observe(this) { it ->
             parseState(it, {
                 userInfo = it
+                mBinding.videoGiftAnimView.setLoop(Int.MAX_VALUE)
+                if (!CommonUtils.isEmpty(it.homeDecorSvga)){
+                    VideoAnimUtils.loadNetVideoAnim(mContext,it.homeDecorSvga!!,mBinding.videoGiftAnimView,null)
+                }
                 bindBasicInfo(it)
                 setDataLoadFinish(page, 0, mBinding.refreshLayout)
             }, {
@@ -315,5 +324,10 @@ class UserHomePageActivity : BaseActivity<ActivityUserHomePageBinding, UserViewM
                 CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_6)
             )
         }
+    }
+
+    override fun exactDestroy() {
+        super.exactDestroy()
+        mBinding.videoGiftAnimView.stopPlay()
     }
 }

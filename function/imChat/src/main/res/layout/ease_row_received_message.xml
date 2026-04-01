@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
     <LinearLayout
+        style="@style/chat_im_parent_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        style="@style/chat_im_parent_style">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/timestamp"
@@ -27,35 +27,32 @@
 
             <include layout="@layout/ease_im_chat_avatar" />
 
-
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bubble"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/userInfoView"
-                android:minHeight="@dimen/dp_44"
                 android:layout_marginTop="@dimen/dp_5"
                 android:layout_toEndOf="@id/vg_avatar"
-                android:background="@drawable/ease_chat_bubble_receive_bg"
-                android:minWidth="30dp"
-                android:paddingVertical="@dimen/dp_9"
-                android:paddingHorizontal="@dimen/dp_10">
+                android:background="@drawable/ease_chat_bubble_receive_bg">
 
-                <TextView
+
+                <cn.yanhu.baselib.view.CustomFontTextView
                     android:id="@+id/tv_chatcontent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:autoLink="web"
-                    android:gravity="center|left"
+                    android:gravity="center_vertical"
                     android:lineSpacingExtra="2dp"
-                    android:maxWidth="@dimen/dp_225"
+                    android:maxWidth="@dimen/dp_220"
+                    android:minWidth="@dimen/dp_80"
+                    android:paddingHorizontal="@dimen/dp_10"
                     android:textColor="@color/cl_common"
                     android:textSize="@dimen/sp_15"
-                    tools:text="环信" />
-
-
-            </RelativeLayout>
+                    app:fontType="@string/fontMedium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="欢迎" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
@@ -132,8 +129,9 @@
                 android:visibility="gone"
                 tools:text="som" />
 
-           <include layout="@layout/view_message_coin_reward"/>
-            <include layout="@layout/ease_receive_im_chat_card_tip"/>
+            <include layout="@layout/view_message_coin_reward" />
+
+            <include layout="@layout/ease_receive_im_chat_card_tip" />
 
         </RelativeLayout>
 
@@ -168,13 +166,14 @@
                 android:textSize="15sp"
                 tools:text="环信" />
         </RelativeLayout>
+
         <com.hyphenate.easeui.widget.EaseChatQuoteView
             android:id="@+id/chat_quote_view"
-            android:layout_marginStart="70dp"
-            android:layout_gravity="start"
-            app:ease_chat_item_sender="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:layout_gravity="start"
+            android:layout_marginStart="70dp"
+            android:visibility="gone"
+            app:ease_chat_item_sender="false" />
     </LinearLayout>
 </layout>

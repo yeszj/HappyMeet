@@ -139,6 +139,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hyphenate.EMCallBack
 import com.hyphenate.EMChatRoomChangeListener
+import com.hyphenate.EMChatRoomChangeListener.BE_KICKED
+import com.hyphenate.EMChatRoomChangeListener.BE_KICKED_FOR_OFFLINE
 import com.hyphenate.EMError
 import com.hyphenate.EMValueCallBack
 import com.hyphenate.chat.EMChatRoom
@@ -1674,6 +1676,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                     "@" + selfUserInfo?.nickName + "，你的玫瑰余额不足，请及时充值",
                     ChatRoomMsgInfo.ITEM_SYSTEM_TYPE
                 )
+                showToast("您的账户余额已不足以下一分钟消费，请尽快充值")
+                showRechargePop()
             } else if (source == ChatConstant.ACTION_MSG_ROSE_LACK_KICK_OUT) { //玫瑰不足，踢出男嘉宾
                 //专属房间余额不足 退出房间
                 showToast("玫瑰余额用尽")
@@ -3812,12 +3816,23 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     override fun onRemovedFromChatRoom(
         reason: Int, roomId: String?, roomName: String?, participant: String?
     ) {
-        logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "被移出聊天室roomId=${roomId}——————$participant,reason=${reason}")
         if (isNotMyRoom(roomId)) {
             return
         }
-        if (participant == localStrUserId) {
-            leaveRoomFinish()
+        if (participant == localStrUserId ) {
+            if (reason == BE_KICKED){
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "被踢出聊天室，离开房间roomId=${roomId}——————$participant,reason=${reason}")
+                leaveRoomFinish()
+            }else if (reason == BE_KICKED_FOR_OFFLINE){
+                //2分钟离线踢出 走重连逻辑
+                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "2分钟离线踢出重连roomId=${roomId}——————$participant,reason=${reason}")
+                joinChatRoom(object : OnJoinChatRoomListener {
+                    override fun onJoinSuccess() {
+                        logComToFile(TAG, "离线重连成功")
+                    }
+                })
+            }
+
         }
     }
 

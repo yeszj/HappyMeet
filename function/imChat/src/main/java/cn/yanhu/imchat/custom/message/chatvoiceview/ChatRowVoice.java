@@ -6,18 +6,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.airbnb.lottie.LottieAnimationView;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.easeui.R;
-import com.hyphenate.easeui.utils.EaseVoiceLengthUtils;
 import com.hyphenate.util.EMLog;
 
 import cn.yanhu.imchat.custom.chat.EaseChatRowVoicePlayer;
 import cn.yanhu.imchat.custom.message.BaseEaseChatRowFile;
 
 
+@SuppressLint("ViewConstructor")
 public class ChatRowVoice extends BaseEaseChatRowFile {
     private static final String TAG = ChatRowVoice.class.getSimpleName();
     private LottieAnimationView voiceImageView;
@@ -43,36 +45,31 @@ public class ChatRowVoice extends BaseEaseChatRowFile {
     @Override
     protected void onFindViewById() {
         super.onFindViewById();
-        voiceImageView = ((LottieAnimationView) findViewById(R.id.iv_voice));
-        voiceLengthView = (TextView) findViewById(R.id.tv_length);
-        readStatusView = (ImageView) findViewById(R.id.iv_unread_voice);
+        voiceImageView = findViewById(R.id.iv_voice);
+        voiceLengthView = findViewById(R.id.tv_length);
+        readStatusView = findViewById(R.id.iv_unread_voice);
 
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onSetUpView() {
         super.onSetUpView();
 
         EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.getBody();
         int len = voiceBody.getLength();
-        int padding = 0;
         if (len > 0) {
-            padding = EaseVoiceLengthUtils.getVoiceLength(getContext(), len);
             voiceLengthView.setText(voiceBody.getLength() + "\"");
             voiceLengthView.setVisibility(View.VISIBLE);
         } else {
             voiceLengthView.setVisibility(View.INVISIBLE);
         }
-        if (!showSenderType) {
-            voiceImageView.setImageResource(cn.yanhu.imchat.R.drawable.icon_voice_from3);
-            voiceLengthView.setPadding(0, 0, padding, 0);
-        } else {
-            voiceImageView.setImageResource(cn.yanhu.imchat.R.drawable.icon_to_voice);
-            voiceLengthView.setPadding(padding, 0, 0, 0);
-        }
+
 
         if (message.direct() == EMMessage.Direct.RECEIVE) {
+            voiceImageView.setImageResource(cn.yanhu.imchat.R.drawable.icon_voice_from3);
+            setColorValue(hasSetReceiveDrawable());
             if (readStatusView != null) {
                 if (message.isListened()) {
                     // hide the unread icon
@@ -84,14 +81,24 @@ public class ChatRowVoice extends BaseEaseChatRowFile {
 
             EMLog.d(TAG, "it is receive msg");
         } else {
-            // hide the unread icon
+            voiceImageView.setImageResource(cn.yanhu.imchat.R.drawable.icon_to_voice);
             readStatusView.setVisibility(View.INVISIBLE);
+            setColorValue(hasSetSendDrawable());
         }
 
-        // To avoid the item is recycled by listview and slide to this item again but the animation is stopped.
         EaseChatRowVoicePlayer voicePlayer = EaseChatRowVoicePlayer.getInstance(getContext());
         if (voicePlayer.isPlaying() && message.getMsgId().equals(voicePlayer.getCurrentPlayingId())) {
             startVoicePlayAnimation();
+        }
+    }
+
+    private void setColorValue(boolean isSet) {
+        if (isSet){
+            voiceLengthView.setTextColor(ContextCompat.getColor(context,R.color.white));
+            voiceImageView.setImageTintList(ContextCompat.getColorStateList(context,R.color.white));
+        }else {
+            voiceLengthView.setTextColor(ContextCompat.getColor(context,R.color.colorIm));
+            voiceImageView.setImageTintList(ContextCompat.getColorStateList(context,R.color.colorIm));
         }
     }
 
@@ -99,7 +106,6 @@ public class ChatRowVoice extends BaseEaseChatRowFile {
     protected void onViewUpdate(EMMessage msg) {
         super.onViewUpdate(msg);
 
-        // Only the received message has the attachment download status.
         if (message.direct() == EMMessage.Direct.SEND) {
             return;
         }
@@ -116,9 +122,17 @@ public class ChatRowVoice extends BaseEaseChatRowFile {
     @SuppressLint("ResourceType")
     public void startVoicePlayAnimation() {
         if (message.direct() == EMMessage.Direct.RECEIVE) {
-            voiceImageView.setAnimation("voice_msg_play.json");
+            if (hasSetReceiveDrawable()){
+                voiceImageView.setAnimation("voice_msg_play_white.json");
+            }else {
+                voiceImageView.setAnimation("voice_msg_play.json");
+            }
         } else {
-            voiceImageView.setAnimation("voice_msg_play_reverse.json");
+            if (hasSetSendDrawable()){
+                voiceImageView.setAnimation("voice_msg_play_reverse_white.json");
+            }else {
+                voiceImageView.setAnimation("voice_msg_play_reverse.json");
+            }
         }
         voiceImageView.playAnimation();
 

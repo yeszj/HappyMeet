@@ -6,9 +6,13 @@ package cn.yanhu.commonres.config
  * desc:
  */
 object ImMessageParamsConfig {
+
+
+
     const val  KEY_IS_FAST_MSG = "isFastMsg"
     const val  KEY_CHAT_SOURCE = "chatSource"
     const val KEY_BTN_VALUE = "btnValue"
+    const val KEY_BTN_STATUS = "btnStatus" //0双方显示 1发送方显示 2接收方显示
 
     const val KEY_PAGE_URL = "pageUrl"
     const val KEY_CONTENT = "content"
@@ -42,5 +46,12 @@ object ImMessageParamsConfig {
 
     const val KEY_WARNING_CONTENT = "alert"
 
+    const val SENDSHOWCONTENT = "sendShowContent"
+    const val RECEIVESHOWCONTENT = "receiveShowContent"
+
+    const val ACTIVITY_ID = "activityId"
+    const val USERNAME = "userName"
+
+    const val KEY_STATUS = "status"
 
 }

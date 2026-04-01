@@ -53,7 +53,7 @@ class TaskCenterActivity : BaseActivity<ActivityTaskCenterBinding, TaskViewModel
         mViewModel.taskInfoObservable.observe(this) { it ->
             parseState(it, {
                 val fragment = frgList[0] as TaskItemFrg
-                fragment.setTaskData(it.dailyTasks)
+                fragment.setTaskData(it!!.dailyTasks)
                 val fragment2 = frgList[1] as TaskItemFrg
                 fragment2.setTaskData(it.newbieTasks)
             })

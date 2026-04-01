@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cn.huanyuan.sweetlove.databinding.AdapterUploadPhotoItemBinding
+import cn.yanhu.baselib.utils.CoilImgUtils
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.GlideUtils
 import cn.yanhu.commonres.bean.EditPhotoInfo
 import cn.yanhu.commonres.manager.ImageThumbUtils
 import com.chad.library.adapter4.BaseQuickAdapter
+import com.zj.dimens.R
 
 /**
  * @author: zhengjun
@@ -47,9 +50,11 @@ class EditPhotoAdapter(private var isShowDelete:Boolean = false) :
                     ivDelete.visibility = View.INVISIBLE
                 }
                 if (item.isNetUrl()){
-                    GlideUtils.load(context,ImageThumbUtils.getThumbUrl(item.url),ivPhoto, placeholderId = -1)
+                    CoilImgUtils.loadRoundImg(ImageThumbUtils.getThumbUrl(item.url),ivPhoto,
+                        CommonUtils.getDimension(R.dimen.dp_12).toFloat())
                 }else{
-                    GlideUtils.load(context,item.url,ivPhoto, placeholderId = -1)
+                    CoilImgUtils.loadRoundImg(item.url,ivPhoto,
+                        CommonUtils.getDimension(R.dimen.dp_12).toFloat())
                 }
                 if (item.isUploadFinish()){
                     tvProgress.visibility = View.INVISIBLE

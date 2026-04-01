@@ -259,7 +259,7 @@ class NewYearEventActivity : BaseActivity<ActivityNewYearEventBinding, EventView
         super.registerNecessaryObserver()
         mViewModel.newYearInfoLivedata.observe(this) { it ->
             parseState(it, {
-                newYearInfo = it
+                newYearInfo = it!!
                 mBinding.tvTotalReward.text = it.sumRoseNum
                 mBinding.tvDivideNum.text = it.devideDesc
                 if (it.status != -2) {

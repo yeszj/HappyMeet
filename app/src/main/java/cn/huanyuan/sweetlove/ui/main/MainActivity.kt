@@ -525,7 +525,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     private fun clearAllFrgManager() {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         val fragments = supportFragmentManager.fragments
-        if (fragments.size > 0) {
+        if (fragments.isNotEmpty()) {
             for (fragment in fragments) {
                 ft.remove(fragment)
             }

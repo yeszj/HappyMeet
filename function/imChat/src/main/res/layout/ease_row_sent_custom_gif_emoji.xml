@@ -31,13 +31,14 @@
             android:layout_toLeftOf="@id/vg_avatar"
             android:layout_below="@id/tv_userid"
             android:layout_marginStart="50dp"
+            android:background="@drawable/ease_chat_bubble_send_bg"
             android:layout_marginTop="@dimen/dp_5"
-            android:paddingHorizontal="@dimen/dp_10"
             android:layout_height="wrap_content">
             <pl.droidsonroids.gif.GifImageView
                 android:id="@+id/gifImage"
                 android:layout_width="@dimen/dp_75"
                 android:layout_height="@dimen/dp_75"
+                android:layout_marginHorizontal="@dimen/dp_10"
                 android:gravity="center"
                 android:orientation="horizontal" />
         </FrameLayout>

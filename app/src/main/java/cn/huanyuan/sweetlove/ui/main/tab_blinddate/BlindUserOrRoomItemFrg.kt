@@ -102,7 +102,7 @@ class BlindUserOrRoomItemFrg : BaseFragment<FrgBlindUserListItemBinding, MainVie
         mViewModel.roomListObservable.observe(this) { it ->
             parseState(it, {
                 isRequest = true
-                val roomList = it.roomList
+                val roomList = it!!.roomList
                 if (page == 1) {
                     adapter.isStateViewEnable = roomList.isEmpty()
                     adapter.submitList(roomList)

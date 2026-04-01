@@ -73,7 +73,7 @@ class DressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
         mViewModel.dressInfoObservable.observe(this) { it ->
             parseState(it, {
                 roseBalance = it.roseBalance
-                dressUpItemAdapter.isStateViewEnable = it.getGoodsList().size <= 0
+                dressUpItemAdapter.isStateViewEnable = it.getGoodsList().isEmpty()
                 dressUpItemAdapter.submitList(it.getGoodsList())
             })
         }
@@ -105,6 +105,11 @@ class DressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
         const val TYPE_CHAT_POP = 3
         const val TYPE_BEAUTIFUL_ACCOUNT = 4
         const val TYPE_USER_FLOAT = 5
+        const val TYPE_USER_HOMEPAGE = 6
+
+        const val TYPE_USER_POP = 7
+
+
         fun newInstance(type: Int): DressUpFrg {
             val dressUpFrg = DressUpFrg()
             val bundle = Bundle()

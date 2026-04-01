@@ -21,23 +21,30 @@
 
         <include layout="@layout/ease_im_chat_avatar" />
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userInfoView"
             android:layout_marginTop="@dimen/dp_5"
             android:layout_toRightOf="@id/vg_avatar"
-            android:paddingVertical="@dimen/dp_9"
-            android:paddingHorizontal="@dimen/dp_10"
             android:background="@drawable/ease_chat_bubble_receive_bg"
-            android:minHeight="@dimen/dp_40">
+            >
 
+            <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="@dimen/dp_1"/>
             <cn.yanhu.commonres.view.CustomLottieAnimationView
                 android:id="@+id/iv_voice"
                 android:layout_width="@dimen/dp_22"
                 android:layout_height="@dimen/dp_22"
+                app:layout_constraintStart_toEndOf="@+id/divider"
                 android:layout_centerVertical="true"
+                app:layout_constraintTop_toTopOf="@+id/tv_length"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_length"
                 app:lottie_loop="true"
                 android:src="@drawable/icon_voice_from3" />
             <TextView
@@ -46,10 +53,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/dp_4"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_voice"
+                android:paddingStart="@dimen/dp_4"
                 android:layout_toRightOf="@id/iv_voice"
+                android:paddingEnd="@dimen/dp_10"
                 android:gravity="center"
-                android:paddingEnd="@dimen/dp_20"
                 android:maxLines="1"
                 android:textColor="@color/cl_common"
                 android:textSize="@dimen/sp_15"
@@ -57,7 +66,7 @@
                 tools:text="3&apos;&apos;" />
 
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include layout="@layout/view_message_coin_reward"/>
         <include layout="@layout/ease_receive_im_chat_card_tip"/>

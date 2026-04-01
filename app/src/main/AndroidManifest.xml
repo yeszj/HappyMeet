@@ -194,6 +194,10 @@
             android:configChanges="orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.event.cp.HeartCpEventActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.setting.ChatPriceSetActivity"
             android:configChanges="orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
@@ -211,6 +215,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.userinfo.UserSearchActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.invite.InviteUserDataDetailActivity"
             android:configChanges="orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
         <activity

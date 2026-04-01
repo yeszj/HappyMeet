@@ -167,7 +167,7 @@ class FriendsFrg : BaseFragment<FrgFriendsBinding, MainViewModel>(
         super.registerNecessaryObserver()
         mViewModel.requestFriendObservable.observe(this) { it ->
             parseState(it, {
-                val list = it.list
+                val list = it!!.list
                 if (list.size > 0) {
                     if (friendRequestTitleAdapter == null) {
                         friendRequestTitleAdapter = FriendTitleAdapter(false)
@@ -196,7 +196,7 @@ class FriendsFrg : BaseFragment<FrgFriendsBinding, MainViewModel>(
         }
         mViewModel.friendObservable.observe(this) { it ->
             parseState(it, {
-                val tcListRes = it.list
+                val tcListRes = it!!.list
                 friendTitleAdapter.item = it.totalCount
                 if (page == 1) {
                     adapter.submitList(tcListRes)

@@ -14,6 +14,7 @@ import cn.yanhu.baselib.base.BaseActivity
 import cn.yanhu.baselib.refresh.IRefreshCallBack
 import cn.yanhu.baselib.refresh.NoMoreDataFootView
 import cn.yanhu.baselib.refresh.RefreshManager
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.view.TitleBar
 import cn.yanhu.commonres.bean.FilterInfo
@@ -37,7 +38,7 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
     R.layout.activity_my_invite_record,
     InviteViewModel::class.java
 ) {
-    private val recordHeadAdapter by lazy { InviteRecordHeadAdapter(mContext) }
+    private val recordHeadAdapter by lazy { InviteRecordHeadAdapter(mContext, mViewModel) }
     private val recordAdapter by lazy { InviteRecordAdapter() }
     private lateinit var helper: QuickAdapterHelper
     private var page = 1
@@ -56,6 +57,10 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
 
     override fun initListener() {
         super.initListener()
+        recordAdapter.addOnItemChildClickListener(R.id.viewDetail) { _, _, position ->
+            val item = recordAdapter.getItem(position) ?: return@addOnItemChildClickListener
+            InviteUserDataDetailActivity.lunch(mContext,item.userId)
+        }
         mBinding.titleBar.setTitleButtonOnClickListener(object :
             TitleBar.TitleButtonOnClickListener {
             override fun leftButtonOnClick(v: View?) {
@@ -124,16 +129,19 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
                 filterList,
                 object : CommonTypeFilterPop.OnFilterListener {
                     override fun onSelectFilter(filterInfo: FilterInfo?) {
-                        filterId = filterInfo?.id.toString()
-                        val filterName = filterInfo?.name.toString()
-                        recordHeadAdapter.filterName = filterName
-                        recordAdapter.filterName = filterName
-                        recordHeadAdapter.notifyItemChanged(0, true)
-                        page = 1
-                        requestData()
+                        startSearch(filterInfo)
                     }
                 })
         }
+    }
+
+    private fun startSearch(filterInfo: FilterInfo?) {
+        filterId = filterInfo?.id.toString()
+        val filterName = filterInfo?.name.toString()
+        recordHeadAdapter.filterName = filterName
+        recordAdapter.filterName = filterName
+        recordHeadAdapter.notifyItemChanged(0, true)
+        refreshData()
     }
 
     override fun initRefresh() {
@@ -141,8 +149,7 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
         RefreshManager.getInstance()
             .initRefresh(mContext, true, mBinding.refreshLayout, object : IRefreshCallBack {
                 override fun onRefresh() {
-                    page = 1
-                    requestData()
+                    refreshData()
                 }
 
                 override fun onLoadMore() {
@@ -152,12 +159,18 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
             })
     }
 
+    fun refreshData() {
+        page = 1
+        requestData()
+    }
+
     override fun requestData() {
         super.requestData()
         mViewModel.getMyInviteUser(page, filterId, filterTimeId)
     }
 
     private var inviteRules: String? = ""
+    private var isFirstLoad = true
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
         mViewModel.myInviteInfoObservable.observe(this) { it ->
@@ -166,6 +179,15 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
                 val list = it.list
                 filterList = it.filterList
                 filterTimeList = it.inviteFilterList
+                if (CommonUtils.isEmpty(recordHeadAdapter.filterName) && filterList.isNotEmpty()) {
+                    if (filterTimeList.isNotEmpty()) {
+                        val info = filterTimeList[0]
+                        filterTimeId = info.id.toString()
+                        recordHeadAdapter.filterTimeName = info.name
+                    }
+                    val filterInfo = filterList[0]
+                    startSearch(filterInfo)
+                }
                 if (page == 1) {
                     if (list.isEmpty()) {
                         mBinding.emptyView.visibility = View.VISIBLE
@@ -173,11 +195,15 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
                     } else {
                         mBinding.emptyView.visibility = View.GONE
                     }
-                    recordHeadAdapter.item = it
+                    if (isFirstLoad){
+                        isFirstLoad = false
+                        recordHeadAdapter.item = it
+                    }
                     recordAdapter.submitList(list)
                 } else {
                     recordAdapter.addAll(list)
                 }
+
                 setDataLoadFinish(page, list.size, mBinding.refreshLayout)
             }, {
                 endLoad(page, mBinding.refreshLayout)

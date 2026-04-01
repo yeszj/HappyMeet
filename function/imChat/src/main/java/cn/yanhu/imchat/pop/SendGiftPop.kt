@@ -172,6 +172,9 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
     }
 
     fun showAddFriendsBtn(userInfo: UserDetailInfo) {
+        if (targetUserInfo.userId != userInfo.userId){
+            return
+        }
         this.targetUserInfo = userInfo
         if (binding != null) {
             if (targetUserInfo.isFriend || (targetUserInfo.isSameGender && AppCacheManager.isMan())) {
@@ -201,23 +204,29 @@ class SendGiftPop() : BaseSheetDialog<PopSendGiftBinding>() {
                 }, object : OnRequestResultListener<ComboCountInfo> {
                     override fun onSuccess(data: BaseBean<ComboCountInfo>) {
                         data.data?.apply {
-                            if (binding!!.tabLayout.checkedRadioButtonId == R.id.tv_face) {
-                                foreverFaceCount = this.minNum
-                                if (this.minNum > 0) {
-                                    binding!!.vgFaceTips.visibility = View.VISIBLE
-                                    binding!!.tvFaceCount.text = this.minNum.toString()
-                                } else {
-                                    binding!!.vgFaceTips.visibility = View.INVISIBLE
+                            binding?.apply {
+                                if (this.tabLayout.checkedRadioButtonId == R.id.tv_face) {
+                                    foreverFaceCount = minNum
+                                    if (minNum > 0) {
+                                        vgFaceTips.visibility = View.VISIBLE
+                                        tvFaceCount.text = minNum.toString()
+                                    } else {
+                                        vgFaceTips.visibility = View.INVISIBLE
+                                    }
                                 }
                             }
+
                         }
                     }
                 })
             } else if (item.type == GiftInfo.TYPE_RANDOM_BOX) {
-                val sendNumber = binding!!.tvNum.text.toString().toInt()
-                if (sendNumber > randomBoxMaxNum) {
-                    binding!!.tvNum.text = randomBoxMaxNum.toString()
+                binding?.apply {
+                    val sendNumber = tvNum.text.toString().toInt()
+                    if (sendNumber > randomBoxMaxNum) {
+                        tvNum.text = randomBoxMaxNum.toString()
+                    }
                 }
+
             }
         }
 

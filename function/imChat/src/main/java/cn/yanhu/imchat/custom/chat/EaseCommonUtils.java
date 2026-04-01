@@ -103,7 +103,7 @@ public class EaseCommonUtils {
     }
 
 
-    public static void showCustomEmojiView(Context context, String customMsg, String sendUserInfo, ViewGroup vgContent, String finalMsgId, boolean isConversationList, boolean isGroup) {
+    public static void showCustomEmojiView(Context context, String customMsg, String sendUserInfo, ViewGroup vgContent, String finalMsgId, boolean isConversationList, boolean isGroup,int colorId) {
         vgContent.removeAllViews();
         String[] split = customMsg.split("/forlove");
         List<View> list = new ArrayList<>();
@@ -122,7 +122,7 @@ public class EaseCommonUtils {
                             GroupUserInfo.class
                     );
                     if (groupUserInfo != null) {
-                        addTextView(context, vgContent, isConversationList, list, groupUserInfo.getNickName() + "：");
+                        addTextView(context, vgContent, isConversationList, list, groupUserInfo.getNickName() + "：",colorId);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -144,7 +144,7 @@ public class EaseCommonUtils {
                         e.printStackTrace();
                     }
                 } else {
-                    addTextView(context, vgContent, isConversationList, list, value);
+                    addTextView(context, vgContent, isConversationList, list, value,colorId);
                 }
             }
             vgContent.setTag(cn.yanhu.commonres.R.id.tag_msg_id, finalMsgId);
@@ -153,25 +153,25 @@ public class EaseCommonUtils {
 
     }
 
-    public static void showCustomEmojiView(Context context, EMMessage lastMessage, ViewGroup vgContent, boolean isConversationList, boolean isGroup) {
+    public static void showCustomEmojiView(Context context, EMMessage lastMessage, ViewGroup vgContent, boolean isConversationList, boolean isGroup,int colorId) {
         String stringAttribute = lastMessage.getStringAttribute(ChatConstant.CUSTOM_MSG, "");
         String sendUserInfo = "";
         if (isGroup) {
             sendUserInfo =
                     lastMessage.getStringAttribute(ChatConstant.CUSTOM_SEND_USER_INFO, "");
         }
-        showCustomEmojiView(context, stringAttribute, sendUserInfo, vgContent, lastMessage.getMsgId(), isConversationList, isGroup);
+        showCustomEmojiView(context, stringAttribute, sendUserInfo, vgContent, lastMessage.getMsgId(), isConversationList, isGroup,colorId);
     }
 
-    private static void addTextView(Context context, ViewGroup vgContent, boolean isConversationList, List<View> list, String value) {
+    private static void addTextView(Context context, ViewGroup vgContent, boolean isConversationList, List<View> list, String value,int colorId) {
         AppCompatTextView appCompatTextView = new AppCompatTextView(context);
         appCompatTextView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         if (isConversationList) {
             appCompatTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-            appCompatTextView.setTextColor(Color.parseColor("#888888"));
+            appCompatTextView.setTextColor(colorId);
         } else {
             appCompatTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            appCompatTextView.setTextColor(CommonUtils.getColor(cn.yanhu.commonres.R.color.cl_common));
+            appCompatTextView.setTextColor(colorId);
         }
         appCompatTextView.setText(replaceLineString(value));
         list.add(appCompatTextView);

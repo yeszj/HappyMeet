@@ -53,7 +53,7 @@ class DressUpCenterActivity : BaseActivity<ActivityDressUpBinding, DressUpViewMo
         mViewModel.tabListObservable.observe(this){ it ->
             parseState(it,{
                 if (frgList.isEmpty()){
-                    initTabLayout(it)
+                    initTabLayout(it!!)
                 }
             })
         }

@@ -45,7 +45,7 @@ class RoseRechargePop(val mContext: FragmentActivity, val isDismissWhenPaySucces
     override fun onCreate() {
         super.onCreate()
         mBinding = PopRoseRechargeBinding.bind(popupImplView)
-        mBinding?.apply {
+        mBinding.apply {
             initRechargeAdapter()
             ivRecharge.setOnSingleClickListener {
                 PayManager.toPay(mContext, paySelectView.getSelectType(), selectItem!!.id)
@@ -111,9 +111,9 @@ class RoseRechargePop(val mContext: FragmentActivity, val isDismissWhenPaySucces
     ) {
         rechargeResponse?.apply {
             rechargeAgreements = this.rechargeAgreement
-            if (balanceRose==null) {
+            //if (balanceRose==null) {
                 mBinding.tvRoseBalance.text = roseBalance
-            }
+            //}
             if (!isRefreshBalance) {
                 selectItem = list[defaultSelect]
                 mBinding.selectItem = selectItem
@@ -127,7 +127,7 @@ class RoseRechargePop(val mContext: FragmentActivity, val isDismissWhenPaySucces
         rvRose.adapter = roseRechargeAdapter
         roseRechargeAdapter.setOnItemClickListener { _, _, position ->
             selectItem = roseRechargeAdapter.getItem(position)
-            mBinding?.selectItem = selectItem
+            mBinding.selectItem = selectItem
             roseRechargeAdapter.setSelectPosition(
                 position
             )
@@ -148,7 +148,7 @@ class RoseRechargePop(val mContext: FragmentActivity, val isDismissWhenPaySucces
             builder
                 .hasShadowBg(hasShadowBg)
                 .asCustom(roseRechargePop).show()
-            return roseRechargePop!!
+            return roseRechargePop
         }
     }
 }

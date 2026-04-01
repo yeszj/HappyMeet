@@ -53,6 +53,7 @@ class BorderGradientDrawable(
 
     fun setColors(colors: IntArray?) {
         mColors = colors
+
     }
 
     private var gradientType = 0

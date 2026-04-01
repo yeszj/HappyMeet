@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/chat_im_parent_style"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    style="@style/chat_im_parent_style">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/timestamp"
@@ -21,26 +21,41 @@
 
         <include layout="@layout/ease_im_chat_avatar" />
 
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/userInfoView"
+            android:layout_marginTop="@dimen/dp_5"
             android:layout_marginRight="@dimen/dp_50"
             android:layout_toRightOf="@id/vg_avatar"
-            android:layout_marginTop="@dimen/dp_5"
-            tools:layout_height="@dimen/dp_40"
             android:background="@drawable/ease_chat_bubble_receive_bg"
-            android:paddingHorizontal="@dimen/dp_10"
-            android:paddingVertical="@dimen/dp_9"
-            android:layout_height="wrap_content">
+            tools:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <cn.yanhu.commonres.view.AutoLineLayout
                 android:id="@+id/vg_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:gravity="center"
-                android:minWidth="30dp"
-                android:orientation="horizontal" />
-        </FrameLayout>
+                android:orientation="horizontal"
+                app:layout_constraintStart_toEndOf="@+id/divider"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_1"
+                app:layout_constraintStart_toEndOf="@+id/vg_content"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <cn.yanhu.imchat.view.ImChatUserInfoView
             android:id="@+id/userInfoView"
@@ -48,8 +63,10 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/vg_avatar"
             android:visibility="gone" />
-        <include layout="@layout/view_message_coin_reward"/>
-        <include layout="@layout/ease_receive_im_chat_card_tip"/>
+
+        <include layout="@layout/view_message_coin_reward" />
+
+        <include layout="@layout/ease_receive_im_chat_card_tip" />
     </RelativeLayout>
 
 </LinearLayout>

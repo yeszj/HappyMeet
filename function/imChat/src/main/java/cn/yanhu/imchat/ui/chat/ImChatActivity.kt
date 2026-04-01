@@ -66,11 +66,11 @@ class ImChatActivity : BaseActivity<ActivityImChatBinding, ImChatViewModel>(
     @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        imChatFrg.onNewIntent(intent)
+      // imChatFrg.onNewIntent(intent)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (imChatFrg.chatFragment == null) {
+        if (!::imChatFrg.isInitialized ||imChatFrg.chatFragment == null) {
             return handlerOtherTypeDispatchTouchEvent(event)
         }
         val leftTop = intArrayOf(0, 0)
@@ -85,7 +85,6 @@ class ImChatActivity : BaseActivity<ActivityImChatBinding, ImChatViewModel>(
         val x = event.x.toInt()
         val y = event.y.toInt()
         return if (x in (left + 1)..<right && y > top && y < bottom) {
-            // 点击的是发送按钮，保留点击EditText的事件
             // 必不可少，否则所有的组件都不会有TouchEvent了
             if (window.superDispatchTouchEvent(event)) {
                 true
@@ -99,8 +98,8 @@ class ImChatActivity : BaseActivity<ActivityImChatBinding, ImChatViewModel>(
         if (action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus
             if (isShouldHideInput(v, event)) {
-                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                if (v != null) {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
+                if (imm!=null && v != null) {
                     imm.hideSoftInputFromWindow(v.windowToken, 0)
                 }
             }

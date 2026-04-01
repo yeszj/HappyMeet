@@ -153,5 +153,11 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="invisible" />
 
+        <com.tencent.qgame.animplayer.AnimView
+            android:id="@+id/videoGiftAnimView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

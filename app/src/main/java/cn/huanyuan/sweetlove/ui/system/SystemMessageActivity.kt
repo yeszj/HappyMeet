@@ -55,7 +55,7 @@ class SystemMessageActivity : BaseActivity<ActivitySystemMessageBinding, SystemV
         super.registerNecessaryObserver()
         mViewModel.msgInfoObservable.observe(this){ it ->
             parseState(it,{
-                msgAdapter.isStateViewEnable = it.size<=0
+                msgAdapter.isStateViewEnable = it!!.isEmpty()
                 msgAdapter.submitList(it)
             })
         }

@@ -81,8 +81,8 @@ class MyDressUpFrg : BaseFragment<FrgDressUpBinding, DressUpViewModel>(
         super.registerNecessaryObserver()
         mViewModel.myDressInfoObservable.observe(this) { it ->
             parseState(it, {
-                roseBalance = it.roseBalance
-                dressUpItemAdapter.isStateViewEnable = it.getGoodsList().size <= 0
+                roseBalance = it!!.roseBalance
+                dressUpItemAdapter.isStateViewEnable = it.getGoodsList().isEmpty()
                 dressUpItemAdapter.submitList(it.getGoodsList())
             })
         }

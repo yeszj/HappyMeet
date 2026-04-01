@@ -31,6 +31,7 @@ import cn.yanhu.imchat.custom.message.chatvideoview.ChatVideoAdapterDelegate;
 import cn.yanhu.imchat.custom.message.chatvoiceview.ChatVoiceAdapterDelegate;
 import cn.yanhu.imchat.custom.message.group.centerTipsView.CenterTipsViewAdapterDelegate;
 import cn.yanhu.imchat.custom.message.group.inviteEnterGroup.InviteEnterGroupViewAdapterDelegate;
+import cn.yanhu.imchat.custom.message.inviteBindCpMsg.InviteBindCpAdapterDelegate;
 import cn.yanhu.imchat.custom.message.inviteSendGiftView.InviteSendGiftViewAdapterDelegate;
 
 
@@ -90,6 +91,7 @@ public class EMInitUtils {
             EaseMessageTypeSetManager.getInstance()
                     .addMessageType(ChatSystemMsgViewAdapterDelegate.class)
                     .addMessageType(ChatTipAdapterDelegate.class)         //提示
+                    .addMessageType(InviteBindCpAdapterDelegate.class)         //提示
                     .addMessageType(ChatRelationshipViewAdapterDelegate.class)
                     .addMessageType(InviteSendGiftViewAdapterDelegate.class)
                     .addMessageType(ChatGifEmojiNewAdapterDelegate.class)

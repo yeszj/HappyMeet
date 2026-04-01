@@ -90,7 +90,7 @@ class PwdLoginActivity : BaseActivity<ActivityPwdLoginBinding, LoginViewModel>(
         super.registerNecessaryObserver()
         mViewModel.loginLivedata.observe(this){ it ->
             parseState(it,{
-                LoginResultManager.loginSuccess(mContext,it)
+                LoginResultManager.loginSuccess(mContext,it!!)
             },{
                 if (it.code == ErrorCode.CODE_VERIFY_LOGIN){
                     VerifyCodeActivity.lunch(mContext,mBinding.etPhone.text.toString().trim())

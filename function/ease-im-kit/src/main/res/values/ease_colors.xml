@@ -51,4 +51,6 @@
     <color name="ease_E6E6E6">#E6E6E6</color>
     <color name="ease_808080">#808080</color>
     <color name="ease_chat_item_bg_dark">#FFE6E6E6</color>
+    <color name="colorIm">#222222</color><!--字体普通颜色-->
+
 </resources>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_top_corner_15"
+        android:orientation="vertical">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_close"
+                android:layout_width="@dimen/dp_56"
+                android:layout_height="@dimen/dp_56"
+                android:padding="@dimen/dp_16"
+                android:src="@mipmap/pop_icon_close_gray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <cn.yanhu.baselib.widget.FontWeightValueTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="邀请绑定CP"
+                android:textColor="@color/color_222222"
+                android:textSize="@dimen/sp_16"
+                app:fontWeightValue="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iv_close" />
+
+            <cn.yanhu.baselib.widget.FontWeightValueTextView
+                android:id="@+id/tv_sure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_12"
+                android:background="@drawable/bg_black_alpha80_r20"
+                android:gravity="center_vertical"
+                android:enabled="false"
+                android:paddingHorizontal="@dimen/dp_8"
+                android:paddingVertical="@dimen/dp_3"
+                android:text="确定"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                app:fontWeightValue="medium"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iv_close" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="@color/blackAlpha96"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="@dimen/dp_3"
+            android:hint="请输入用户的ID或昵称搜索"
+            android:inputType="text|textMultiLine|textFilter"
+            android:maxLines="1"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:textColor="@color/cl_common"
+            android:textColorHint="@color/color_888888"
+            android:textSize="@dimen/sp_14" />
+
+        <cn.yanhu.baselib.refresh.MyRefreshLayout
+            android:id="@+id/refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_user"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_410"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/adapter_heart_cp_user_invite_item" />
+        </cn.yanhu.baselib.refresh.MyRefreshLayout>
+
+    </LinearLayout>
+</layout>

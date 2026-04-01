@@ -160,6 +160,7 @@
                 android:layout_width="@dimen/dp_60"
                 android:layout_height="@dimen/dp_60"
                 app:lottie_autoPlay="false"
+                android:layout_gravity="center"
                 app:lottie_loop="true"
                 app:lottie_repeatMode="restart" />
         </FrameLayout>

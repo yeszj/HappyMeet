@@ -57,7 +57,7 @@ class UserBlackListActivity : BaseActivity<ActivityUserBlackListBinding, SystemV
         super.registerNecessaryObserver()
         mViewModel.blackUserListObservable.observe(this){ it ->
             parseState(it,{
-                blackUserAdapter.isStateViewEnable = it.size<=0
+                blackUserAdapter.isStateViewEnable = it!!.size<=0
                 blackUserAdapter.submitList(it)
             })
         }
