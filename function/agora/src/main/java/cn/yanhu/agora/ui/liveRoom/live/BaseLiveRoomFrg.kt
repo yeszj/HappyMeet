@@ -1007,6 +1007,9 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     protected fun showSendGiftPop(roomUserSeatInfo: UserDetailInfo, isGetUser: Boolean = true) {
+        if (getCurrentSendGiftPop()?.isVisible == true) {
+            return
+        }
         getRandomBoxLimitNum()
         getGiftComboSwitch()
         if (isGetUser) {

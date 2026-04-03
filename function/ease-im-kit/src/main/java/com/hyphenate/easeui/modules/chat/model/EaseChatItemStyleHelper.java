@@ -100,10 +100,16 @@ public class EaseChatItemStyleHelper {
     }
 
     public void setReceiverBgDrawable(Drawable receiverBgDrawable) {
+        if(style==null){
+            return;
+        }
         style.setReceiverBgDrawable(receiverBgDrawable);
     }
 
     public void setSenderBgDrawable(Drawable senderBgDrawable) {
+        if(style==null){
+            return;
+        }
         style.setSenderBgDrawable(senderBgDrawable);
     }
 
