@@ -88,6 +88,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 import java.util.Timer
+import androidx.core.net.toUri
 
 class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickListener {
     private val ITEM_GIFT = 1
@@ -531,12 +532,12 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         val message: EMMessage
         if (isNetUrl(path)) {
             message = EMMessage.createSendMessage(EMMessage.Type.VOICE)
-            val body = EMVoiceMessageBody(Uri.parse(path), length)
+            val body = EMVoiceMessageBody(path?.toUri(), length)
             body.remoteUrl = path
             message.to = conversationId
             message.addBody(body)
         } else {
-            message = EMMessage.createVoiceSendMessage(Uri.parse(path), length, conversationId)
+            message = EMMessage.createVoiceSendMessage(path?.toUri(), length, conversationId)
         }
         if (chatSource != -1) {
             message.setAttribute(ImMessageParamsConfig.KEY_CHAT_SOURCE, chatSource)
@@ -789,7 +790,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
     }
 
     fun isVideo(var0: String?): Boolean {
-        return var0?.startsWith("video") ?: false
+        return var0?.startsWith("video") == true
     }
 
     private fun sendVideoOrImageMsg(finalType: String, localMedia: LocalMedia) {
@@ -806,7 +807,7 @@ class ChatFragment : CustomEaseChatFragment(), SendMsgListener, OnChatTypeClickL
         } else {
             val availablePath = localMedia.availablePath
             var restoreImageUri =
-                ImageUtils.checkDegreeAndRestoreImage(mContext, Uri.parse(availablePath))
+                ImageUtils.checkDegreeAndRestoreImage(mContext, availablePath.toUri())
             restoreImageUri =
                 (chatLayout.presenter as CustomEaseHandleMessagePresenterImpl).handleImageHeifToJpeg(
                     restoreImageUri

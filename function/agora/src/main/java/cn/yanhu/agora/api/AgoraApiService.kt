@@ -9,7 +9,9 @@ import cn.yanhu.agora.bean.GiftSendCntInfo
 import cn.yanhu.agora.bean.LiveIncomeDetailInfo
 import cn.yanhu.agora.bean.LiveRecordResponse
 import cn.yanhu.agora.bean.LiveStatisticTotalInfo
+import cn.yanhu.agora.bean.PkAgreeResponse
 import cn.yanhu.agora.bean.PkConfigInfo
+import cn.yanhu.agora.bean.PkInfoResponse
 import cn.yanhu.agora.bean.RoomConfigInfo
 import cn.yanhu.agora.bean.RoomExtraInfo
 import cn.yanhu.agora.bean.RoomGroupMemberRes
@@ -362,4 +364,70 @@ interface AgoraApiService : CommonApiService {
     suspend fun getHeartInviteUserList(
         @Query("activityId") activityId: String?, @Query("page") page: Int,@Query("searchContent") searchContent: String?
     ): BaseBean<MutableList<UserDetailInfo>>
+
+    @FormUrlEncoded
+    @POST("app/v1/room/initiatePk")
+    suspend  fun initiatePk(
+        @Field("roomId") roomId: String?,
+        @Field("targetRoomId") targetRoomId: String?,
+        @Field("source") source: Int,
+        @Field("pkSeconds") pkSeconds: Int
+    ): BaseBean<String>
+
+    @FormUrlEncoded
+    @POST("app/v1/room/cancelPkInvite")
+    suspend fun cancelPkInvite(@Field("roomId") roomId: String?): BaseBean<String>
+
+    @GET("app/v1/room/getPkRoomInfo")
+    suspend fun getPkRoomInfo(@Query("roomId") roomId: String?):BaseBean<PkInfoResponse>
+
+    @FormUrlEncoded
+    @POST("app/v1/room/agreeOrRejectPk")
+    suspend fun agreePk(
+        @Field("roomId") roomId: String?,
+        @Field("id") id: Int,
+        @Field("choose") choose: Int
+    ): BaseBean<PkAgreeResponse>
+
+    @FormUrlEncoded
+    @POST("app/v1/room/agreeOrRejectPk")
+    suspend fun rejectPk(
+        @Field("roomId") roomId: String?,
+        @Field("id") id: Int,
+        @Field("choose") choose: Int
+    ): BaseBean<String>
+
+    @FormUrlEncoded
+    @POST("app/v1/room/finishPk")
+    suspend fun finishPk(@Field("id") id: Int?): BaseBean<String>
+
+    @FormUrlEncoded
+    @POST("app/v1/room/breakPk")
+    suspend fun breakPk(@Field("id") id: Int): BaseBean<String>
+
+
+    @FormUrlEncoded
+    @POST("app/v1/room/continuePk")
+    suspend  fun continuePk(
+        @Field("roomId") roomId: String?,
+        @Field("targetRoomId") targetRoomId: String?,
+        @Field("pkSeconds") pkSeconds: Int
+    ): BaseBean<String>
+
+    @FormUrlEncoded
+    @POST("app/v1/room/continuePkAgree")
+    suspend fun continuePkAgree(
+        @Field("roomId") roomId: String?,
+        @Field("id") id: Int
+    ):BaseBean<String>
+
+
+    @FormUrlEncoded
+    @POST("app/v1/room/operatePkMikeUse")
+    suspend  fun operatePkMikeUse(
+        @Field("roomId") roomId: String?,
+        @Field("pkMikeUse") pkMikeUse: Boolean?
+    ): BaseBean<Boolean>
+
+
 }

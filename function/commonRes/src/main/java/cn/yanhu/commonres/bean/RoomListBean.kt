@@ -94,7 +94,6 @@ open class RoomListBean : SmartFragmentTypeExEntity(), Serializable, Observable 
             else -> FRG_OTHER_ROOM
         }
     }
-
     fun isThreeRoom(): Boolean {
         return getFragmentType() == FRG_THREE_ROOM
     }

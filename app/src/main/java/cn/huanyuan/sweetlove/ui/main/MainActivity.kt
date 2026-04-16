@@ -31,6 +31,7 @@ import cn.huanyuan.sweetlove.ui.main.tab_samecity.TabSameCityFrg
 import cn.huanyuan.sweetlove.ui.main.tab_wallet.TabWalletFrg
 import cn.huanyuan.sweetlove.ui.recommend.RecommendRoomActivity
 import cn.huanyuan.sweetlove.ui.teenage.TeenAgeModeActivity
+import cn.huanyuan.sweetlove.ui.userinfo.auth.UploadIdCardPicActivity
 import cn.yanhu.agora.listener.OnDownloadProgressListener
 import cn.yanhu.agora.manager.AgoraSdkDownloadManager
 import cn.yanhu.agora.manager.BeautyFaceEffectManager

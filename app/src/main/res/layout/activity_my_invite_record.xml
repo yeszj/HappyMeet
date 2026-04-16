@@ -35,9 +35,10 @@
                 android:id="@+id/rv_record"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="1"
-                tools:listitem="@layout/adapter_invite_record_head_item" />
+                android:layout_marginHorizontal="@dimen/dp_5"
+                app:layoutManager="com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager"
+                app:spanCount="2"
+                tools:listitem="@layout/adapter_invite_record_item" />
         </cn.yanhu.baselib.refresh.MyRefreshLayout>
 
         <cn.yanhu.baselib.refresh.NoMoreDataFootView

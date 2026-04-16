@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/dp_15"
+        android:paddingBottom="@dimen/dp_10"
         android:orientation="vertical">
 
         <com.youth.banner.Banner
@@ -25,7 +25,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_100"
-            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginHorizontal="@dimen/dp_5"
             android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/bg_invite_total"
             android:gravity="center_vertical"
@@ -98,7 +98,7 @@
                 <cn.yanhu.baselib.view.CustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="本月邀请收益(元)"
+                    android:text="累计邀请收益(元)"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_14"
                     app:fontType="@string/fontBold" />
@@ -140,7 +140,7 @@
                 android:layout_height="match_parent"
                 android:drawableRight="@drawable/icon_down_trangle"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_15"
+                android:paddingHorizontal="@dimen/dp_10"
                 android:text="累计收益"
                 android:textColor="@color/color_666666"
                 android:textSize="@dimen/sp_13" />
@@ -150,7 +150,7 @@
             android:id="@+id/et_content"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_40"
-            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginHorizontal="@dimen/dp_5"
             android:background="@drawable/white_corner_10"
             android:backgroundTint="@color/blackAlpha96"
             android:drawableStart="@drawable/ic_search"

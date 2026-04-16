@@ -10,6 +10,7 @@
         <variable
             name="bean"
             type="cn.huanyuan.sweetlove.bean.GlobalGiftBean" />
+        <import type="cn.yanhu.commonres.bean.GiftInfo"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -116,7 +117,7 @@
             android:shadowColor="#80440020"
             android:shadowDy="5"
             android:shadowRadius="3.0"
-            android:text="@{` `+bean.giftName+`x`+bean.giftNum}"
+            android:text="@{bean.giftType==GiftInfo.TYPE_RANDOM_BOX?(` `+bean.giftName+` 价值`+bean.giftPrice+`玫瑰`):(` `+bean.giftName+`x`+bean.giftNum)}"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
             app:layout_constraintBottom_toBottomOf="@+id/fromFrame"

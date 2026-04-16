@@ -45,7 +45,15 @@ class RoomDetailInfo : RoomListBean(), Serializable, Observable {
     var exclusiveRoomPrice:Int = 0
     var exclusiveSeatPrice:Int = 0
     var foreverFaceEffect: String?=""
+    val pkRoomDetail: RoomPkEnterInfo?=null
+    val intervalSecond:Int =0
 
+    @Bindable
+    var pkSuccessCount: Int = 0
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.pkSuccessCount)
+        }
     fun isAdmin(): Boolean {
         return admin == 1
     }

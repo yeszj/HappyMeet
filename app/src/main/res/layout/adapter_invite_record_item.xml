@@ -17,10 +17,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_5"
         android:layout_marginBottom="@dimen/dp_10"
-        android:background="@drawable/white_corner_12"
-        android:paddingStart="@dimen/dp_10">
+        android:background="@drawable/white_corner_10"
+      >
 
         <cn.yanhu.commonres.view.UserAvatarView
             android:id="@+id/avatarView"
@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_15"
             app:avatarSize="@dimen/dp_40"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -41,7 +42,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"
             app:layout_constraintEnd_toEndOf="@+id/avatarView" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
             android:id="@+id/tv_nickName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,138 +50,77 @@
             android:text="@{userinfo.nickName}"
             android:textColor="@color/fontTextColor"
             android:textSize="@dimen/sp_14"
-            app:fontType="@string/fontBold"
+            app:fontWeightValue="bold"
             app:layout_constraintStart_toEndOf="@+id/avatarView"
             app:layout_constraintTop_toTopOf="@+id/avatarView"
             tools:text="佊岸、花开" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            android:drawableStart="@{userinfo.realNameAuth?@drawable/svg_identify_tag:@drawable/svg_identify_tag_gray}"
-            android:drawablePadding="@dimen/dp_2"
-            android:ellipsize="end"
-            android:paddingEnd="@dimen/dp_10"
-            android:gravity="center_vertical"
-            android:text='@{userinfo.realNameAuth?"已实名认证":"尚未实名认证"}'
-            android:textColor="@{userinfo.realNameAuth?@color/color_31cdd7:@color/color_888888}"
-            android:textSize="@dimen/sp_12"
-            app:fontType="@string/fontMedium"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_nickName"
-            tools:drawableStart="@drawable/svg_identify_tag"
-            tools:text="已实名认证"
-            tools:textColor="@color/color_31cdd7" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_5"
-            android:drawablePadding="@dimen/dp_2"
-            android:paddingEnd="@dimen/dp_10"
-            android:ellipsize="end"
-            android:text="@{userinfo.inviteTime}"
-            android:textColor="#888888"
-            android:textSize="@dimen/sp_12"
-            app:fontType="@string/fontMedium"
-            app:layout_constraintBottom_toBottomOf="@+id/tagId"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tagId"
-            tools:text="2024-12-20 16:12:30" />
 
-        <cn.yanhu.commonres.view.UserTagView
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
             android:id="@+id/tagId"
-            tagColorId="@{@color/blackAlpha96}"
-            tagTextColorId="@{@color/fontGrayColor}"
-            tagValue='@{"ID:"+userinfo.userId}'
+            android:text='@{"ID "+userinfo.userId}'
+            android:textColor="@color/color6"
             android:layout_width="wrap_content"
+            android:textSize="@dimen/sp_12"
+            tools:text="ID 32323"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_5"
             app:layout_constraintBottom_toBottomOf="@+id/avatarView"
             app:layout_constraintStart_toEndOf="@+id/avatarView" />
 
-        <View
+        <com.lihang.ShadowLayout
             android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_15"
+            app:hl_layoutBackground="#1AFFB039"
+            app:hl_strokeWith="@dimen/dp_1"
+            app:hl_strokeColor="#1AFFB039"
+            app:hl_cornerRadius="@dimen/dp_5"
             android:layout_marginTop="@dimen/dp_8"
-            android:background="@drawable/dot_line"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/avatarView"
+            android:background="@drawable/main_alpha10_stroke_r8"
             app:layout_constraintTop_toBottomOf="@+id/avatarView" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_totalDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/dp_10"
-            android:text="累计收益(元)："
-            android:textColor="@color/fontGrayColor"
+            android:text="累计收益(元)"
+            android:textColor="@color/color_888888"
             android:textSize="@dimen/sp_12"
-            app:layout_constraintStart_toStartOf="@+id/avatarView"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_totalValue"
+            app:layout_constraintEnd_toEndOf="@+id/divider"
+            app:layout_constraintStart_toStartOf="@+id/divider"
+            app:layout_constraintBottom_toBottomOf="@+id/divider" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_totalValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text='@{userinfo.totalIncome}'
-            android:textColor="@{CommonUtils.INSTANCE.compareZero(userinfo.totalIncome)?@color/colorMain:@color/color_888888}"
+            android:textColor="#FFB039"
             android:textSize="@dimen/sp_14"
-            app:fontType="@string/fontBold"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_totalDesc"
-            app:layout_constraintStart_toEndOf="@+id/tv_totalDesc"
-            app:layout_constraintTop_toTopOf="@+id/tv_totalDesc"
+            app:fontWeightValue="bold"
+            app:layout_constraintEnd_toEndOf="@+id/divider"
+            app:layout_constraintStart_toStartOf="@+id/divider"
+            app:layout_constraintTop_toTopOf="@+id/divider"
+            app:layout_constraintBottom_toTopOf="@+id/tv_totalDesc"
             tools:text="21.00" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_incomeDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/dp_10"
-            android:text="累计贡献收益(元)："
-            android:textColor="@color/fontGrayColor"
-            android:textSize="@dimen/sp_12"
-            app:layout_constraintEnd_toStartOf="@+id/tv_income"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
-
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_income"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/dp_10"
-            android:text='@{userinfo.contributionIncome}'
-            android:textColor="@{CommonUtils.INSTANCE.compareZero(userinfo.contributionIncome)?@color/colorMain:@color/color_888888}"
-            android:textSize="@dimen/sp_14"
-            app:fontType="@string/fontBold"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_totalDesc"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_totalDesc"
-            tools:text="21.00" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_tips"
-            android:layout_width="@dimen/dp_16"
-            android:layout_height="@dimen/dp_16"
-            android:drawableTint="@color/bgOrangeColor"
-            android:gravity="center_vertical"
-            android:src="@drawable/svg_gantan_orange_16"
-            android:visibility="@{userinfo.showActiveTip?View.VISIBLE:View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_clearTips"
-            app:layout_constraintStart_toStartOf="@+id/tv_totalDesc"
-            app:layout_constraintTop_toTopOf="@+id/tv_clearTips" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
             android:id="@+id/tv_clearTips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text='@{userinfo.showActiveTip?" "+userinfo.activeDesc:"最近在线时间："+userinfo.lastOnlineTime}'
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_10"
+            android:paddingHorizontal="@dimen/dp_15"
+            android:text='@{userinfo.showActiveTip?userinfo.activeDesc:userinfo.lastOnlineTime}'
             android:textColor="@{userinfo.showActiveTip?@color/bgOrangeColor:@color/fontGrayColor}"
             android:textSize="@dimen/sp_12"
-            app:layout_constraintStart_toEndOf="@+id/iv_tips"
-            app:layout_constraintTop_toBottomOf="@+id/tv_totalDesc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
             tools:text=" 89天未活跃 邀请关系将在1天后失效"
             tools:textColor="@color/bgOrangeColor" />
 
@@ -188,20 +128,14 @@
             android:id="@+id/tv_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/svg_right_red"
             android:text="查看详情"
             android:gravity="center_vertical"
             android:padding="@dimen/dp_10"
             android:textColor="@color/colorMain"
             android:textSize="@dimen/sp_12"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_clearTips"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_clearTips"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_clearTips" />
-        <View
-            android:id="@+id/viewDetail"
-            android:layout_width="match_parent"
-            app:layout_constraintTop_toTopOf="@+id/divider"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_height="0dp"/>
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

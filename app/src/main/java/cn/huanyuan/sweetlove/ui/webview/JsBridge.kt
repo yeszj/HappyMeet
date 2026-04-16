@@ -10,6 +10,7 @@ import cn.yanhu.baselib.utils.ext.showToast
 import cn.yanhu.commonres.manager.AppCacheManager
 import cn.yanhu.commonres.router.PageIntentUtil
 import cn.zj.netrequest.application.ApplicationProxy
+import com.blankj.utilcode.util.ThreadUtils.runOnUiThread
 import com.pcl.sdklib.manager.SdkParamsManager
 import com.tencent.mm.opensdk.constants.Build
 import com.tencent.mm.opensdk.modelbiz.WXOpenBusinessView
@@ -65,4 +66,16 @@ class JsBridge(private var mWebView: WebView, private var context: FragmentActiv
         }
     }
 
+    @JavascriptInterface
+    fun goBackPage() {
+        runOnUiThread(object : Runnable {
+            override fun run() {
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack()
+                } else {
+                    context.finish()
+                }
+            }
+        })
+    }
 }

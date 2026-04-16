@@ -15,12 +15,8 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import cn.happy.beautyface.ui.utils.BeautyManager;
 import cn.yanhu.agora.listener.IRtcEngineEventHandlerListener;
@@ -34,6 +30,7 @@ import io.agora.rtc2.RtcConnection;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.video.CameraCapturerConfiguration;
+import io.agora.rtc2.video.ContentInspectConfig;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 
@@ -277,7 +274,9 @@ public class AgoraManager implements IMediaExtensionObserver {
             rtcConnection.channelId = pkRoomId;
             rtcConnection.localUid = Integer.parseInt(AppCacheManager.INSTANCE.getUserId());
         }
-        mRtcEngine.setupRemoteVideoEx(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid), rtcConnection);
+        VideoCanvas videoCanvas = VideoCanvasPool.INSTANCE.obtainVideoCanvas(uid, surfaceView);
+
+        mRtcEngine.setupRemoteVideoEx(videoCanvas, rtcConnection);
     }
 
     public void clearRtcConnection() {
@@ -546,6 +545,46 @@ public class AgoraManager implements IMediaExtensionObserver {
             }
         }
     };
+
+
+    /**
+     * 开启本地截图上传
+     * @param second 上传频率 单位秒
+     */
+    private ContentInspectConfig contentInspectConfig;
+    private int currentContentInspectSecond = -1;
+    public void switchContentInspect(Integer second) {
+        if (second==null){
+            return;
+        }
+        if (currentContentInspectSecond==second){
+            return;
+        }
+        if (second<=0){
+            closeContentInspect();
+        }else {
+            if (contentInspectConfig==null){
+                contentInspectConfig = new ContentInspectConfig();
+                contentInspectConfig.moduleCount = 1;
+                // 功能模块的类型为本地截图上传
+                contentInspectConfig.modules[0].type = ContentInspectConfig.CONTENT_INSPECT_TYPE_SUPERVISE;
+            }
+            contentInspectConfig.extraInfo = "YourExtraInfo";
+            // 本地截图上传的频率为 2 秒一次
+            contentInspectConfig.modules[0].interval = second;
+            mRtcEngine.enableContentInspect(true, contentInspectConfig);
+        }
+        currentContentInspectSecond = second;
+    }
+
+    /**
+     * 关闭本地截图上传
+     */
+    public void closeContentInspect() {
+        if (contentInspectConfig!=null){
+            mRtcEngine.enableContentInspect(false, contentInspectConfig);
+        }
+    }
 
     public void onDestroy() {
         logcom("离开");

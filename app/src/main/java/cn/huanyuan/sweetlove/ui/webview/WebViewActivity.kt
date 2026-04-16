@@ -36,14 +36,13 @@ class WebViewActivity : BaseActivity<ActivityWebviewBinding, WebViewModel>(
         super.initListener()
         LiveEventBus.get<Boolean>(EventBusKeyConfig.REQUESTMERCHANTTRANSFERSUCCESS)
             .observe(this) { o -> back() }
-
     }
 
     override fun initData() {
         val url = intent.getStringExtra(WEB_URL)
         WebViewUtil.initWebViews(mBinding.webView)
         mBinding.webView.webChromeClient =
-            MyWebChromeClient(mBinding.title).setProgressBar(mBinding.progressBar)
+            MyWebChromeClient(mContext,mBinding.title).setProgressBar(mBinding.progressBar)
         mBinding.webView.webViewClient = MyWebViewClient()
         mBinding.webView.addJavascriptInterface(JsBridge(mBinding.webView,mContext), "AppJs")
         mBinding.webView.loadUrl(url.toString(), HttpHeadConfig.getHeader())

@@ -43,4 +43,7 @@ object EventBusKeyConfig {
     const val REQUESTMERCHANTTRANSFERSUCCESS = "request_merchant_transfer_success"
 
 
+    const val REFRESH_PK_INFO = "refresh_pk_info"
+    const val AGREE_OR_REJECT_PK = "agree_or_reject_pk"
+
 }

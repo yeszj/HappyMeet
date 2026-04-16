@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_104"
+        android:background="@drawable/bg_gradient_pk_view">
+
+        <LinearLayout
+            android:id="@+id/vg_time1"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_24"
+            android:background="@drawable/bg_pk_time"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="invisible">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_pk"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:src="@drawable/txt_pk" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_countTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:paddingStart="@dimen/dp_2"
+                android:text="04:30"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vg_continueTime"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_24"
+            android:background="@drawable/bg_pk_time"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_nextCountDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:paddingStart="@dimen/dp_2"
+                android:text="继续PK(59s)"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="@dimen/dp_10"
+                android:layout_marginHorizontal="@dimen/dp_4"
+                android:background="#33FFFFFF" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_disConnect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:paddingStart="@dimen/dp_2"
+                android:textSize="@dimen/sp_12"
+                android:text="断开连线"
+                android:textColor="@color/whiteColorAlpha50" />
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_my"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:paddingEnd="@dimen/dp_5"
+            android:text="我方"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_myResult"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_myResult" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_myResult"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:src="@drawable/pk_success"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/tv_my"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_otherResult"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:src="@drawable/pk_fail"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@+id/tv_other"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:paddingStart="@dimen/dp_5"
+            android:text="对方"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_myResult"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_myResult" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_blueProgress"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginHorizontal="@dimen/dp_35"
+            android:background="@drawable/progress_gradient_pk_blue"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_myAvatar"
+            app:layout_constraintTop_toTopOf="@+id/iv_myAvatar" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_redProgress"
+            android:layout_width="@dimen/dp_145"
+            android:layout_height="@dimen/dp_16"
+            android:background="@drawable/progress_gradient_pk_red"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_myAvatar"
+            app:layout_constraintStart_toStartOf="@+id/iv_blueProgress"
+            app:layout_constraintTop_toTopOf="@+id/iv_myAvatar" />
+
+        <cn.yanhu.commonres.view.CustomLottieAnimationView
+            android:id="@+id/lottiePoint"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_m_12"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_myAvatar"
+            app:layout_constraintStart_toEndOf="@+id/iv_redProgress"
+            app:layout_constraintTop_toTopOf="@+id/iv_myAvatar"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="pk_point.json"
+            app:lottie_loop="true" />
+
+        <cn.yanhu.commonres.view.CustomLottieAnimationView
+            android:id="@+id/iv_startTag"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_32"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_myAvatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_myAvatar"
+            app:lottie_autoPlay="false"
+            app:lottie_fileName="pk_start.json"
+            app:lottie_loop="false" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_myAvatar"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:src="@drawable/ease_default_avatar"
+            app:layout_constraintStart_toStartOf="@+id/tv_my"
+            app:layout_constraintTop_toBottomOf="@+id/iv_myResult"
+             />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_otherAvatar"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:src="@drawable/ease_default_avatar"
+            app:layout_constraintEnd_toEndOf="@+id/tv_other"
+            app:layout_constraintTop_toBottomOf="@+id/iv_myResult"
+           />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_myCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:paddingTop="@dimen/dp_9"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toStartOf="@id/tv_my"
+            app:layout_constraintTop_toBottomOf="@+id/iv_myAvatar" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_otherCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:paddingTop="@dimen/dp_9"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="@id/tv_other"
+            app:layout_constraintTop_toBottomOf="@+id/iv_myAvatar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

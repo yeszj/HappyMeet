@@ -204,13 +204,14 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     private var isShowContinueClick: Boolean = false//普通礼物是否显示连击
     private var selfUserInfo: UserDetailInfo? = null
     private var randomBoxMaxNum = 1//盲盒最大可选择数量
+    private var intervalSecond : Int?= 0
     override fun initData() {
         selfUserInfo = ImUserManager.getSelfUserInfo()
         initPageData()
         seatList = roomSourceBean.roomSeatResList
         hasExpand = seatList.indexOfFirst { it.isExpand } >= 0
         isSendAll = false
-        setRvSeatHeight()
+        initRvSeatHeight()
         setRvChatMessageTop(false)
         initSeatStatus()
         getCurrentSendGiftPop()?.dismiss()
@@ -226,6 +227,9 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         EMClient.getInstance().chatroomManager().addChatRoomChangeListener(this)
         getRandomBoxLimitNum()
         joinChatRoom()
+        val findLast =
+            seatList.indexOfLast { it.roomUserSeatInfo?.userId == localStrUserId }
+        AgoraManager.getInstance().init(mContext, if (findLast >= 0) 1 else 0, null)
         joinChannel()
         requestData()
         setUnReadMsgCount()
@@ -239,7 +243,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun getRandomBoxLimitNum() {
-        request({ commonRxApi.getConfigInfo(ServiceConfigKeyManager.RANDOM_BOX_COMBO_LIMIT_NUM) },
+        request(
+            { commonRxApi.getConfigInfo(ServiceConfigKeyManager.RANDOM_BOX_COMBO_LIMIT_NUM) },
             object : OnRequestResultListener<String> {
                 override fun onSuccess(data: BaseBean<String>) {
                     data.data?.apply {
@@ -323,7 +328,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         })
     }
 
-    private fun setRvSeatHeight() {
+    private fun initRvSeatHeight() {
         when (roomType) {
 
             TYPE_SEVEN_SONG, RoomListBean.TYPE_SEVEN_FRIEND, RoomListBean.TYPE_SEVEN_ANGLE -> {
@@ -343,13 +348,18 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             }
 
             RoomListBean.TYPE_PUBLIC, RoomListBean.TYPE_PRIVATE -> {
-                seatHeight =
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_360) + CommonUtils.getDimension(
-                        com.zj.dimens.R.dimen.dp_32
-                    )
+                if (mBinding.isPk == true) {
+                    seatHeight =
+                        CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_304)
+                } else {
+                    seatHeight =
+                        CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_360) + CommonUtils.getDimension(
+                            com.zj.dimens.R.dimen.dp_32
+                        )
+                }
+
             }
         }
-        // ViewUtils.setViewHeight(mBinding.rvSeat,seatHeight)
         mBinding.rvSeat.isNestedScrollingEnabled = false
 
     }
@@ -1111,7 +1121,14 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             }
         }
         val sendGiftPop = SendGiftPop.showDialog(
-            mContext, roomUserSeatInfo, roomType, 0, listener, isShowContinueClick, balanceRose,randomBoxMaxNum
+            mContext,
+            roomUserSeatInfo,
+            roomType,
+            0,
+            listener,
+            isShowContinueClick,
+            balanceRose,
+            randomBoxMaxNum
         )
         sendGiftPopWeakRef = WeakReference(sendGiftPop)
     }
@@ -1614,7 +1631,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
 
-    private fun sendPkNotice(content: String) {
+    protected fun sendPkNotice(content: String) {
         sendMessage(
             content, ChatRoomMsgInfo.ITEM_ROBOT_TYPE
         )
@@ -1640,13 +1657,13 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     @SuppressLint("SetTextI18n")
     private fun dealCmdMsg(it: EMMessage) {
         try {
-            if (isNotMyRoom(it.to) && !it.to.equals(localStrUserId)) {
+            val source = it.getIntAttribute("source", -1)
+            if (isNotMyRoom(it.to) && !it.to.equals(localStrUserId) && source != ChatConstant.ACTION_MSG_PK_USER_SWITCH_MIKE) {
                 return
             }
             if (mContext.isFinishing) {
                 return
             }
-            val source = it.getIntAttribute("source", -1)
             logInfoCom(LiveRoomActivity.LIVE_ROOM_TAG, "source=${source}---roomId=${roomId}")
             if (source == ChatConstant.ACTION_MSG_APPLY_SET_UP) { //申请上麦
                 logInfoCom("有人申请上麦")
@@ -1863,6 +1880,10 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 val chatRoomGiftMsg =
                     GsonUtils.fromJson<ChatRoomGiftMsg>(content, ChatRoomGiftMsg::class.java)
                 playSvga(chatRoomGiftMsg)
+            } else if (source == ChatConstant.ACTION_CONTENT_INSPECT_SECOND) {
+                val data: JSONObject = it.getJSONObjectAttribute("data")
+                intervalSecond = data.optInt("intervalSecond", intervalSecond?:0)
+                switchContentInspect()
             } else {
                 onReceiveCmdMsg(it)
             }
@@ -1914,7 +1935,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         val softInputVisible = KeyboardUtils.isSoftInputVisible(mContext)
         val isShowExpression =
             messageDialog?.isShow == true && messageDialog?.isShowExpression() == true
-        setRvSeatHeight()
+        initRvSeatHeight()
         setRvChatMessageTop(softInputVisible || isShowExpression)
     }
 
@@ -2125,6 +2146,11 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         balanceRose,
                         BigDecimal(getSeatInRoseNum())
                     )
+                    val res = data.data?:return
+                    if (CommonUtils.isInteger(res)){
+                        intervalSecond = res.toInt()
+                        AgoraManager.getInstance().switchContentInspect(intervalSecond)
+                    }
                 }
             }
 
@@ -2948,6 +2974,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 mBinding.roomInfo = it
                 needComboCnt = it.needComboCnt
                 foreverFaceEffect = it.foreverFaceEffect
+                intervalSecond = it.intervalSecond
                 roomSourceBean = it
                 if (seatList.isNotEmpty()) {
                     roomSourceBean.roomSeatResList = seatList
@@ -2958,12 +2985,19 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 bindPkInfo(pkDetail)
                 getGiftComboSwitch()
                 userRoomAdminChanger(roomSourceBean.roomAdmin)
+                switchContentInspect()
             })
         }
         mViewModel.closeRoomObserver.observe(this) {
             parseState(it, {
                 showToast("房间已强制关闭")
             })
+        }
+    }
+
+    private fun switchContentInspect() {
+        if (isInSeatByUserId(localUserId)) {
+            AgoraManager.getInstance().switchContentInspect(intervalSecond)
         }
     }
 
@@ -3113,7 +3147,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
     private fun getMaxTopHeight(): Int {
         val titleHeight = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_40)
-        return (if (seatHeight > 0) seatHeight else mBinding.rvSeat.height) + titleHeight + mBinding.flTopView.height + mBinding.vgPkView.height
+        return (if (seatHeight > 0) seatHeight else mBinding.rvSeat.height) + titleHeight + mBinding.flTopView.height + mBinding.vgPkView.height + mBinding.vgRoomPk.height
     }
 
     /**
@@ -3127,9 +3161,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
 
 
     private fun preJoinRoom(): Int {
-        val findLast =
-            seatList.indexOfLast { it.roomUserSeatInfo?.userId == localStrUserId }
-        AgoraManager.getInstance().init(mContext, if (findLast >= 0) 1 else 0, null)
+
         logInfoCom(LiveRoomActivity.LIVE_ROOM_TAG, "加载房间---roomId${roomId}")
         //声网初始化
         if (roomSourceBean.getFragmentType() == RoomListBean.FRG_THREE_ROOM) {
@@ -3177,6 +3209,9 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun clearAgora() {
+        if (mBinding.getIsPk() == true) {
+            AgoraManager.getInstance().leavePkChannel()
+        }
         AgoraManager.getInstance().clearRtcConnection()
         AgoraManager.getInstance().onDestroy()
     }
@@ -3212,7 +3247,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             isOnNewIntent = false
             return
         }
-        reLoginIm(object : OnJoinChatRoomListener{
+        reLoginIm(object : OnJoinChatRoomListener {
             override fun onJoinSuccess() {
 
             }
@@ -3550,7 +3585,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         return null
     }
 
-    private fun isInSeatByUserId(uid: Int): Boolean {
+    protected fun isInSeatByUserId(uid: Int): Boolean {
         for (j in seatList.indices) {
             val roomSeatResListDTO = seatList[j]
             val roomUserSeatInfo = roomSeatResListDTO.roomUserSeatInfo
@@ -3749,6 +3784,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                             map,
                             EMMessage.ChatType.Chat
                         )
+
+
                     } else {
                         updateMyMicStatus(operate, seatNum)
                     }
@@ -3773,6 +3810,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             EMMessage.ChatType.ChatRoom
         )
     }
+
 
     protected open fun refreshSeatMicStatus(seatPosition: Int, mickUser: Boolean) {
     }
@@ -3822,13 +3860,19 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         if (isNotMyRoom(roomId)) {
             return
         }
-        if (participant == localStrUserId ) {
-            if (reason == BE_KICKED){
-                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "被踢出聊天室，离开房间roomId=${roomId}——————$participant,reason=${reason}")
+        if (participant == localStrUserId) {
+            if (reason == BE_KICKED) {
+                logComToFile(
+                    LiveRoomActivity.LIVE_ROOM_TAG,
+                    "被踢出聊天室，离开房间roomId=${roomId}——————$participant,reason=${reason}"
+                )
                 leaveRoomFinish()
-            }else if (reason == BE_KICKED_FOR_OFFLINE){
+            } else if (reason == BE_KICKED_FOR_OFFLINE) {
                 //2分钟离线踢出 走重连逻辑
-                logComToFile(LiveRoomActivity.LIVE_ROOM_TAG, "2分钟离线踢出重连roomId=${roomId}——————$participant,reason=${reason}")
+                logComToFile(
+                    LiveRoomActivity.LIVE_ROOM_TAG,
+                    "2分钟离线踢出重连roomId=${roomId}——————$participant,reason=${reason}"
+                )
                 joinChatRoom(object : OnJoinChatRoomListener {
                     override fun onJoinSuccess() {
                         logComToFile(TAG, "离线重连成功")

@@ -62,12 +62,14 @@ class RoomSeatInfo : BaseObservable(), Serializable, CloneableItem {
 
     var roomUserSeatInfo: SeatUserInfo? = null
 
+
     @Bindable
     var isExpand: Boolean = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.isExpand)
         }
+
 
     override fun deepCopy(): CloneableItem {
         val roomSeatInfo = RoomSeatInfo()
@@ -81,6 +83,7 @@ class RoomSeatInfo : BaseObservable(), Serializable, CloneableItem {
         roomSeatInfo.seatUserRose = seatUserRose
         roomSeatInfo.roomUserSeatInfo = roomUserSeatInfo
         roomSeatInfo.isExpand = isExpand
+
         return roomSeatInfo
     }
 }

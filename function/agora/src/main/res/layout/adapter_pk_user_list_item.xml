@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="userInfo"
+            type="cn.yanhu.agora.bean.PkUserInfo" />
+        <variable
+            name="isRecent"
+            type="java.lang.Boolean" />
+
+        <import type="androidx.core.content.ContextCompat" />
+        <import type="cn.yanhu.agora.R" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:paddingVertical="@dimen/dp_5"
+        android:paddingHorizontal="@dimen/dp_12"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp_40"
+            app:layout_constraintTop_toTopOf="parent"
+            circleImageUrl="@{userInfo.portrait}"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:src="@drawable/ease_default_avatar"
+            android:layout_height="@dimen/dp_40"/>
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_10"
+            android:textSize="@dimen/sp_14"
+            tools:text="用户昵称"
+            app:fontWeightValue="medium"
+            android:text="@{userInfo.nickName}"
+            android:textColor="@color/white"
+            android:visibility="visible" />
+        <cn.yanhu.commonres.view.UserLevelView
+            android:id="@+id/levelInfo"
+            userLevel="@{userInfo.level}"
+            isShowZero="@{false}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_2"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_nickName"
+            app:layout_constraintStart_toEndOf="@+id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
+        <androidx.appcompat.widget.AppCompatTextView
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_10"
+            android:textSize="@dimen/sp_12"
+            tools:text="女 | 32岁｜浙江｜老家黑龙江"
+            android:text="@{userInfo.strUserInfo}"
+            android:textColor="@color/white"
+            android:visibility="visible" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_invite"
+            android:layout_width="@dimen/dp_63"
+            android:background="@{userInfo.inviteStatus==0?@drawable/common_shape_click_bg_r20:@drawable/white_corner_20}"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:background="@drawable/white_corner_20"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text='@{userInfo.inviteStatus==0?"邀请PK":"取消邀请"}'
+            android:gravity="center"
+            android:textColor="@{userInfo.inviteStatus==0?@color/white:@color/colorMain}"
+            android:paddingVertical="@dimen/dp_4"
+            android:textSize="@dimen/sp_13"
+            android:fontFamily="sans-serif-medium"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

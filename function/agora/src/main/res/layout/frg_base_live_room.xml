@@ -10,6 +10,9 @@
             type="cn.yanhu.commonres.bean.RoomDetailInfo" />
 
         <import type="android.view.View" />
+        <variable
+            name="isPk"
+            type="java.lang.Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +34,25 @@
             android:layout_height="@dimen/dp_40"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <LinearLayout
+            android:id="@+id/vg_pkBg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{isPk?View.VISIBLE:View.INVISIBLE}"
+            tools:visibility="visible">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#4DFF2A68" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#4D3C4FFF" />
+        </LinearLayout>
         <FrameLayout
             android:id="@+id/fl_topView"
             android:layout_width="match_parent"
@@ -44,21 +66,42 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/fl_topView">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_seat"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                tools:itemCount="3"
-                tools:layoutManager="com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager"
-                tools:listitem="@layout/adapter_three_room_user_seat_item"
-                tools:spanCount="2" />
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_seat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:nestedScrollingEnabled="false"
+                    tools:itemCount="3"
+                    tools:layoutManager="com.chad.library.adapter4.layoutmanager.QuickGridLayoutManager"
+                    tools:listitem="@layout/adapter_three_room_user_seat_item"
+                    tools:spanCount="2" />
+
+                <FrameLayout
+                    android:id="@+id/vg_otherSeat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    tools:visibility="gone"
+                    android:layout_weight="1"
+                    android:visibility="@{isPk?View.VISIBLE:View.GONE}" />
+            </LinearLayout>
+
 
             <FrameLayout
                 android:id="@+id/seatContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/vg_roomPk"
+            app:layout_constraintTop_toBottomOf="@+id/vg_seat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <FrameLayout
             android:id="@+id/vg_pkView"
@@ -122,6 +165,38 @@
             app:layout_constraintBottom_toBottomOf="@+id/bgInput"
             app:layout_constraintEnd_toEndOf="@+id/bgInput"
             app:layout_constraintTop_toTopOf="@+id/bgInput" />
+
+
+
+        <RelativeLayout
+            android:id="@+id/vg_pk"
+            android:layout_width="@dimen/dp_36"
+            android:visibility="@{roomInfo.owner &amp;&amp; roomInfo.publicRoom?View.VISIBLE:View.GONE}"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginEnd="@dimen/dp_10"
+            tools:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/bgInput"
+            app:layout_constraintEnd_toStartOf="@+id/iv_sendGift"
+            app:layout_constraintTop_toTopOf="@+id/bgInput">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/svg_room_pk_btn" />
+
+            <cn.yanhu.commonres.view.CircleBarView
+                android:id="@+id/pkTimeProgress"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_36"
+                app:bar_width="@dimen/dp_2"
+                app:bg_color="@color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:progress_color="@color/whiteColorAlpha50"
+                app:start_angle="-90" />
+        </RelativeLayout>
+
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_sendGift"
@@ -195,13 +270,13 @@
             android:layout_marginTop="@dimen/dp_480"
             android:layout_marginEnd="@dimen/dp_20"
             android:layout_marginBottom="@dimen/dp_8"
-            android:paddingStart="@dimen/dp_10"
-            tools:listitem="@layout/adapter_chat_room_msg_txt_item"
             android:fadingEdgeLength="@dimen/dp_10"
+            android:paddingStart="@dimen/dp_10"
             android:requiresFadingEdge="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/bgInput"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/adapter_chat_room_msg_txt_item" />
 
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -247,6 +322,7 @@
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/vg_applyList"
             android:layout_width="wrap_content"
@@ -255,12 +331,12 @@
             android:background="@drawable/bg_gradient_seat_btn"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
             android:paddingHorizontal="@dimen/dp_8"
             android:paddingVertical="@dimen/dp_4"
-            tools:visibility="gone"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vg_applySeat">
+            app:layout_constraintTop_toBottomOf="@+id/vg_applySeat"
+            tools:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
@@ -279,6 +355,7 @@
                 android:textSize="@dimen/sp_12"
                 app:fontType="@string/fontMedium" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/vg_song"
             android:layout_width="wrap_content"
@@ -357,10 +434,10 @@
             app:autoPlay="false"
             app:clearsAfterDetached="true"
             app:fillMode="Clear"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:loopCount="1" />
 
         <com.tencent.qgame.animplayer.AnimView
@@ -369,16 +446,17 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical" />
+
         <LinearLayout
             android:id="@+id/vg_foreverTip"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_40"
             android:background="@drawable/continue_click_bg"
             android:gravity="center_vertical"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/vg_clickRose"
             app:layout_constraintEnd_toEndOf="@+id/vg_clickRose"
             app:layout_constraintTop_toTopOf="@+id/vg_clickRose"
-            app:layout_constraintBottom_toBottomOf="@+id/vg_clickRose"
-            android:visibility="invisible"
             tools:visibility="invisible">
 
             <cn.yanhu.baselib.view.StrokeGradientTextView
@@ -423,6 +501,7 @@
                 app:strokeColor="#80AA1C00"
                 tools:textStyle="bold|italic" />
         </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/vg_clickRose"
             android:layout_width="@dimen/dp_81"

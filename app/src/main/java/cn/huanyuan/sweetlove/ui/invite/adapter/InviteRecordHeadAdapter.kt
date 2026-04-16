@@ -45,7 +45,7 @@ class InviteRecordHeadAdapter(val mContext: FragmentActivity,val mViewModel: Inv
             tvFilter.text = filterName
             tvFilterTime.text = filterTimeName
             tvTotalCount.text = item.totalInviteCount.toString()
-            tvTotalIncome.text = item.monthInviteIncome
+            tvTotalIncome.text = item.totalIncome
             if (TextUtils.isEmpty(item.numDesc)) {
                 tvNumDesc.visibility = View.INVISIBLE
             } else {
@@ -105,5 +105,9 @@ class InviteRecordHeadAdapter(val mContext: FragmentActivity,val mViewModel: Inv
 
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
         return VH(parent)
+    }
+
+    override fun isFullSpanItem(itemType: Int): Boolean {
+        return true
     }
 }

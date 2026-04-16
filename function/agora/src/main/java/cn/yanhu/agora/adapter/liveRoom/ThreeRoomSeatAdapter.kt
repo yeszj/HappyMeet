@@ -1,5 +1,6 @@
 package cn.yanhu.agora.adapter.liveRoom
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.SurfaceView
@@ -90,6 +91,8 @@ class ThreeRoomSeatAdapter :
                 if (roomDetailInfo == null) {
                     return
                 }
+                isPk = isPkStatus
+                setViewMargin(position)
                 seatInfo = item
                 if (item.roomUserSeatInfo == null) {
                     setEmptySeatInfo(position, item)
@@ -98,19 +101,53 @@ class ThreeRoomSeatAdapter :
 
             }
             upDataSeats(position)
-            if (position == 1) {
-                ViewUtils.setMarginRight(vgParent, 0)
-            } else {
-                ViewUtils.setMarginRight(
-                    vgParent,
-                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_4)
-                )
-            }
+
             viewRank.setOnSingleClickListener {
                 showUserReceiveRoseDetailPop(item)
             }
 
             executePendingBindings()
+        }
+    }
+
+    private fun AdapterThreeRoomUserSeatItemBinding.setViewMargin(position: Int) {
+        val marginDimen = CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_4)
+        if (isPkStatus) {
+            ViewUtils.setViewPadding(
+                tvJoinSeat, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_6),
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_3)
+            )
+            vgParent.setCornerRadius(0)
+            ViewUtils.clearVieMargin(vgParent)
+            ViewUtils.setViewHeight(
+                vgParent,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_106)
+            )
+        } else {
+            ViewUtils.setViewPadding(
+                tvJoinSeat, CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_12),
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_6)
+            )
+            vgParent.setCornerRadius(marginDimen)
+            ViewUtils.setViewHeight(
+                vgParent,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_204)
+            )
+            if (position == 1) {
+                val layoutParams = vgParent.layoutParams
+                if (layoutParams is ViewGroup.MarginLayoutParams) {
+                    layoutParams.rightMargin = 0
+                    layoutParams.leftMargin = marginDimen
+                    vgParent.layoutParams = layoutParams
+                }
+            } else {
+                val layoutParams = vgParent.layoutParams
+                if (layoutParams is ViewGroup.MarginLayoutParams) {
+                    layoutParams.rightMargin = marginDimen
+                    layoutParams.leftMargin = marginDimen
+                    vgParent.layoutParams = layoutParams
+                }
+            }
         }
     }
 
@@ -143,17 +180,27 @@ class ThreeRoomSeatAdapter :
                 if (payloads.isNotEmpty()) {
                     if (payloads[0] is String) {
                         val switch = payloads[0]
-                        if (switch == "showEnterAnim"){
-                            holder.binding.vgEnterAnim.visibility = View.VISIBLE
-                            changeEnterAnimStatus(holder.binding.ivEnter, false)
-                        }else if (switch == "hideEnterAnim"){
+                        if (switch == "showEnterAnim") {
+                            if (!isPkStatus) {
+                                holder.binding.vgEnterAnim.visibility = View.VISIBLE
+                                changeEnterAnimStatus(holder.binding.ivEnter, false)
+                            }
+                        } else if (switch == "hideEnterAnim") {
                             holder.binding.vgEnterAnim.visibility = View.GONE
-                        }else if (switch == "updateToggleAuto") {
+                        } else if (switch == "updateToggleAuto") {
                             holder.binding.roomInfo = roomDetailInfo
                         } else if (switch == "0") {
                             holder.binding.tvSwitch.visibility = View.GONE
-                        }  else {
-                            holder.binding.tvSwitch.visibility = View.VISIBLE
+                        } else if (switch == "refreshPkSuccessCount") {
+                            holder.binding.apply {
+                                this.anchorSeatInfo.roomInfo = roomDetailInfo
+                            }
+                        } else {
+                            if (isPkStatus) {
+                                holder.binding.tvSwitch.visibility = View.GONE
+                            } else {
+                                holder.binding.tvSwitch.visibility = View.VISIBLE
+                            }
                         }
                     } else {
                         holder.binding.apply {
@@ -168,17 +215,21 @@ class ThreeRoomSeatAdapter :
             }
 
             override fun onBind(holder: VH, position: Int, item: RoomSeatInfo?) {
+                val anchorSeatInfoView = holder.itemView.findViewById<View>(R.id.anchorSeatInfo)
+
                 holder.binding.apply {
                     val owner = roomDetailInfo?.isOwner() == true
-
+                    this.isPk = isPkStatus
+                    this.anchorSeatInfo.isPk = isPkStatus
+                    this.anchorSeatInfo.seatIsOwner = true
+                    setAnchorViewMargin(holder, anchorSeatInfoView, owner)
                     bindWishInfo()
 
                     anchorSeatInfo.seatInfo = item
                     this.isOwner = owner
-                    if (owner){
-                        vgEnterAnim.visibility = View.VISIBLE
-                    }
+
                     this.roomInfo = roomDetailInfo
+                    anchorSeatInfo.roomInfo = roomDetailInfo
                     val tag = anchorSeatInfo.itemVideoSf.tag
                     if (tag == null || tag !is SurfaceView) {
                         val surfaceView = TextureView(context)
@@ -208,8 +259,9 @@ class ThreeRoomSeatAdapter :
             }
 
 
-             fun changeEnterAnimStatus(ivEnterAnim: AppCompatImageView, isSave: Boolean = false) {
-                val roomSwitchInfo = RoomSwitchCacheManager.getRoomSwitchInfo(roomDetailInfo!!.roomId!!)
+            fun changeEnterAnimStatus(ivEnterAnim: AppCompatImageView, isSave: Boolean = false) {
+                val roomSwitchInfo =
+                    RoomSwitchCacheManager.getRoomSwitchInfo(roomDetailInfo!!.roomId!!)
                 if (isSave) {
                     roomSwitchInfo.enterAnimOpen = !roomSwitchInfo.enterAnimOpen
                     RoomSwitchCacheManager.saveRoomSwitchInfo(roomSwitchInfo)
@@ -250,6 +302,48 @@ class ThreeRoomSeatAdapter :
         })
     }
 
+    private fun AdapterThreeRoomAnchorSeatItemBinding.setAnchorViewMargin(
+        holder: VH,
+        anchorSeatInfoView: View,
+        owner: Boolean
+    ) {
+        if (isPkStatus) {
+            holder.binding.tvSwitch.visibility = View.GONE
+            vgEnterAnim.visibility = View.INVISIBLE
+            anchorSeatInfo.vgParent.setCornerRadius(0)
+            ViewUtils.clearVieMargin(anchorSeatInfo.vgParent)
+            ViewUtils.setViewHeight(
+                vgAnchorParent,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_198)
+            )
+            ViewUtils.setViewPadding(vgAnchorParent, 0, 0)
+            ViewUtils.setViewWidthMatch(anchorSeatInfoView)
+        } else {
+            anchorSeatInfo.vgParent.setCornerRadius(CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_4))
+            ViewUtils.setMarginNoBottom(
+                anchorSeatInfo.vgParent,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_4)
+            )
+            ViewUtils.setViewPadding(
+                vgAnchorParent,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_4),
+                0
+            )
+            ViewUtils.setViewHeight(
+                vgAnchorParent,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_176)
+            )
+            ViewUtils.setViewWidth(
+                anchorSeatInfoView,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_160)
+            )
+            holder.binding.tvSwitch.visibility = View.VISIBLE
+            if (owner) {
+                vgEnterAnim.visibility = View.VISIBLE
+            }
+        }
+    }
+
     private fun AdapterThreeRoomAnchorSeatItemBinding.bindWishInfo() {
         val tag = banner.tag
         val list = wishResponse?.list
@@ -268,7 +362,7 @@ class ThreeRoomSeatAdapter :
             wishGiftBannerAdapter.setDatas(list)
         }
         val owner = roomDetailInfo?.isOwner() == true
-        if (!owner && wishResponse?.status == 0) {
+        if ((!owner && wishResponse?.status == 0) || isPkStatus) {
             vgWish.visibility = View.INVISIBLE
         } else {
             vgWish.visibility = View.VISIBLE
@@ -279,7 +373,7 @@ class ThreeRoomSeatAdapter :
         tvStatus.text = wishResponse?.getStatusDesc()
     }
 
-    private var surfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = mutableMapOf()
+    var surfaceViewMap: MutableMap<Int, LiveRoomSeatBean?> = mutableMapOf()
 
     //更新座位状态
     private fun AdapterThreeRoomUserSeatItemBinding.upDataSeats(position: Int) {
@@ -299,8 +393,8 @@ class ThreeRoomSeatAdapter :
                 var surfaceView = liveRoomSeatBean.surfaceView
                 if (surfaceView == null) {
                     surfaceView = TextureView(context)
-                }else{
-                    if (liveRoomSeatBean.uid == dto.roomUserSeatInfo!!.userId.toInt()){
+                } else {
+                    if (liveRoomSeatBean.uid == dto.roomUserSeatInfo!!.userId.toInt()) {
                         AgoraManager.getInstance().setupVideo(
                             dto.roomUserSeatInfo!!.userId.toInt(),
                             dto.roomUserSeatInfo!!.userId == AppCacheManager.userId, surfaceView
@@ -330,7 +424,7 @@ class ThreeRoomSeatAdapter :
     }
 
     private fun AdapterThreeRoomAnchorSeatItemBinding.setApplyInfo() {
-        if (roomDetailInfo != null && roomDetailInfo!!.ownerInfo?.userId == AppCacheManager.userId) {
+        if (roomDetailInfo != null && roomDetailInfo!!.ownerInfo?.userId == AppCacheManager.userId && !isPkStatus) {
             val manApplyInfo = roomDetailInfo!!.manApplyInfo
             val build = Spans.builder().text("${manApplyInfo.applyNum}申请").color(
                 CommonUtils.getColor(
@@ -417,6 +511,14 @@ class ThreeRoomSeatAdapter :
 
     interface OnRoomItemClickListener {
         fun onClickWish()
+    }
+
+    private var isPkStatus = false
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setIsPk(isPk: Boolean) {
+        isPkStatus = isPk
+        notifyDataSetChanged()
     }
 
     companion object {

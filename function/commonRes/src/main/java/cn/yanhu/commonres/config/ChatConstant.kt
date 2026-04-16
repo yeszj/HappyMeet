@@ -116,6 +116,30 @@ object ChatConstant {
 
     const val GLOBAL_GIFT_ALERT = 18 //礼物飘屏
 
+
+    const val ACTION_LIVE_ROOM_PK_INVITE: Int = 36
+
+    const val ACTION_PK_AGREE: Int = 37
+
+    const val ACTION_PK_REJECT: Int = 38
+
+    const val ACTION_PK_ROOM_END: Int = 39
+
+    const val ACTION_PK_ROOM_FINISH: Int = 40
+
+    const val ACTION_INVITE_CONTINUE_PK: Int = 41
+
+    const val ACTION_AGREE_CONTINUE_PK: Int = 42
+
+    const val ACTION_SUBSCRIBE_AUDIO_PK: Int = 43
+
+    const val ACTION_PK_VALUE_CHANGE: Int = 44
+
+    const val ACTION_NO_INVITE_PK_ROOM: Int = 45
+
+    const val ACTION_REFRESH_PK_SEAT: Int = 46
+
+
     const val ACTION_FORCE_AUTH = 48//强制实名认证
 
     const val ACTION_EVENT_POP = 49//活动弹框
@@ -149,5 +173,10 @@ object ChatConstant {
     const val ACTION_EXPAND_SEAT_ITEM = 2000 //放大麦位
 
     const val UPDATE_PK_INFO = 5001
+
+    const val ACTION_MSG_PK_USER_SWITCH_MIKE = 5002
+
+    const val ACTION_CONTENT_INSPECT_SECOND = 5003
+
 
 }

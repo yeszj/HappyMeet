@@ -255,5 +255,10 @@
             android:configChanges="orientation|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.userinfo.auth.UploadIdCardPicActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

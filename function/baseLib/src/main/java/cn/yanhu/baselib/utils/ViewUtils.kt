@@ -39,6 +39,20 @@ object ViewUtils {
         }
     }
 
+    fun clearVieMargin(view: View) {
+        val layoutParams = view.layoutParams
+        if (layoutParams is ViewGroup.MarginLayoutParams) {
+            layoutParams.leftMargin = 0
+            layoutParams.rightMargin = 0
+
+            layoutParams.topMargin = 0
+
+            layoutParams.bottomMargin = 0
+
+            view.layoutParams = layoutParams
+        }
+    }
+
     fun setMarginLeft(view: View, leftMargin: Int) {
         val layoutParams = view.layoutParams
         if (layoutParams is ViewGroup.MarginLayoutParams) {
@@ -54,7 +68,15 @@ object ViewUtils {
             view.layoutParams = layoutParams
         }
     }
-
+    fun setMarginNoBottom(view: View, margin: Int) {
+        val layoutParams = view.layoutParams
+        if (layoutParams is ViewGroup.MarginLayoutParams) {
+            layoutParams.topMargin = margin
+            layoutParams.leftMargin = margin
+            layoutParams.rightMargin = margin
+            view.layoutParams = layoutParams
+        }
+    }
     fun setMarginTop(view: View, topMargin: Int) {
         val layoutParams = view.layoutParams
         if (layoutParams is ViewGroup.MarginLayoutParams) {

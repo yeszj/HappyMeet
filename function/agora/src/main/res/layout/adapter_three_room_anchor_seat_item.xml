@@ -14,11 +14,17 @@
         <variable
             name="roomInfo"
             type="cn.yanhu.commonres.bean.RoomDetailInfo" />
+        <variable
+            name="isPk"
+            type="java.lang.Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_anchorParent"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_176"
+        tools:background="@drawable/bg_three_room"
+        tools:layout_height="@dimen/dp_176"
         android:layout_marginTop="@dimen/dp_8"
         android:paddingHorizontal="@dimen/dp_4">
 
@@ -27,12 +33,13 @@
             style="@style/constraintHorizonCenter"
             layout="@layout/adapter_three_room_user_seat_item"
             android:layout_width="@dimen/dp_160"
-            android:layout_height="@dimen/dp_176" />
+            android:layout_height="match_parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vg_wish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="@{isPk?View.INVISIBLE:View.VISIBLE}"
             android:layout_marginTop="@dimen/dp_14"
             app:layout_constraintEnd_toStartOf="@+id/anchorSeatInfo"
             app:layout_constraintStart_toStartOf="parent"
@@ -110,6 +117,7 @@
             android:background="@drawable/white_corner_5"
             android:backgroundTint="@color/blackAlpha80"
             android:gravity="center"
+            android:visibility="@{isPk?View.INVISIBLE:View.VISIBLE}"
             android:layout_marginTop="@dimen/dp_4"
             app:layout_constraintStart_toStartOf="@+id/vg_autoSeat"
             android:paddingHorizontal="@dimen/dp_4"
@@ -172,7 +180,7 @@
             android:gravity="center"
             app:layout_constraintTop_toBottomOf="@+id/vg_enterAnim"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
+            android:visibility="@{isOwner &amp;&amp; !isPk?View.VISIBLE:View.INVISIBLE}"
             tools:visibility="visible">
 
             <androidx.appcompat.widget.AppCompatTextView

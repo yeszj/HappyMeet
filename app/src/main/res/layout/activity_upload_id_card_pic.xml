@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <cn.yanhu.baselib.view.TitleBar
+            android:id="@+id/titleBar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleLeftName="身份证上传" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/titleBar"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:background="@drawable/white_corner_10"
+            android:backgroundTint="#1AFF2A68"
+            android:gravity="center"
+            android:paddingVertical="@dimen/dp_10"
+            android:text="请上传平台实名认证本人的身份证，否则无法提现"
+            android:textColor="@color/colorTextRed"
+            android:textSize="@dimen/sp_14" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_idCardFront"
+            android:layout_width="@dimen/dp_336"
+            android:layout_height="@dimen/dp_180"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tips"
+            style="@style/constraintHorizonCenter"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_20"
+            android:src="@drawable/icon_default_idcard_front"
+            app:riv_corner_radius="@dimen/dp_10"
+            tools:ignore="MissingConstraints" />
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_frontProgress"
+            style="@style/common_white_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:visibility="invisible"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_idCardFront"
+            app:layout_constraintEnd_toEndOf="@+id/iv_idCardFront"
+            app:layout_constraintStart_toStartOf="@+id/iv_idCardFront"
+            app:layout_constraintTop_toTopOf="@+id/iv_idCardFront"
+            tools:text="90%" />
+
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_front"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/iv_idCardFront"
+            style="@style/constraintHorizonCenter"
+            android:layout_gravity="center_horizontal"
+            android:paddingVertical="@dimen/dp_10"
+            android:text=" 拍摄身份证正面（人像面）"
+            android:textColor="@color/colorTextRed"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="MissingConstraints" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_idCardReverse"
+            android:layout_width="@dimen/dp_336"
+            app:layout_constraintTop_toBottomOf="@+id/tv_front"
+            style="@style/constraintHorizonCenter"
+            android:layout_height="@dimen/dp_180"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icon_default_idcard_reverse"
+            app:riv_corner_radius="@dimen/dp_10"
+            tools:ignore="MissingConstraints" />
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_verseProgress"
+            style="@style/common_white_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            android:textSize="@dimen/sp_16"
+            app:fontType="@string/fontMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_idCardReverse"
+            app:layout_constraintEnd_toEndOf="@+id/iv_idCardReverse"
+            app:layout_constraintStart_toStartOf="@+id/iv_idCardReverse"
+            app:layout_constraintTop_toTopOf="@+id/iv_idCardReverse"
+            tools:text="90%" />
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_reverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingVertical="@dimen/dp_10"
+            app:layout_constraintTop_toBottomOf="@+id/iv_idCardReverse"
+            style="@style/constraintHorizonCenter"
+            android:text=" 拍摄身份证反面（国徽面）"
+            android:textColor="@color/colorTextRed"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="MissingConstraints" />
+
+
+        <cn.yanhu.baselib.view.CustomFontTextView
+            android:id="@+id/tv_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableStart="@drawable/svg_unselected_r20"
+            android:drawablePadding="@dimen/dp_5"
+            android:padding="@dimen/dp_10"
+            android:text="确认身份证信息真实有效，并授权平台用于实名核验"
+            android:textColor="@color/color_888888"
+            android:textSize="@dimen/sp_12"
+            android:gravity="center_vertical"
+            style="@style/constraintHorizonCenter"
+            app:layout_constraintBottom_toTopOf="@+id/tv_commit"
+            tools:ignore="MissingConstraints" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_commit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:layout_marginBottom="@dimen/dp_30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/shape_common_btn_r30"
+            android:gravity="center"
+            android:text="确认提交"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontWeightValue="bold" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

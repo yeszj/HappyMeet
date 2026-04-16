@@ -25,6 +25,15 @@ public class GlobalGiftBean {
     private String toUserNickName;
     private int toUserId;
     private String toUserPortrait;
+    private  int giftType;
+
+    public int getGiftType() {
+        return giftType;
+    }
+
+    public void setGiftType(int giftType) {
+        this.giftType = giftType;
+    }
 
     public String getGiftNum() {
         return giftNum;

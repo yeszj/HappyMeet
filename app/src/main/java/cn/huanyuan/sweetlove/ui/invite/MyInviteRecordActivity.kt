@@ -57,7 +57,7 @@ class MyInviteRecordActivity : BaseActivity<ActivityMyInviteRecordBinding, Invit
 
     override fun initListener() {
         super.initListener()
-        recordAdapter.addOnItemChildClickListener(R.id.viewDetail) { _, _, position ->
+        recordAdapter.addOnItemChildClickListener(R.id.tv_detail) { _, _, position ->
             val item = recordAdapter.getItem(position) ?: return@addOnItemChildClickListener
             InviteUserDataDetailActivity.lunch(mContext,item.userId)
         }

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+    <cn.yanhu.baselib.refresh.MyRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_top_corner_10"
+        android:backgroundTint="#161727">
+
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_20"
+            android:text="发起PK"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:fontWeightValue="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.lihang.ShadowLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginStart="@dimen/dp_5"
+            android:paddingStart="@dimen/dp_8"
+            android:paddingEnd="@dimen/dp_2"
+            app:hl_cornerRadius="@dimen/dp_30"
+            app:hl_layoutBackground="@color/whiteColorAlpha90"
+            app:hl_strokeColor="@color/whiteColorAlpha80"
+            app:hl_strokeWith="@dimen/dp_0_5"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+            app:layout_constraintStart_toEndOf="@+id/tv_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_title">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:drawableEnd="@drawable/icon_down_trangle"
+                android:text="5分钟"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13" />
+        </com.lihang.ShadowLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="@dimen/dp_5"
+            android:text="接受PK邀请"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/togglePk"
+            app:layout_constraintEnd_toStartOf="@+id/togglePk"
+            app:layout_constraintTop_toTopOf="@+id/togglePk" />
+
+        <androidx.appcompat.widget.AppCompatToggleButton
+            android:id="@+id/togglePk"
+            android:layout_width="@dimen/dp_27"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_12"
+            android:background="@drawable/toggle_style"
+            android:checked="true"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_title" />
+
+        <com.lihang.ShadowLayout
+            android:id="@+id/vg_pk"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_151"
+            android:layout_marginHorizontal="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_17"
+            app:hl_centerColor="#F3F3FA"
+            app:hl_cornerRadius="@dimen/dp_10"
+            app:hl_endColor="#EDF2FD"
+            app:hl_startColor="#FAE3ED"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_randomPk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="随机PK"
+            android:textColor="@color/colorTextRed"
+            android:textSize="@dimen/sp_14"
+            app:fontWeightValue="bold"
+            app:layout_constraintStart_toStartOf="@+id/vg_pk"
+            app:layout_constraintTop_toTopOf="@+id/vg_pk" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="@dimen/dp_1"
+            android:layout_height="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_4"
+            android:background="@color/colorTextRed"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_randomPk"
+            app:layout_constraintStart_toEndOf="@+id/tv_randomPk"
+            app:layout_constraintTop_toTopOf="@+id/tv_randomPk" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_4"
+            android:textColor="@color/cl_common"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_randomPk"
+            app:layout_constraintStart_toEndOf="@+id/divider"
+            app:layout_constraintTop_toTopOf="@+id/tv_randomPk"
+            tools:text="为你寻找实力相近的对手，预计等待11s" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_myAvatar"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginEnd="@dimen/dp_25"
+            android:src="@drawable/ease_default_avatar"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_pk"
+            app:layout_constraintEnd_toStartOf="@+id/iv_pk"
+            app:layout_constraintTop_toTopOf="@+id/iv_pk" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_pk"
+            android:layout_width="@dimen/dp_33"
+            android:layout_height="@dimen/dp_32"
+            android:src="@drawable/svg_red_pk"
+            app:layout_constraintBottom_toTopOf="@+id/tv_startRandom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_randomPk" />
+
+        <cn.yanhu.commonres.view.LoopScrollAvatar
+            android:id="@+id/avatarBanner"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_25"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_pk"
+            app:layout_constraintStart_toEndOf="@+id/iv_pk"
+            app:layout_constraintTop_toTopOf="@+id/iv_pk" />
+
+        <cn.yanhu.baselib.widget.FontWeightValueTextView
+            android:id="@+id/tv_startRandom"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@drawable/shape_common_btn_r30"
+            android:gravity="center"
+            android:text="发起随机PK"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17"
+            app:fontWeightValue="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/vg_pk"
+            app:layout_constraintEnd_toEndOf="@+id/vg_pk"
+            app:layout_constraintStart_toStartOf="@+id/vg_pk" />
+
+        <net.lucode.hackware.magicindicator.MagicIndicator
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vg_pk"
+            tools:ignore="RtlSymmetry" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_260"
+            app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </cn.yanhu.baselib.refresh.MyRefreshLayout>
+</layout>

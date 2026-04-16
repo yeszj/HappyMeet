@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_304"
+        android:layout_marginTop="@dimen/dp_8"
+        android:orientation="vertical"
+        tools:background="@drawable/bg_three_room">
+
+        <include
+            android:id="@+id/seat1"
+            layout="@layout/adapter_pk_room_blue_seat_item"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/vg2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_106"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/seat1">
+
+            <include
+                android:id="@+id/seat2"
+                layout="@layout/adapter_pk_room_blue_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <include
+                android:id="@+id/seat3"
+                layout="@layout/adapter_pk_room_blue_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

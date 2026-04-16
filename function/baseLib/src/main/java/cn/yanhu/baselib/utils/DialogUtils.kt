@@ -154,12 +154,13 @@ object DialogUtils {
         confirmBg: Int = R.drawable.shape_common_btn_r30,
         cancelBg: Int = R.drawable.shape_cancel_btn_r30,
         context: Context = ActivityUtils.getTopActivity(),
-        gravity: Int = Gravity.CENTER
+        gravity: Int = Gravity.CENTER,
+        isDismissOuTouchOutSide : Boolean= true
     ): BasePopupView {
         val asConfirm = XPopup.Builder(context)
             .autoDismiss(isAutoDismiss)
-            .dismissOnTouchOutside(true)
-            .dismissOnBackPressed(true)
+            .dismissOnTouchOutside(isDismissOuTouchOutSide)
+            .dismissOnBackPressed(isDismissOuTouchOutSide)
             .asConfirm(
                 title,
                 content,

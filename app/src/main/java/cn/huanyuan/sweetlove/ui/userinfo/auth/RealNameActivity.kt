@@ -9,10 +9,12 @@ import cn.huanyuan.sweetlove.databinding.ActivityRealNameBinding
 import cn.huanyuan.sweetlove.net.rxApi
 import cn.huanyuan.sweetlove.ui.userinfo.UserViewModel
 import cn.yanhu.baselib.base.BaseActivity
+import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.logcom
 import cn.yanhu.baselib.utils.ext.setOnSingleClickListener
 import cn.yanhu.baselib.utils.ext.showToast
+import cn.yanhu.baselib.widget.spans.Spans
 import cn.yanhu.commonres.config.IntentKeyConfig
 import cn.yanhu.commonres.manager.LiveDataEventManager
 import cn.yanhu.commonres.manager.RequestCodeManager
@@ -38,8 +40,7 @@ import com.pcl.sdklib.sdk.faceAuth.FaceAuthActivity
  */
 @Route(path = RouterPath.ROUTER_REAL_NAME)
 class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
-    R.layout.activity_real_name,
-    UserViewModel::class.java
+    R.layout.activity_real_name, UserViewModel::class.java
 ) {
     private var source: Int = 1
     private var isConsumeGold: Boolean = false
@@ -67,21 +68,19 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
     private fun getFaceAuthInfo() {
         DialogUtils.showLoading()
         request(
-            { rxApi.getFaceAuthInfo() },
-            object : OnRequestResultListener<FaceAuthInfo> {
-                override fun onSuccess(data: BaseBean<FaceAuthInfo>) {
-                    DialogUtils.dismissLoading()
-                    val faceInfo = data.data ?: return
-                    checkBaiduFaceResult =
-                        CheckFaceAuthResult(2, GsonUtils.toJson(faceInfo), false)
-                    toCheckFace(checkBaiduFaceResult!!)
-                }
-                override fun onFail(code: Int?, msg: String?) {
-                    DialogUtils.dismissLoading()
-                    finish()
-                }
-            },
-            true
+            { rxApi.getFaceAuthInfo() }, object : OnRequestResultListener<FaceAuthInfo> {
+            override fun onSuccess(data: BaseBean<FaceAuthInfo>) {
+                DialogUtils.dismissLoading()
+                val faceInfo = data.data ?: return
+                checkBaiduFaceResult = CheckFaceAuthResult(2, GsonUtils.toJson(faceInfo), false)
+                toCheckFace(checkBaiduFaceResult!!)
+            }
+
+            override fun onFail(code: Int?, msg: String?) {
+                DialogUtils.dismissLoading()
+                finish()
+            }
+        }, true
         )
     }
 
@@ -89,7 +88,8 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
         super.initListener()
         mBinding.btnAuth.setOnSingleClickListener {
             if (checkValue()) {
-                mViewModel.realNameProve(realName, idCard)
+                DialogUtils.showLoading()
+                mViewModel.realNameAuthPreCheck(realName, idCard)
             }
         }
         LiveEventBus.get<Boolean>(LiveDataEventManager.FACE_RESULT).observe(this) {
@@ -124,10 +124,25 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
 
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
+        mViewModel.realNamePreCheckObservable.observe(this) {
+            parseState(it, {
+                if (it.needConfirm) {
+                    showConfirmPop()
+                } else {
+                    faceAuthInfo = it
+                    checkIsCanFace()
+                }
+            }, {
+                DialogUtils.dismissLoading()
+            })
+        }
         mViewModel.realNameObservable.observe(this) { it ->
             parseState(it, {
+                DialogUtils.dismissLoading()
                 faceAuthInfo = it
                 checkIsCanFace()
+            }, {
+                DialogUtils.dismissLoading()
             })
         }
         mViewModel.checkFaceResultObservable.observe(this) { it ->
@@ -160,9 +175,22 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
                 authSuccess()
             }, {
                 authFail()
-
             })
         }
+    }
+
+    private fun showConfirmPop() {
+        val defaultColor = CommonUtils.getColor(cn.yanhu.commonres.R.color.color_666666)
+        val redColor = CommonUtils.getColor(cn.yanhu.baselib.R.color.colorMain)
+        val build = Spans.builder().text("该身份信息").color(defaultColor).text("已绑定上级账号")
+            .color(redColor).text("，继续实名").color(defaultColor).text("将清除现有邀请关系")
+            .color(redColor).text("，是否仍要使用？").color(defaultColor).build()
+        DialogUtils.showConfirmDialog("实名认证确认", {
+            mViewModel.realNameProve(realName, idCard)
+        }, {
+            mBinding.etRealName.setText("")
+            mBinding.etIdCard.setText("")
+        }, build, cancel = "更换信息", confirm = "继续实名")
     }
 
     private fun checkBaiduStep() {
@@ -253,8 +281,7 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
             intent.putExtra(IntentKeyConfig.SOURCE, source)
             intent.putExtra("isConsumeGold", isConsumeGold)
             context.startActivityForResult(
-                intent,
-                RequestCodeManager.REQUEST_CODE_REAL_NAME
+                intent, RequestCodeManager.REQUEST_CODE_REAL_NAME
             )
         }
     }

@@ -1,6 +1,7 @@
 package cn.huanyuan.sweetlove.ui.userinfo
 
 import androidx.lifecycle.MutableLiveData
+import cn.huanyuan.sweetlove.bean.AuthPreCheckRes
 import cn.huanyuan.sweetlove.bean.GuardRankResponse
 import cn.huanyuan.sweetlove.bean.UserLevelResponse
 import cn.huanyuan.sweetlove.net.rxApi
@@ -49,16 +50,24 @@ class UserViewModel : BaseViewModel() {
     fun addFriend(chatUserId: String) {
         request({ imChatRxApi.addFriend(chatUserId) }, addFriendObservable, false)
     }
+
     fun becomeFriendRose(chatUserId: String) {
-        request({ imChatRxApi.becomeFriendRose(chatUserId) }, addFriendRoseObservable, false, isShowToast = false)
+        request(
+            { imChatRxApi.becomeFriendRose(chatUserId) },
+            addFriendRoseObservable,
+            false,
+            isShowToast = false
+        )
     }
+
     val cancelFriendObservable = MutableLiveData<ResultState<String>>()
     fun cancelFriends(chatUserId: String) {
         request({ imChatRxApi.cancelFriends(chatUserId) }, cancelFriendObservable, false)
     }
+
     fun searchUserList(content: String) {
-        request({ rxApi.searchUserList(content) }, searchUserObservable, true,
-            loadingHasContent = true
+        request(
+            { rxApi.searchUserList(content) }, searchUserObservable, true, loadingHasContent = true
         )
     }
 
@@ -73,6 +82,7 @@ class UserViewModel : BaseViewModel() {
     fun getMyService() {
         request({ rxApi.getMyService() }, myServiceObservable, false)
     }
+
     fun getDynamicByUserId(page: Int, userId: String, loadingHasContent: Boolean) {
         request(
             { momentRxApi.getDynamicByUserId(page, userId) },
@@ -82,7 +92,9 @@ class UserViewModel : BaseViewModel() {
         )
     }
 
-    fun updatePersonalPageSingle(type: Int, content: String,onRequestResultListener: OnRequestResultListener<String>) {
+    fun updatePersonalPageSingle(
+        type: Int, content: String, onRequestResultListener: OnRequestResultListener<String>
+    ) {
         request(
             { rxApi.updatePersonalPageSingle(type, content) }, onRequestResultListener
         )
@@ -115,28 +127,40 @@ class UserViewModel : BaseViewModel() {
     }
 
     val realNameObservable = MutableLiveData<ResultState<FaceAuthInfo>>()
-    fun realNameProve(realName:String,idCard:String) {
-        request({ rxApi.realNameProve(realName,idCard) }, realNameObservable,
-            isShowDialog = true, loadingHasContent = true
+    fun realNameProve(realName: String, idCard: String) {
+        request(
+            { rxApi.realNameProve(realName, idCard) }, realNameObservable
         )
     }
-     val checkFaceResultObservable = MutableLiveData<ResultState<CheckFaceAuthResult>>()
+
+
+    val realNamePreCheckObservable = MutableLiveData<ResultState<FaceAuthInfo>>()
+    fun realNameAuthPreCheck(realName: String, idCard: String) {
+        request({ rxApi.realNameAuthPreCheck(realName, idCard) }, realNamePreCheckObservable)
+    }
+
+    val checkFaceResultObservable = MutableLiveData<ResultState<CheckFaceAuthResult>>()
     fun checkBaiduStep() {
-        request({ rxApi.checkBaiduFace() }, checkFaceResultObservable,
-            isShowDialog = false
+        request(
+            { rxApi.checkBaiduFace() }, checkFaceResultObservable, isShowDialog = false
         )
     }
 
     val canBaidFaceObservable = MutableLiveData<ResultState<Boolean>>()
     fun ifCanBaiduFace() {
-        request({ rxApi.ifCanBaiduFace() }, canBaidFaceObservable,
-            isShowDialog = false, isShowToast = false
+        request(
+            { rxApi.ifCanBaiduFace() },
+            canBaidFaceObservable,
+            isShowDialog = false,
+            isShowToast = false
         )
     }
 
     val postBaidFaceObservable = MutableLiveData<ResultState<String>>()
     fun submitBaiduFace(postBaiduAuthBean: PostBaiduAuthBean) {
-        request({ rxApi.submitBaiduFace(postBaiduAuthBean) }, postBaidFaceObservable,
+        request(
+            { rxApi.submitBaiduFace(postBaiduAuthBean) },
+            postBaidFaceObservable,
             isShowDialog = false
         )
     }

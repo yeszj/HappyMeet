@@ -12,6 +12,8 @@ import cn.yanhu.commonres.databinding.PopCommonOperateBinding
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.util.setOnDebouncedItemClick
 import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.interfaces.SimpleCallback
+import com.lxj.xpopup.interfaces.XPopupCallback
 
 /**
  * @author: zhengjun
@@ -44,7 +46,6 @@ class CommonOperatePop(
             ) {
                 val item = operateAdapter.getItem(position) ?: return
                 onClickItemListener.onClickItem(item)
-                dismiss()
             }
         })
         mBiding.tvCancel.setOnSingleClickListener { dismiss() }
@@ -60,10 +61,10 @@ class CommonOperatePop(
         fun showDialog(
             context: Context,
             list: MutableList<OperateInfo>,
-            onClickItemListener: OnClickItemListener
+            onClickItemListener: OnClickItemListener,xPopupCallback: SimpleCallback?=null
         ): CommonOperatePop {
             val pop = CommonOperatePop(context, list, onClickItemListener)
-            val builder = XPopup.Builder(context)
+            val builder = XPopup.Builder(context).setPopupCallback(xPopupCallback)
             builder.asCustom(pop).show()
             return pop
         }

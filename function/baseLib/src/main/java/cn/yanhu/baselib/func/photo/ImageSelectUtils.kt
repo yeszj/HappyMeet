@@ -113,7 +113,7 @@ object ImageSelectUtils {
         isCrop: Boolean = true,
         maxSelectNum: Int,
         width: Int = 180,
-        height: Int = 18,
+        height: Int = 180,
         isWithSelectVideoImage: Boolean = false,
         selectType: Int = SelectMimeType.ofAll(),
         call: OnResultCallbackListener<LocalMedia>
@@ -140,13 +140,15 @@ object ImageSelectUtils {
         mContext: Activity,
         isCrop: Boolean = true,
         type:Int = SelectMimeType.ofImage(),
+        width: Int = 180,
+        height: Int = 180,
         call: OnResultCallbackListener<LocalMedia>
     ) {
         val pictureSelectionCameraModel: PictureSelectionCameraModel =
             PictureSelector.create(mContext).openCamera(type)
                 .setSandboxFileEngine(MeSandboxFileEngine())
         if (isCrop) {
-            pictureSelectionCameraModel.setCropEngine(ImageFileCropEngine())
+            pictureSelectionCameraModel.setCropEngine(ImageFileCropEngine(width, height))
         }
         pictureSelectionCameraModel.setCompressEngine(ImageCompressEngine())
         pictureSelectionCameraModel.forResult(call)

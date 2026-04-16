@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="seatInfo"
+            type="cn.yanhu.commonres.bean.RoomSeatInfo" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="isOwner"
+            type="java.lang.Boolean" />
+    </data>
+
+
+    <FrameLayout
+        android:id="@+id/vg_parent"
+        style="@style/constraintHorizonCenter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_204"
+        android:background="@color/whiteColorAlpha90"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_avatarBg"
+            maskRadius="@{25}"
+            maskSampling="@{2}"
+            maskUrl="@{seatInfo.roomUserSeatInfo.portrait}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_video_sf"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:visibility="gone" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/vg_userInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{seatInfo.roomUserSeatInfo==null?View.INVISIBLE:View.VISIBLE}"
+            tools:visibility="visible">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_6"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/iv_avatar"
+                    imageUrl="@{seatInfo.roomUserSeatInfo.portrait}"
+                    android:layout_width="@dimen/dp_28"
+                    android:layout_height="@dimen/dp_28"
+                    android:visibility="@{isOwner?View.VISIBLE:View.GONE}"
+                    app:riv_oval="true"
+                    tools:src="@drawable/ease_default_avatar"
+                    android:layout_marginEnd="@dimen/dp_4"
+                    tools:visibility="visible" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_nickName"
+                        style="@style/common_white_shadow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{seatInfo.roomUserSeatInfo.nickName}"
+                        android:textColor="@color/white"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textSize="@dimen/sp_13"
+                        app:fontType="@string/fontMedium"
+                        tools:text="王地主" />
+
+                    <cn.yanhu.baselib.view.CustomFontTextView
+                        android:id="@+id/tv_age"
+                        style="@style/common_white_shadow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="主持"
+                        android:textColor="@color/whiteAlpha30"
+                        android:textSize="@dimen/sp_12"
+                        android:visibility="@{isOwner?View.VISIBLE:View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+                        app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_nickName"
+                        tools:visibility="gone" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_voiceStatus"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:visibility="invisible"
+                    android:layout_marginEnd="@dimen/dp_3"
+                    android:src="@{seatInfo.mikeUser?@drawable/svg_blue_voice:@drawable/svg_blue_voice_off}"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_age"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:src="@drawable/svg_blue_voice" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_roomVoice"
+                android:layout_width="@dimen/dp_28"
+                android:layout_height="@dimen/dp_28"
+                android:layout_margin="@dimen/dp_4"
+                android:src="@{seatInfo.roomUserSeatInfo.pkMikeUse?@drawable/icon_voice_on_fill:@drawable/icon_micro_off}"
+                android:visibility="@{isOwner?View.VISIBLE:View.INVISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/icon_voice_on_fill" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </FrameLayout>
+
+
+</layout>

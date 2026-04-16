@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/pk_invite_bg"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginStart="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_15"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ease_default_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_nickName" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_150"
+            android:layout_marginTop="@dimen/dp_100"
+            android:rotation="-5"
+            android:text="美美的椰子"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_bg" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rotation="-5"
+            android:text="向你发起挑战！"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_21"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_nickName"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nickName" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_bg">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_refuse"
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="@dimen/dp_50"
+                android:background="@drawable/white_corner_30"
+                android:backgroundTint="#333333"
+                android:gravity="center"
+                android:text="残忍拒绝"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/tv_agree"
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginStart="@dimen/dp_24"
+                android:gravity="center"
+                android:src="@drawable/btn_agree_pk" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

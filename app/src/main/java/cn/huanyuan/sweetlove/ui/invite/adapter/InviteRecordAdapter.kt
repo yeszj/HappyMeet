@@ -29,15 +29,13 @@ class InviteRecordAdapter : BaseQuickAdapter<InviteRecordInfo, InviteRecordAdapt
     override fun onBindViewHolder(holder: VH, position: Int, item: InviteRecordInfo?) {
         holder.binding.apply {
             userinfo = item
-            if (item?.isAuth == true){
-                TextViewDrawableUtils.setDrawableRight(tvNickName, ContextCompat.getDrawable(context,
-                    cn.yanhu.commonres.R.drawable.svg_identify_tag))
-            }else{
-                TextViewDrawableUtils.setDrawableRight(tvNickName,null)
-            }
-            tvTotalDesc.text = "$filterName(元)："
-            val replace = filterName.replace("收益", "")
-            tvIncomeDesc.text = "${replace}贡献收益(元)："
+//            if (item?.isAuth == true){
+//                TextViewDrawableUtils.setDrawableRight(tvNickName, ContextCompat.getDrawable(context,
+//                    cn.yanhu.commonres.R.drawable.svg_identify_tag))
+//            }else{
+//                TextViewDrawableUtils.setDrawableRight(tvNickName,null)
+//            }
+            tvTotalDesc.text = "${filterName}(元)"
             executePendingBindings()
         }
     }

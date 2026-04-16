@@ -3,6 +3,7 @@ package cn.huanyuan.sweetlove.net
 import cn.huanyuan.sweetlove.bean.AppCheckItemInfo
 import cn.huanyuan.sweetlove.bean.AppStartResponse
 import cn.huanyuan.sweetlove.bean.AppVersionInfo
+import cn.huanyuan.sweetlove.bean.AuthPreCheckRes
 import cn.huanyuan.sweetlove.bean.CommonEventImgConfig
 import cn.huanyuan.sweetlove.bean.CommonEventRankResponse
 import cn.huanyuan.sweetlove.bean.ComplaintInfo
@@ -316,6 +317,12 @@ interface ApiService : CommonApiService {
     @FormUrlEncoded
     @POST("app/v1/auth/realNameAuth")
     suspend fun realNameProve(
+        @Field("realName") realName: String, @Field("idCard") idCard: String
+    ): BaseBean<FaceAuthInfo>
+
+    @FormUrlEncoded
+    @POST("app/v1/auth/realNameAuthPreCheck")
+    suspend fun realNameAuthPreCheck(
         @Field("realName") realName: String, @Field("idCard") idCard: String
     ): BaseBean<FaceAuthInfo>
 

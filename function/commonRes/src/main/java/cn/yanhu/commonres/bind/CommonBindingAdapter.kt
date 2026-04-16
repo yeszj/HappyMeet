@@ -4,11 +4,14 @@ import android.R.attr.resource
 import android.graphics.Color
 import android.text.Spanned
 import android.text.TextUtils
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import cn.yanhu.baselib.utils.CoilImgUtils
 import cn.yanhu.baselib.utils.GlideUtils
+import cn.yanhu.baselib.utils.ViewUtils
 import cn.yanhu.baselib.utils.ext.toHtml
 import cn.yanhu.baselib.view.CustomFontTextView
 import coil.load
@@ -156,5 +159,21 @@ fun loadImage2(
             view.setImageDrawable(it)
         }
     }
+}
+
+@BindingAdapter("android:layout_marginStart")
+fun setMarginStart(view: View, marginStart: Float) {
+    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+    layoutParams.marginStart = marginStart.toInt()
+    view.layoutParams = layoutParams
+}
+
+
+@BindingAdapter("bindLayoutWidth", "bindLayoutHeight")
+fun setLayoutSize(view: View, width: Float, height: Float) {
+    val lp = view.layoutParams
+    lp.width = width.toInt()
+    lp.height = height.toInt()
+    view.layoutParams = lp
 }
 

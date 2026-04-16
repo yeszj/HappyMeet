@@ -16,4 +16,11 @@ class SeatUserInfo : UserDetailInfo() {
             notifyPropertyChanged(BR._all)
         }
     var replacePrice: Int = 0
+
+    @Bindable
+    var pkMikeUse: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.pkMikeUse)
+        }
 }
