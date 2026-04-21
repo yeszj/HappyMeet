@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.text.TextUtils
 import android.view.View
 import cn.huanyuan.sweetlove.R
@@ -27,7 +26,6 @@ import cn.yanhu.commonres.bean.CommonErrorTipsInfo
 import cn.yanhu.commonres.bean.PayWayInfo
 import cn.yanhu.commonres.bean.WithDrawInfo
 import cn.yanhu.commonres.bean.response.WithdrawResponse
-import cn.yanhu.commonres.manager.WebUrlManager
 import cn.yanhu.commonres.router.PageIntentUtil
 import cn.yanhu.commonres.router.RouteIntent
 import cn.yanhu.commonres.view.PayWaySelectView
@@ -52,7 +50,6 @@ import cn.zj.netrequest.ext.request
 import cn.zj.netrequest.status.BaseBean
 import com.blankj.utilcode.util.ActivityUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.lxj.xpopup.interfaces.OnConfirmListener
 import com.youth.banner.listener.OnBannerListener
 
 /**
@@ -66,7 +63,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
 ) {
     private val withdrawalAdapter by lazy { WithdrawalAdapter() }
     private var selectItem: WithDrawInfo? = null
-    private var selectAccountType:Int = PayWayInfo.TYPE_ALIPAY
+    private var selectAccountType: Int = PayWayInfo.TYPE_ALIPAY
     override fun initData() {
         setFullScreenStatusBar(false)
         mBinding.rvAmount.adapter = withdrawalAdapter
@@ -82,7 +79,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
 
     private var authCenterInfo: AuthCenterInfo? = null
     fun getAuthCenterInfo() {
-        request({ rxApi.getAuthCenterInfo() }, object : OnRequestResultListener<AuthCenterInfo>{
+        request({ rxApi.getAuthCenterInfo() }, object : OnRequestResultListener<AuthCenterInfo> {
             override fun onSuccess(data: BaseBean<AuthCenterInfo>) {
                 authCenterInfo = data.data
             }
@@ -95,12 +92,16 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             .text("用户提现协议")
             .color(CommonUtils.getColor(cn.yanhu.baselib.R.color.adminTagColor)).click(
                 mBinding.tvAgreement,
-                CustomClickSpan(mContext,CommonUtils.getColor(cn.yanhu.baselib.R.color.adminTagColor), object : CustomClickSpan.OnAllSpanClickListener {
-                    override fun onClick(widget: View?) {
-                        RouteIntent.lunchToWebView(WebUrlManager.WITHDRAW_AGREEMENT)
-                    }
-                })
-            ).build()
+                CustomClickSpan(
+                    mContext,
+                    CommonUtils.getColor(cn.yanhu.baselib.R.color.adminTagColor),
+                    object : CustomClickSpan.OnAllSpanClickListener {
+                        override fun onClick(widget: View?) {
+                            RouteIntent.lunchToWebView(withDrawInfo?.withdrawalAgreement)
+                        }
+                    })
+            )
+            .build()
         mBinding.tvAgreement.text = build
     }
 
@@ -113,7 +114,8 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             startWithdrawal()
         }
         initTitleListener()
-        mBinding.paySelectView.registerSelectChangeListener(object : PayWaySelectView.OnSelectChangeListener{
+        mBinding.paySelectView.registerSelectChangeListener(object :
+            PayWaySelectView.OnSelectChangeListener {
             override fun onSelectChange(type: Int) {
                 selectAccountType = type
                 bindAccountInfo()
@@ -151,13 +153,13 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                             toAliAuth()
                             return@apply
                         }
-                    } else if (mBinding.paySelectView.getSelectType() == PayWayInfo.TYPE_WXPAY){
+                    } else if (mBinding.paySelectView.getSelectType() == PayWayInfo.TYPE_WXPAY) {
                         if (TextUtils.isEmpty(withDrawInfo?.wxNickName)) {
                             showToast("请先绑定微信账户")
                             toWxAuth()
                             return@apply
                         }
-                    }else{
+                    } else {
                         if (TextUtils.isEmpty(withDrawInfo?.bankCard)) {
                             showToast("请先绑定银行卡")
                             toBindBankCard()
@@ -177,12 +179,12 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     }
 
     private fun toAliAuth() {
-        AliAuthUtils.aliAuth(mContext,object : OnAuthResultListener{
+        AliAuthUtils.aliAuth(mContext, object : OnAuthResultListener {
             override fun onAuthSuccess() {
                 requestData()
             }
         })
-       // AliPayAccountBindActivity.lunch(mContext, withDrawInfo!!.realName)
+        // AliPayAccountBindActivity.lunch(mContext, withDrawInfo!!.realName)
     }
 
 
@@ -216,6 +218,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     }
 
     private var withDrawInfo: WithdrawResponse? = null
+
     @SuppressLint("SetTextI18n")
     override fun registerNecessaryObserver() {
         super.registerNecessaryObserver()
@@ -223,13 +226,13 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             parseState(it, {
                 showToast("提现申请提交成功，请耐心等待")
                 requestData()
-            },{
-                if (it.code==ErrorCode.COMMON_TIP_POP){
+            }, {
+                if (it.code == ErrorCode.COMMON_TIP_POP) {
                     showErrorTip(it)
-                }else if (it.code == ErrorCode.CODE_SET_PWD){
+                } else if (it.code == ErrorCode.CODE_SET_PWD) {
                     showToast(it.msg)
-                    SetPwdActivity.lunch(mContext,authCenterInfo?.phone.toString())
-                } else{
+                    SetPwdActivity.lunch(mContext, authCenterInfo?.phone.toString())
+                } else {
                     showToast(it.msg)
                 }
             })
@@ -251,13 +254,13 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
         }
     }
 
-    private var bannerImageAdapter: MyBannerImageAdapter?=null
+    private var bannerImageAdapter: MyBannerImageAdapter? = null
     private fun bindBanner(list: MutableList<BannerBean>) {
-        if (list.isEmpty()){
+        if (list.isEmpty()) {
             mBinding.banner.visibility = View.GONE
-        }else{
+        } else {
             mBinding.banner.visibility = View.VISIBLE
-            if (bannerImageAdapter==null){
+            if (bannerImageAdapter == null) {
                 mBinding.banner.addBannerLifecycleObserver(this)
                 bannerImageAdapter = MyBannerImageAdapter(mBinding.banner, list)
                 mBinding.banner.setAdapter(bannerImageAdapter)
@@ -266,15 +269,15 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                         PageIntentUtil.url2Page(ActivityUtils.getTopActivity(), data.pageUrl)
                     }
                 })
-            }else{
+            } else {
                 bannerImageAdapter?.setDatas(list)
             }
         }
     }
 
-    private var errorTipsPop:BasePopupView?=null
+    private var errorTipsPop: BasePopupView? = null
     private fun showErrorTip(it: CustomException) {
-        if (CommonUtils.isPopShow(errorTipsPop)){
+        if (CommonUtils.isPopShow(errorTipsPop)) {
             return
         }
         val msg = it.msg
@@ -289,7 +292,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setWithdrawRule(){
+    private fun setWithdrawRule() {
         mBinding.tvRule.text = withDrawInfo?.desc
     }
 
@@ -300,7 +303,7 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
                 bindAliStyle()
             } else if (selectAccountType == PayWayInfo.TYPE_WXPAY) {
                 bindWxStyle()
-            }else{
+            } else {
                 bindBankStyle()
             }
             val name = if (TextUtils.isEmpty(this.realName)) {
@@ -315,7 +318,10 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     private fun WithdrawResponse.bindBankStyle() {
         mBinding.tvBind.setTextColor("#FFB039".toColorInt())
         if (TextUtils.isEmpty(this.bankCard)) {
-            ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_35))
+            ViewUtils.setPaddingTop(
+                mBinding.tvDesc,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_35)
+            )
             mBinding.vgNoBind.visibility = View.VISIBLE
             mBinding.vgNoBind.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_bank_no_bind)
             mBinding.tvClickBind.backgroundTintList =
@@ -332,7 +338,10 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             }
         } else {
             mBinding.tvAccountTag.text = "银行卡号"
-            ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20))
+            ViewUtils.setPaddingTop(
+                mBinding.tvDesc,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20)
+            )
             mBinding.bgAccountInfo.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_bank_no_bind)
             mBinding.bgAccountInfo.visibility = View.VISIBLE
             mBinding.vgNoBind.visibility = View.GONE
@@ -342,21 +351,19 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     }
 
 
+    private fun showBindTipPop() {
+        DialogUtils.showConfirmDialog(
+            "温馨提示", {
+                if (selectAccountType == PayWayInfo.TYPE_ALIPAY) {
+                    toAliAuth()
+                } else if (selectAccountType == PayWayInfo.TYPE_WXPAY) {
+                    toWxAuth()
+                } else {
+                    toBindBankCard()
+                }
+            }, {
 
-
-    private fun showBindTipPop(){
-         DialogUtils.showConfirmDialog(
-            "温馨提示",{
-                 if (selectAccountType == PayWayInfo.TYPE_ALIPAY) {
-                     toAliAuth()
-                 } else if (selectAccountType == PayWayInfo.TYPE_WXPAY) {
-                     toWxAuth()
-                 }else{
-                     toBindBankCard()
-                 }
-             },{
-
-             },
+            },
             "您好！请确认绑定的提现账号与平台的实名认证一致避免提现失败",
             "取消",
             "去绑定"
@@ -364,14 +371,17 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     }
 
 
-    private fun toBindBankCard(){
+    private fun toBindBankCard() {
         BindBankActivity.lunch(mContext, withDrawInfo!!.realName)
     }
 
     private fun WithdrawResponse.bindWxStyle() {
         mBinding.tvBind.setTextColor("#00CB76".toColorInt())
         if (TextUtils.isEmpty(this.wxNickName)) {
-            ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_35))
+            ViewUtils.setPaddingTop(
+                mBinding.tvDesc,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_35)
+            )
             mBinding.vgNoBind.visibility = View.VISIBLE
             mBinding.vgNoBind.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_wx_no_bind)
             mBinding.tvClickBind.backgroundTintList =
@@ -388,7 +398,10 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             }
         } else {
             mBinding.tvAccountTag.text = "微信账号"
-            ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20))
+            ViewUtils.setPaddingTop(
+                mBinding.tvDesc,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20)
+            )
             mBinding.bgAccountInfo.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_wx_no_bind)
             mBinding.bgAccountInfo.visibility = View.VISIBLE
             mBinding.vgNoBind.visibility = View.GONE
@@ -400,7 +413,10 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
     private fun WithdrawResponse.bindAliStyle() {
         mBinding.tvBind.setTextColor("#2D9AFF".toColorInt())
         if (TextUtils.isEmpty(this.aliAccount)) {
-            ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_35))
+            ViewUtils.setPaddingTop(
+                mBinding.tvDesc,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_35)
+            )
             mBinding.vgNoBind.visibility = View.VISIBLE
             mBinding.vgNoBind.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_ali_no_bind)
             mBinding.tvClickBind.backgroundTintList =
@@ -417,7 +433,10 @@ class WithdrawalActivity : BaseActivity<ActivityWithdrawalBinding, WalletViewMod
             }
         } else {
             mBinding.tvAccountTag.text = "授权账号"
-            ViewUtils.setPaddingTop(mBinding.tvDesc,CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20))
+            ViewUtils.setPaddingTop(
+                mBinding.tvDesc,
+                CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_20)
+            )
             mBinding.bgAccountInfo.setBackgroundResource(cn.yanhu.commonres.R.drawable.bg_ali_no_bind)
             mBinding.bgAccountInfo.visibility = View.VISIBLE
             mBinding.vgNoBind.visibility = View.GONE

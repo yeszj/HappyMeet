@@ -204,7 +204,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     private var isShowContinueClick: Boolean = false//普通礼物是否显示连击
     private var selfUserInfo: UserDetailInfo? = null
     private var randomBoxMaxNum = 1//盲盒最大可选择数量
-    private var intervalSecond : Int?= 0
+    private var intervalSecond: Int? = 0
     override fun initData() {
         selfUserInfo = ImUserManager.getSelfUserInfo()
         initPageData()
@@ -348,14 +348,12 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
             }
 
             RoomListBean.TYPE_PUBLIC, RoomListBean.TYPE_PRIVATE -> {
-                if (mBinding.isPk == true) {
-                    seatHeight =
-                        CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_304)
+                seatHeight = if (mBinding.isPk == true) {
+                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_304)
                 } else {
-                    seatHeight =
-                        CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_360) + CommonUtils.getDimension(
-                            com.zj.dimens.R.dimen.dp_32
-                        )
+                    CommonUtils.getDimension(com.zj.dimens.R.dimen.dp_360) + CommonUtils.getDimension(
+                        com.zj.dimens.R.dimen.dp_32
+                    )
                 }
 
             }
@@ -409,7 +407,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         chatRoomMsgAdapter.add(
             ChatRoomMsgInfo(
                 ChatRoomMsgInfo.ITEM_SYSTEM_TYPE,
-                "平台公示：平台只提供交友介绍认识的服务，我们提倡文明直播、积极阳光交友，严禁涉黄、涉政、涉恐、低俗、辱骂等行为。发现违规行为将被封禁。保护网络绿色环境，从你我做起。",
+                getString(R.string.live_room_notice),
                 null
             )
         )
@@ -1882,7 +1880,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                 playSvga(chatRoomGiftMsg)
             } else if (source == ChatConstant.ACTION_CONTENT_INSPECT_SECOND) {
                 val data: JSONObject = it.getJSONObjectAttribute("data")
-                intervalSecond = data.optInt("intervalSecond", intervalSecond?:0)
+                intervalSecond = data.optInt("intervalSecond", intervalSecond ?: 0)
                 switchContentInspect()
             } else {
                 onReceiveCmdMsg(it)
@@ -2056,6 +2054,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         BeautyManager.setStickerItem(null)
         AgoraManager.getInstance().setDownVideo(localUserId, true)
         userLeaveChanged(localUserId)
+        AgoraManager.getInstance().switchContentInspect(0)
     }
 
     @SuppressLint("SetTextI18n")
@@ -2146,8 +2145,8 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
                         balanceRose,
                         BigDecimal(getSeatInRoseNum())
                     )
-                    val res = data.data?:return
-                    if (CommonUtils.isInteger(res)){
+                    val res = data.data ?: return
+                    if (CommonUtils.isInteger(res)) {
                         intervalSecond = res.toInt()
                         AgoraManager.getInstance().switchContentInspect(intervalSecond)
                     }
@@ -2996,9 +2995,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
     }
 
     private fun switchContentInspect() {
-        if (isInSeatByUserId(localUserId)) {
-            AgoraManager.getInstance().switchContentInspect(intervalSecond)
-        }
+        AgoraManager.getInstance().switchContentInspect(intervalSecond)
     }
 
 

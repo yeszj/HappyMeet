@@ -569,7 +569,7 @@ class BaseApplication : Application() {
             val source = message.getIntAttribute("source", -1)
             val attributes = message.attributes
             if (BuildConfig.DEBUG) {
-                logcom("收到透传消息${GsonUtils.toJson(attributes)}")
+                logcom("收到透传消息${GsonUtils.toJson(attributes)};\ntoUserId=${message.to},\nfromUserId = ${message.from}")
             }
             if (source == CmdMsgTypeConfig.ADD_FRIEND) {
                 val userInfo = ChatUserInfoManager.getUserInfo(message.conversationId())

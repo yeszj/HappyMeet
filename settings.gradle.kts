@@ -12,6 +12,8 @@ dependencyResolutionManagement {
         google()
         jcenter()
         mavenCentral()
+//        maven("https://maven.zego.im")  // <- 添加这行。
+//        maven("https://www.jitpack.io") // <- 添加这行。
         maven("https://jitpack.io")
         maven("https://plugins.gradle.org/m2/")
         maven("https://maven.aliyun.com/nexus/content/repositories/google")

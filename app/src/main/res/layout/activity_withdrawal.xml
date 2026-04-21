@@ -89,15 +89,14 @@
                     <com.youth.banner.Banner
                         android:id="@+id/banner"
                         android:layout_width="@dimen/dp_336"
+                        android:layout_height="@dimen/dp_40"
                         android:layout_marginTop="@dimen/dp_20"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/viewBg"
-                        android:layout_height="@dimen/dp_40"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/viewBg" />
 
                     <cn.yanhu.baselib.view.CustomFontTextView
                         android:id="@+id/tv_recharge"
-                        app:layout_constraintTop_toBottomOf="@+id/banner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="@dimen/dp_16"
@@ -106,7 +105,7 @@
                         android:textColor="@color/fontGrayColor"
                         android:textSize="@dimen/sp_14"
                         app:layout_constraintStart_toStartOf="parent"
-                        />
+                        app:layout_constraintTop_toBottomOf="@+id/banner" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_amount"

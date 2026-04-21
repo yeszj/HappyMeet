@@ -9,6 +9,7 @@ import cn.huanyuan.sweetlove.databinding.ActivityRealNameBinding
 import cn.huanyuan.sweetlove.net.rxApi
 import cn.huanyuan.sweetlove.ui.userinfo.UserViewModel
 import cn.yanhu.baselib.base.BaseActivity
+import cn.yanhu.baselib.refresh.RefreshManager
 import cn.yanhu.baselib.utils.CommonUtils
 import cn.yanhu.baselib.utils.DialogUtils
 import cn.yanhu.baselib.utils.ext.logcom
@@ -69,18 +70,18 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
         DialogUtils.showLoading()
         request(
             { rxApi.getFaceAuthInfo() }, object : OnRequestResultListener<FaceAuthInfo> {
-            override fun onSuccess(data: BaseBean<FaceAuthInfo>) {
-                DialogUtils.dismissLoading()
-                val faceInfo = data.data ?: return
-                checkBaiduFaceResult = CheckFaceAuthResult(2, GsonUtils.toJson(faceInfo), false)
-                toCheckFace(checkBaiduFaceResult!!)
-            }
+                override fun onSuccess(data: BaseBean<FaceAuthInfo>) {
+                    DialogUtils.dismissLoading()
+                    val faceInfo = data.data ?: return
+                    checkBaiduFaceResult = CheckFaceAuthResult(2, GsonUtils.toJson(faceInfo), false)
+                    toCheckFace(checkBaiduFaceResult!!)
+                }
 
-            override fun onFail(code: Int?, msg: String?) {
-                DialogUtils.dismissLoading()
-                finish()
-            }
-        }, true
+                override fun onFail(code: Int?, msg: String?) {
+                    DialogUtils.dismissLoading()
+                    finish()
+                }
+            }, true
         )
     }
 
@@ -128,6 +129,7 @@ class RealNameActivity : BaseActivity<ActivityRealNameBinding, UserViewModel>(
             parseState(it, {
                 if (it.needConfirm) {
                     showConfirmPop()
+                    DialogUtils.dismissLoading()
                 } else {
                     faceAuthInfo = it
                     checkIsCanFace()

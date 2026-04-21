@@ -552,12 +552,8 @@ public class AgoraManager implements IMediaExtensionObserver {
      * @param second 上传频率 单位秒
      */
     private ContentInspectConfig contentInspectConfig;
-    private int currentContentInspectSecond = -1;
     public void switchContentInspect(Integer second) {
         if (second==null){
-            return;
-        }
-        if (currentContentInspectSecond==second){
             return;
         }
         if (second<=0){
@@ -569,12 +565,11 @@ public class AgoraManager implements IMediaExtensionObserver {
                 // 功能模块的类型为本地截图上传
                 contentInspectConfig.modules[0].type = ContentInspectConfig.CONTENT_INSPECT_TYPE_SUPERVISE;
             }
-            contentInspectConfig.extraInfo = "YourExtraInfo";
+           // contentInspectConfig.extraInfo = "YourExtraInfo";
             // 本地截图上传的频率为 2 秒一次
             contentInspectConfig.modules[0].interval = second;
             mRtcEngine.enableContentInspect(true, contentInspectConfig);
         }
-        currentContentInspectSecond = second;
     }
 
     /**

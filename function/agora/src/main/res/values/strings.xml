@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="wish_desc" tools:ignore="MissingTranslation">许下3个礼物心愿，本场直播结束后失效</string>
+    <string name="live_room_notice" tools:ignore="MissingTranslation">平台公示：本平台仅提供交友机会，倡导文明直播、阳光交友。为维护绿色网络环境，官方24小时巡查所有直播内容，严禁涉政、涉黄、涉恐、低俗、辱骂等违规行为，违者封禁。请勿私下金钱交易，谨防诈骗。</string>
 </resources>
