@@ -171,7 +171,9 @@ class ThreeRoomPkShowInfoView : LinearLayout {
         if (isRoomOwner) {
             mBinding.vgTime1.visibility = INVISIBLE
             mBinding.vgContinueTime.visibility = VISIBLE
-            startContinueCountdown(countTime)
+          //  startContinueCountdown(countTime)
+            mBinding.tvNextCountDown.text =
+                "继续PK"
             mBinding.tvNextCountDown.setOnSingleClickListener {
                 if (isRoomOwner) {
                     clickContinue()
@@ -180,7 +182,9 @@ class ThreeRoomPkShowInfoView : LinearLayout {
         } else {
             mBinding.vgContinueTime.visibility = INVISIBLE
             mBinding.ivPk.visibility = GONE
-            startEndCountdown(countTime)
+            mBinding.tvCountTime.text = "PK结束"
+
+           // startEndCountdown(countTime)
         }
     }
 
@@ -193,6 +197,10 @@ class ThreeRoomPkShowInfoView : LinearLayout {
         })
     }
 
+    /**
+     * 房间成员倒计时
+     * pk结束
+     */
     private fun startEndCountdown(countTime: Int) {
         pkTimer?.cancel()
         mBinding.tvCountTime.setTextColor(CommonUtils.getColor(cn.yanhu.baselib.R.color.white))
@@ -209,7 +217,7 @@ class ThreeRoomPkShowInfoView : LinearLayout {
         pkTimer!!.start()
     }
 
-    /**
+    /**房主倒计时
      * pk结束 是否继续倒计时 1分钟
      * 倒计时结束后 回到原直播间样式
      */

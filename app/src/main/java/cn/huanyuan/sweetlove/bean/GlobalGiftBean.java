@@ -1,5 +1,7 @@
 package cn.huanyuan.sweetlove.bean;
 
+import cn.yanhu.commonres.manager.ImageThumbUtils;
+
 public class GlobalGiftBean {
 
     /**
@@ -26,6 +28,25 @@ public class GlobalGiftBean {
     private int toUserId;
     private String toUserPortrait;
     private  int giftType;
+
+    private int showType;//0一个头像 1两个头像
+
+
+    public String getFromThumbPortrait(){
+        return ImageThumbUtils.getThumbUrl(fromUserPortrait);
+    }
+
+    public String getToThumbPortrait(){
+        return ImageThumbUtils.getThumbUrl(toUserPortrait);
+    }
+
+    public int getShowType() {
+        return showType;
+    }
+
+    public void setShowType(int showType) {
+        this.showType = showType;
+    }
 
     public int getGiftType() {
         return giftType;
