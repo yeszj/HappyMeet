@@ -2990,6 +2990,7 @@ open class BaseLiveRoomFrg : BaseFragment<FrgBaseLiveRoomBinding, LiveRoomViewMo
         mViewModel.closeRoomObserver.observe(this) {
             parseState(it, {
                 showToast("房间已强制关闭")
+
             })
         }
     }
