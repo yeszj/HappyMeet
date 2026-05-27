@@ -121,7 +121,7 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     }
 
     fun getRecommendRoomDesc(): String {
-        if (onSeat){
+        if (!onSeat){
             return "围观中"
         }
         return if (isPublicRoom()) {
