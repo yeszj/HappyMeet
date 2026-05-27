@@ -19,8 +19,8 @@ android {
         applicationId = "cn.huanyuan.sweetlove"
         minSdk = cfg["minSdkVersion"] as Int
         targetSdk = cfg["targetSdkVersion"] as Int
-        versionCode = 57
-        versionName = "1.5.8"
+        versionCode = 58
+        versionName = "1.5.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
@@ -48,14 +48,11 @@ android {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName(keyName)
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             //http://dev-qxq.hanyonjoy.com
             buildConfigField(
-                "String",
-                "BASE_SERVER_ADDRESS",
-                "\"http://dev-qxq.hanyonjoy.com/\""
+                "String", "BASE_SERVER_ADDRESS", "\"http://dev-qxq.hanyonjoy.com/\""
             )
 
         }
@@ -64,8 +61,7 @@ android {
             isMinifyEnabled = true
             signingConfig = signingConfigs.getByName(keyName)
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             buildConfigField("String", "BASE_SERVER_ADDRESS", "\"https://qxq.whhanyon.com/\"")
         }
@@ -134,5 +130,5 @@ dependencies {
     kapt("com.alibaba:arouter-compiler:${rootProject.ext.get("arouter")}")
     //noinspection KaptUsageInsteadOfKsp
     kapt("androidx.room:room-compiler:2.6.1")
-    api( "com.meituan.android.walle:library:1.1.7")
+    api("com.meituan.android.walle:library:1.1.7")
 }

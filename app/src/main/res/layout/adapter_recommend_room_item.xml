@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="cn.yanhu.commonres.manager.ImageThumbUtils"/>
+
+        <import type="cn.yanhu.commonres.manager.ImageThumbUtils" />
+
         <variable
             name="userInfo"
             type="cn.yanhu.commonres.bean.UserDetailInfo" />
@@ -17,9 +19,9 @@
         android:padding="@dimen/dp_12">
 
         <androidx.appcompat.widget.AppCompatImageView
+            circleImageUrl="@{ImageThumbUtils.getThumbUrl(userInfo.portrait)}"
             android:layout_width="@dimen/dp_32"
             android:layout_height="@dimen/dp_32"
-            circleImageUrl="@{ImageThumbUtils.getThumbUrl(userInfo.portrait)}"
             android:src="@drawable/ease_default_avatar" />
 
         <cn.yanhu.baselib.view.CustomFontTextView
@@ -28,9 +30,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingStart="@dimen/dp_10"
+            android:text="@{userInfo.nickName}"
             android:textColor="@color/fontTextColor"
             android:textSize="@dimen/sp_14"
-            android:text="@{userInfo.nickName}"
             app:fontType="@string/fontBold"
             tools:text="找个真心的人" />
 
@@ -38,28 +40,28 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_22"
             android:background="@{userInfo.publicRoom?@drawable/bg_blinding_tag:(userInfo.privateRoom?@drawable/bg_private_tag:  @drawable/bg_friends_tag)}"
-            tools:background="@drawable/bg_private_tag"
-            android:orientation="horizontal"
             android:gravity="center"
-            android:paddingHorizontal="@dimen/dp_6" >
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/dp_6"
+            tools:background="@drawable/bg_private_tag">
 
-        <com.opensource.svgaplayer.SVGAImageView
-            android:id="@+id/svga_loading"
-            android:layout_width="@dimen/dp_14"
-            android:layout_height="@dimen/dp_14"
-            app:autoPlay="true"
-            app:loopCount="-1"
-            app:source="play_white.svga" />
+            <com.opensource.svgaplayer.SVGAImageView
+                android:id="@+id/svga_loading"
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="@dimen/dp_14"
+                app:autoPlay="true"
+                app:loopCount="-1"
+                app:source="play_white.svga" />
 
-        <cn.yanhu.baselib.view.CustomFontTextView
-            android:id="@+id/tv_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fontType="@string/fontMedium"
-            tools:text="专属交友中"
-            android:text="@{userInfo.recommendRoomDesc}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_12" />
+            <cn.yanhu.baselib.view.CustomFontTextView
+                android:id="@+id/tv_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{userInfo.recommendRoomDesc}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                app:fontType="@string/fontMedium"
+                tools:text="专属交友中" />
         </LinearLayout>
 
     </LinearLayout>

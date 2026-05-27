@@ -41,8 +41,7 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     var cardFrameSvga: String?=""
     var myBubbleInfo: BubbleInfo? = null
     var targetBubbleInfo: BubbleInfo? = null
-
-
+    var onSeat: Boolean = false
     fun getAvatarFramePic(): String? {
         if (TextUtils.isEmpty(avatarFrameCover)) {
             return avatarFrame
@@ -122,6 +121,9 @@ open class UserDetailInfo : BaseUserInfo(), Serializable {
     }
 
     fun getRecommendRoomDesc(): String {
+        if (onSeat){
+            return "围观中"
+        }
         return if (isPublicRoom()) {
             "视频交友中"
         } else if (isPrivateRoom()) {
